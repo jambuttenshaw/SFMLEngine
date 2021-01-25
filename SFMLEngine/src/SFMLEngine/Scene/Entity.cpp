@@ -3,7 +3,8 @@
 
 namespace SFMLEngine {
 
-	Entity::Entity()
+	Entity::Entity(const std::string& name)
+		: m_Name(name)
 	{
 	}
 
@@ -31,14 +32,13 @@ namespace SFMLEngine {
 		return false;
 	}
 
-	const Component* Entity::GetComponent(Component::ComponentType type)
+	const Component& Entity::GetComponent(Component::ComponentType type)
 	{
 		for (Component* c : m_Components)
 		{
 			if (c->GetType() == type)
-				return c;
+				return *c;
 		}
-		return nullptr;
 	}
 
 	void Entity::RemoveComponent(Component::ComponentType type)

@@ -12,7 +12,8 @@ namespace SFMLEngine {
 
 		Entity* CreateEntity();
 
-		std::vector<Entity*> GetEntitiesOfType(Component::ComponentType type);
+		const Component& FindObjectOfType(Component::ComponentType type);
+		const std::vector<const Component&>& FindObjectsOfType(Component::ComponentType type);
 
 		// some kind of render scene function
 		void RenderScene();
@@ -21,6 +22,11 @@ namespace SFMLEngine {
 	private:
 		// scene needs to be aware of the window
 		// to render stuff to
+
+
+		// the scene has a list of all the entities present in it
+		std::vector<Entity*> m_Entities;
+
 	};
 
 }
