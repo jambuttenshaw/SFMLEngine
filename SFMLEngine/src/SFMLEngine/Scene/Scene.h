@@ -12,8 +12,8 @@ namespace SFMLEngine {
 
 		Entity* CreateEntity();
 
-		const Component& FindObjectOfType(Component::ComponentType type);
-		const std::vector<const Component&>& FindObjectsOfType(Component::ComponentType type);
+		Component* FindObjectOfType(Component::ComponentType type);
+		const std::vector<Component*> FindObjectsOfType(Component::ComponentType type);
 
 		// some kind of render scene function
 		void RenderScene();

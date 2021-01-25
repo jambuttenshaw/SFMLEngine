@@ -14,7 +14,7 @@ namespace SFMLEngine {
 
 		void AddComponent(Component::ComponentType type);
 		bool HasComponent(Component::ComponentType type);
-		const Component& GetComponent(Component::ComponentType type);
+		Component* GetComponent(Component::ComponentType type);
 		void RemoveComponent(Component::ComponentType type);
 
 	private:

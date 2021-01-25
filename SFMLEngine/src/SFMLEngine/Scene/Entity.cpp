@@ -32,12 +32,12 @@ namespace SFMLEngine {
 		return false;
 	}
 
-	const Component& Entity::GetComponent(Component::ComponentType type)
+	Component* Entity::GetComponent(Component::ComponentType type)
 	{
 		for (Component* c : m_Components)
 		{
 			if (c->GetType() == type)
-				return *c;
+				return c;
 		}
 	}
 

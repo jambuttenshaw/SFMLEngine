@@ -23,9 +23,11 @@ namespace SFMLEngine {
 		{
 			switch (type)
 			{
-				case ComponentType::Transform:			return new TransformComponent(); break;
-				case ComponentType::SpriteRenderer:		return new SpriteRendererComponent(); break;
+				case ComponentType::None:				break; // error
+				//case ComponentType::Transform:			return new TransformComponent();
+				//case ComponentType::SpriteRenderer:		return new SpriteRendererComponent();
 			}
+			return nullptr;
 		}
 
 	protected:
@@ -88,7 +90,7 @@ namespace SFMLEngine {
 	class SpriteRendererComponent : public Component
 	{
 	public:
-		SpriteRendererComponent(const sf::Color& color = { 0.0, 0.0, 0.0, 1.0 })
+		SpriteRendererComponent(const sf::Color& color = { 0, 0, 0, 255 })
 			: Component(), m_Color(color)
 		{
 			m_Type = ComponentType::SpriteRenderer;
@@ -96,7 +98,7 @@ namespace SFMLEngine {
 		~SpriteRendererComponent() = default;
 
 	private:
-		sf::Color m_Color = { 0.0, 0.0, 0.0, 1.0 };
+		sf::Color m_Color = { 0, 0, 0, 255 };
 	};
 
 }

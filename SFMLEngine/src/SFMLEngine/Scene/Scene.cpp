@@ -23,18 +23,19 @@ namespace SFMLEngine {
 		return newEntity;
 	}
 
-	const Component& Scene::FindObjectOfType(Component::ComponentType type)
+	Component* Scene::FindObjectOfType(Component::ComponentType type)
 	{
 		for (Entity* e : m_Entities)
 		{
 			if (e->HasComponent(type))
 				return e->GetComponent(type);
 		}
+		return nullptr;
 	}
 
-	const std::vector<const Component&>& Scene::FindObjectsOfType(Component::ComponentType type)
+	const std::vector<Component*> Scene::FindObjectsOfType(Component::ComponentType type)
 	{
-		std::vector<const Component&> objects;
+		std::vector<Component*> objects;
 		for (Entity* e : m_Entities)
 		{
 			if (e->HasComponent(type))
