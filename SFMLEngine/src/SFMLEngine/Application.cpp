@@ -35,7 +35,7 @@ namespace SFMLEngine
             sf::Event event;
             while (m_Window->pollEvent(event))
             {
-                // Close window: exit
+                // window events should be handled by the application
                 if (event.type == sf::Event::Closed)
                     m_Window->close();
                 else
