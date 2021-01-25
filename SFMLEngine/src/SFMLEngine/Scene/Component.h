@@ -4,6 +4,7 @@
 
 namespace SFMLEngine {
 
+
 	class Component
 	{
 	public:
@@ -15,14 +16,30 @@ namespace SFMLEngine {
 	public:
 		virtual ~Component() = 0;
 
+		ComponentType GetType() { return m_Type; }
+
+
+		static Component* Create(ComponentType type)
+		{
+			switch (type)
+			{
+				case ComponentType::Transform:			return new TransformComponent(); break;
+				case ComponentType::SpriteRenderer:		return new SpriteRendererComponent(); break;
+			}
+		}
+
 	protected:
 		ComponentType m_Type = ComponentType::None;
 	};
 
+
+
+
+
 	class TransformComponent : public Component
 	{
 	public:
-		TransformComponent(sf::Vector2f pos = { 0.0f, 0.0f }, float rotation = 0.0f, sf::Vector2f scale = { 1.0f, 1.0f })
+		TransformComponent(const sf::Vector2f& pos = { 0.0f, 0.0f }, float rotation = 0.0f, const sf::Vector2f& scale = { 1.0f, 1.0f })
 			: Component(), m_Position(pos), m_Rotation(rotation), m_Scale(scale) 
 		{
 			m_Type = ComponentType::Transform;
@@ -61,6 +78,12 @@ namespace SFMLEngine {
 		float m_Rotation = 0.0f;
 		sf::Vector2f m_Scale = { 0.0f, 0.0f };
 	};
+
+
+
+
+
+
 
 	class SpriteRendererComponent : public Component
 	{
