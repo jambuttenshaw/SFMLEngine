@@ -5,4 +5,3 @@
 #include "SFMLEngine/Layer.h"
 
 // ECS
-#include "SFMLEngine/Scene/Scene.h"

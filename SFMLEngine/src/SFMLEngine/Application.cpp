@@ -4,8 +4,13 @@
 namespace SFMLEngine
 {
 
+    Application* Application::s_Instance = nullptr;
+
     Application::Application()
     {
+        if (!s_Instance)
+            s_Instance = this;
+
         m_Window = new sf::RenderWindow(sf::VideoMode(800, 600), "SFML window");
 
     }

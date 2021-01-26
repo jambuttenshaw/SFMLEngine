@@ -7,7 +7,7 @@ namespace SFMLEngine {
 	class Layer
 	{
 	public:
-		virtual ~Layer() = 0;
+		virtual ~Layer() {};
 
 		virtual void Update(float timestep) = 0;
 
