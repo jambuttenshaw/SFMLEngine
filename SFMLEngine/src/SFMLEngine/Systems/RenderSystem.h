@@ -18,6 +18,19 @@ namespace SFMLEngine {
 			m_RenderTarget = target;
 		}
 
+		void Update(float timestep)
+		{
+			for (auto const& entity : m_Entities)
+			{
+				auto& sRenderer = m_Coordinator->GetComponent<SpriteRenderer>(entity);
+				auto& transform = m_Coordinator->GetComponent<Transform>(entity);
+
+				sRenderer.Sprite.setPosition(transform.Position);
+				sRenderer.Sprite.setRotation(transform.Rotation);
+				sRenderer.Sprite.setScale(transform.Scale);
+			}
+		}
+
 		void Render()
 		{
 			for (auto const& entity : m_Entities)

@@ -27,6 +27,7 @@ namespace SFMLEngine
 
         {
             Signature signature;
+            signature.set(m_Coordinator->GetComponentType<Transform>());
             signature.set(m_Coordinator->GetComponentType<SpriteRenderer>());
             m_Coordinator->SetSystemSignature<SpriteRenderer>(signature);
         }
@@ -71,8 +72,20 @@ namespace SFMLEngine
                 }
             }
             
+
+            // Update the systems
+
+
+            // update the render system last
+            m_RenderSystem->Update(0);
+
+
+
             // Clear screen
             m_Window->clear();
+
+            // draw to the screen
+            m_RenderSystem->Render();
 
             // Update the window
             m_Window->display();

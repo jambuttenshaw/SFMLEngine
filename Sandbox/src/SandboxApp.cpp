@@ -1,6 +1,9 @@
 #include <SFMLEngine.h>
 #include <SFMLEngine/EntryPoint.h>
 
+#include <SFML/Graphics.hpp>
+
+#include <iostream>
 
 class GameLayer : public SFMLEngine::Layer
 {
@@ -8,11 +11,17 @@ public:
 	GameLayer()
 		: Layer()
 	{
-
+		// create a new scene
+		m_Scene = SFMLEngine::Application::GetApplicationHandle()->CreateScene();
 		
+		// create a new entity
+		m_Entity = m_Scene->CreateEntity();		
 	}
 
-	~GameLayer() {}
+	~GameLayer() 
+	{
+		m_Scene->DestroyEntity(m_Entity);
+	}
 
 	void GameLayer::OnAttach() {}
 	void GameLayer::OnDetach() {}
@@ -25,7 +34,9 @@ public:
 	}
 
 private:
+	std::shared_ptr<SFMLEngine::Scene> m_Scene;
 
+	SFMLEngine::Entity m_Entity;
 };
 
 

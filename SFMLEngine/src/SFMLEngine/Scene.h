@@ -11,7 +11,7 @@ namespace SFMLEngine {
 			: m_Coordinator(coordinator) {}
 
 		Entity CreateEntity() { return m_Coordinator->CreateEntity(); }
-		void DestroyEntity(Entity entity) { m_Coordinator->DestroyEntity(); }
+		void DestroyEntity(Entity entity) { m_Coordinator->DestroyEntity(entity); }
 
 		template<typename T>
 		void AddComponent(Entity entity, T component) { m_Coordinator->AddComponent(entity, component); }

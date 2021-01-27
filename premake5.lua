@@ -101,19 +101,27 @@ project "Sandbox"
 		"%{wks.location}/SFMLEngine/src",
 		"%{wks.location}/SFMLEngine/vendor/SFML/include"
 	}
-
-	links
+	
+	libdirs
 	{
-		"SFMLEngine"
-	}
 
+	}
+	
 	filter "system:windows"
 		systemversion "latest"
 
 	filter "configurations:Debug"
 		runtime "Debug"
 		symbols "on"
+		links
+		{
+			"SFMLEngine"
+		}
 
 	filter "configurations:Release"
 		runtime "Release"
 		optimize "on"
+		links
+		{
+			"SFMLEngine"
+		}
