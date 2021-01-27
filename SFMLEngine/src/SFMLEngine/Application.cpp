@@ -43,6 +43,7 @@ namespace SFMLEngine
             m_Coordinator->SetSystemSignature<RenderSystem>(signature);
         }
 
+
         // native scripting system
         m_ScriptableEntitySystem = m_Coordinator->RegisterSystem<ScriptableEntitySystem>();
         m_ScriptableEntitySystem->Init(m_Coordinator);

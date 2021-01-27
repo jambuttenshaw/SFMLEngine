@@ -10,6 +10,21 @@ namespace SFMLEngine {
 	{
 	public:
 		ScriptableEntitySystem() = default;
+		
+		~ScriptableEntitySystem()
+		{
+			// the scriptable entity system is responsible for deleting the
+			// instances of the scripts that have been created
+			for (auto const& entity : m_Entities)
+			{
+				auto& nativeScriptComponent = m_Coordinator->GetComponent<NativeScripts>(entity);
+				for (auto script : nativeScriptComponent.Scripts)
+				{
+					delete script;
+				}
+				nativeScriptComponent.Scripts.clear();
+			}
+		}
 
 		void Init(Coordinator* coordinator) 
 		{
@@ -53,7 +68,7 @@ namespace SFMLEngine {
 		}
 
 	private:
-		Coordinator* m_Coordinator;
+		Coordinator* m_Coordinator = nullptr;
 	};
 
 }

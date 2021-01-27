@@ -11,6 +11,7 @@ namespace SFMLEngine {
 	{
 	public:
 		RenderSystem() = default;
+		~RenderSystem() = default;
 		
 		void Init(Coordinator* coordinator, sf::RenderTarget* target)
 		{
