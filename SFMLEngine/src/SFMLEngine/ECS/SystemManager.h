@@ -61,6 +61,7 @@ namespace SFMLEngine {
 				if ((entitySignature & systemSignature) == systemSignature)
 				{
 					system->m_Entities.insert(entity);
+					system->EntityAddedToSystem(entity);
 				}
 				// Entity signature does not match system signature - erase from set
 				else

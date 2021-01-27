@@ -18,6 +18,12 @@ namespace SFMLEngine {
 			m_RenderTarget = target;
 		}
 
+		void EntityAddedToSystem(Entity entity) override
+		{
+			auto& sRenderer = m_Coordinator->GetComponent<SpriteRenderer>(entity);
+			sRenderer.Sprite.setTexture(sRenderer.Texture);
+		}
+
 		void Update(float timestep)
 		{
 			for (auto const& entity : m_Entities)
@@ -36,7 +42,6 @@ namespace SFMLEngine {
 			for (auto const& entity : m_Entities)
 			{
 				auto& sRenderer = m_Coordinator->GetComponent<SpriteRenderer>(entity);
-				// sRenderer.Sprite.setTexture(sRenderer.Texture);
 				m_RenderTarget->draw(sRenderer.Sprite);
 			}
 		}
