@@ -44,8 +44,6 @@ namespace SFMLEngine {
 
 		// place this entities signature into the array
 		m_Signatures[entity] = signature;
-
-		std::cout << "setting signature" << std::endl;
 	}
 
 	Signature EntityManager::GetSignature(Entity entity)
