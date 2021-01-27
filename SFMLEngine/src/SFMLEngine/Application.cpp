@@ -16,13 +16,22 @@ namespace SFMLEngine
 
         m_Window = new sf::RenderWindow(sf::VideoMode(800, 600), "SFML window");
 
+        /*
+        ----------
+        SET UP ECS
+        ----------
+        */
 
         m_Coordinator = new Coordinator();
         m_Coordinator->Init();
 
+        // register components
         m_Coordinator->RegisterComponent<Transform>();
         m_Coordinator->RegisterComponent<SpriteRenderer>();
 
+        // register systems
+
+        // render system
         m_RenderSystem = m_Coordinator->RegisterSystem<RenderSystem>();
         m_RenderSystem->Init(m_Coordinator, m_Window);
 
@@ -32,6 +41,7 @@ namespace SFMLEngine
             signature.set(m_Coordinator->GetComponentType<SpriteRenderer>());
             m_Coordinator->SetSystemSignature<RenderSystem>(signature);
         }
+
     }
 
     Application::~Application()

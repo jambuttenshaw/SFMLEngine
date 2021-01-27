@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include "ScriptableEntity.h"
 
 
 namespace SFMLEngine {
@@ -16,7 +17,11 @@ namespace SFMLEngine {
 	{
 		sf::Sprite Sprite;
 		sf::Texture Texture;
+	};
 
+	struct NativeScripts
+	{
+		std::vector<ScriptableEntity> Scripts;
 	};
 
 }

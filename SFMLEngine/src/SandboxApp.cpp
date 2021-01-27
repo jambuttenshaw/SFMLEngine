@@ -26,7 +26,7 @@ public:
 		m_Scene->AddComponent(m_Entity, entityTransform);
 
 		sf::Texture spriteTexture;
-		if (!spriteTexture.loadFromFile("assets/texture.png"))
+		if (!spriteTexture.loadFromFile("assets/textures/texture.png"))
 			std::cout << "Failed to load texture!" << std::endl;
 		sf::Sprite entitySprite;
 		entitySprite.setTexture(spriteTexture);
