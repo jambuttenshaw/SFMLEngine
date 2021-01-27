@@ -36,7 +36,7 @@ namespace SFMLEngine {
 			for (auto const& entity : m_Entities)
 			{
 				auto& sRenderer = m_Coordinator->GetComponent<SpriteRenderer>(entity);
-
+				// sRenderer.Sprite.setTexture(sRenderer.Texture);
 				m_RenderTarget->draw(sRenderer.Sprite);
 			}
 		}

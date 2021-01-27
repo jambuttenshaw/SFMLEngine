@@ -15,6 +15,8 @@ namespace SFMLEngine {
 	struct SpriteRenderer
 	{
 		sf::Sprite Sprite;
+		sf::Texture Texture;
+
 	};
 
 }
