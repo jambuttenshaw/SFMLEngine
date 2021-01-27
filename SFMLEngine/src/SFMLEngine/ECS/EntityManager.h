@@ -16,6 +16,8 @@ namespace SFMLEngine {
 		Entity CreateEntity();
 		void DestroyEntity(Entity entity);
 
+		bool HasComponentInSignature(Entity entity, ComponentType component);
+
 		void SetSignature(Entity entity, Signature signature);
 		Signature GetSignature(Entity entity);
 

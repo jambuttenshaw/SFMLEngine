@@ -28,6 +28,7 @@ namespace SFMLEngine
         // register components
         m_Coordinator->RegisterComponent<Transform>();
         m_Coordinator->RegisterComponent<SpriteRenderer>();
+        m_Coordinator->RegisterComponent<NativeScripts>();
 
         // register systems
 
@@ -40,6 +41,16 @@ namespace SFMLEngine
             signature.set(m_Coordinator->GetComponentType<Transform>());
             signature.set(m_Coordinator->GetComponentType<SpriteRenderer>());
             m_Coordinator->SetSystemSignature<RenderSystem>(signature);
+        }
+
+        // native scripting system
+        m_ScriptableEntitySystem = m_Coordinator->RegisterSystem<ScriptableEntitySystem>();
+        m_ScriptableEntitySystem->Init(m_Coordinator);
+
+        {
+            Signature signature;
+            signature.set(m_Coordinator->GetComponentType<NativeScripts>());
+            m_Coordinator->SetSystemSignature<ScriptableEntitySystem>(signature);
         }
 
     }

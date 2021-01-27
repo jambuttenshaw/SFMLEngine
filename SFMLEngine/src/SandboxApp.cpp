@@ -3,6 +3,9 @@
 
 #include <SFML/Graphics.hpp>
 
+// scripts
+#include "Scripts/EntityScript.h"
+
 #include <iostream>
 
 using namespace SFMLEngine;
@@ -31,7 +34,7 @@ public:
 		sf::Sprite entitySprite;
 		entitySprite.setTexture(spriteTexture);
 		m_Scene->AddComponent(m_Entity, SpriteRenderer{ entitySprite, spriteTexture });
-			
+
 	}
 
 	~GameLayer()

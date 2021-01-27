@@ -72,6 +72,12 @@ namespace SFMLEngine {
 		}
 
 		template<typename T>
+		bool HasComponent(Entity entity)
+		{
+			return m_EntityManager->HasComponentInSignature(entity, m_ComponentManager->GetComponentType<T>());
+		}
+
+		template<typename T>
 		ComponentType GetComponentType()
 		{
 			return m_ComponentManager->GetComponentType<T>();

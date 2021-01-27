@@ -21,7 +21,7 @@ namespace SFMLEngine {
 
 	struct NativeScripts
 	{
-		std::vector<ScriptableEntity> Scripts;
+		std::vector<ScriptableEntity*> Scripts;
 	};
 
 }

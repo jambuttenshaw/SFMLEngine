@@ -38,6 +38,11 @@ namespace SFMLEngine {
 		--m_LivingEntityCount;
 	}
 
+	bool EntityManager::HasComponentInSignature(Entity entity, ComponentType component)
+	{
+		return m_Signatures[entity].test(component);
+	}
+
 	void EntityManager::SetSignature(Entity entity, Signature signature)
 	{
 		assert(entity < MAX_ENTITIES && "Entity out of range.");
