@@ -20,7 +20,7 @@ namespace SFMLEngine {
 				auto& nativeScriptComponent = m_Coordinator->GetComponent<NativeScripts>(entity);
 				for (auto script : nativeScriptComponent.Scripts)
 				{
-					delete script;
+					delete script.second;
 				}
 				nativeScriptComponent.Scripts.clear();
 			}
@@ -38,8 +38,8 @@ namespace SFMLEngine {
 			for (auto const& entity : m_Entities)
 			{
 				auto& scriptComponent = m_Coordinator->GetComponent<NativeScripts>(entity);
-				for (ScriptableEntity* script : scriptComponent.Scripts)
-					script->Start();
+				for (auto script : scriptComponent.Scripts)
+					script.second->Start();
 			}
 		}
 
@@ -48,23 +48,49 @@ namespace SFMLEngine {
 			for (auto const& entity : m_Entities)
 			{
 				auto& scriptComponent = m_Coordinator->GetComponent<NativeScripts>(entity);
-				for (ScriptableEntity* script : scriptComponent.Scripts)
-					script->Update(timestep);
+				for (auto script : scriptComponent.Scripts)
+					script.second->Update(timestep);
 			}
 		}
 
 		template<typename T>
 		T& AddNativeScript(Entity entity)
 		{
+			const char* typeName = typeid(T).name();
+
 			T* newScript = new T;
 			// check if the entity has a native scripts component
 			if (!m_Coordinator->HasComponent<NativeScripts>(entity))
 				m_Coordinator->AddComponent(entity, NativeScripts{});
 
 			auto& nativeScriptComponent = m_Coordinator->GetComponent<NativeScripts>(entity);
-			nativeScriptComponent.Scripts.push_back(dynamic_cast<ScriptableEntity*>(newScript));
+			nativeScriptComponent.Scripts.insert({ {typeName, dynamic_cast<ScriptableEntity*>(newScript)} });
 
 			return *newScript;
+		}
+
+		template<typename T>
+		void RemoveNativeScript(Entity entity)
+		{
+			const char* typeName = typeid(T).name();
+			auto& scripts = m_Coordinator->GetComponent<NativeScripts>(entity).Scripts;
+
+			assert(scripts.find(typeName) != scripts.end() && "Entity did not have script attatched!");
+
+			scripts.erase(typeName);
+		}
+
+		template<typename T>
+		T& GetNativeScript(Entity entity)
+		{
+			const char* typeName = typeid(T).name();
+			auto& scripts = m_Coordinator->GetComponent<NativeScripts>(entity).Scripts;
+
+			auto location = scripts.find(typeName);
+
+			assert(location != scripts.end() && "Entity did not have script attatched!");
+
+			return *scripts[location];
 		}
 
 	private:

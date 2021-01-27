@@ -21,7 +21,7 @@ namespace SFMLEngine {
 
 	struct NativeScripts
 	{
-		std::vector<ScriptableEntity*> Scripts;
+		std::unordered_map<const char*, ScriptableEntity*> Scripts;
 	};
 
 }

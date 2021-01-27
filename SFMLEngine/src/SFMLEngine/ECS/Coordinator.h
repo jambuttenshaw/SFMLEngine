@@ -42,7 +42,7 @@ namespace SFMLEngine {
 		}
 
 		template<typename T>
-		void AddComponent(Entity entity, T component)
+		T& AddComponent(Entity entity, T component)
 		{
 			m_ComponentManager->AddComponent<T>(entity, component);
 
@@ -51,6 +51,8 @@ namespace SFMLEngine {
 			m_EntityManager->SetSignature(entity, signature);
 
 			m_SystemManager->EntitySignatureChanged(entity, signature);
+
+			return component;
 		}
 
 		template<typename T>
