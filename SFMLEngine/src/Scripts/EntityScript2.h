@@ -4,8 +4,9 @@
 
 #include <iostream>
 
-class EntityScript : public SFMLEngine::ScriptableEntity
+class EntityScript2 : public SFMLEngine::ScriptableEntity
 {
+
 	void Start() override
 	{
 		// do something when the game starts
@@ -17,5 +18,5 @@ class EntityScript : public SFMLEngine::ScriptableEntity
 		// do something every frame
 
 	}
-	
+
 };

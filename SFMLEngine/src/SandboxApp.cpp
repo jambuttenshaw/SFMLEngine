@@ -5,6 +5,7 @@
 
 // scripts
 #include "Scripts/EntityScript.h"
+#include "Scripts/EntityScript2.h"
 
 #include <iostream>
 
@@ -19,23 +20,31 @@ public:
 		// create a new scene
 		m_Scene = Application::GetApplicationHandle()->CreateScene();
 
+
+		// create an entity
 		m_Entity = m_Scene->CreateEntity();
 
+
+		// give the entity a transform
 		Transform entityTransform{
 			sf::Vector2f(100, 100),
 			0,
 			sf::Vector2f(1, 1)
 		};
+		// add the component
 		m_Scene->AddComponent(m_Entity, entityTransform);
 
+		// load a texture
 		sf::Texture spriteTexture;
 		if (!spriteTexture.loadFromFile("assets/textures/texture.png"))
 			std::cout << "Failed to load texture!" << std::endl;
 		sf::Sprite entitySprite;
-		entitySprite.setTexture(spriteTexture);
+		// add the sprite renderer component
 		m_Scene->AddComponent(m_Entity, SpriteRenderer{ entitySprite, spriteTexture });
 
+		// add the scripts onto the entity
 		m_Scene->AddNativeScript<EntityScript>(m_Entity);
+		m_Scene->AddNativeScript<EntityScript2>(m_Entity);
 	}
 
 	~GameLayer()
