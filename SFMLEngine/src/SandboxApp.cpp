@@ -16,16 +16,22 @@ namespace SFMLEngine {
 			// create a new scene
 			m_Scene = Application::GetApplicationHandle()->CreateScene();
 
-			Entity entity = m_Scene->CreateEntity();
-			m_Scene->DestroyEntity(entity);
+			m_Entity = m_Scene->CreateEntity();
 		}
 
 		~GameLayer()
 		{
 		}
 
-		void GameLayer::OnAttach() {}
-		void GameLayer::OnDetach() {}
+		void GameLayer::OnAttach()
+		{
+		
+		}
+
+		void GameLayer::OnDetach()
+		{
+			m_Scene->DestroyEntity(m_Entity);
+		}
 
 		void GameLayer::OnEvent(sf::Event) {}
 
@@ -36,6 +42,7 @@ namespace SFMLEngine {
 
 	private:
 		std::shared_ptr<Scene> m_Scene;
+		Entity m_Entity;
 	};
 
 

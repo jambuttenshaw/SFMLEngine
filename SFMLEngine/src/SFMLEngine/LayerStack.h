@@ -15,6 +15,9 @@ namespace SFMLEngine {
 		void PopLayer(Layer* layer);
 		void PopOverlay(Layer* overlay);
 
+		inline size_t GetNumLayers() { return m_Layers.size(); }
+		inline Layer* GetLayer(int index) { return m_Layers[index]; }
+
 		std::vector<Layer*>::iterator begin() { return m_Layers.begin(); }
 		std::vector<Layer*>::iterator end() { return m_Layers.end(); }
 		std::vector<Layer*>::reverse_iterator rbegin() { return m_Layers.rbegin(); }

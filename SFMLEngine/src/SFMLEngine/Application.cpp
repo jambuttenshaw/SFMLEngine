@@ -90,6 +90,19 @@ namespace SFMLEngine
             // Update the window
             m_Window->display();
         }
+
+        Shutdown();
     }
+
+    void Application::Shutdown()
+    {
+        size_t numLayers = m_LayerStack.GetNumLayers();
+        for (size_t i = 0; i < numLayers; i++)
+        {
+            Layer* currentLayer = m_LayerStack.GetLayer(0);
+            m_LayerStack.PopLayer(currentLayer);
+        }
+    }
+
 
 }

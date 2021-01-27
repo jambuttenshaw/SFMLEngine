@@ -18,6 +18,8 @@ namespace SFMLEngine {
 
 		void Run();
 
+		void Shutdown();
+
 		void PushLayer(Layer* layer);
 		void PushOverlay(Layer* overlay);
 
