@@ -26,7 +26,7 @@ namespace SFMLEngine {
 
 		sf::RenderWindow* GetWindowHandle() { return m_Window; }
 
-		std::shared_ptr<Scene> CreateScene() { return std::make_shared<Scene>(m_Coordinator); }
+		std::shared_ptr<Scene> CreateScene() { return std::make_shared<Scene>(m_Coordinator, m_ScriptableEntitySystem); }
 
 	private:
 		sf::RenderWindow* m_Window;

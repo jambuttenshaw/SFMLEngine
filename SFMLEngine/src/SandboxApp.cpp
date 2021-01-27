@@ -35,6 +35,7 @@ public:
 		entitySprite.setTexture(spriteTexture);
 		m_Scene->AddComponent(m_Entity, SpriteRenderer{ entitySprite, spriteTexture });
 
+		m_Scene->AddNativeScript<EntityScript>(m_Entity);
 	}
 
 	~GameLayer()

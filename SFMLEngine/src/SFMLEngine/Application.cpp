@@ -75,6 +75,12 @@ namespace SFMLEngine
 
     void Application::Run()
     {
+
+        /*
+        start up the scriptable entities
+        */
+        m_ScriptableEntitySystem->Start();
+
         while (m_Window->isOpen())
         {
             // Process events
@@ -95,7 +101,7 @@ namespace SFMLEngine
             
 
             // Update the systems
-
+            m_ScriptableEntitySystem->Update(0);
 
             // update the render system last
             m_RenderSystem->Update(0);

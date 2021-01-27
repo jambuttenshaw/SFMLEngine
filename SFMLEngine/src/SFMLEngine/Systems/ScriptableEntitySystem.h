@@ -41,20 +41,13 @@ namespace SFMLEngine {
 		template<typename T>
 		T& AddNativeScript(Entity entity)
 		{
-			T newScript = new T;
+			T* newScript = new T;
 			// check if the entity has a native scripts component
-			if (m_Coordinator->HasComponent<NativeScripts>(entity))
-			{
-				// it already has a native script component
-				// we just need to add this new script to the vector of scripts attatched to this component
-				auto const& nativeScriptComponent = m_Coordinator->GetComponent<NativeScripts>(entity);
-				nativeScriptComponent.Scripts.push_back(newScript);
-			}
-			else
-			{
-				auto const& nativeScriptComponent = m_Coordinator->AddComponent(entity, NativeScripts{});
-				nativeScriptComponent.Scripts.push_back(newScript);
-			}
+			if (!m_Coordinator->HasComponent<NativeScripts>(entity))
+				m_Coordinator->AddComponent(entity, NativeScripts{});
+
+			auto& nativeScriptComponent = m_Coordinator->GetComponent<NativeScripts>(entity);
+			nativeScriptComponent.Scripts.push_back(dynamic_cast<ScriptableEntity*>(newScript));
 
 			return *newScript;
 		}
