@@ -2,6 +2,7 @@
 
 #include "ECS/Components.h"
 
+#include <iostream>
 
 namespace SFMLEngine
 {
@@ -29,9 +30,8 @@ namespace SFMLEngine
             Signature signature;
             signature.set(m_Coordinator->GetComponentType<Transform>());
             signature.set(m_Coordinator->GetComponentType<SpriteRenderer>());
-            m_Coordinator->SetSystemSignature<SpriteRenderer>(signature);
+            m_Coordinator->SetSystemSignature<RenderSystem>(signature);
         }
-
     }
 
     Application::~Application()

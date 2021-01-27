@@ -1,6 +1,5 @@
 workspace "SFMLEngine"
     architecture "x86_64"
-    startproject "Sandbox"
 
     configurations
     {
@@ -17,7 +16,7 @@ LibraryDir = {}
 LibraryDir["SFML"] = "%{wks.location}/SFMLEngine/vendor/SFML/lib"
 
 project "SFMLEngine"
-    kind "StaticLib"
+    kind "ConsoleApp"
     language "C++"
     cppdialect "C++17"
 		
@@ -78,50 +77,4 @@ project "SFMLEngine"
 			"sfml-graphics-s.lib",
 			"sfml-window-s.lib",
 			"sfml-system-s.lib"
-		}
-
-project "Sandbox"
-	kind "ConsoleApp"
-	language "C++"
-	cppdialect "C++17"
-
-	location("%{wks.location}/Sandbox")
-
-	targetdir ("%{wks.location}/bin/" .. outputdir .. "/%{prj.name}")
-	objdir ("%{wks.location}/bin-int/" .. outputdir .. "/%{prj.name}")
-
-	files
-	{
-		"Sandbox/src/**.h",
-		"Sandbox/src/**.cpp"
-	}
-
-	includedirs
-	{
-		"%{wks.location}/SFMLEngine/src",
-		"%{wks.location}/SFMLEngine/vendor/SFML/include"
-	}
-	
-	libdirs
-	{
-
-	}
-	
-	filter "system:windows"
-		systemversion "latest"
-
-	filter "configurations:Debug"
-		runtime "Debug"
-		symbols "on"
-		links
-		{
-			"SFMLEngine"
-		}
-
-	filter "configurations:Release"
-		runtime "Release"
-		optimize "on"
-		links
-		{
-			"SFMLEngine"
 		}
