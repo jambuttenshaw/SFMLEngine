@@ -1,5 +1,7 @@
 #include "Application.h"
 
+#include "ECS/Components.h"
+
 
 namespace SFMLEngine
 {
@@ -13,11 +15,28 @@ namespace SFMLEngine
 
         m_Window = new sf::RenderWindow(sf::VideoMode(800, 600), "SFML window");
 
+
+        m_Coordinator = new Coordinator();
+        m_Coordinator->Init();
+
+        m_Coordinator->RegisterComponent<Transform>();
+        m_Coordinator->RegisterComponent<SpriteRenderer>();
+
+        m_RenderSystem = m_Coordinator->RegisterSystem<RenderSystem>();
+        m_RenderSystem->Init(m_Coordinator, m_Window);
+
+        {
+            Signature signature;
+            signature.set(m_Coordinator->GetComponentType<SpriteRenderer>());
+            m_Coordinator->SetSystemSignature<SpriteRenderer>(signature);
+        }
+
     }
 
     Application::~Application()
     {
         delete m_Window;
+        delete m_Coordinator;
     }
 
     void Application::PushLayer(Layer* layer)

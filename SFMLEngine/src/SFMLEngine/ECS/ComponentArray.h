@@ -2,6 +2,7 @@
 
 #include "../Constants.h"
 
+#include <cassert>
 #include <unordered_map>
 
 namespace SFMLEngine {
@@ -23,7 +24,7 @@ namespace SFMLEngine {
 	public:
 		void InsertData(Entity entity, T component)
 		{
-			assert(mEntityToIndexMap.find(entity) == mEntityToIndexMap.end() && "Component added to same entity more than once.");
+			assert(m_EntityToIndexMap.find(entity) == m_EntityToIndexMap.end() && "Component added to same entity more than once.");
 
 			size_t newIndex = m_Size;
 
@@ -37,7 +38,7 @@ namespace SFMLEngine {
 
 		void RemoveData(Entity entity)
 		{
-			assert(mEntityToIndexMap.find(entity) != mEntityToIndexMap.end() && "Removing non-existent component.");
+			assert(m_EntityToIndexMap.find(entity) != m_EntityToIndexMap.end() && "Removing non-existent component.");
 
 			// copy element at end into deleted elements place to maintain tightly packed array
 			size_t indexOfRemovedEntity = m_EntityToIndexMap[entity];
@@ -59,7 +60,7 @@ namespace SFMLEngine {
 
 		T& GetData(Entity entity)
 		{
-			assert(mEntityToIndexMap.find(entity) != mEntityToIndexMap.end() && "Retrieving non-existent component.");
+			assert(m_EntityToIndexMap.find(entity) != m_EntityToIndexMap.end() && "Retrieving non-existent component.");
 
 			// return a reference to the entity's component
 			return m_ComponentArray[m_EntityToIndexMap[entity]];
@@ -68,7 +69,7 @@ namespace SFMLEngine {
 		void EntityDestroyed(Entity entity) override
 		{
 			// dont assert here, because its possible that we would be requested to remove an entities data that doesnt have data for this component
-			if (mEntityToIndexMap.find(entity) != mEntityToIndexMap.end())
+			if (m_EntityToIndexMap.find(entity) != m_EntityToIndexMap.end())
 			{
 				// Remove the entity's component if it existed
 				RemoveData(entity);
@@ -88,7 +89,7 @@ namespace SFMLEngine {
 
 
 		// total size of valid entries in the array
-		size_t m_Size;
+		size_t m_Size = 0;
 	};
 
 }

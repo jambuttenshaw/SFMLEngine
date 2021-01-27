@@ -8,8 +8,13 @@ namespace SFMLEngine {
 	struct Transform 
 	{
 		sf::Vector2f Position;
-		float Rotation;
+		float Rotation = 0.0f;
 		sf::Vector2f Scale;
+	};
+
+	struct SpriteRenderer
+	{
+		sf::Sprite Sprite;
 	};
 
 }
