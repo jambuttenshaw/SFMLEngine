@@ -33,7 +33,9 @@ namespace SFMLEngine {
 			m_Coordinator = coordinator;
 		}
 
-		void EntityAddedToSystem(Entity entity) override {}
+		void EntityAddedToSystem(Entity entity) override
+		{
+		}
 
 		void Start()
 		{
@@ -65,6 +67,9 @@ namespace SFMLEngine {
 			ScriptableEntity* scriptableEntity = dynamic_cast<ScriptableEntity*>(newScript);
 			scriptableEntity->SetSceneHandle(scene);
 			scriptableEntity->SetEntityHandle(entity);
+
+			// call awake on the ScriptableEntity
+			scriptableEntity->Awake();
 
 			// check if the entity has a native scripts component
 			if (!m_Coordinator->HasComponent<NativeScripts>(entity))
