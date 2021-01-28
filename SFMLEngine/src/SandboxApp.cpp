@@ -25,7 +25,7 @@ public:
 
 			// give the entity a transform
 			Transform entityTransform{
-				sf::Vector2f(100, 100),
+				sf::Vector2f(50, 50),
 				0,
 				sf::Vector2f(1, 1)
 			};
@@ -37,7 +37,7 @@ public:
 			
 			sf::Sprite entitySprite;
 			// add the sprite renderer component
-			m_Scene->AddComponent(m_Entity, SpriteRenderer{ entitySprite, spriteTexture, 1 });
+			m_Scene->AddComponent(m_Entity, SpriteRenderer{ spriteTexture, 1 });
 
 			// add the scripts onto the entity
 			m_Scene->AddNativeScript<EntityScript>(m_Entity);
@@ -50,11 +50,8 @@ public:
 
 
 			// give the entity a transform
-			Transform entityTransform{
-				sf::Vector2f(132, 132),
-				0,
-				sf::Vector2f(1, 1)
-			};
+			// this time a default transform
+			Transform entityTransform{};
 			// add the component
 			m_Scene->AddComponent(m_Entity2, entityTransform);
 
@@ -63,7 +60,7 @@ public:
 
 			sf::Sprite entitySprite;
 			// add the sprite renderer component
-			m_Scene->AddComponent(m_Entity2, SpriteRenderer{ entitySprite, spriteTexture, 0 });
+			m_Scene->AddComponent(m_Entity2, SpriteRenderer{ spriteTexture, 0 });
 		}
 	}
 

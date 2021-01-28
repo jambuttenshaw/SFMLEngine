@@ -44,5 +44,7 @@ namespace SFMLEngine {
 	// and they dont inherit from a common base class
 	using ResourceHandle = void*;
 
+	// in case a texture wasnt, or couldnt be, loaded
+	const ResourceID NULL_RESOURCE_ID = MAX_RESOURCES + 1;
 
 }

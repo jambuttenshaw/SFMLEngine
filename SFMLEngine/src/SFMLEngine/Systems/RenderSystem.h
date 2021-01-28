@@ -26,7 +26,14 @@ namespace SFMLEngine {
 		void EntityAddedToSystem(Entity entity) override
 		{
 			auto& sRenderer = m_Coordinator->GetComponent<SpriteRenderer>(entity);
-			sRenderer.Sprite.setTexture(*ResourceManager::GetResourceHandle<sf::Texture>(sRenderer.TextureHandle));
+			if (sRenderer.TextureHandle != NULL_RESOURCE_ID)
+			{
+				sRenderer.Sprite.setTexture(*ResourceManager::GetResourceHandle<sf::Texture>(sRenderer.TextureHandle));
+			}
+			else
+			{
+				LOG_WARN("No texture was supplied for entity ID {0}", entity);
+			}
 		}
 
 		void Update()

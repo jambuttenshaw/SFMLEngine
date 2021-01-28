@@ -27,7 +27,7 @@ namespace SFMLEngine {
 				// error- resource could not be loaded from file
 				LOG_ERROR("Resource could not be loaded from {0}", filepath);
 				delete resource;
-				return 0;
+				return NULL_RESOURCE_ID;
 			}
 
 			// create a new ID for the resource
