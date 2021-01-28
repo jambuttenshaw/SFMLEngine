@@ -74,6 +74,17 @@ namespace SFMLEngine {
 		}
 
 		template<typename T>
+		std::vector<T> GetComponents(std::set<Entity> entities)
+		{
+			std::vector<T> components;
+			for (auto const& entity : entities)
+			{
+				components.push_back(m_ComponentManager->GetComponent<T>(entity));
+			}
+			return components;
+		}
+
+		template<typename T>
 		bool HasComponent(Entity entity)
 		{
 			return m_EntityManager->HasComponentInSignature(entity, m_ComponentManager->GetComponentType<T>());

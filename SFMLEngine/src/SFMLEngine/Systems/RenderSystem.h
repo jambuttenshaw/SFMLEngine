@@ -5,6 +5,8 @@
 #include "../ECS/Coordinator.h"
 #include "../ECS/Components.h"
 
+#include <algorithm>
+
 namespace SFMLEngine {
 
 	class RenderSystem : public System
@@ -40,10 +42,16 @@ namespace SFMLEngine {
 
 		void Render()
 		{
-			for (auto const& entity : m_Entities)
+			auto components = m_Coordinator->GetComponents<SpriteRenderer>(m_Entities);
+
+			// sort components by the draw order
+			std::sort(components.begin(), components.end(),
+				[](const SpriteRenderer& a, const SpriteRenderer& b) -> bool
+				{ return a.OrderInLayer < b.OrderInLayer; });
+
+			for (const auto& c : components)
 			{
-				auto& sRenderer = m_Coordinator->GetComponent<SpriteRenderer>(entity);
-				m_RenderTarget->draw(sRenderer.Sprite);
+				m_RenderTarget->draw(c.Sprite);
 			}
 		}
 

@@ -71,7 +71,6 @@ namespace SFMLEngine {
 			}
 		}
 
-
 	private:
 		std::unordered_map<const char*, Signature> m_Signatures{};
 

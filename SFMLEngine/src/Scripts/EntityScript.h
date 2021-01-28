@@ -16,7 +16,7 @@ public:
 	void Update(Timestep ts) override
 	{
 		// do something every frame
-		m_Transform->Position += (float)ts * sf::Vector2f(50, 20);
+		// m_Transform->Position += (float)ts * sf::Vector2f(50, 20);
 	}
 
 private:

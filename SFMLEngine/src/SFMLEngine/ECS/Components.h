@@ -17,6 +17,7 @@ namespace SFMLEngine {
 	{
 		sf::Sprite Sprite;
 		sf::Texture Texture;
+		int OrderInLayer;
 	};
 
 	struct NativeScripts

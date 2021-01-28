@@ -97,6 +97,7 @@ namespace SFMLEngine
                     m_Window->close();
                 else
                 {
+                    // send event callback through to the layer stack
                     for (Layer* layer : m_LayerStack)
                     {
                         layer->OnEvent(event);
