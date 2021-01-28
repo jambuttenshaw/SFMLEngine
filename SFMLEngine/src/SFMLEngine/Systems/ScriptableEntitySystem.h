@@ -4,6 +4,8 @@
 #include "../ECS/Components.h"
 #include "../ECS/System.h"
 
+#include "../Timestep.h"
+
 namespace SFMLEngine {
 
 	class ScriptableEntitySystem : public System
@@ -43,13 +45,13 @@ namespace SFMLEngine {
 			}
 		}
 
-		void Update(float timestep)
+		void Update(Timestep ts)
 		{
 			for (auto const& entity : m_Entities)
 			{
 				auto& scriptComponent = m_Coordinator->GetComponent<NativeScripts>(entity);
 				for (auto script : scriptComponent.Scripts)
-					script.second->Update(timestep);
+					script.second->Update(ts);
 			}
 		}
 

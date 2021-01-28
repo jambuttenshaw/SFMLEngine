@@ -2,6 +2,8 @@
 
 #include <SFML/Graphics.hpp>
 
+#include "Timestep.h"
+
 namespace SFMLEngine {
 
 	class Layer
@@ -9,7 +11,7 @@ namespace SFMLEngine {
 	public:
 		virtual ~Layer() {};
 
-		virtual void Update(float timestep) = 0;
+		virtual void Update(Timestep ts) = 0;
 
 		virtual void OnEvent(sf::Event event) = 0;
 

@@ -61,7 +61,7 @@ public:
 
 	void GameLayer::OnEvent(sf::Event) {}
 
-	void GameLayer::Update(float timestep)
+	void GameLayer::Update(Timestep ts)
 	{
 
 	}

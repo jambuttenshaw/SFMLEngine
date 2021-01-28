@@ -31,6 +31,8 @@ namespace SFMLEngine {
 	private:
 		sf::RenderWindow* m_Window;
 
+		sf::Clock m_Clock;
+
 		LayerStack m_LayerStack;
 
 		// ECS

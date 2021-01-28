@@ -25,7 +25,7 @@ namespace SFMLEngine {
 			sRenderer.Sprite.setTexture(sRenderer.Texture);
 		}
 
-		void Update(float timestep)
+		void Update()
 		{
 			for (auto const& entity : m_Entities)
 			{

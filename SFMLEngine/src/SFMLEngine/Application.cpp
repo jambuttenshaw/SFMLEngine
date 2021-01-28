@@ -1,6 +1,7 @@
 #include "Application.h"
 
 #include "ECS/Components.h"
+#include "Timestep.h"
 
 #include <iostream>
 
@@ -15,6 +16,7 @@ namespace SFMLEngine
             s_Instance = this;
 
         m_Window = new sf::RenderWindow(sf::VideoMode(800, 600), "SFML window");
+        m_Window->setFramerateLimit(60);
 
         /*
         ----------
@@ -84,6 +86,8 @@ namespace SFMLEngine
 
         while (m_Window->isOpen())
         {
+            Timestep ts(m_Clock.restart().asSeconds());
+
             // Process events
             sf::Event event;
             while (m_Window->pollEvent(event))
@@ -100,12 +104,20 @@ namespace SFMLEngine
                 }
             }
             
+            // update the layers
+            for (Layer* layer : m_LayerStack)
+            {
+                layer->Update(ts);
+            }
 
             // Update the systems
-            m_ScriptableEntitySystem->Update(0);
+            m_ScriptableEntitySystem->Update(ts);
 
             // update the render system last
-            m_RenderSystem->Update(0);
+            // the render system doesnt require a time step
+            // as it is just applying any changes to the transforms
+            // to the sprites
+            m_RenderSystem->Update();
 
 
 

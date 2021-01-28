@@ -2,23 +2,24 @@
 
 #include "../SFMLEngine.h"
 
+using namespace SFMLEngine;
 
-class EntityScript : public SFMLEngine::ScriptableEntity
+class EntityScript : public ScriptableEntity
 {
 public:
 	void Start() override
 	{
 		// do something when the game starts
-		m_Transform = &GetComponent<SFMLEngine::Transform>();
+		m_Transform = &GetComponent<Transform>();
 	}
 
-	void Update(float timestep) override
+	void Update(Timestep ts) override
 	{
 		// do something every frame
-		m_Transform->Position += sf::Vector2f(1, 0);
+		m_Transform->Position += (float)ts * sf::Vector2f(50, 20);
 	}
 
 private:
-	SFMLEngine::Transform* m_Transform;
+	Transform* m_Transform;
 
 };

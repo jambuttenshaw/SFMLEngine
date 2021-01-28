@@ -1,6 +1,9 @@
 #pragma once
 
 #include "../Constants.h"
+#include "../Timestep.h"
+
+#include <SFML/System.hpp>
 
 
 namespace SFMLEngine {
@@ -15,7 +18,7 @@ namespace SFMLEngine {
 		virtual void Awake() {};
 		virtual void Start() {};
 
-		virtual void Update(float timestep) {};
+		virtual void Update(Timestep ts) {};
 
 		// components
 		template<typename T>
