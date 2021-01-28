@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ECS/Coordinator.h"
+#include "Systems/ScriptableEntitySystem.h"
 
 namespace SFMLEngine {
 
@@ -25,7 +26,7 @@ namespace SFMLEngine {
 		
 		// NATIVE SCRIPTING
 		template<typename T>
-		T& AddNativeScript(Entity entity) { return m_ScriptableEntitySystem->AddNativeScript<T>(entity); }
+		T& AddNativeScript(Entity entity) { return m_ScriptableEntitySystem->AddNativeScript<T>(entity, this); }
 		template<typename T>
 		void RemoveNativeScript(Entity entity) { m_ScriptableEntitySystem->RemoveNativeScript<T>(entity); }
 		template<typename T>

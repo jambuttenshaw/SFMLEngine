@@ -5,7 +5,6 @@
 
 // scripts
 #include "Scripts/EntityScript.h"
-#include "Scripts/EntityScript2.h"
 
 #include <iostream>
 
@@ -44,7 +43,6 @@ public:
 
 		// add the scripts onto the entity
 		m_Scene->AddNativeScript<EntityScript>(m_Entity);
-		m_Scene->AddNativeScript<EntityScript2>(m_Entity);
 	}
 
 	~GameLayer()

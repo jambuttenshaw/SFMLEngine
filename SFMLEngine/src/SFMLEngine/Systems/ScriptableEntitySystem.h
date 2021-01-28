@@ -54,17 +54,22 @@ namespace SFMLEngine {
 		}
 
 		template<typename T>
-		T& AddNativeScript(Entity entity)
+		T& AddNativeScript(Entity entity, void* scene)
 		{
 			const char* typeName = typeid(T).name();
 
 			T* newScript = new T;
+
+			ScriptableEntity* scriptableEntity = dynamic_cast<ScriptableEntity*>(newScript);
+			scriptableEntity->SetSceneHandle(scene);
+			scriptableEntity->SetEntityHandle(entity);
+
 			// check if the entity has a native scripts component
 			if (!m_Coordinator->HasComponent<NativeScripts>(entity))
 				m_Coordinator->AddComponent(entity, NativeScripts{});
 
 			auto& nativeScriptComponent = m_Coordinator->GetComponent<NativeScripts>(entity);
-			nativeScriptComponent.Scripts.insert({ {typeName, dynamic_cast<ScriptableEntity*>(newScript)} });
+			nativeScriptComponent.Scripts.insert({ {typeName, scriptableEntity} });
 
 			return *newScript;
 		}
