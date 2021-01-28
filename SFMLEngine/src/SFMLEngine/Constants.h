@@ -40,5 +40,9 @@ namespace SFMLEngine {
 	// the maximum number of resources the manager can manage
 	const ResourceID MAX_RESOURCES = 5000;
 
+	// since we store lots of different types of resources
+	// and they dont inherit from a common base class
+	using ResourceHandle = void*;
+
 
 }

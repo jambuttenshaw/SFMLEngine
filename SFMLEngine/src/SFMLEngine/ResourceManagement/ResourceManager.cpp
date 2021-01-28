@@ -4,6 +4,7 @@
 namespace SFMLEngine {
 
 	// initialize static members
+	std::queue<ResourceID> ResourceManager::s_AvailableResourceIDs;
 	size_t ResourceManager::s_LivingResourceCount = 0;
 
 	void ResourceManager::Init()
