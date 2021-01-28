@@ -6,7 +6,6 @@
 // scripts
 #include "Scripts/EntityScript.h"
 
-#include <iostream>
 
 using namespace SFMLEngine;
 

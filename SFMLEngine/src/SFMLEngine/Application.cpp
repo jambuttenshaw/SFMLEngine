@@ -4,7 +4,7 @@
 #include "Timestep.h"
 #include "ResourceManagement/ResourceManager.h"
 
-#include <iostream>
+#include "Log.h"
 
 namespace SFMLEngine
 {
@@ -18,6 +18,11 @@ namespace SFMLEngine
 
         m_Window = new sf::RenderWindow(sf::VideoMode(800, 600), "SFML window");
         m_Window->setFramerateLimit(60);
+
+        // Output the context settings and shader capabilities of the hardware
+        const auto& contextSettings = m_Window->getSettings();
+        LOG_CORE_INFO("OpenGL Version: {0}.{1}", contextSettings.majorVersion, contextSettings.minorVersion);
+        LOG_CORE_INFO("Shaders Supported: {0}", (sf::Shader::isAvailable() ? "True" : "False"));
 
         /*
         --------------------------

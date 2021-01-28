@@ -1,7 +1,6 @@
 #include "EntityManager.h"
 
 #include <cassert>
-#include <iostream>
 
 namespace SFMLEngine {
 

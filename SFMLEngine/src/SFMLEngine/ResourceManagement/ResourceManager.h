@@ -1,11 +1,11 @@
 #pragma once
 
 #include "../Constants.h"
+#include "../Log.h"
 
 #include <cassert>
 #include <queue>
 #include <unordered_map>
-#include <iostream>
 
 
 namespace SFMLEngine {
@@ -25,7 +25,7 @@ namespace SFMLEngine {
 			if (!resource->loadFromFile(filepath))
 			{
 				// error- resource could not be loaded from file
-				std::cout << "Error: Resource could not be loaded from " << filepath << std::endl;
+				LOG_ERROR("Resource could not be loaded from {0}", filepath);
 				delete resource;
 				return 0;
 			}
