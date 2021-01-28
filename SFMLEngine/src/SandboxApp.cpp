@@ -37,6 +37,7 @@ public:
 			sf::Texture spriteTexture;
 			if (!spriteTexture.loadFromFile("assets/textures/texture.png"))
 				std::cout << "Failed to load texture!" << std::endl;
+			std::cout << "texture created" << std::endl;
 			sf::Sprite entitySprite;
 			// add the sprite renderer component
 			m_Scene->AddComponent(m_Entity, SpriteRenderer{ entitySprite, spriteTexture, 1 });
