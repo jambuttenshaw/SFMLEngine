@@ -11,6 +11,7 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 IncludeDir = {}
 IncludeDir["SFML"] = "%{wks.location}/SFMLEngine/vendor/SFML/include"
+IncludeDir["spdlog"] = "%{wks.location}/SFMLEngine/vendor/spdlog/include"
 
 LibraryDir = {}
 LibraryDir["SFML"] = "%{wks.location}/SFMLEngine/vendor/SFML/lib"
@@ -39,7 +40,8 @@ project "SFMLEngine"
 	includedirs
 	{
 		"src",
-		"%{IncludeDir.SFML}"
+		"%{IncludeDir.SFML}",
+		"%{IncludeDir.spdlog}"
 	}
 	
 	libdirs

@@ -5,6 +5,8 @@ extern SFMLEngine::Application* SFMLEngine::CreateApplication();
 int main(int argc, char** argv)
 {
 
+	SFMLEngine::Log::Init();
+
 	SFMLEngine::Application* app = SFMLEngine::CreateApplication();
 
 	app->Run();
