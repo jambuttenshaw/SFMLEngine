@@ -2,6 +2,7 @@
 
 #include "ECS/Components.h"
 #include "Timestep.h"
+#include "ResourceManagement/ResourceManager.h"
 
 #include <iostream>
 
@@ -17,7 +18,16 @@ namespace SFMLEngine
 
         m_Window = new sf::RenderWindow(sf::VideoMode(800, 600), "SFML window");
         m_Window->setFramerateLimit(60);
-        std::cout << "window created" << std::endl;
+
+        /*
+        --------------------------
+        SET UP RESOURCE MANAGEMENT
+        --------------------------
+        */
+
+        ResourceManager::Init();
+
+
         /*
         ----------
         SET UP ECS

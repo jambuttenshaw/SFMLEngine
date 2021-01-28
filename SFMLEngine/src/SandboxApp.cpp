@@ -34,10 +34,8 @@ public:
 			m_Scene->AddComponent(m_Entity, entityTransform);
 
 			// load a texture
-			sf::Texture spriteTexture;
-			if (!spriteTexture.loadFromFile("assets/textures/texture.png"))
-				std::cout << "Failed to load texture!" << std::endl;
-			std::cout << "texture created" << std::endl;
+			ResourceID spriteTexture = ResourceManager::LoadFromFile<sf::Texture>("assets/textures/texture.png");
+			
 			sf::Sprite entitySprite;
 			// add the sprite renderer component
 			m_Scene->AddComponent(m_Entity, SpriteRenderer{ entitySprite, spriteTexture, 1 });
@@ -62,9 +60,8 @@ public:
 			m_Scene->AddComponent(m_Entity2, entityTransform);
 
 			// load a texture
-			sf::Texture spriteTexture;
-			if (!spriteTexture.loadFromFile("assets/textures/texture2.png"))
-				std::cout << "Failed to load texture!" << std::endl;
+			ResourceID spriteTexture = ResourceManager::LoadFromFile<sf::Texture>("assets/textures/texture2.png");
+
 			sf::Sprite entitySprite;
 			// add the sprite renderer component
 			m_Scene->AddComponent(m_Entity2, SpriteRenderer{ entitySprite, spriteTexture, 0 });

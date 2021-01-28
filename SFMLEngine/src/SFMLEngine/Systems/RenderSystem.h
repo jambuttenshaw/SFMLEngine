@@ -5,6 +5,8 @@
 #include "../ECS/Coordinator.h"
 #include "../ECS/Components.h"
 
+#include "../ResourceManagement/ResourceManager.h"
+
 #include <algorithm>
 
 namespace SFMLEngine {
@@ -24,7 +26,7 @@ namespace SFMLEngine {
 		void EntityAddedToSystem(Entity entity) override
 		{
 			auto& sRenderer = m_Coordinator->GetComponent<SpriteRenderer>(entity);
-			sRenderer.Sprite.setTexture(sRenderer.Texture);
+			sRenderer.Sprite.setTexture(*ResourceManager::GetResourceHandle<sf::Texture>(sRenderer.TextureHandle));
 		}
 
 		void Update()

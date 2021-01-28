@@ -6,4 +6,8 @@
 #include "SFMLEngine/Scene.h"
 #include "SFMLEngine/Timestep.h"
 
+// Resource Management
+#include "SFMLEngine/ResourceManagement/ResourceManager.h"
+
+// ECS
 #include "SFMLEngine/ECS/Components.h"

@@ -22,7 +22,7 @@ namespace SFMLEngine {
 			T* resource = new T;
 			
 			// load if from the file
-			if (!T::loadFromFile(filepath))
+			if (!resource->loadFromFile(filepath))
 			{
 				// error- resource could not be loaded from file
 				std::cout << "Error: Resource could not be loaded from " << filepath << std::endl;
@@ -47,7 +47,7 @@ namespace SFMLEngine {
 			// make sure that we actually found a resource associated with that ID
 			assert(location != s_Resources.end() && "Invalid ResourceID: no resource could be found!");
 
-			delete s_Resources[location];
+			delete static_cast<T*>(s_Resources.at(location));
 			s_Resources.erase(location);
 		}
 
@@ -62,7 +62,7 @@ namespace SFMLEngine {
 
 			// cast the resource then return it
 			// resources are stored in the map as ResourceHandle's, which are just void*
-			return dynamic_cast<T*>(s_Resources[location]);
+			return static_cast<T*>(s_Resources.at(resourceID));
 		}
 
 	private:

@@ -1,7 +1,9 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+
 #include "ScriptableEntity.h"
+#include "../ResourceManagement/ResourceManager.h"
 
 
 namespace SFMLEngine {
@@ -16,7 +18,7 @@ namespace SFMLEngine {
 	struct SpriteRenderer
 	{
 		sf::Sprite Sprite;
-		sf::Texture Texture;
+		ResourceID TextureHandle;
 		int OrderInLayer;
 	};
 
