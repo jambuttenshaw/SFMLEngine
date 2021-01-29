@@ -2,7 +2,9 @@
 
 #include "ECS/Components.h"
 #include "Timestep.h"
+
 #include "ResourceManagement/ResourceManager.h"
+#include "Renderer/Renderer.h"
 
 #include "Log.h"
 
@@ -24,6 +26,16 @@ namespace SFMLEngine
 
         ResourceManager::Init();
 
+        /*
+        ------------------------
+        SET UP RENDERER & WINDOW
+        ------------------------
+        */
+
+        auto const& contextSettings = Renderer::Init();
+
+        m_Window = new sf::RenderWindow(sf::VideoMode(800, 600), "SFML window", sf::Style::Default, contextSettings);
+        m_Window->setFramerateLimit(60);
 
         /*
         ----------
@@ -43,7 +55,7 @@ namespace SFMLEngine
 
         // render system
         m_RenderSystem = m_Coordinator->RegisterSystem<RenderSystem>();
-        m_Window = m_RenderSystem->Init(m_Coordinator);
+        m_RenderSystem->Init(m_Coordinator, m_Window);
 
         {
             Signature signature;
