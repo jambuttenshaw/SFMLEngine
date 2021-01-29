@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include <SFML/OpenGL.hpp>
 
 #include "../ECS/Coordinator.h"
 #include "../ECS/Components.h"
@@ -15,13 +16,52 @@ namespace SFMLEngine {
 	{
 	public:
 		RenderSystem() = default;
-		~RenderSystem() = default;
+		~RenderSystem()
+		{
+			delete m_ContextSettings;
+		}
 		
-		void Init(Coordinator* coordinator, sf::RenderTarget* target)
+		sf::RenderWindow* Init(Coordinator* coordinator)
 		{
 			m_Coordinator = coordinator;
-			m_RenderTarget = target;
+			
+			// create the context settings
+			m_ContextSettings = new sf::ContextSettings();
+			m_ContextSettings->depthBits = 24;
+			m_ContextSettings->majorVersion = 3;
+			m_ContextSettings->minorVersion = 4;
+			
+
+			m_RenderWindow = new sf::RenderWindow(sf::VideoMode(800, 600), "SFML window", sf::Style::Default, *m_ContextSettings);
+			m_RenderWindow->setFramerateLimit(60);
+
+
+			// Output the context settings and shader capabilities of the hardware
+			LOG_CORE_INFO("OpenGL Version: {0}.{1}", m_ContextSettings->majorVersion, m_ContextSettings->minorVersion);
+			LOG_CORE_INFO("Shaders Supported: {0}", (sf::Shader::isAvailable() ? "True" : "False"));
+			LOG_CORE_INFO("Size allocated to depth buffer: {0} bits", m_ContextSettings->depthBits);
+
+			
+			// set up OpenGL
+			m_RenderWindow->setActive();
+
+			glDepthFunc(GL_LEQUAL);
+
+			m_RenderWindow->setActive(false);
+			
+
+			// load the shader
+			m_Shader = ResourceManager::LoadFromFile<sf::Shader>("assets/shaders/Basic.vert", "assets/shaders/Basic.frag");
+
+			return m_RenderWindow;
 		}
+
+		sf::ContextSettings& GetContextSettings()
+		{
+			return *m_ContextSettings;
+		}
+
+		void SetWindowHandle(sf::RenderWindow* window) { m_RenderWindow = window; }
 
 		void EntityAddedToSystem(Entity entity) override
 		{
@@ -34,6 +74,7 @@ namespace SFMLEngine {
 			{
 				LOG_WARN("No texture was supplied for entity ID {0}", entity);
 			}
+			m_MaxOrderInLayer = std::max(m_MaxOrderInLayer, abs(sRenderer.OrderInLayer));
 		}
 
 		void Update()
@@ -53,20 +94,37 @@ namespace SFMLEngine {
 		{
 			auto components = m_Coordinator->GetComponents<SpriteRenderer>(m_Entities);
 
-			// sort components by the draw order
-			std::sort(components.begin(), components.end(),
-				[](const SpriteRenderer& a, const SpriteRenderer& b) -> bool
-				{ return a.OrderInLayer < b.OrderInLayer; });
+			m_RenderWindow->setActive();
+
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			glEnable(GL_DEPTH_TEST);
+
+			auto shader = ResourceManager::GetResourceHandle<sf::Shader>(m_Shader);
+
+			// we do not want to divide by 0
+			float normalizeFactor = m_MaxOrderInLayer == 0 ? 1.0f : (float)m_MaxOrderInLayer;
 
 			for (const auto& c : components)
 			{
-				m_RenderTarget->draw(c.Sprite);
+				// set shader uniforms
+				shader->setUniform("u_DepthValue", (float)c.OrderInLayer / normalizeFactor);
+
+				m_RenderWindow->draw(c.Sprite, shader);
 			}
+
+			m_RenderWindow->setActive(false);
 		}
 
 	private:
 		Coordinator* m_Coordinator = nullptr;
-		sf::RenderTarget* m_RenderTarget = nullptr;
+		sf::RenderWindow* m_RenderWindow = nullptr;
+
+		sf::ContextSettings* m_ContextSettings = nullptr;
+
+		// the shader used to render sprites
+		ResourceID m_Shader = NULL_RESOURCE_ID;
+
+		int m_MaxOrderInLayer = 0;
 	};
 
 }

@@ -16,14 +16,6 @@ namespace SFMLEngine
         if (!s_Instance)
             s_Instance = this;
 
-        m_Window = new sf::RenderWindow(sf::VideoMode(800, 600), "SFML window");
-        m_Window->setFramerateLimit(60);
-
-        // Output the context settings and shader capabilities of the hardware
-        const auto& contextSettings = m_Window->getSettings();
-        LOG_CORE_INFO("OpenGL Version: {0}.{1}", contextSettings.majorVersion, contextSettings.minorVersion);
-        LOG_CORE_INFO("Shaders Supported: {0}", (sf::Shader::isAvailable() ? "True" : "False"));
-
         /*
         --------------------------
         SET UP RESOURCE MANAGEMENT
@@ -51,7 +43,7 @@ namespace SFMLEngine
 
         // render system
         m_RenderSystem = m_Coordinator->RegisterSystem<RenderSystem>();
-        m_RenderSystem->Init(m_Coordinator, m_Window);
+        m_Window = m_RenderSystem->Init(m_Coordinator);
 
         {
             Signature signature;
@@ -70,7 +62,6 @@ namespace SFMLEngine
             signature.set(m_Coordinator->GetComponentType<NativeScripts>());
             m_Coordinator->SetSystemSignature<ScriptableEntitySystem>(signature);
         }
-
     }
 
     Application::~Application()

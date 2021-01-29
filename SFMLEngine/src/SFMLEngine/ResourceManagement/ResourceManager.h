@@ -41,6 +41,31 @@ namespace SFMLEngine {
 		}
 
 		template<typename T>
+		static ResourceID LoadFromFile(const std::string& filepath1, const std::string& filepath2)
+		{
+			// create a new instance of the resource
+			T* resource = new T;
+
+			// load if from the file
+			if (!resource->loadFromFile(filepath1, filepath2))
+			{
+				// error- resource could not be loaded from file
+				LOG_ERROR("Resource could not be loaded from files: {0} {1}", filepath1, filepath2);
+				delete resource;
+				return NULL_RESOURCE_ID;
+			}
+
+			// create a new ID for the resource
+			ResourceID newID = GetNextID();
+
+			// add the pointer to the resource into the resource manager
+			s_Resources.insert(std::make_pair(newID, static_cast<ResourceHandle>(resource)));
+
+			// return the ID used to access the resource
+			return newID;
+		}
+
+		template<typename T>
 		static void DeleteResource(ResourceID resourceID)
 		{
 			auto location = s_Resources.find(resourceID);
