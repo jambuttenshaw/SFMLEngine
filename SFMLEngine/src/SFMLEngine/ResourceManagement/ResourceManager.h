@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../Constants.h"
-#include "../Log.h"
+#include "../Core.h"
 
 #include <queue>
 #include <unordered_map>
@@ -25,8 +25,9 @@ namespace SFMLEngine {
 			if (!resource->loadFromFile(filepath))
 			{
 				// error- resource could not be loaded from file
-				LOG_ERROR("Resource could not be loaded from {0}", filepath);
 				delete resource;
+				LOG_CORE_ERROR("Resource could not be loaded from {0}", filepath);
+				SFMLE_CORE_ASSERT(0, "Resource load failure".);
 				return NULL_RESOURCE_ID;
 			}
 
@@ -50,8 +51,9 @@ namespace SFMLEngine {
 			if (!resource->loadFromFile(filepath1, filepath2))
 			{
 				// error- resource could not be loaded from file
-				LOG_ERROR("Resource could not be loaded from files: {0} {1}", filepath1, filepath2);
 				delete resource;
+				LOG_CORE_ERROR("Resource could not be loaded from files : {0} {1}", filepath1, filepath2);
+				SFMLE_CORE_ASSERT(0, "Resource load failure.");
 				return NULL_RESOURCE_ID;
 			}
 
@@ -69,12 +71,9 @@ namespace SFMLEngine {
 		static void DeleteResource(ResourceID resourceID)
 		{
 			auto location = s_Resources.find(resourceID);
+			
 			// make sure that we actually found a resource associated with that ID
-			if (location == s_Resources.end())
-			{
-				LOG_CORE_ERROR("Invalid Resource ID {0}: no resource could be found!", resourceID);
-				return;
-			}
+			SFMLE_CORE_ASSERT(location != s_Resources.end(), "Invalid Resource ID: no resource could be found!");
 
 			delete static_cast<T*>(s_Resources.at(resourceID));
 			s_Resources.erase(location);
@@ -87,11 +86,7 @@ namespace SFMLEngine {
 			auto location = s_Resources.find(resourceID);
 
 			// make sure that we actually found a resource associated with that ID
-			if (location == s_Resources.end())
-			{
-				LOG_CORE_ERROR("Invalid Resource ID {0}: no resource could be found!", resourceID);
-				return nullptr;
-			}
+			SFMLE_CORE_ASSERT(location != s_Resources.end(), "Invalid Resource ID: no resource could be found!");
 
 			// cast the resource then return it
 			// resources are stored in the map as ResourceHandle's, which are just void*

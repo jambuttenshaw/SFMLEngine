@@ -1,8 +1,8 @@
 #pragma once
 
 #include "../Constants.h"
+#include "../Core.h"
 
-#include <cassert>
 #include <unordered_map>
 
 namespace SFMLEngine {
@@ -24,7 +24,7 @@ namespace SFMLEngine {
 	public:
 		void InsertData(Entity entity, T component)
 		{
-			assert(m_EntityToIndexMap.find(entity) == m_EntityToIndexMap.end() && "Component added to same entity more than once.");
+			SFMLE_CORE_ASSERT(m_EntityToIndexMap.find(entity) == m_EntityToIndexMap.end(), "Component added to same entity more than once.");
 
 			size_t newIndex = m_Size;
 
@@ -38,7 +38,7 @@ namespace SFMLEngine {
 
 		void RemoveData(Entity entity)
 		{
-			assert(m_EntityToIndexMap.find(entity) != m_EntityToIndexMap.end() && "Removing non-existent component.");
+			SFMLE_CORE_ASSERT(m_EntityToIndexMap.find(entity) != m_EntityToIndexMap.end(), "Removing non-existent component.");
 
 			// copy element at end into deleted elements place to maintain tightly packed array
 			size_t indexOfRemovedEntity = m_EntityToIndexMap[entity];
@@ -60,7 +60,7 @@ namespace SFMLEngine {
 
 		T& GetData(Entity entity)
 		{
-			assert(m_EntityToIndexMap.find(entity) != m_EntityToIndexMap.end() && "Retrieving non-existent component.");
+			SFMLE_CORE_ASSERT(m_EntityToIndexMap.find(entity) != m_EntityToIndexMap.end(), "Retrieving non-existent component.");
 
 			// return a reference to the entity's component
 			return m_ComponentArray[m_EntityToIndexMap[entity]];

@@ -16,7 +16,7 @@ namespace SFMLEngine {
 		{
 			const char* typeName = typeid(T).name();
 
-			assert(m_Systems.find(typeName) == m_Systems.end() && "Registering system more than once.");
+			SFMLE_CORE_ASSERT(m_Systems.find(typeName) == m_Systems.end(), "Registering system more than once.");
 
 
 			// create a pointer to the system and return it so it can be used externally
@@ -30,7 +30,7 @@ namespace SFMLEngine {
 		{
 			const char* typeName = typeid(T).name();
 
-			assert(m_Systems.find(typeName) != m_Systems.end() && "System used before registered.");
+			SFMLE_CORE_ASSERT(m_Systems.find(typeName) != m_Systems.end(), "System used before registered.");
 
 			// Set the signature for this system
 			m_Signatures.insert({ typeName, signature });

@@ -2,8 +2,8 @@
 
 #include "../Constants.h"
 #include "ComponentArray.h"
+#include "../Core.h"
 
-#include <cassert>
 #include <unordered_map>
 #include <memory>
 
@@ -18,7 +18,7 @@ namespace SFMLEngine {
 			const char* typeName = typeid(T).name();
 
 			// make sure the component hasnt been registered already
-			assert(m_ComponentTypes.find(typeName) == m_ComponentTypes.end() && "Registering component type more than once.");
+			SFMLE_CORE_ASSERT(m_ComponentTypes.find(typeName) == m_ComponentTypes.end(), "Registering component type more than once.");
 
 			// add this component type to the component type map
 			m_ComponentTypes.insert({ typeName, m_NextComponentType });
@@ -35,7 +35,7 @@ namespace SFMLEngine {
 		{
 			const char* typeName = typeid(T).name();
 
-			assert(m_ComponentTypes.find(typeName) != m_ComponentTypes.end() && "Component not registered before use.");
+			SFMLE_CORE_ASSERT(m_ComponentTypes.find(typeName) != m_ComponentTypes.end(), "Component not registered before use.");
 
 			// return the components type: used for creating signatures
 			return m_ComponentTypes[typeName];
