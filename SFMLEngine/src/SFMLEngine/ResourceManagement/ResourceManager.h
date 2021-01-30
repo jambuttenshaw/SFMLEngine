@@ -3,7 +3,6 @@
 #include "../Constants.h"
 #include "../Log.h"
 
-#include <cassert>
 #include <queue>
 #include <unordered_map>
 
@@ -14,6 +13,7 @@ namespace SFMLEngine {
 	{
 	public:
 		static void Init();
+		static void Shutdown();
 
 		template<typename T>
 		static ResourceID LoadFromFile(std::string filepath)
@@ -59,7 +59,7 @@ namespace SFMLEngine {
 			ResourceID newID = GetNextID();
 
 			// add the pointer to the resource into the resource manager
-			s_Resources.insert(std::make_pair(newID, static_cast<ResourceHandle>(resource)));
+			s_Resources.insert({ {newID, static_cast<ResourceHandle>(resource)} });
 
 			// return the ID used to access the resource
 			return newID;
@@ -70,9 +70,13 @@ namespace SFMLEngine {
 		{
 			auto location = s_Resources.find(resourceID);
 			// make sure that we actually found a resource associated with that ID
-			assert(location != s_Resources.end() && "Invalid ResourceID: no resource could be found!");
+			if (location == s_Resources.end())
+			{
+				LOG_CORE_ERROR("Invalid Resource ID {0}: no resource could be found!", resourceID);
+				return;
+			}
 
-			delete static_cast<T*>(s_Resources.at(location));
+			delete static_cast<T*>(s_Resources.at(resourceID));
 			s_Resources.erase(location);
 		}
 
@@ -83,7 +87,11 @@ namespace SFMLEngine {
 			auto location = s_Resources.find(resourceID);
 
 			// make sure that we actually found a resource associated with that ID
-			assert(location != s_Resources.end() && "Invalid ResourceID: no resource could be found!");
+			if (location == s_Resources.end())
+			{
+				LOG_CORE_ERROR("Invalid Resource ID {0}: no resource could be found!", resourceID);
+				return nullptr;
+			}
 
 			// cast the resource then return it
 			// resources are stored in the map as ResourceHandle's, which are just void*

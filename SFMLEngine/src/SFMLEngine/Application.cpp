@@ -5,6 +5,7 @@
 
 #include "ResourceManagement/ResourceManager.h"
 #include "Renderer/Renderer.h"
+#include "Renderer/ShaderLibrary.h"
 
 #include "Log.h"
 
@@ -36,6 +37,9 @@ namespace SFMLEngine
 
         m_Window = new sf::RenderWindow(sf::VideoMode(800, 600), "SFML window", sf::Style::Default, contextSettings);
         m_Window->setFramerateLimit(60);
+
+        // load up the shader library
+        ShaderLibrary::Init();
 
         /*
         ----------
@@ -161,6 +165,11 @@ namespace SFMLEngine
             Layer* currentLayer = m_LayerStack.GetLayer(0);
             m_LayerStack.PopLayer(currentLayer);
         }
+
+        // shutdown the renderer
+        Renderer::Shutdown();
+        ShaderLibrary::Shutdown();
+        ResourceManager::Shutdown();
     }
 
 

@@ -7,6 +7,7 @@
 
 #include "../ResourceManagement/ResourceManager.h"
 #include "../Renderer/Renderer.h"
+#include "../Renderer/ShaderLibrary.h"
 
 
 namespace SFMLEngine {
@@ -23,7 +24,7 @@ namespace SFMLEngine {
 			m_RenderWindow = window;
 			
 			// load the shader
-			m_Shader = ResourceManager::LoadFromFile<sf::Shader>("assets/shaders/Basic.vert", "assets/shaders/Basic.frag");
+			m_Shader = ShaderLibrary::GetShaderResourceID("Basic");
 		}
 
 		void EntityAddedToSystem(Entity entity) override

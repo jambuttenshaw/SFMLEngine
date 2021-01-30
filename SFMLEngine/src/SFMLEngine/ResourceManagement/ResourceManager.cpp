@@ -16,6 +16,15 @@ namespace SFMLEngine {
 		}
 	}
 
+	void ResourceManager::Shutdown()
+	{
+		for (auto const& resource : s_Resources)
+		{
+			LOG_CORE_WARN("Resource ID {0} was not explicitly deleted, type could not be assumed.", resource.first);
+			delete resource.second;
+		}
+		s_Resources.clear();
+	}
 
 	ResourceID ResourceManager::GetNextID()
 	{
