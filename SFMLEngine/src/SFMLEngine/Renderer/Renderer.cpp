@@ -1,8 +1,9 @@
 #include "Renderer.h"
 
-# include <SFML/OpenGL.hpp>
+#include <GL/glew.h>
+#include <SFML/OpenGL.hpp>
 
-#include "../Log.h"
+#include "../Core.h"
 
 namespace SFMLEngine {
 
@@ -22,6 +23,14 @@ namespace SFMLEngine {
 		LOG_CORE_INFO("Size allocated to depth buffer: {0} bits", s_ContextSettings->depthBits);
 
 		return *s_ContextSettings;
+	}
+
+	void Renderer::InitGLEW()
+	{
+		// initialise glew
+		// this must be after a valid openGL context is created
+		GLenum err = glewInit();
+		SFMLE_CORE_ASSERT(err == GLEW_OK, "GLEW failed to initialise.");
 	}
 
 	void Renderer::Shutdown()

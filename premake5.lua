@@ -12,9 +12,12 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 IncludeDir = {}
 IncludeDir["SFML"] = "%{wks.location}/SFMLEngine/vendor/SFML/include"
 IncludeDir["spdlog"] = "%{wks.location}/SFMLEngine/vendor/spdlog/include"
+IncludeDir["glew"] = "%{wks.location}/SFMLEngine/vendor/glew/include"
+
 
 LibraryDir = {}
 LibraryDir["SFML"] = "%{wks.location}/SFMLEngine/vendor/SFML/lib"
+LibraryDir["glew"] = "%{wks.location}/SFMLEngine/vendor/glew/lib/Release/x64"
 
 project "SFMLEngine"
     kind "ConsoleApp"
@@ -34,19 +37,22 @@ project "SFMLEngine"
 
 	defines
 	{
-		"SFML_STATIC"
+		"SFML_STATIC",
+		"GLEW_STATIC"
 	}
 
 	includedirs
 	{
 		"src",
 		"%{IncludeDir.SFML}",
-		"%{IncludeDir.spdlog}"
+		"%{IncludeDir.spdlog}",
+		"%{IncludeDir.glew}"
 	}
 	
 	libdirs
 	{
-		"%{LibraryDir.SFML}"
+		"%{LibraryDir.SFML}",
+		"%{LibraryDir.glew}"
 	}
 
 	filter "system:windows"
@@ -62,6 +68,7 @@ project "SFMLEngine"
 			"winmm.lib",
 			"opengl32.lib",
 			"freetype.lib",
+			"glew32s.lib",
 			"sfml-graphics-s-d.lib",
 			"sfml-window-s-d.lib",
 			"sfml-system-s-d.lib"
@@ -77,6 +84,7 @@ project "SFMLEngine"
 			"winmm.lib",
 			"opengl32.lib",
 			"freetype.lib",
+			"glew32s.lib",
 			"sfml-graphics-s.lib",
 			"sfml-window-s.lib",
 			"sfml-system-s.lib"

@@ -27,7 +27,7 @@ namespace SFMLEngine {
 				// error- resource could not be loaded from file
 				delete resource;
 				LOG_CORE_ERROR("Resource could not be loaded from {0}", filepath);
-				SFMLE_CORE_ASSERT(0, "Resource load failure".);
+				SFMLE_CORE_ASSERT(0, "Resource load failure.");
 				return NULL_RESOURCE_ID;
 			}
 

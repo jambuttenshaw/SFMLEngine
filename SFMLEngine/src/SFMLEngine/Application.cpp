@@ -38,6 +38,8 @@ namespace SFMLEngine
         m_Window = new sf::RenderWindow(sf::VideoMode(800, 600), "SFML window", sf::Style::Default, contextSettings);
         m_Window->setFramerateLimit(60);
 
+        Renderer::InitGLEW();
+
         // load up the shader library
         ShaderLibrary::Init();
 

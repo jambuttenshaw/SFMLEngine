@@ -10,6 +10,7 @@ namespace SFMLEngine {
 	public:
 
 		static const sf::ContextSettings& Init();
+		static void InitGLEW();
 		static void Shutdown();
 
 		static void Begin();

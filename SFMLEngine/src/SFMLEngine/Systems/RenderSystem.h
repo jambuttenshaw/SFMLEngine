@@ -67,21 +67,20 @@ namespace SFMLEngine {
 			auto shader = ResourceManager::GetResourceHandle<sf::Shader>(m_Shader);
 
 			// we do not want to divide by 0
-			float normalizeFactor = m_MaxOrderInLayer == 0 ? 1.0f : (float)m_MaxOrderInLayer;
+			float normalizeFactor = 1 / (m_MaxOrderInLayer == 0 ? 1.0f : (float)m_MaxOrderInLayer);
 
 
 			for (const auto& c : components)
 			{
 				// set shader uniforms
-				shader->setUniform("u_DepthValue", (float)c.OrderInLayer / normalizeFactor);
+				shader->setUniform("u_DepthValue", (float)c.OrderInLayer * normalizeFactor);
 
 				m_RenderWindow->draw(c.Sprite, shader);
 			}
 
-
 			m_RenderWindow->setActive(false);
+		
 		}
-
 	private:
 		Coordinator* m_Coordinator = nullptr;
 		sf::RenderWindow* m_RenderWindow = nullptr;
