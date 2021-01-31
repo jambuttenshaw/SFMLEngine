@@ -37,7 +37,7 @@ public:
 			
 			sf::Sprite entitySprite;
 			// add the sprite renderer component
-			m_Scene->AddComponent(m_Entity, SpriteRenderer{ spriteTexture, 1 });
+			m_Scene->AddComponent(m_Entity, SpriteRenderer{ spriteTexture, Material::Create("Basic"), 1 });
 
 			// add the scripts onto the entity
 			m_Scene->AddNativeScript<EntityScript>(m_Entity);
@@ -60,7 +60,7 @@ public:
 
 			sf::Sprite entitySprite;
 			// add the sprite renderer component
-			m_Scene->AddComponent(m_Entity2, SpriteRenderer{ spriteTexture, 0 });
+			m_Scene->AddComponent(m_Entity2, SpriteRenderer{ spriteTexture, Material::Create("Basic"), 0 });
 		}
 	}
 

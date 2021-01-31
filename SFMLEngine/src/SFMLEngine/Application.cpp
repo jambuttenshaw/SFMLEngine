@@ -171,6 +171,9 @@ namespace SFMLEngine
 
         // shutdown the renderer
         Renderer::Shutdown();
+
+        Material::DestroyAllCached();
+
         ShaderLibrary::Shutdown();
         ResourceManager::Shutdown();
     }

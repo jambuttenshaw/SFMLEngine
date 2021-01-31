@@ -25,14 +25,15 @@ namespace SFMLEngine {
 	struct SpriteRenderer
 	{
 		ResourceID TextureHandle;
+		ResourceID Material;
 		int OrderInLayer;
 		sf::Sprite Sprite;
 
 		SpriteRenderer()
-			: TextureHandle(NULL_RESOURCE_ID), OrderInLayer(0), Sprite()
+			: TextureHandle(NULL_RESOURCE_ID), Material(NULL_RESOURCE_ID), OrderInLayer(0), Sprite()
 		{}
-		SpriteRenderer(ResourceID texHandle, int orderInLayer)
-			: TextureHandle(texHandle), OrderInLayer(orderInLayer), Sprite()
+		SpriteRenderer(ResourceID texHandle, ResourceID material, int orderInLayer)
+			: TextureHandle(texHandle), Material(material), OrderInLayer(orderInLayer), Sprite()
 		{}
 	};
 

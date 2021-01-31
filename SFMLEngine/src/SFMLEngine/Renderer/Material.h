@@ -56,6 +56,17 @@ namespace SFMLEngine {
 			uniform.Data = static_cast<void*>(data);
 		}
 
+	public:
+
+		// create a new material using the shader
+		// or if one already exists then return the resource ID of it
+		static ResourceID Create(const std::string& shader);
+
+		// deletes all cached materials from memory
+		// should be called on shutdown
+		static void DestroyAllCached();
+
+
 	private:
 
 		void Init();
@@ -67,6 +78,10 @@ namespace SFMLEngine {
 		ResourceID m_ShaderResourceID;
 
 		std::vector<Uniform> m_Uniforms;
+
+	private:
+		static std::unordered_map<std::string, ResourceID> s_Materials;
+
 	};
 
 }

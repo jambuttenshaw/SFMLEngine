@@ -17,3 +17,6 @@
 // ECS
 #include "SFMLEngine/ECS/Components.h"
 
+// Graphics
+#include "SFMLEngine/Renderer/Material.h"
+

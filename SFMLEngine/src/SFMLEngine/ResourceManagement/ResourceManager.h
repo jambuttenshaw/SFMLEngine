@@ -15,6 +15,7 @@ namespace SFMLEngine {
 		static void Init();
 		static void Shutdown();
 
+
 		template<typename T>
 		static ResourceID LoadFromFile(std::string filepath)
 		{
@@ -67,6 +68,21 @@ namespace SFMLEngine {
 			return newID;
 		}
 
+
+		template<typename T>
+		static ResourceID ManageResource(T* resource)
+		{
+			// create an ID for the resource
+			ResourceID newID = GetNextID();
+
+			// add the pointer to the resource into the map
+			s_Resources.insert({ {newID, static_cast<ResourceHandle>(resource)} });
+
+			// return the ID
+			return newID;
+		}
+
+
 		template<typename T>
 		static void DeleteResource(ResourceID resourceID)
 		{
@@ -92,6 +108,7 @@ namespace SFMLEngine {
 			// resources are stored in the map as ResourceHandle's, which are just void*
 			return static_cast<T*>(s_Resources.at(resourceID));
 		}
+
 
 	private:
 		static ResourceID GetNextID();

@@ -3,6 +3,8 @@
 
 namespace SFMLEngine {
 
+	std::unordered_map<std::string, ResourceID> Material::s_Materials;
+
 	Material::Material(const std::string& shaderName)
 	{
 		m_ShaderResourceID = ShaderLibrary::GetShaderResourceID(shaderName);
@@ -165,6 +167,56 @@ namespace SFMLEngine {
 		}
 		// this should never be reached provided UniformExists check was carried out first
 		LOG_CORE_ERROR("Uniform {0} doesn't exist: Call Material::UniformExists before attempting to retrieve uniforms.", name);
+
+		// since this should never be reached, we can just return an empty uniform object
+		// this is mostly to just stop the compiler warning
+		Uniform uniform;
+		return uniform;
 	}
+
+
+
+
+	ResourceID Material::Create(const std::string& shader)
+	{
+		// to be assigned the id of the material
+		ResourceID newID = NULL_RESOURCE_ID;
+
+		// check to see if a material with this shader already exists
+		if (s_Materials.find(shader) != s_Materials.end())
+		{
+			// a material with this shader already exists
+			// we should find the resource ID of it and return that
+			newID = s_Materials.at(shader);
+		}
+		else
+		{
+			// a material using this shader has not been created before
+			// we must create a new material
+			Material* newMat = new Material(shader);
+
+			// this new material should be managed by the resource manager
+			// register this object with the resource manager
+			// this gives us the resource ID of the material
+			newID = ResourceManager::ManageResource(newMat);
+
+			// now that we have created a material, we cache it into the map
+			// so that it can be shared between sprites that want the same material
+			s_Materials.insert(std::make_pair(shader, newID));
+		}
+
+		return newID;
+	}
+
+
+	void Material::DestroyAllCached()
+	{
+		for (auto& mat : s_Materials)
+		{
+			ResourceManager::DeleteResource<Material>(mat.second);
+		}
+		s_Materials.clear();
+	}
+
 
 }
