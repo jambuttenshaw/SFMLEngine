@@ -39,19 +39,6 @@ namespace SFMLEngine {
 			m_MaxOrderInLayer = std::max(m_MaxOrderInLayer, abs(sRenderer.OrderInLayer));
 		}
 
-		void Update()
-		{
-			for (auto const& entity : m_Entities)
-			{
-				auto& sRenderer = m_Coordinator->GetComponent<SpriteRenderer>(entity);
-				auto& transform = m_Coordinator->GetComponent<Transform>(entity);
-
-				sRenderer.Sprite.setPosition(transform.Position);
-				sRenderer.Sprite.setRotation(transform.Rotation);
-				sRenderer.Sprite.setScale(transform.Scale);
-			}
-		}
-
 		void Render()
 		{
 			// get the sprite renderer components
@@ -66,20 +53,36 @@ namespace SFMLEngine {
 			Renderer::Begin();
 
 
+			// create a renderstate to choose how the sprite is rendered
+			sf::RenderStates renderState;
+
+
 			// we do not want to divide by 0
 			float normalizeFactor = 1 / (m_MaxOrderInLayer == 0 ? 1.0f : (float)m_MaxOrderInLayer);
 
 
-			for (const auto& c : components)
+			for (const auto& entity : m_Entities)
 			{
+				auto const& sR = m_Coordinator->GetComponent<SpriteRenderer>(entity);
+				auto const& t = m_Coordinator->GetComponent<Transform>(entity);
+
 				// get the material
-				Material* mat = c.GetMaterial();
+				Material* mat = sR.GetMaterial();
 
 				// set shader uniforms
-				mat->SetUniform("u_DepthValue", (float)c.OrderInLayer * normalizeFactor);
+				mat->SetUniform("u_DepthValue", (float)sR.OrderInLayer * normalizeFactor);
 				sf::Shader* shader = mat->Bind();
 
-				m_RenderWindow->draw(c.Sprite, shader);
+				renderState.shader = shader;
+
+				// create a transform
+				sf::Transform transform;
+				transform.translate(t.Position);
+				transform.rotate(t.Rotation);
+				transform.scale(t.Scale);
+				renderState.transform = transform;
+
+				m_RenderWindow->draw(sR.Sprite, renderState);
 			}
 
 			m_RenderWindow->setActive(false);

@@ -140,13 +140,6 @@ namespace SFMLEngine
             // Update the systems
             m_ScriptableEntitySystem->Update(ts);
 
-            // update the render system last
-            // the render system doesnt require a time step
-            // as it is just applying any changes to the transforms
-            // to the sprites
-            m_RenderSystem->Update();
-
-
 
             // Clear screen
             m_Window->clear();
