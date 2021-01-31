@@ -29,6 +29,13 @@ namespace SFMLEngine {
 		void* Data;
 	};
 
+	struct MaterialCacheEntry
+	{
+		std::string ShaderName;
+		ResourceID MaterialID;
+		bool Shared;
+	};
+
 
 	class Material
 	{
@@ -77,12 +84,16 @@ namespace SFMLEngine {
 		Uniform& GetUniform(const std::string& name);
 
 	private:
+
+		static ResourceID MaterialCached(const std::string& shaderName);
+
+	private:
 		ResourceID m_ShaderResourceID;
 
 		std::vector<Uniform> m_Uniforms;
 
 	private:
-		static std::unordered_map<std::string, ResourceID> s_Materials;
+		static std::vector<MaterialCacheEntry> s_MaterialCache;
 
 	};
 

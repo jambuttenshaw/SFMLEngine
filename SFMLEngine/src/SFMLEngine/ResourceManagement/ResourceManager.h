@@ -1,5 +1,7 @@
 #pragma once
 
+#include <SFML/Graphics.hpp>
+
 #include "../Constants.h"
 #include "../Core.h"
 
@@ -15,11 +17,9 @@ namespace SFMLEngine {
 		static void Init();
 		static void Shutdown();
 
-
 		template<typename T>
 		static ResourceID LoadFromFile(std::string filepath)
 		{
-			// create a new instance of the resource
 			T* resource = new T;
 			
 			// load if from the file
@@ -62,7 +62,7 @@ namespace SFMLEngine {
 			ResourceID newID = GetNextID();
 
 			// add the pointer to the resource into the resource manager
-			s_Resources.insert({ {newID, static_cast<ResourceHandle>(resource)} });
+			s_Resources.insert(std::make_pair(newID, static_cast<ResourceHandle>(resource)));
 
 			// return the ID used to access the resource
 			return newID;
@@ -76,7 +76,7 @@ namespace SFMLEngine {
 			ResourceID newID = GetNextID();
 
 			// add the pointer to the resource into the map
-			s_Resources.insert({ {newID, static_cast<ResourceHandle>(resource)} });
+			s_Resources.insert(std::make_pair(newID, static_cast<ResourceHandle>(resource)));
 
 			// return the ID
 			return newID;
@@ -91,7 +91,8 @@ namespace SFMLEngine {
 			// make sure that we actually found a resource associated with that ID
 			SFMLE_CORE_ASSERT(location != s_Resources.end(), "Invalid Resource ID: no resource could be found!");
 
-			delete static_cast<T*>(s_Resources.at(resourceID));
+			delete static_cast<T*> (s_Resources.at(resourceID));
+			
 			s_Resources.erase(location);
 		}
 

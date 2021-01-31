@@ -3,7 +3,7 @@
 
 namespace SFMLEngine {
 
-	std::unordered_map<std::string, ResourceID> Material::s_Materials;
+	std::vector<MaterialCacheEntry> Material::s_MaterialCache;
 
 	Material::Material(const std::string& shaderName)
 	{
@@ -198,38 +198,16 @@ namespace SFMLEngine {
 
 	ResourceID Material::Create(const std::string& shader)
 	{
-		// to be assigned the id of the material
-		ResourceID newID = NULL_RESOURCE_ID;
+		// check to see if theres a cached material using the same shader
+		// if there is then return the resource id of that
+		ResourceID cachedMaterial = MaterialCached(shader);
+		if (cachedMaterial != NULL_RESOURCE_ID)
+			return cachedMaterial;
 
-		// check to see if a material with this shader already exists
-		if (s_Materials.find(shader) != s_Materials.end())
-		{
-			// a material with this shader already exists
-			// we should find the resource ID of it and return that
-			newID = s_Materials.at(shader);
-		}
-		else
-		{
-			// a material using this shader has not been created before
-			// we must create a new material
-			Material* newMat = new Material(shader);
-
-			// this new material should be managed by the resource manager
-			// register this object with the resource manager
-			// this gives us the resource ID of the material
-			newID = ResourceManager::ManageResource(newMat);
-
-			// now that we have created a material, we cache it into the map
-			// so that it can be shared between sprites that want the same material
-			s_Materials.insert(std::make_pair(shader, newID));
-		}
+		// we do not have a shared material with the same shader already cached
 		
-
-		return newID;
-	}
-
-	ResourceID Material::CreateInstance(const std::string& shader)
-	{
+		// a material using this shader has not been created before
+		// we must create a new material
 		Material* newMat = new Material(shader);
 
 		// this new material should be managed by the resource manager
@@ -237,17 +215,49 @@ namespace SFMLEngine {
 		// this gives us the resource ID of the material
 		ResourceID newID = ResourceManager::ManageResource(newMat);
 
+		// now that we have created a material, we cache it into the map
+		// so that it can be shared between sprites that want the same material
+		s_MaterialCache.push_back(MaterialCacheEntry{ shader, newID, true });
+
 		return newID;
 	}
 
+	ResourceID Material::CreateInstance(const std::string& shader)
+	{
+		// do not check the cache
+
+		Material* newMat = new Material(shader);
+
+		// this new material should be managed by the resource manager
+		// register this object with the resource manager
+		// this gives us the resource ID of the material
+		ResourceID newID = ResourceManager::ManageResource(newMat);
+
+		// register this material in the material cache
+		// but then state that it is not to be shared with other sprites
+		s_MaterialCache.push_back(MaterialCacheEntry{ shader, newID, false });
+
+		return newID;
+	}
+
+	ResourceID Material::MaterialCached(const std::string& shaderName)
+	{
+		for (auto const& mat : s_MaterialCache)
+		{
+			if (mat.ShaderName == shaderName && mat.Shared)
+				return mat.MaterialID;
+		}
+
+		return NULL_RESOURCE_ID;
+	}
 
 	void Material::DestroyAllCached()
 	{
-		for (auto& mat : s_Materials)
+		for (auto& mat : s_MaterialCache)
 		{
-			ResourceManager::DeleteResource<Material>(mat.second);
+			ResourceManager::DeleteResource<Material>(mat.MaterialID);
 		}
-		s_Materials.clear();
+		s_MaterialCache.clear();
 	}
 
 

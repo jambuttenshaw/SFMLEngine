@@ -10,16 +10,21 @@ public:
 	void Start() override
 	{
 		// do something when the game starts
-		m_Transform = &GetComponent<Transform>();
+		m_Material = GetComponent<SpriteRenderer>().GetMaterial();
 	}
 
 	void Update(Timestep ts) override
 	{
 		// do something every frame
-		// m_Transform->Position += (float)ts * sf::Vector2f(50, 20);
+		
+		t += ts;
+		color = 127 * (1 + sin(t));
+		m_Material->SetUniform("u_Color", sf::Glsl::Vec4(sf::Color(color, 255 - color, color, 255)));
 	}
 
 private:
-	Transform* m_Transform;
+	Material* m_Material;
 
+	float t = 0;
+	float color = 0;
 };
