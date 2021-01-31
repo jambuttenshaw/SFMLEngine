@@ -5,6 +5,8 @@
 #include "ScriptableEntity.h"
 #include "../ResourceManagement/ResourceManager.h"
 
+#include "../Renderer/Material.h"
+
 
 namespace SFMLEngine {
 
@@ -25,16 +27,26 @@ namespace SFMLEngine {
 	struct SpriteRenderer
 	{
 		ResourceID TextureHandle;
-		ResourceID Material;
+		ResourceID MaterialHandle;
 		int OrderInLayer;
 		sf::Sprite Sprite;
 
 		SpriteRenderer()
-			: TextureHandle(NULL_RESOURCE_ID), Material(NULL_RESOURCE_ID), OrderInLayer(0), Sprite()
+			: TextureHandle(NULL_RESOURCE_ID), MaterialHandle(NULL_RESOURCE_ID), OrderInLayer(0), Sprite()
 		{}
 		SpriteRenderer(ResourceID texHandle, ResourceID material, int orderInLayer)
-			: TextureHandle(texHandle), Material(material), OrderInLayer(orderInLayer), Sprite()
+			: TextureHandle(texHandle), MaterialHandle(material), OrderInLayer(orderInLayer), Sprite()
 		{}
+
+		sf::Texture* GetTexture() const
+		{
+			return ResourceManager::GetResourceHandle<sf::Texture>(TextureHandle);
+		}
+
+		Material* GetMaterial() const
+		{
+			return ResourceManager::GetResourceHandle<Material>(MaterialHandle);
+		}
 	};
 
 	struct NativeScripts

@@ -62,7 +62,31 @@ namespace SFMLEngine {
 					// a pointer to the data the uniform contains
 					// this is void* since we dont know what data type it will be in advance
 					// but we can use the Type attribute to retrieve it to the correct data type
-					newUniform.Data = nullptr;
+
+					// assign it some default data in case it isnt done manually in the program
+					// and we dont want to try pass nullptr into the shader
+					switch (type)
+					{
+					case GL_FLOAT:				newUniform.Data = (void*)new UniformData(0.0f); break;
+					case GL_FLOAT_VEC2:			newUniform.Data = (void*)new UniformData(sf::Glsl::Vec2(0.0f, 0.0f)); break;
+					case GL_FLOAT_VEC3:			newUniform.Data = (void*)new UniformData(sf::Glsl::Vec3(0.0f, 0.0f, 0.0f)); break;
+					case GL_FLOAT_VEC4:			newUniform.Data = (void*)new UniformData(sf::Glsl::Vec4(1.0f, 1.0f, 1.0f, 1.0f)); break;
+					case GL_INT:				newUniform.Data = (void*)new UniformData(0); break;
+					case GL_INT_VEC2:			newUniform.Data = (void*)new UniformData(sf::Glsl::Ivec2(0, 0)); break;
+					case GL_INT_VEC3:			newUniform.Data = (void*)new UniformData(sf::Glsl::Ivec3(0, 0, 0)); break; 
+					case GL_INT_VEC4:			newUniform.Data = (void*)new UniformData(sf::Glsl::Ivec4(0, 0, 0, 0)); break;
+					case GL_BOOL:				newUniform.Data = (void*)new UniformData(false); break;
+					case GL_BOOL_VEC2:			newUniform.Data = (void*)new UniformData(sf::Glsl::Bvec2(false, false)); break;
+					case GL_BOOL_VEC3:			newUniform.Data = (void*)new UniformData(sf::Glsl::Bvec3(false, false, false)); break;
+					case GL_BOOL_VEC4:			newUniform.Data = (void*)new UniformData(sf::Glsl::Bvec4(false, false, false, false)); break;
+					case GL_FLOAT_MAT3:			newUniform.Data = (void*)new UniformData(sf::Glsl::Mat3(sf::Transform())); break;
+					case GL_FLOAT_MAT4:			newUniform.Data = (void*)new UniformData(sf::Glsl::Mat4(sf::Transform())); break;
+
+						// I will come back to textures
+						// case GL_SAMPLER_2D:			delete static_cast<UniformData<float>*>(uniform.Data); break;
+
+					default:					LOG_CORE_ERROR("Shader uniform with unknown data type."); break;
+					}
 
 					m_Uniforms.push_back(newUniform);
 				}
@@ -199,6 +223,19 @@ namespace SFMLEngine {
 			// so that it can be shared between sprites that want the same material
 			s_Materials.insert(std::make_pair(shader, newID));
 		}
+		
+
+		return newID;
+	}
+
+	ResourceID Material::CreateInstance(const std::string& shader)
+	{
+		Material* newMat = new Material(shader);
+
+		// this new material should be managed by the resource manager
+		// register this object with the resource manager
+		// this gives us the resource ID of the material
+		ResourceID newID = ResourceManager::ManageResource(newMat);
 
 		return newID;
 	}

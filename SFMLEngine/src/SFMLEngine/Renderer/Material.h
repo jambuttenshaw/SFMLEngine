@@ -17,6 +17,8 @@ namespace SFMLEngine {
 	struct UniformData
 	{
 		T Data;
+
+		UniformData(T data) : Data(data) {}
 	};
 
 
@@ -47,8 +49,7 @@ namespace SFMLEngine {
 				SFMLE_CORE_ASSERT(0, "Could not set uniform.");
 			}
 
-			UniformData<T>* data = new UniformData<T>;
-			data->Data = value;
+			UniformData<T>* data = new UniformData(value);
 
 			// assign data into uniforms vector
 			auto& uniform = GetUniform(uniformName);
@@ -61,6 +62,7 @@ namespace SFMLEngine {
 		// create a new material using the shader
 		// or if one already exists then return the resource ID of it
 		static ResourceID Create(const std::string& shader);
+		static ResourceID CreateInstance(const std::string& shader);
 
 		// deletes all cached materials from memory
 		// should be called on shutdown

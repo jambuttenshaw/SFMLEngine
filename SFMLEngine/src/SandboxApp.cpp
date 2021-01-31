@@ -34,13 +34,15 @@ public:
 
 			// load a texture
 			ResourceID spriteTexture = ResourceManager::LoadFromFile<sf::Texture>("assets/textures/texture.png");
-			ResourceID materialID = Material::Create("Basic");
+
+			// create a material from a shader
+			ResourceID materialID = Material::CreateInstance("Basic");
 			Material* mat = ResourceManager::GetResourceHandle<Material>(materialID);
 
 			mat->SetUniform("u_Color", sf::Glsl::Vec4(sf::Color::Red));
 
 			// add the sprite renderer component
-			m_Scene->AddComponent(m_Entity, SpriteRenderer{ spriteTexture, Material::Create("Basic"), -1 });
+			m_Scene->AddComponent(m_Entity, SpriteRenderer{ spriteTexture, materialID, 1 });
 
 			// add the scripts onto the entity
 			m_Scene->AddNativeScript<EntityScript>(m_Entity);

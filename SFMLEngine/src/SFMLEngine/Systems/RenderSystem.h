@@ -73,7 +73,7 @@ namespace SFMLEngine {
 			for (const auto& c : components)
 			{
 				// get the material
-				Material* mat = ResourceManager::GetResourceHandle<Material>(c.Material);
+				Material* mat = c.GetMaterial();
 
 				// set shader uniforms
 				mat->SetUniform("u_DepthValue", (float)c.OrderInLayer * normalizeFactor);
