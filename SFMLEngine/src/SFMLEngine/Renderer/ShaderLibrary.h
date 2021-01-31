@@ -48,32 +48,6 @@ namespace SFMLEngine {
 
 			s_ShaderLibrary.insert(std::make_pair(name, newShader));
 
-			{
-				sf::Shader* shader = ResourceManager::GetResourceHandle<sf::Shader>(newShader);
-				GLuint nativeShaderHandle = shader->getNativeHandle();
-
-				GLint i;
-				GLint count;
-
-				GLint size; // size of the variable
-				GLenum type; // type of the variable (float, vec3 or mat4, etc)
-
-				const GLsizei bufSize = 16; // maximum name length
-				GLchar varName[bufSize]; // variable name in GLSL
-				GLsizei length; // name length
-
-				glGetProgramiv(nativeShaderHandle, GL_ACTIVE_UNIFORMS, &count);
-				// LOG_CORE_TRACE("Active uniforms: {0}", count);
-				// printf("Active Uniforms: %d\n", count);
-
-				for (i = 0; i < count; i++)
-				{
-					glGetActiveUniform(nativeShaderHandle, (GLuint)i, bufSize, &length, &size, &type, varName);
-					// LOG_CORE_TRACE("Uniform #{0} Type: {1} Name: {2}", i, type, varName);
-					// printf("Uniform #%d Type: %u Name: %s\n", i, type, name);
-				}
-			}
-
 			return newShader;
 		}
 

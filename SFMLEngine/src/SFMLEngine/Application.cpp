@@ -6,6 +6,7 @@
 #include "ResourceManagement/ResourceManager.h"
 #include "Renderer/Renderer.h"
 #include "Renderer/ShaderLibrary.h"
+#include "Renderer/Material.h"
 
 #include "Log.h"
 
