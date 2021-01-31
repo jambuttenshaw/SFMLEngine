@@ -8,6 +8,7 @@
 #include "../ResourceManagement/ResourceManager.h"
 #include "../Renderer/Renderer.h"
 #include "../Renderer/ShaderLibrary.h"
+#include "../Renderer/Material.h"
 
 
 namespace SFMLEngine {
@@ -22,9 +23,6 @@ namespace SFMLEngine {
 		{
 			m_Coordinator = coordinator;
 			m_RenderWindow = window;
-			
-			// load the shader
-			m_Shader = ShaderLibrary::GetShaderResourceID("Basic");
 		}
 
 		void EntityAddedToSystem(Entity entity) override
@@ -56,15 +54,17 @@ namespace SFMLEngine {
 
 		void Render()
 		{
+			// get the sprite renderer components
 			auto components = m_Coordinator->GetComponents<SpriteRenderer>(m_Entities);
 
 
+			// set the context active
 			m_RenderWindow->setActive();
 
+			// set up the renderer for drawing
 			Renderer::SetOpenGLStates();
 			Renderer::Begin();
 
-			auto shader = ResourceManager::GetResourceHandle<sf::Shader>(m_Shader);
 
 			// we do not want to divide by 0
 			float normalizeFactor = 1 / (m_MaxOrderInLayer == 0 ? 1.0f : (float)m_MaxOrderInLayer);
@@ -72,8 +72,12 @@ namespace SFMLEngine {
 
 			for (const auto& c : components)
 			{
+				// get the material
+				Material* mat = ResourceManager::GetResourceHandle<Material>(c.Material);
+
 				// set shader uniforms
-				shader->setUniform("u_DepthValue", (float)c.OrderInLayer * normalizeFactor);
+				mat->SetUniform("u_DepthValue", (float)c.OrderInLayer * normalizeFactor);
+				sf::Shader* shader = mat->Bind();
 
 				m_RenderWindow->draw(c.Sprite, shader);
 			}
@@ -84,9 +88,6 @@ namespace SFMLEngine {
 	private:
 		Coordinator* m_Coordinator = nullptr;
 		sf::RenderWindow* m_RenderWindow = nullptr;
-
-		// the shader used to render sprites
-		ResourceID m_Shader = NULL_RESOURCE_ID;
 
 		int m_MaxOrderInLayer = 0;
 	};

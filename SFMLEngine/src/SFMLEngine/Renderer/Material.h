@@ -47,13 +47,13 @@ namespace SFMLEngine {
 				SFMLE_CORE_ASSERT(0, "Could not set uniform.");
 			}
 
-			UniformData<T> data = new UniformData<T>;
+			UniformData<T>* data = new UniformData<T>;
 			data->Data = value;
 
 			// assign data into uniforms vector
 			auto& uniform = GetUniform(uniformName);
 			// cast to a void* since we dont know the data type at compile time
-			uniform.Data = static_cast<void*>(data);
+			uniform.Data = (void*)(data);
 		}
 
 	public:

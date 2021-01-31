@@ -167,11 +167,6 @@ namespace SFMLEngine {
 		}
 		// this should never be reached provided UniformExists check was carried out first
 		LOG_CORE_ERROR("Uniform {0} doesn't exist: Call Material::UniformExists before attempting to retrieve uniforms.", name);
-
-		// since this should never be reached, we can just return an empty uniform object
-		// this is mostly to just stop the compiler warning
-		Uniform uniform;
-		return uniform;
 	}
 
 
