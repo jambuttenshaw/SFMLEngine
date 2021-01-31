@@ -7,6 +7,7 @@
 #include "Renderer/Renderer.h"
 #include "Renderer/ShaderLibrary.h"
 #include "Renderer/Material.h"
+#include "Renderer/Texture.h"
 
 #include "Log.h"
 
@@ -173,6 +174,7 @@ namespace SFMLEngine
         Renderer::Shutdown();
 
         Material::DestroyAllCached();
+        Texture::DestroyAllCached();
 
         ShaderLibrary::Shutdown();
         ResourceManager::Shutdown();

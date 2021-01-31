@@ -33,7 +33,7 @@ public:
 			m_Scene->AddComponent(m_Entity, entityTransform);
 
 			// load a texture
-			ResourceID spriteTexture = ResourceManager::LoadFromFile<sf::Texture>("assets/textures/texture.png");
+			ResourceID spriteTexture = Texture::Create("assets/textures/texture.png");
 
 			// create a material from a shader
 			ResourceID materialID = Material::CreateInstance("Basic");
@@ -61,7 +61,7 @@ public:
 			m_Scene->AddComponent(m_Entity2, entityTransform);
 
 			// load a texture
-			ResourceID spriteTexture = ResourceManager::LoadFromFile<sf::Texture>("assets/textures/texture2.png");
+			ResourceID spriteTexture = Texture::Create("assets/textures/texture2.png");
 
 			// add the sprite renderer component
 			m_Scene->AddComponent(m_Entity2, SpriteRenderer{ spriteTexture, Material::Create("Basic"), 0 });
