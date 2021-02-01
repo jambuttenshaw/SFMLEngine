@@ -81,9 +81,7 @@ namespace SFMLEngine {
 					case GL_BOOL_VEC4:			newUniform.Data = (void*)new UniformData(sf::Glsl::Bvec4(false, false, false, false)); break;
 					case GL_FLOAT_MAT3:			newUniform.Data = (void*)new UniformData(sf::Glsl::Mat3(sf::Transform())); break;
 					case GL_FLOAT_MAT4:			newUniform.Data = (void*)new UniformData(sf::Glsl::Mat4(sf::Transform())); break;
-
-						// I will come back to textures
-						// case GL_SAMPLER_2D:			delete static_cast<UniformData<float>*>(uniform.Data); break;
+					case GL_SAMPLER_2D:			newUniform.Data = (void*)new UniformData(NULL_RESOURCE_ID); break;
 
 					default:					LOG_CORE_ERROR("Shader uniform with unknown data type."); break;
 					}
@@ -115,9 +113,7 @@ namespace SFMLEngine {
 			case GL_BOOL_VEC4:			delete static_cast<UniformData<sf::Glsl::Bvec4>*>(uniform.Data); break;
 			case GL_FLOAT_MAT3:			delete static_cast<UniformData<sf::Glsl::Mat3>*>(uniform.Data); break;
 			case GL_FLOAT_MAT4:			delete static_cast<UniformData<sf::Glsl::Mat4>*>(uniform.Data); break;
-
-				// I will come back to textures
-				// case GL_SAMPLER_2D:			delete static_cast<UniformData<float>*>(uniform.Data); break;
+			case GL_SAMPLER_2D:			delete static_cast<UniformData<ResourceID>*>(uniform.Data); break;
 
 			default:					LOG_CORE_ERROR("Shader uniform with unknown data type."); break;
 			}
@@ -144,23 +140,22 @@ namespace SFMLEngine {
 
 			switch (uniform.Type)
 			{
-			case GL_FLOAT:				shaderHandle->setUniform(uniform.Name, static_cast<UniformData<float>*>(uniform.Data)->Data); break;
-			case GL_FLOAT_VEC2:			shaderHandle->setUniform(uniform.Name, static_cast<UniformData<sf::Glsl::Vec2>*>(uniform.Data)->Data); break;
-			case GL_FLOAT_VEC3:			shaderHandle->setUniform(uniform.Name, static_cast<UniformData<sf::Glsl::Vec3>*>(uniform.Data)->Data); break;
-			case GL_FLOAT_VEC4:			shaderHandle->setUniform(uniform.Name, static_cast<UniformData<sf::Glsl::Vec4>*>(uniform.Data)->Data); break;
-			case GL_INT:				shaderHandle->setUniform(uniform.Name, static_cast<UniformData<int>*>(uniform.Data)->Data); break;
-			case GL_INT_VEC2:			shaderHandle->setUniform(uniform.Name, static_cast<UniformData<sf::Glsl::Ivec2>*>(uniform.Data)->Data); break;
-			case GL_INT_VEC3:			shaderHandle->setUniform(uniform.Name, static_cast<UniformData<sf::Glsl::Ivec3>*>(uniform.Data)->Data); break;
-			case GL_INT_VEC4:			shaderHandle->setUniform(uniform.Name, static_cast<UniformData<sf::Glsl::Ivec4>*>(uniform.Data)->Data); break;
-			case GL_BOOL:				shaderHandle->setUniform(uniform.Name, static_cast<UniformData<bool>*>(uniform.Data)->Data); break;
-			case GL_BOOL_VEC2:			shaderHandle->setUniform(uniform.Name, static_cast<UniformData<sf::Glsl::Bvec2>*>(uniform.Data)->Data); break;
-			case GL_BOOL_VEC3:			shaderHandle->setUniform(uniform.Name, static_cast<UniformData<sf::Glsl::Bvec3>*>(uniform.Data)->Data); break;
-			case GL_BOOL_VEC4:			shaderHandle->setUniform(uniform.Name, static_cast<UniformData<sf::Glsl::Bvec4>*>(uniform.Data)->Data); break;
-			case GL_FLOAT_MAT3:			shaderHandle->setUniform(uniform.Name, static_cast<UniformData<sf::Glsl::Mat3>*>(uniform.Data)->Data); break;
-			case GL_FLOAT_MAT4:			shaderHandle->setUniform(uniform.Name, static_cast<UniformData<sf::Glsl::Mat4>*>(uniform.Data)->Data); break;
-
-			// I will come back to textures
-			// case GL_SAMPLER_2D:			shaderHandle->setUniform(uniform.Name, static_cast<UniformData<float>*>(uniform.Data)->Data); break;
+			case GL_FLOAT:		shaderHandle->setUniform(uniform.Name, static_cast<UniformData<float>*>(uniform.Data)->Data); break;
+			case GL_FLOAT_VEC2:	shaderHandle->setUniform(uniform.Name, static_cast<UniformData<sf::Glsl::Vec2>*>(uniform.Data)->Data); break;
+			case GL_FLOAT_VEC3:	shaderHandle->setUniform(uniform.Name, static_cast<UniformData<sf::Glsl::Vec3>*>(uniform.Data)->Data); break;
+			case GL_FLOAT_VEC4:	shaderHandle->setUniform(uniform.Name, static_cast<UniformData<sf::Glsl::Vec4>*>(uniform.Data)->Data); break;
+			case GL_INT:		shaderHandle->setUniform(uniform.Name, static_cast<UniformData<int>*>(uniform.Data)->Data); break;
+			case GL_INT_VEC2:	shaderHandle->setUniform(uniform.Name, static_cast<UniformData<sf::Glsl::Ivec2>*>(uniform.Data)->Data); break;
+			case GL_INT_VEC3:	shaderHandle->setUniform(uniform.Name, static_cast<UniformData<sf::Glsl::Ivec3>*>(uniform.Data)->Data); break;
+			case GL_INT_VEC4:	shaderHandle->setUniform(uniform.Name, static_cast<UniformData<sf::Glsl::Ivec4>*>(uniform.Data)->Data); break;
+			case GL_BOOL:		shaderHandle->setUniform(uniform.Name, static_cast<UniformData<bool>*>(uniform.Data)->Data); break;
+			case GL_BOOL_VEC2:	shaderHandle->setUniform(uniform.Name, static_cast<UniformData<sf::Glsl::Bvec2>*>(uniform.Data)->Data); break;
+			case GL_BOOL_VEC3:	shaderHandle->setUniform(uniform.Name, static_cast<UniformData<sf::Glsl::Bvec3>*>(uniform.Data)->Data); break;
+			case GL_BOOL_VEC4:	shaderHandle->setUniform(uniform.Name, static_cast<UniformData<sf::Glsl::Bvec4>*>(uniform.Data)->Data); break;
+			case GL_FLOAT_MAT3:	shaderHandle->setUniform(uniform.Name, static_cast<UniformData<sf::Glsl::Mat3>*>(uniform.Data)->Data); break;
+			case GL_FLOAT_MAT4:	shaderHandle->setUniform(uniform.Name, static_cast<UniformData<sf::Glsl::Mat4>*>(uniform.Data)->Data); break;
+			case GL_SAMPLER_2D:	shaderHandle->setUniform(uniform.Name,
+				*ResourceManager::GetResourceHandle<sf::Texture>(static_cast<UniformData<ResourceID>*>(uniform.Data)->Data)); break;
 
 			default:					LOG_CORE_ERROR("Shader uniform with unknown data type."); break;
 			}

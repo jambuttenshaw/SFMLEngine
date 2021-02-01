@@ -32,14 +32,17 @@ public:
 			// add the component
 			m_Scene->AddComponent(m_Entity, entityTransform);
 
+
 			// load a texture
 			ResourceID spriteTexture = Texture::Create("assets/textures/texture.png");
+
 
 			// create a material from a shader
 			ResourceID materialID = Material::CreateInstance("Basic");
 			Material* mat = ResourceManager::GetResourceHandle<Material>(materialID);
-
+			// set material properties
 			mat->SetUniform("u_Color", sf::Glsl::Vec4(sf::Color::Red));
+
 
 			// add the sprite renderer component
 			m_Scene->AddComponent(m_Entity, SpriteRenderer{ spriteTexture, materialID, 1 });
@@ -60,11 +63,21 @@ public:
 			// add the component
 			m_Scene->AddComponent(m_Entity2, entityTransform);
 
+
 			// load a texture
 			ResourceID spriteTexture = Texture::Create("assets/textures/texture2.png");
 
+
+			// create a material from a shader
+			ResourceID materialID = Material::CreateInstance("TextureMask");
+			Material* mat = ResourceManager::GetResourceHandle<Material>(materialID);
+			// set material properties
+			ResourceID maskTexture = Texture::Create("assets/textures/textureMask.png");
+			mat->SetUniform("u_TextureMask", maskTexture);
+
+
 			// add the sprite renderer component
-			m_Scene->AddComponent(m_Entity2, SpriteRenderer{ spriteTexture, Material::Create("Basic"), 0 });
+			m_Scene->AddComponent(m_Entity2, SpriteRenderer{ spriteTexture, materialID, 0 });
 		}
 	}
 
@@ -79,7 +92,7 @@ public:
 
 	void GameLayer::OnDetach()
 	{
-		m_Scene->DestroyEntity(m_Entity);
+		m_Scene->DestroyEntity(m_Entity2);
 	}
 
 	void GameLayer::OnEvent(sf::Event) {}
