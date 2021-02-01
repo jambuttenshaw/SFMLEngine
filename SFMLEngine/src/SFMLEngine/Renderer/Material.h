@@ -44,7 +44,7 @@ namespace SFMLEngine {
 		Material(ResourceID shaderResourceID);
 		~Material();
 
-		sf::Shader* Bind();
+		sf::Shader* SetUniforms();
 
 		template<typename T>
 		void SetUniform(const std::string& uniformName, T value)

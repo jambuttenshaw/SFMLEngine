@@ -122,7 +122,7 @@ namespace SFMLEngine {
 		m_Uniforms.clear();
 	}
 
-	sf::Shader* Material::Bind()
+	sf::Shader* Material::SetUniforms()
 	{
 
 		// get a pointer to the shader object from the resource manager

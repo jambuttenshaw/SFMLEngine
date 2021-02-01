@@ -28,14 +28,15 @@ namespace SFMLEngine {
 	{
 		ResourceID TextureHandle;
 		ResourceID MaterialHandle;
+		int RenderLayer;
 		int OrderInLayer;
 		sf::Sprite Sprite;
 
 		SpriteRenderer()
-			: TextureHandle(NULL_RESOURCE_ID), MaterialHandle(NULL_RESOURCE_ID), OrderInLayer(0), Sprite()
+			: TextureHandle(NULL_RESOURCE_ID), MaterialHandle(NULL_RESOURCE_ID), RenderLayer(0), OrderInLayer(0), Sprite()
 		{}
-		SpriteRenderer(ResourceID texHandle, ResourceID material, int orderInLayer)
-			: TextureHandle(texHandle), MaterialHandle(material), OrderInLayer(orderInLayer), Sprite()
+		SpriteRenderer(ResourceID texHandle, ResourceID material, int renderLayer, int orderInLayer)
+			: TextureHandle(texHandle), MaterialHandle(material), RenderLayer(renderLayer), OrderInLayer(orderInLayer), Sprite()
 		{}
 
 		sf::Texture* GetTexture() const
