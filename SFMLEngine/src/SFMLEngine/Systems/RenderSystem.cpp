@@ -52,7 +52,7 @@ namespace SFMLEngine {
 
 			// set shader uniforms
 			float depth = (sR.RenderLayer + (sR.OrderInLayer * orderInLayerNormalizeFactor)) * renderLayerNormaizeFactor;
-			mat->SetUniform("u_DepthValue", depth);
+			mat->SetProperty("u_DepthValue", depth);
 
 			sf::Shader* shader = mat->SetUniforms();
 

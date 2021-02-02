@@ -20,7 +20,7 @@ public:
 		
 		t += ts;
 		color = 127 * (1 + sin(t));
-		m_Material->SetUniform("u_Color", sf::Glsl::Vec4(sf::Color(color, 255 - color, color, 255)));
+		m_Material->SetProperty("u_Color", sf::Color(color, 255 - color, color, 255));
 	}
 
 	void SetPosition(sf::Vector2f pos)

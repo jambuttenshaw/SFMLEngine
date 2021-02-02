@@ -4,6 +4,7 @@
 namespace SFMLEngine {
 
 	std::vector<MaterialCacheEntry> Material::s_MaterialCache;
+	bool Material::s_WarnOnUnknownUniform = true;
 
 	Material::Material(const std::string& shaderName)
 	{
@@ -67,12 +68,12 @@ namespace SFMLEngine {
 					switch (type)
 					{
 					case GL_FLOAT:				newUniform.Data = (void*)new UniformData(0.0f); break;
-					case GL_FLOAT_VEC2:			newUniform.Data = (void*)new UniformData(sf::Glsl::Vec2(0.0f, 0.0f)); break;
-					case GL_FLOAT_VEC3:			newUniform.Data = (void*)new UniformData(sf::Glsl::Vec3(0.0f, 0.0f, 0.0f)); break;
-					case GL_FLOAT_VEC4:			newUniform.Data = (void*)new UniformData(sf::Glsl::Vec4(1.0f, 1.0f, 1.0f, 1.0f)); break;
+					case GL_FLOAT_VEC2:			newUniform.Data = (void*)new UniformData(sf::Vector2f(0.0f, 0.0f)); break;
+					case GL_FLOAT_VEC3:			newUniform.Data = (void*)new UniformData(sf::Vector3f(0.0f, 0.0f, 0.0f)); break;
+					case GL_FLOAT_VEC4:			newUniform.Data = (void*)new UniformData(sf::Color::White); break;
 					case GL_INT:				newUniform.Data = (void*)new UniformData(0); break;
-					case GL_INT_VEC2:			newUniform.Data = (void*)new UniformData(sf::Glsl::Ivec2(0, 0)); break;
-					case GL_INT_VEC3:			newUniform.Data = (void*)new UniformData(sf::Glsl::Ivec3(0, 0, 0)); break; 
+					case GL_INT_VEC2:			newUniform.Data = (void*)new UniformData(sf::Vector2i(0, 0)); break;
+					case GL_INT_VEC3:			newUniform.Data = (void*)new UniformData(sf::Vector3i(0, 0, 0)); break; 
 					case GL_INT_VEC4:			newUniform.Data = (void*)new UniformData(sf::Glsl::Ivec4(0, 0, 0, 0)); break;
 					case GL_BOOL:				newUniform.Data = (void*)new UniformData(false); break;
 					case GL_BOOL_VEC2:			newUniform.Data = (void*)new UniformData(sf::Glsl::Bvec2(false, false)); break;
@@ -96,15 +97,16 @@ namespace SFMLEngine {
 		// delete all of the shader data
 		for (Uniform& uniform : m_Uniforms)
 		{
+			// we need to cast the uniform data to the right type so that the destructor is called
 			switch (uniform.Type)
 			{
 			case GL_FLOAT:				delete static_cast<UniformData<float>*>(uniform.Data); break;
-			case GL_FLOAT_VEC2:			delete static_cast<UniformData<sf::Glsl::Vec2>*>(uniform.Data); break;
-			case GL_FLOAT_VEC3:			delete static_cast<UniformData<sf::Glsl::Vec3>*>(uniform.Data); break;
-			case GL_FLOAT_VEC4:			delete static_cast<UniformData<sf::Glsl::Vec4>*>(uniform.Data); break;
+			case GL_FLOAT_VEC2:			delete static_cast<UniformData<sf::Vector2f>*>(uniform.Data); break;
+			case GL_FLOAT_VEC3:			delete static_cast<UniformData<sf::Vector3f>*>(uniform.Data); break;
+			case GL_FLOAT_VEC4:			delete static_cast<UniformData<sf::Color>*>(uniform.Data); break;
 			case GL_INT:				delete static_cast<UniformData<int>*>(uniform.Data); break;
-			case GL_INT_VEC2:			delete static_cast<UniformData<sf::Glsl::Ivec2>*>(uniform.Data); break;
-			case GL_INT_VEC3:			delete static_cast<UniformData<sf::Glsl::Ivec3>*>(uniform.Data); break;
+			case GL_INT_VEC2:			delete static_cast<UniformData<sf::Vector2i>*>(uniform.Data); break;
+			case GL_INT_VEC3:			delete static_cast<UniformData<sf::Vector3i>*>(uniform.Data); break;
 			case GL_INT_VEC4:			delete static_cast<UniformData<sf::Glsl::Ivec4>*>(uniform.Data); break;
 			case GL_BOOL:				delete static_cast<UniformData<bool>*>(uniform.Data); break;
 			case GL_BOOL_VEC2:			delete static_cast<UniformData<sf::Glsl::Bvec2>*>(uniform.Data); break;
@@ -139,12 +141,12 @@ namespace SFMLEngine {
 			switch (uniform.Type)
 			{
 			case GL_FLOAT:		shaderHandle->setUniform(uniform.Name, static_cast<UniformData<float>*>(uniform.Data)->Data); break;
-			case GL_FLOAT_VEC2:	shaderHandle->setUniform(uniform.Name, static_cast<UniformData<sf::Glsl::Vec2>*>(uniform.Data)->Data); break;
-			case GL_FLOAT_VEC3:	shaderHandle->setUniform(uniform.Name, static_cast<UniformData<sf::Glsl::Vec3>*>(uniform.Data)->Data); break;
-			case GL_FLOAT_VEC4:	shaderHandle->setUniform(uniform.Name, static_cast<UniformData<sf::Glsl::Vec4>*>(uniform.Data)->Data); break;
+			case GL_FLOAT_VEC2:	shaderHandle->setUniform(uniform.Name, sf::Glsl::Vec2(static_cast<UniformData<sf::Vector2f>*>(uniform.Data)->Data)); break;
+			case GL_FLOAT_VEC3:	shaderHandle->setUniform(uniform.Name, sf::Glsl::Vec3(static_cast<UniformData<sf::Vector3f>*>(uniform.Data)->Data)); break;
+			case GL_FLOAT_VEC4:	shaderHandle->setUniform(uniform.Name, sf::Glsl::Vec4(static_cast<UniformData<sf::Color>*>(uniform.Data)->Data)); break;
 			case GL_INT:		shaderHandle->setUniform(uniform.Name, static_cast<UniformData<int>*>(uniform.Data)->Data); break;
-			case GL_INT_VEC2:	shaderHandle->setUniform(uniform.Name, static_cast<UniformData<sf::Glsl::Ivec2>*>(uniform.Data)->Data); break;
-			case GL_INT_VEC3:	shaderHandle->setUniform(uniform.Name, static_cast<UniformData<sf::Glsl::Ivec3>*>(uniform.Data)->Data); break;
+			case GL_INT_VEC2:	shaderHandle->setUniform(uniform.Name, sf::Glsl::Ivec2(static_cast<UniformData<sf::Vector2i>*>(uniform.Data)->Data)); break;
+			case GL_INT_VEC3:	shaderHandle->setUniform(uniform.Name, sf::Glsl::Ivec3(static_cast<UniformData<sf::Vector3i>*>(uniform.Data)->Data)); break;
 			case GL_INT_VEC4:	shaderHandle->setUniform(uniform.Name, static_cast<UniformData<sf::Glsl::Ivec4>*>(uniform.Data)->Data); break;
 			case GL_BOOL:		shaderHandle->setUniform(uniform.Name, static_cast<UniformData<bool>*>(uniform.Data)->Data); break;
 			case GL_BOOL_VEC2:	shaderHandle->setUniform(uniform.Name, static_cast<UniformData<sf::Glsl::Bvec2>*>(uniform.Data)->Data); break;

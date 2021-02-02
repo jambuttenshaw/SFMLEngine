@@ -46,25 +46,24 @@ namespace SFMLEngine {
 
 		sf::Shader* SetUniforms();
 
-		template<typename T>
-		void SetUniform(const std::string& uniformName, T value)
-		{
-			// error checking to make sure uniform exists
-			if (!UniformExists(uniformName))
-			{
-				return;
+		// even though the function bodies are all the same,
+		// I overloaded SetProperty for each allowed data type to be assigned to a shader uniform
+		// to stop any random data type being passed into SetUniform
 
-				LOG_CORE_ERROR("Uniform {0} does not exist.", uniformName);
-				SFMLE_CORE_ASSERT(0, "Could not set uniform.");
-			}
+		// there would be no way for me to easily validate data types being passed into SetUniform since they just
+		// get casted into a void*, so using these functions effectively perform validation that the correct data types are being passed in
 
-			UniformData<T>* data = new UniformData(value);
+		void SetProperty(const std::string& propertyName, float value) { SetUniform(propertyName, value); }
+		void SetProperty(const std::string& propertyName, const sf::Vector2f& value) { SetUniform(propertyName, value); }
+		void SetProperty(const std::string& propertyName, const sf::Vector3f& value) { SetUniform(propertyName, value); }
+		void SetProperty(const std::string& propertyName, const sf::Color& value) { SetUniform(propertyName, value); }
+		void SetProperty(const std::string& propertyName, int value) { SetUniform(propertyName, value); }
+		void SetProperty(const std::string& propertyName, const sf::Vector2i& value) { SetUniform(propertyName, value); }
+		void SetProperty(const std::string& propertyName, const sf::Vector3i& value) { SetUniform(propertyName, value); }
+		void SetProperty(const std::string& propertyName, bool value) { SetUniform(propertyName, value); }
+		void SetProperty(const std::string& propertyName, const sf::Transform& value) { SetUniform(propertyName, value); }
+		void SetProperty(const std::string& propertyName, ResourceID value) { SetUniform(propertyName, value); }
 
-			// assign data into uniforms vector
-			auto& uniform = GetUniform(uniformName);
-			// cast to a void* since we dont know the data type at compile time
-			uniform.Data = (void*)(data);
-		}
 
 	public:
 
@@ -77,10 +76,32 @@ namespace SFMLEngine {
 		// should be called on shutdown
 		static void DestroyAllCached();
 
+		// set whether warnings are given out if uniform doesnt exist
+		static void WarnOnUnknownUniform(bool flag) { s_WarnOnUnknownUniform = flag; }
+
 
 	private:
 
 		void Init();
+
+		// templated function to set the values of uniforms
+		// the values are held by the material class and only uploaded to the gpu prior to rendering
+		template<typename T>
+		void SetUniform(const std::string& uniformName, T value)
+		{
+			// error checking to make sure uniform exists
+			if (!UniformExists(uniformName) && s_WarnIfUnknownUniform)
+			{
+				LOG_CORE_WARN("Uniform {0} does not exist.", uniformName);
+			}
+
+			UniformData<T>* data = new UniformData(value);
+
+			// assign data into uniforms vector
+			auto& uniform = GetUniform(uniformName);
+			// cast to a void* since we dont know the data type at compile time
+			uniform.Data = (void*)(data);
+		}
 
 		bool UniformExists(const std::string& name);
 		Uniform& GetUniform(const std::string& name);
@@ -96,6 +117,7 @@ namespace SFMLEngine {
 
 	private:
 		static std::vector<MaterialCacheEntry> s_MaterialCache;
+		static bool s_WarnOnUnknownUniform;
 
 	};
 

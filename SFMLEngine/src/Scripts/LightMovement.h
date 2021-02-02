@@ -17,21 +17,14 @@ public:
 	{
 		// do something every frame
 
-		t += 0.5f * ts;
-		//lightPosition = sf::Vector3f(128, 128, 1);// +(200.0f * sf::Vector3f(cos(t), sin(t), 0));
 		sf::Vector2i mouse = sf::Mouse::getPosition(*Application::GetApplicationHandle()->GetWindowHandle());
-		lightPosition = sf::Vector3f(mouse.x, mouse.y, -5);
-		m_Material->SetUniform("u_LightPos", sf::Glsl::Vec3(lightPosition));
-		//m_EntityScript->SetPosition(sf::Vector2f(lightPosition.x, lightPosition.y));
+		lightPosition = sf::Vector3f((float)mouse.x, (float)mouse.y, -5.0f);
+
+		m_Material->SetProperty("u_LightPos", lightPosition);
 	}
 
-	//void SetEntityScript(EntityScript* script) { m_EntityScript = script; }
-
 private:
-	Material* m_Material;
+	Material* m_Material = nullptr;
 
-	float t = 0;
 	sf::Vector3f lightPosition;
-
-	//EntityScript* m_EntityScript;
 };
