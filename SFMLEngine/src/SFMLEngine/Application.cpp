@@ -83,6 +83,17 @@ namespace SFMLEngine
             signature.set(m_Coordinator->GetComponentType<NativeScripts>());
             m_Coordinator->SetSystemSignature<ScriptableEntitySystem>(signature);
         }
+
+
+        // lighting system
+        m_LightingSystem = m_Coordinator->RegisterSystem<LightingSystem>();
+        m_LightingSystem->Init(m_Coordinator);
+
+        {
+            Signature signature;
+            signature.set(m_Coordinator->GetComponentType<PointLight>());
+            m_Coordinator->SetSystemSignature<LightingSystem>(signature);
+        }
     }
 
     Application::~Application()

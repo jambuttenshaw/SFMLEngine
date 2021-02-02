@@ -3,8 +3,10 @@
 #include <SFML/Graphics.hpp>
 
 #include "ECS/Coordinator.h"
+
 #include "Systems/RenderSystem.h"
 #include "Systems/ScriptableEntitySystem.h"
+#include "Systems/LightingSystem.h"
 
 #include "LayerStack.h"
 #include "Scene.h"
@@ -41,6 +43,7 @@ namespace SFMLEngine {
 		// ECS systems
 		std::shared_ptr<RenderSystem> m_RenderSystem;
 		std::shared_ptr<ScriptableEntitySystem> m_ScriptableEntitySystem;
+		std::shared_ptr<LightingSystem> m_LightingSystem;
 
 	public:
 		static Application* GetApplicationHandle() { return s_Instance; }

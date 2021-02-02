@@ -76,6 +76,7 @@ namespace SFMLEngine {
 		template<typename T>
 		std::vector<T> GetComponents(std::set<Entity> entities)
 		{
+			// returns a vector of all components from the set of entities
 			std::vector<T> components;
 			for (auto const& entity : entities)
 			{
