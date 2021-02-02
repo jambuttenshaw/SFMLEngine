@@ -2,6 +2,6 @@
 
 namespace SFMLEngine {
 
-	std::unordered_map<std::string, ResourceID> ShaderLibrary::s_ShaderLibrary;
+	std::unordered_map<std::string, ShaderData> ShaderLibrary::s_ShaderLibrary;
 
 }

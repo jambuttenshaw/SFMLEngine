@@ -12,6 +12,12 @@
 
 namespace SFMLEngine {
 
+	struct ShaderData
+	{
+		ResourceID ShaderID;
+		bool Lit;
+	};
+
 	class ShaderLibrary
 	{
 	public:
@@ -21,19 +27,19 @@ namespace SFMLEngine {
 			// load in the shaders
 			LoadNewShader("Basic", "assets/shaders/Basic.vert", "assets/shaders/Basic.frag");
 			LoadNewShader("TextureMask", "assets/shaders/Basic.vert", "assets/shaders/TextureMask.frag");
-			LoadNewShader("Lit", "assets/shaders/Lit.vert", "assets/shaders/Lit.frag");
+			LoadNewShader("Lit", "assets/shaders/Lit.vert", "assets/shaders/Lit.frag", true);
 		}
 
 		static void Shutdown()
 		{
 			for (auto const& shader : s_ShaderLibrary)
 			{
-				ResourceManager::DeleteResource<sf::Shader>(shader.second);
+				ResourceManager::DeleteResource<sf::Shader>(shader.second.ShaderID);
 			}
 			s_ShaderLibrary.clear();
 		}
 
-		static ResourceID LoadNewShader(const std::string& name, const std::string& vertShader, const std::string& fragShader)
+		static ResourceID LoadNewShader(const std::string& name, const std::string& vertShader, const std::string& fragShader, bool lit = false)
 		{
 			if (s_ShaderLibrary.find(name) != s_ShaderLibrary.end())
 			{
@@ -48,27 +54,36 @@ namespace SFMLEngine {
 				return NULL_RESOURCE_ID;
 			}
 
-			s_ShaderLibrary.insert(std::make_pair(name, newShader));
+			s_ShaderLibrary.insert(std::make_pair(name, ShaderData{ newShader, lit }));
 
 			return newShader;
 		}
 
-		static ResourceID GetShaderResourceID(const std::string& name)
+		static ShaderData GetShaderData(const std::string& name)
 		{
 			auto location = s_ShaderLibrary.find(name);
 
 			if (location == s_ShaderLibrary.end())
 			{
 				LOG_CORE_ERROR("Shader '{0}' does not exist.", name);
-				return NULL_RESOURCE_ID;
+				return ShaderData{ NULL_RESOURCE_ID, false };
 			}
 
 			return s_ShaderLibrary[name];
 		}
 
+		static ResourceID GetShaderResourceID(const std::string& name)
+		{
+			return GetShaderData(name).ShaderID;
+		}
+		static bool IsLitShader(const std::string& name)
+		{
+			return GetShaderData(name).Lit;
+		}
+
 	private:
 
-		static std::unordered_map<std::string, ResourceID> s_ShaderLibrary;
+		static std::unordered_map<std::string, ShaderData> s_ShaderLibrary;
 
 	};
 

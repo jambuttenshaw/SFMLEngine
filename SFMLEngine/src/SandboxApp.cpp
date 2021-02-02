@@ -43,6 +43,9 @@ public:
 			mat->SetProperty("u_NormalMap", normalMap);
 
 			mat->SetProperty("u_LightPos", sf::Vector3f(128, 128, 5));
+			mat->SetProperty("u_LightIntensity", 3.0f);
+			mat->SetProperty("u_LightRange", 0.007f);
+			mat->SetProperty("u_LightColor", sf::Color(204, 51, 51));
 
 
 			// add the sprite renderer component
