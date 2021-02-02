@@ -102,7 +102,7 @@ namespace SFMLEngine {
 
 			assert(location != scripts.end() && "Entity did not have script attatched!");
 
-			return *scripts[location];
+			return *static_cast<T*>(scripts.at(typeName));
 		}
 
 	private:

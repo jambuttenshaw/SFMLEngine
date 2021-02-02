@@ -19,6 +19,9 @@ namespace SFMLEngine {
 		Transform()
 			: Position(sf::Vector2f(0, 0)), Rotation(0.0f), Scale(sf::Vector2f(1.0f, 1.0f))
 		{}
+		Transform(sf::Vector2f pos)
+			: Position(pos), Rotation(0.0f), Scale(sf::Vector2f(1.0f, 1.0f))
+		{}
 		Transform(sf::Vector2f pos, float rot, sf::Vector2f scale)
 			: Position(pos), Rotation(rot), Scale(scale)
 		{}

@@ -52,6 +52,8 @@ namespace SFMLEngine {
 			// error checking to make sure uniform exists
 			if (!UniformExists(uniformName))
 			{
+				return;
+
 				LOG_CORE_ERROR("Uniform {0} does not exist.", uniformName);
 				SFMLE_CORE_ASSERT(0, "Could not set uniform.");
 			}

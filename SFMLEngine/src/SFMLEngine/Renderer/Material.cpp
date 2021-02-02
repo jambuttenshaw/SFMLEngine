@@ -42,7 +42,6 @@ namespace SFMLEngine {
 		{
 			// get the information about the current uniform
 			glGetActiveUniform(nativeShaderHandle, i, bufferSize, &length, &size, &type, uniformName);
-			// LOG_CORE_TRACE("Uniform #{0} Type: {1} Name: {2}", i, type, varName);
 
 			// we only want to deal with the uniform if its name begins with 'u_'
 			// the length of the name must therefore be greater than 2
@@ -137,7 +136,6 @@ namespace SFMLEngine {
 
 			// then we need to cast the void* back to a pointer of UniformData of that type
 			// only then can we pass the data into setUniform as the correct type
-
 			switch (uniform.Type)
 			{
 			case GL_FLOAT:		shaderHandle->setUniform(uniform.Name, static_cast<UniformData<float>*>(uniform.Data)->Data); break;

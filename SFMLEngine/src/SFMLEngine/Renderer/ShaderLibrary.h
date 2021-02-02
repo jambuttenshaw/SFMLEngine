@@ -21,6 +21,7 @@ namespace SFMLEngine {
 			// load in the shaders
 			LoadNewShader("Basic", "assets/shaders/Basic.vert", "assets/shaders/Basic.frag");
 			LoadNewShader("TextureMask", "assets/shaders/Basic.vert", "assets/shaders/TextureMask.frag");
+			LoadNewShader("Lit", "assets/shaders/Lit.vert", "assets/shaders/Lit.frag");
 		}
 
 		static void Shutdown()
