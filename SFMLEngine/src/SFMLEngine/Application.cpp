@@ -58,6 +58,7 @@ namespace SFMLEngine
         m_Coordinator->RegisterComponent<Transform>();
         m_Coordinator->RegisterComponent<SpriteRenderer>();
         m_Coordinator->RegisterComponent<NativeScripts>();
+        m_Coordinator->RegisterComponent<PointLight>();
 
         // register systems
 

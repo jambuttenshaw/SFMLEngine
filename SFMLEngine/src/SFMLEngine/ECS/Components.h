@@ -58,4 +58,19 @@ namespace SFMLEngine {
 		std::unordered_map<const char*, ScriptableEntity*> Scripts;
 	};
 
+	struct PointLight
+	{
+		sf::Vector3f Position;
+		float Range;
+		float Intensity;
+		sf::Color Color;
+
+		PointLight()
+			: Position(sf::Vector3f({ 0.0f, 0.0f, 0.0f })), Range(10.0f), Intensity(1.0f), Color(sf::Color::White)
+		{}
+		PointLight(sf::Vector3f pos, float range, float intensity, sf::Color color)
+			: Position(pos), Range(range), Intensity(intensity), Color(color)
+		{}
+	};
+
 }
