@@ -82,6 +82,7 @@ namespace SFMLEngine {
 
 	void RenderSystem::UploadLightingData(Material* material)
 	{
+		material->SetProperty("u_NumLights", m_NumLights);
 		for (int i = 0; i < m_NumLights; i++)
 		{
 			std::string lightIndex("u_Lights[" + std::to_string(i) + "]");

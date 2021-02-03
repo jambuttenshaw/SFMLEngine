@@ -52,9 +52,16 @@ public:
 			m_Light = m_Scene->CreateEntity();
 
 			m_Scene->AddComponent(m_Light, Transform{});
-			m_Scene->AddComponent(m_Light, PointLight{ 1.0f, 0.007f, sf::Color::Blue });
+			m_Scene->AddComponent(m_Light, PointLight{ 2.0f, 0.007f, sf::Color::Red });
 
 			m_Scene->AddNativeScript<GoToMouse>(m_Light);
+		}
+		
+		{
+			m_Light2 = m_Scene->CreateEntity();
+
+			m_Scene->AddComponent(m_Light2, Transform{sf::Vector2f(400, 300)});
+			m_Scene->AddComponent(m_Light2, PointLight{ 4.0f, 0.007f, sf::Color::Blue });
 		}
 	}
 
@@ -71,6 +78,7 @@ public:
 	{
 		m_Scene->DestroyEntity(m_Entity);
 		m_Scene->DestroyEntity(m_Light);
+		m_Scene->DestroyEntity(m_Light2);
 	}
 
 	void GameLayer::OnEvent(sf::Event) {}
@@ -85,6 +93,7 @@ private:
 	
 	Entity m_Entity;
 	Entity m_Light;
+	Entity m_Light2;
 };
 
 
