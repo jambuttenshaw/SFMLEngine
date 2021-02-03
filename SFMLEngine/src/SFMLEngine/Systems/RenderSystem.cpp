@@ -39,10 +39,8 @@ namespace SFMLEngine {
 			Material* mat = ResourceManager::GetResourceHandle<Material>(materialData.MaterialID);
 
 			// if it is a lit material we want to upload all of the lighting uniforms
-			if (true)
-			{
+			if (materialData.Lit)
 				UploadLightingData(mat);
-			}
 
 			sf::Shader* shader = mat->SetUniforms();
 			m_RenderState.shader = shader;
@@ -55,7 +53,7 @@ namespace SFMLEngine {
 
 				// set shader uniforms
 				float depth = (sR.RenderLayer + (sR.OrderInLayer * m_OrderInLayerNormalizeFactor)) * m_RenderLayerNormaizeFactor;
-				mat->SetProperty("u_DepthValue", depth);
+				shader->setUniform("u_DepthValue", depth);
 
 				// create a transform
 				m_RenderState.transform = t.GetTransformMatrix();

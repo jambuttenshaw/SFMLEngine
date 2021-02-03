@@ -213,7 +213,7 @@ namespace SFMLEngine {
 
 		// now that we have created a material, we cache it into the map
 		// so that it can be shared between sprites that want the same material
-		s_MaterialCache.push_back(MaterialData{ shader, newID, true });
+		s_MaterialCache.push_back(MaterialData{ shader, newID, true, ShaderLibrary::IsLitShader(shader) });
 
 		return newID;
 	}
@@ -231,7 +231,7 @@ namespace SFMLEngine {
 
 		// register this material in the material cache
 		// but then state that it is not to be shared with other sprites
-		s_MaterialCache.push_back(MaterialData{ shader, newID, false });
+		s_MaterialCache.push_back(MaterialData{ shader, newID, false, ShaderLibrary::IsLitShader(shader) });
 
 		return newID;
 	}

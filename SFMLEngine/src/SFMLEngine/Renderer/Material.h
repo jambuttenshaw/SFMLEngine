@@ -34,6 +34,7 @@ namespace SFMLEngine {
 		std::string ShaderName;
 		ResourceID MaterialID;
 		bool Shared;
+		bool Lit;
 	};
 
 
