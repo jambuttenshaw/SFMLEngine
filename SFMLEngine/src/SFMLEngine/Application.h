@@ -45,6 +45,8 @@ namespace SFMLEngine {
 		std::shared_ptr<ScriptableEntitySystem> m_ScriptableEntitySystem;
 		std::shared_ptr<LightingSystem> m_LightingSystem;
 
+		sf::Vector2f m_DefaultWindowCentre;
+
 	public:
 		static Application* GetApplicationHandle() { return s_Instance; }
 

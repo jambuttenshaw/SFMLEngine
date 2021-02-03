@@ -39,6 +39,7 @@ namespace SFMLEngine
 
         m_Window = new sf::RenderWindow(sf::VideoMode(800, 600), "SFML window", sf::Style::Default, contextSettings);
         m_Window->setFramerateLimit(60);
+        m_DefaultWindowCentre = m_Window->getView().getCenter();
 
         Renderer::InitGLEW();
 
@@ -98,8 +99,6 @@ namespace SFMLEngine
         m_RenderSystem->Init(m_Coordinator, m_Window, m_LightingSystem);
         m_ScriptableEntitySystem->Init(m_Coordinator);
         m_LightingSystem->Init(m_Coordinator);
-
-
     }
 
     Application::~Application()
@@ -139,6 +138,10 @@ namespace SFMLEngine
                 // window events should be handled by the application
                 if (event.type == sf::Event::Closed)
                     m_Window->close();
+                
+                if (event.type == sf::Event::Resized)
+                    m_Window->setView(sf::View(m_DefaultWindowCentre, sf::Vector2f((float)event.size.width, (float)event.size.height)));
+                    
                 else
                 {
                     // send event callback through to the layer stack
