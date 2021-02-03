@@ -91,6 +91,7 @@ namespace SFMLEngine
 
         {
             Signature signature;
+            signature.set(m_Coordinator->GetComponentType<Transform>());
             signature.set(m_Coordinator->GetComponentType<PointLight>());
             m_Coordinator->SetSystemSignature<LightingSystem>(signature);
         }
@@ -153,11 +154,24 @@ namespace SFMLEngine
             m_ScriptableEntitySystem->Update(ts);
 
 
+            // ---------
+            // RENDERING
+            // ---------
+
             // Clear screen
             m_Window->clear();
+            Renderer::Clear();
+
+            // set the context active
+            m_Window->setActive();
+
+            // set up the renderer for drawing
+            Renderer::SetOpenGLStates();
 
             // draw to the screen
             m_RenderSystem->Render();
+            
+            m_Window->setActive(false);
 
             // Update the window
             m_Window->display();

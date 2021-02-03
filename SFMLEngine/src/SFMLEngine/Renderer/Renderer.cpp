@@ -31,6 +31,10 @@ namespace SFMLEngine {
 		// this must be after a valid openGL context is created
 		GLenum err = glewInit();
 		SFMLE_CORE_ASSERT(err == GLEW_OK, "GLEW failed to initialise.");
+
+
+		// set up the opengl states we want
+		glDepthFunc(GL_LEQUAL);
 	}
 
 	void Renderer::Shutdown()
@@ -38,15 +42,16 @@ namespace SFMLEngine {
 		delete s_ContextSettings;
 	}
 
-	void Renderer::Begin()
+	void Renderer::Clear()
 	{
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		// SFML only clears the colour buffer,
+		// but since were also using the depth buffer we need to clear that too
+		glClear(GL_DEPTH_BUFFER_BIT);
 	}
 
 	void Renderer::SetOpenGLStates()
 	{
 		glEnable(GL_DEPTH_TEST);
-		glDepthFunc(GL_LEQUAL);
 	}
 
 }

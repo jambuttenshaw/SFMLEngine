@@ -29,7 +29,7 @@ namespace SFMLEngine {
 		void* Data;
 	};
 
-	struct MaterialCacheEntry
+	struct MaterialData
 	{
 		std::string ShaderName;
 		ResourceID MaterialID;
@@ -71,6 +71,9 @@ namespace SFMLEngine {
 		// or if one already exists then return the resource ID of it
 		static ResourceID Create(const std::string& shader);
 		static ResourceID CreateInstance(const std::string& shader);
+
+		// get all the materials in use
+		static void GetAllMaterialsInUse(std::vector<MaterialData>& materials) { materials = s_MaterialCache; }
 
 		// deletes all cached materials from memory
 		// should be called on shutdown
@@ -116,7 +119,7 @@ namespace SFMLEngine {
 		std::vector<Uniform> m_Uniforms;
 
 	private:
-		static std::vector<MaterialCacheEntry> s_MaterialCache;
+		static std::vector<MaterialData> s_MaterialCache;
 		static bool s_WarnOnUnknownUniform;
 
 	};

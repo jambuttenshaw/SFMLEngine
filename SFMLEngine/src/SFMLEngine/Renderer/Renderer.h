@@ -13,7 +13,7 @@ namespace SFMLEngine {
 		static void InitGLEW();
 		static void Shutdown();
 
-		static void Begin();
+		static void Clear();
 
 		static void SetOpenGLStates();
 

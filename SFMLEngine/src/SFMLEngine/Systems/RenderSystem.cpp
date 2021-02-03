@@ -16,59 +16,61 @@ namespace SFMLEngine {
 		}
 		m_MaxOrderInLayer = std::max(m_MaxOrderInLayer, abs(sRenderer.OrderInLayer));
 		m_MaxRenderLayer = std::max(m_MaxRenderLayer, abs(sRenderer.RenderLayer));
+		m_OrderInLayerNormalizeFactor = m_MaxOrderInLayer == 0 ? 0 : 1.0f / (float)(m_MaxOrderInLayer + 1.0f);
+		m_RenderLayerNormaizeFactor = m_MaxRenderLayer == 0 ? 1.0f : 1.0f / (float)(m_MaxRenderLayer);
+
+		// update the materials that the system knows about
+		Material::GetAllMaterialsInUse(m_Materials);
 	}
 
 
 	void RenderSystem::Render()
 	{
-		// get the sprite renderer components
-		auto components = m_Coordinator->GetComponents<SpriteRenderer>(m_Entities);
-
-
-		// set the context active
-		m_RenderWindow->setActive();
-
-		// set up the renderer for drawing
-		Renderer::SetOpenGLStates();
-		Renderer::Begin();
-
-
-		// create a renderstate to choose how the sprite is rendered
-		sf::RenderStates renderState;
-
-
-		// we do not want to divide by 0
-		float orderInLayerNormalizeFactor = m_MaxOrderInLayer == 0 ? 0 : 1.0f / (float)(m_MaxOrderInLayer + 1.0f);
-		float renderLayerNormaizeFactor = m_MaxRenderLayer == 0 ? 1.0f : 1.0f / (float)(m_MaxRenderLayer);
-
-
-		for (const auto& entity : m_Entities)
+		for (const auto& materialData : m_Materials)
 		{
-			auto const& sR = m_Coordinator->GetComponent<SpriteRenderer>(entity);
-			auto const& t = m_Coordinator->GetComponent<Transform>(entity);
+			// get all the entities that use that material
+			// this populates m_CurrentEntities with the entities using this material
+			GetAllEntitiesWithMaterial(materialData);
 
-			// get the material
-			Material* mat = sR.GetMaterial();
-
-			// set shader uniforms
-			float depth = (sR.RenderLayer + (sR.OrderInLayer * orderInLayerNormalizeFactor)) * renderLayerNormaizeFactor;
-			mat->SetProperty("u_DepthValue", depth);
-
+			// set the shader uniforms (with the exception of the depth value) once per material, rather than once per sprite
+			Material* mat = ResourceManager::GetResourceHandle<Material>(materialData.MaterialID);
 			sf::Shader* shader = mat->SetUniforms();
+			m_RenderState.shader = shader;
 
-			renderState.shader = shader;
+			for (const auto& entity : m_CurrentEntities)
+			{
+				auto const& sR = m_Coordinator->GetComponent<SpriteRenderer>(entity);
+				auto const& t = m_Coordinator->GetComponent<Transform>(entity);
 
-			// create a transform
-			sf::Transform transform;
-			transform.translate(t.Position);
-			transform.rotate(t.Rotation);
-			transform.scale(t.Scale);
-			renderState.transform = transform;
 
-			m_RenderWindow->draw(sR.Sprite, renderState);
+				// set shader uniforms
+				float depth = (sR.RenderLayer + (sR.OrderInLayer * m_OrderInLayerNormalizeFactor)) * m_RenderLayerNormaizeFactor;
+				mat->SetProperty("u_DepthValue", depth);
+
+				// create a transform
+				sf::Transform transform;
+				transform.translate(t.Position);
+				transform.rotate(t.Rotation);
+				transform.scale(t.Scale);
+				m_RenderState.transform = transform;
+
+				m_RenderWindow->draw(sR.Sprite, m_RenderState);
+			}
 		}
+	}
 
-		m_RenderWindow->setActive(false);
+	void RenderSystem::GetAllEntitiesWithMaterial(MaterialData material)
+	{
+		m_CurrentEntities.clear();
+
+		for (auto& entity : m_Entities)
+		{
+			if (m_Coordinator->GetComponent<SpriteRenderer>(entity).MaterialHandle == material.MaterialID)
+			{
+				m_CurrentEntities.push_back(entity);
+				if (!material.Shared) return;
+			}
+		}
 
 	}
 
