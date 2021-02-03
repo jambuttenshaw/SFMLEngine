@@ -4,7 +4,6 @@
 #include <SFML/Graphics.hpp>
 
 // scripts
-#include "Scripts/EntityScript.h"
 #include "Scripts/LightMovement.h"
 
 

@@ -15,16 +15,25 @@ namespace SFMLEngine {
 		sf::Vector2f Position;
 		float Rotation = 0.0f;
 		sf::Vector2f Scale;
+		
 
 		Transform()
-			: Position(sf::Vector2f(0, 0)), Rotation(0.0f), Scale(sf::Vector2f(1.0f, 1.0f))
 		{}
 		Transform(sf::Vector2f pos)
-			: Position(pos), Rotation(0.0f), Scale(sf::Vector2f(1.0f, 1.0f))
+			: Position(pos)
 		{}
 		Transform(sf::Vector2f pos, float rot, sf::Vector2f scale)
 			: Position(pos), Rotation(rot), Scale(scale)
 		{}
+
+		sf::Transform GetTransformMatrix() const 
+		{
+			sf::Transform t;
+			t.translate(Position);
+			t.rotate(Rotation);
+			t.scale(Scale);
+			return t;
+		}
 	};
 
 	struct SpriteRenderer

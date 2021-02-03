@@ -47,4 +47,12 @@ namespace SFMLEngine {
 	// in case a texture wasnt, or couldnt be, loaded
 	const ResourceID NULL_RESOURCE_ID = MAX_RESOURCES + 1;
 
+
+
+	// --------
+	// Lighting
+	// --------
+
+	const int MAX_LIGHTS = 16;
+
 }

@@ -26,6 +26,9 @@ namespace SFMLEngine {
 
 	void RenderSystem::Render()
 	{
+		// retrieve lighting data from lighting system
+		m_NumLights = m_LightingSystem->GetLightingData(m_Lights);
+
 		for (const auto& materialData : m_Materials)
 		{
 			// get all the entities that use that material
@@ -34,6 +37,13 @@ namespace SFMLEngine {
 
 			// set the shader uniforms (with the exception of the depth value) once per material, rather than once per sprite
 			Material* mat = ResourceManager::GetResourceHandle<Material>(materialData.MaterialID);
+
+			// if it is a lit material we want to upload all of the lighting uniforms
+			if (true)
+			{
+				UploadLightingData(mat);
+			}
+
 			sf::Shader* shader = mat->SetUniforms();
 			m_RenderState.shader = shader;
 
@@ -48,11 +58,7 @@ namespace SFMLEngine {
 				mat->SetProperty("u_DepthValue", depth);
 
 				// create a transform
-				sf::Transform transform;
-				transform.translate(t.Position);
-				transform.rotate(t.Rotation);
-				transform.scale(t.Scale);
-				m_RenderState.transform = transform;
+				m_RenderState.transform = t.GetTransformMatrix();
 
 				m_RenderWindow->draw(sR.Sprite, m_RenderState);
 			}
@@ -72,6 +78,18 @@ namespace SFMLEngine {
 			}
 		}
 
+	}
+
+	void RenderSystem::UploadLightingData(Material* material)
+	{
+		for (int i = 0; i < m_NumLights; i++)
+		{
+			std::string lightIndex("u_Lights[" + std::to_string(i) + "]");
+			material->SetProperty(lightIndex + ".Position", m_Lights[i].Position);
+			material->SetProperty(lightIndex + ".Intensity", m_Lights[i].Intensity);
+			material->SetProperty(lightIndex + ".Range", m_Lights[i].Range);
+			material->SetProperty(lightIndex + ".Color", m_Lights[i].Color);
+		}
 	}
 
 }
