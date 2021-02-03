@@ -69,15 +69,15 @@ namespace SFMLEngine {
 
 	struct PointLight
 	{
-		float Range;
 		float Intensity;
+		float Range;
 		sf::Color Color;
 
 		PointLight()
 			: Range(10.0f), Intensity(1.0f), Color(sf::Color::White)
 		{}
-		PointLight(float range, float intensity, sf::Color color)
-			: Range(range), Intensity(intensity), Color(color)
+		PointLight(float intensity, float range, sf::Color color)
+			: Intensity(intensity), Range(range), Color(color)
 		{}
 	};
 

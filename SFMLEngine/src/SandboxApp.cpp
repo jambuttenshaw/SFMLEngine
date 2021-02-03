@@ -5,6 +5,7 @@
 
 // scripts
 #include "Scripts/LightMovement.h"
+#include "Scripts/GoToMouse.h"
 
 
 using namespace SFMLEngine;
@@ -24,7 +25,6 @@ public:
 
 
 			// give the entity a transform
-			// this time a default transform
 			Transform entityTransform{sf::Vector2f(272, 172), 0, sf::Vector2f(4, 4)};
 			// add the component
 			m_Scene->AddComponent(m_Entity, entityTransform);
@@ -37,21 +37,24 @@ public:
 			// create a material from a shader
 			ResourceID materialID = Material::CreateInstance("Lit");
 			Material* mat = ResourceManager::GetResourceHandle<Material>(materialID);
+
 			// set material properties
 			ResourceID normalMap = Texture::Create("assets/textures/textureNormalMap.png");
 			mat->SetProperty("u_NormalMap", normalMap);
 
-			mat->SetProperty("u_Lights[0].Position", sf::Vector3f(128, 128, 5));
-			mat->SetProperty("u_Lights[0].Intensity", 3.0f);
-			mat->SetProperty("u_Lights[0].Range", 0.007f);
-			mat->SetProperty("u_Lights[0].Color", sf::Color(204, 51, 51));
-
 
 			// add the sprite renderer component
 			m_Scene->AddComponent(m_Entity, SpriteRenderer{ spriteTexture, materialID, 2, 0 });
+		}
 
-			// add a script to move the light
-			auto& script = m_Scene->AddNativeScript<LightMovement>(m_Entity);
+
+		{
+			m_Light = m_Scene->CreateEntity();
+
+			m_Scene->AddComponent(m_Light, Transform{});
+			m_Scene->AddComponent(m_Light, PointLight{ 1.0f, 0.007f, sf::Color::Blue });
+
+			m_Scene->AddNativeScript<GoToMouse>(m_Light);
 		}
 	}
 
@@ -67,6 +70,7 @@ public:
 	void GameLayer::OnDetach()
 	{
 		m_Scene->DestroyEntity(m_Entity);
+		m_Scene->DestroyEntity(m_Light);
 	}
 
 	void GameLayer::OnEvent(sf::Event) {}
@@ -80,6 +84,7 @@ private:
 	std::shared_ptr<Scene> m_Scene;
 	
 	Entity m_Entity;
+	Entity m_Light;
 };
 
 

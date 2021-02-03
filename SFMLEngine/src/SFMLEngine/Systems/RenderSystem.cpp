@@ -85,6 +85,7 @@ namespace SFMLEngine {
 		for (int i = 0; i < m_NumLights; i++)
 		{
 			std::string lightIndex("u_Lights[" + std::to_string(i) + "]");
+			// LOG_CORE_TRACE(lightIndex);
 			material->SetProperty(lightIndex + ".Position", m_Lights[i].Position);
 			material->SetProperty(lightIndex + ".Intensity", m_Lights[i].Intensity);
 			material->SetProperty(lightIndex + ".Range", m_Lights[i].Range);

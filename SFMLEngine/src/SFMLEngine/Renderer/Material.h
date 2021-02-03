@@ -96,6 +96,7 @@ namespace SFMLEngine {
 			if (!UniformExists(uniformName) && s_WarnOnUnknownUniform)
 			{
 				LOG_CORE_WARN("Uniform {0} does not exist.", uniformName);
+				return;
 			}
 
 			UniformData<T>* data = new UniformData(value);
