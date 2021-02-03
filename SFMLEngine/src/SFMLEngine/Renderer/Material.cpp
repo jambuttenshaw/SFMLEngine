@@ -56,6 +56,12 @@ namespace SFMLEngine {
 					Uniform newUniform;
 					// its easier to deal with std::string rather than char* so we do a quick convert here
 					newUniform.Name = std::string(uniformName);
+
+					// there are some special case uniforms that we dont expose to materials
+					// but are instead handled directly by the render system
+					if (newUniform.Name == "u_DepthValue" || newUniform.Name == "u_NormalMap")
+						continue;
+
 					// store the type of the uniform
 					// this is used for retrieving the data later
 					newUniform.Type = type;

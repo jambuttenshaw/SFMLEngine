@@ -14,6 +14,7 @@ namespace SFMLEngine {
 		{
 			LOG_WARN("No texture was supplied for entity ID {0}", entity);
 		}
+
 		m_MaxOrderInLayer = std::max(m_MaxOrderInLayer, abs(sRenderer.OrderInLayer));
 		m_MaxRenderLayer = std::max(m_MaxRenderLayer, abs(sRenderer.RenderLayer));
 		m_OrderInLayerNormalizeFactor = m_MaxOrderInLayer == 0 ? 0 : 1.0f / (float)(m_MaxOrderInLayer + 1.0f);
@@ -54,6 +55,7 @@ namespace SFMLEngine {
 				// set shader uniforms
 				float depth = (sR.RenderLayer + (sR.OrderInLayer * m_OrderInLayerNormalizeFactor)) * m_RenderLayerNormaizeFactor;
 				shader->setUniform("u_DepthValue", depth);
+				if (materialData.Lit) shader->setUniform("u_NormalMap", *ResourceManager::GetResourceHandle<sf::Texture>(sR.NormalMapHandle));
 
 				// create a transform
 				m_RenderState.transform = t.GetTransformMatrix();
