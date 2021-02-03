@@ -28,6 +28,8 @@ namespace SFMLEngine {
 
 	ResourceID ResourceManager::GetNextID()
 	{
+		SFMLE_CORE_ASSERT(s_LivingResourceCount < MAX_RESOURCES, "Too many resources in existance!");
+
 		ResourceID nextID = s_AvailableResourceIDs.front();
 		s_AvailableResourceIDs.pop();
 		++s_LivingResourceCount;
