@@ -42,10 +42,10 @@ public:
 			ResourceID normalMap = Texture::Create("assets/textures/textureNormalMap.png");
 			mat->SetProperty("u_NormalMap", normalMap);
 
-			mat->SetProperty("u_LightPos", sf::Vector3f(128, 128, 5));
-			mat->SetProperty("u_LightIntensity", 3.0f);
-			mat->SetProperty("u_LightRange", 0.007f);
-			mat->SetProperty("u_LightColor", sf::Color(204, 51, 51));
+			mat->SetProperty("u_Lights[0].Position", sf::Vector3f(128, 128, 5));
+			mat->SetProperty("u_Lights[0].Intensity", 3.0f);
+			mat->SetProperty("u_Lights[0].Range", 0.007f);
+			mat->SetProperty("u_Lights[0].Color", sf::Color(204, 51, 51));
 
 
 			// add the sprite renderer component

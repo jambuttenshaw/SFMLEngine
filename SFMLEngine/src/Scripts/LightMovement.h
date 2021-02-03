@@ -20,7 +20,7 @@ public:
 		sf::Vector2i mouse = sf::Mouse::getPosition(*Application::GetApplicationHandle()->GetWindowHandle());
 		lightPosition = sf::Vector3f((float)mouse.x, (float)mouse.y, -5.0f);
 
-		m_Material->SetProperty("u_LightPos", lightPosition);
+		m_Material->SetProperty("u_Lights[0].Position", lightPosition);
 	}
 
 private:

@@ -2,10 +2,14 @@ uniform sampler2D texture;
 
 uniform sampler2D u_NormalMap;
 
-uniform vec3 u_LightPos;
-uniform float u_LightIntensity;
-uniform float u_LightRange;
-uniform vec4 u_LightColor;
+struct LightData
+{
+	vec3 Position;
+	float Intensity;
+	float Range;
+	vec4 Color;
+};
+uniform LightData u_Lights[16];
 
 varying vec3 v_FragPos;
 
@@ -21,7 +25,7 @@ void main()
 	normal = normalize(normal * 2.0 - 1.0);
 
 	// get the direction from the fragment to the light
-	vec3 toLight = u_LightPos - v_FragPos;
+	vec3 toLight = u_Lights[0].Position - v_FragPos;
 	vec3 lightDir = normalize(toLight);
 	lightDir.y = -lightDir.y;
 
@@ -33,8 +37,8 @@ void main()
 	lighting = 0.5 * (lighting + 1.0);
 
 	// factor in how intense and far away the light source is
-	lighting *= u_LightIntensity * exp(u_LightRange * -distToLight);
+	lighting *= u_Lights[0].Intensity * exp(u_Lights[0].Range * -distToLight);
 
 	// assign the fragment colour as the sample from the texture multiplied by the lighting value
-	gl_FragColor = vec4(lighting * u_LightColor * pixel.rgb, pixel.a);
+	gl_FragColor = vec4(lighting * u_Lights[0].Color * pixel.rgb, pixel.a);
 }
