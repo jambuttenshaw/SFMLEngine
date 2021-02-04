@@ -1,7 +1,6 @@
 #include "Input.h"
 
 #include "Log.h"
-#include "Application.h"
 
 namespace SFMLEngine {
 

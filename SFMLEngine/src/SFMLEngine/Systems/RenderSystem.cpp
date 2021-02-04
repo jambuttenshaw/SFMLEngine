@@ -77,7 +77,6 @@ namespace SFMLEngine {
 				auto const& sR = m_Coordinator->GetComponent<SpriteRenderer>(entity);
 				auto const& t = m_Coordinator->GetComponent<Transform>(entity);
 
-
 				// set shader uniforms
 				float depth = (sR.RenderLayer + (sR.OrderInLayer * m_OrderInLayerNormalizeFactor)) * m_RenderLayerNormaizeFactor;
 				shader->setUniform("u_DepthValue", depth);
@@ -88,7 +87,7 @@ namespace SFMLEngine {
 					// requires negated because of the y axis being flipped
 					shader->setUniform("u_Rotation", -t.Rotation * DEG_TO_RAD);
 				}
-
+				
 				// create a transform
 				m_RenderState.transform = t.GetTransformMatrix();
 

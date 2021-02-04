@@ -125,6 +125,9 @@ namespace SFMLEngine
         */
         m_ScriptableEntitySystem->Start();
 
+        sf::Clock clock;
+        float fps = 0;
+
         while (m_Window->isOpen())
         {
             Timestep ts(m_Clock.restart().asSeconds());
@@ -181,6 +184,8 @@ namespace SFMLEngine
 
             // Update the window
             m_Window->display();
+
+            fps = 1.0f / clock.restart().asSeconds();
         }
 
         Shutdown();
