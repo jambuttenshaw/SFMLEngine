@@ -1,5 +1,7 @@
 #include "Input.h"
 
+#include "Log.h"
+#include "Application.h"
 
 namespace SFMLEngine {
 
@@ -20,14 +22,14 @@ namespace SFMLEngine {
 		return sf::Mouse::isButtonPressed(button);
 	}
 
-	const sf::Vector2i& Input::GetMouseScreenPos()
+	sf::Vector2i Input::GetMouseScreenPos()
 	{
 		return sf::Mouse::getPosition(*s_Window);
 	}
 
-	const sf::Vector2f& Input::GetMouseWorldPos()
+	sf::Vector2f Input::GetMouseWorldPos()
 	{
-		return s_Window->mapPixelToCoords(GetMouseScreenPos());
+		return s_Window->mapPixelToCoords(GetMouseScreenPos(), s_Window->getView());
 	}
 
 }

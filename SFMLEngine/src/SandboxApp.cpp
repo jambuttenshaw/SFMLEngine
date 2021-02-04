@@ -4,7 +4,6 @@
 #include <SFML/Graphics.hpp>
 
 // scripts
-#include "Scripts/LightMovement.h"
 #include "Scripts/GoToMouse.h"
 
 

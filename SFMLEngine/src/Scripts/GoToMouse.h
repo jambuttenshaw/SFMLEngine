@@ -16,7 +16,7 @@ public:
 	void Update(Timestep ts) override
 	{
 		// do something every frame
-		m_Transform->Position = (sf::Vector2f)sf::Mouse::getPosition(*Application::GetApplicationHandle()->GetWindowHandle());
+		m_Transform->Position = Input::GetMouseWorldPos();
 	}
 
 private:

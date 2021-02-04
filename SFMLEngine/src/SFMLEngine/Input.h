@@ -14,8 +14,8 @@ namespace SFMLEngine {
 
 		static bool IsMouseButtonDown(sf::Mouse::Button);
 
-		static const sf::Vector2i& GetMouseScreenPos();
-		static const sf::Vector2f& GetMouseWorldPos();
+		static sf::Vector2i GetMouseScreenPos();
+		static sf::Vector2f GetMouseWorldPos();
 
 	private:
 
