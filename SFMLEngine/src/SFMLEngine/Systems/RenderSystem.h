@@ -6,6 +6,7 @@
 #include "../ECS/Components.h"
 
 #include "Lighting/PointLightSystem.h"
+#include "Lighting/DirectionalLightSystem.h"
 
 #include "../ResourceManagement/ResourceManager.h"
 
@@ -35,7 +36,6 @@ namespace SFMLEngine {
 	private:
 		Coordinator* m_Coordinator = nullptr;
 		sf::RenderWindow* m_RenderWindow = nullptr;
-		std::shared_ptr<PointLightSystem> m_PointLightSystem;
 
 		std::vector<MaterialData> m_Materials;
 		std::vector<Entity> m_CurrentEntities;
@@ -47,8 +47,14 @@ namespace SFMLEngine {
 
 		sf::RenderStates m_RenderState;
 
-		PointLightData m_Lights[MAX_LIGHTS];
-		int m_NumLights = 0;
+		std::shared_ptr<PointLightSystem> m_PointLightSystem;
+		std::shared_ptr<DirectionalLightSystem> m_DirectionalLightSystem;
+
+		int m_NumPointLights = 0;
+		PointLightData m_PointLights[MAX_POINT_LIGHTS];
+
+		int m_NumDirectionalLights = 0;
+		DirectionalLightData m_DirectionalLights[MAX_DIRECTIONAL_LIGHTS];
 	};
 
 }

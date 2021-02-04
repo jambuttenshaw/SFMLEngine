@@ -32,7 +32,7 @@ namespace SFMLEngine {
 		GLint size; // size of the variable
 		GLenum type; // type of the variable (float, vec3 or mat4, etc)
 
-		const GLsizei bufferSize = 32; // maximum name length
+		const GLsizei bufferSize = 48; // maximum name length
 		GLchar uniformName[bufferSize]; // variable name in GLSL
 		GLsizei length; // name length
 

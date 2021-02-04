@@ -14,13 +14,12 @@ namespace SFMLEngine {
 		// create the context settings
 		s_ContextSettings = new sf::ContextSettings();
 		s_ContextSettings->depthBits = 24;
-		s_ContextSettings->majorVersion = 3;
-		s_ContextSettings->minorVersion = 4;
+		s_ContextSettings->majorVersion = 4;
+		s_ContextSettings->minorVersion = 6;
 
 		// Output the context settings and shader capabilities of the hardware
 		LOG_CORE_INFO("OpenGL Version: {0}.{1}", s_ContextSettings->majorVersion, s_ContextSettings->minorVersion);
-		LOG_CORE_INFO("Shaders Supported: {0}", (sf::Shader::isAvailable() ? "True" : "False"));
-		LOG_CORE_INFO("Size allocated to depth buffer: {0} bits", s_ContextSettings->depthBits);
+		LOG_CORE_INFO("Shaders Supported: {0}", (sf::Shader::isAvailable() ? "Yes" : "No"));
 
 		return *s_ContextSettings;
 	}

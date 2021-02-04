@@ -5,7 +5,7 @@ namespace SFMLEngine {
 
 	int PointLightSystem::GetLightingData(PointLightData* lightArray)
 	{
-		if (m_Entities.size() < MAX_LIGHTS)
+		if (m_Entities.size() < MAX_POINT_LIGHTS)
 		{
 			// we have not exceeded the maximum number of lights the shader supports
 			// we can just submit all light components to render

@@ -2,24 +2,43 @@ uniform sampler2D texture;
 
 uniform sampler2D u_NormalMap;
 
-struct LightData
+// --------------
+// POINT LIGHTING
+// --------------
+
+struct PointLightData
 {
 	vec3 Position;
 	float Intensity;
 	float Range;
 	vec4 Color;
 };
-uniform LightData u_Lights[16];
-uniform int u_NumLights;
+uniform PointLightData u_PointLights[8];
+uniform int u_NumPointLights;
+
+// --------------------
+// DIRECTIONAL LIGHTING
+// --------------------
+
+struct DirectionalLightData
+{
+	vec3 Direction;
+	float Intensity;
+	vec4 Color;
+};
+uniform DirectionalLightData u_DirectionalLights[2];
+uniform int u_NumDirectionalLights;
+
 
 uniform float u_Rotation;
 
+
 varying vec3 v_FragPos;
 
-vec3 CalculateDiffuse(int lightIndex, vec3 normal, vec3 worldPos)
+vec3 CalculatePointLight(int lightIndex, vec3 normal, vec3 worldPos)
 {
 	// get the direction from the fragment to the light
-	vec3 toLight = u_Lights[lightIndex].Position - worldPos;
+	vec3 toLight = u_PointLights[lightIndex].Position - worldPos;
 	vec3 lightDir = normalize(toLight);
 	lightDir.y = -lightDir.y;
 
@@ -31,9 +50,21 @@ vec3 CalculateDiffuse(int lightIndex, vec3 normal, vec3 worldPos)
 	lighting = 0.5 * (lighting + 1.0);
 
 	// factor in how intense and far away the light source is
-	lighting *= u_Lights[lightIndex].Intensity * exp(u_Lights[lightIndex].Range * -distToLight);
+	lighting *= u_PointLights[lightIndex].Intensity * exp(u_PointLights[lightIndex].Range * -distToLight);
 	
-	return lighting * u_Lights[lightIndex].Color.rgb;
+	return lighting * u_PointLights[lightIndex].Color.rgb;
+}
+
+vec3 CalculateDirectionalLight(int lightIndex, vec3 normal)
+{
+	// find the dot product of the light direction and the normal
+	float lighting = dot(normalize(u_DirectionalLights[lightIndex].Direction), normal);
+	lighting = 0.5 * (lighting + 1.0);
+
+	// factor in the intensity of the light source
+	lighting *= u_DirectionalLights[lightIndex].Intensity;
+
+	return lighting * u_DirectionalLights[lightIndex].Color.rgb;
 }
 
 void main()
@@ -50,10 +81,19 @@ void main()
 	// if the sprite is rotated then we want to transform the normal by the rotation
 	normal = vec3(normal.x * cos(u_Rotation) - normal.y * sin(u_Rotation), normal.x * sin(u_Rotation) + normal.y * cos(u_Rotation), normal.z);
 
+	// the accumulative affect of each light on this pixel
 	vec3 lightColor = vec3(0, 0, 0);
-	for (int i = 0; i < u_NumLights; i++)
+
+	// calculate the diffuse light from directional lights
+	for (int i = 0; i < u_NumDirectionalLights; i++)
 	{
-		lightColor += CalculateDiffuse(i, normal, v_FragPos);
+		lightColor += CalculateDirectionalLight(i, normal);
+	}
+
+	// calculate the diffuse light from point lights
+	for (int i = 0; i < u_NumPointLights; i++)
+	{
+		lightColor += CalculatePointLight(i, normal, v_FragPos);
 	}
 
 	// assign the fragment colour as the sample from the texture multiplied by the lighting value

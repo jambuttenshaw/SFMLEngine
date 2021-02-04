@@ -70,6 +70,7 @@ namespace SFMLEngine
         m_Coordinator->RegisterComponent<SpriteRenderer>();
         m_Coordinator->RegisterComponent<NativeScripts>();
         m_Coordinator->RegisterComponent<PointLight>();
+        m_Coordinator->RegisterComponent<DirectionalLight>();
 
         // register systems
 

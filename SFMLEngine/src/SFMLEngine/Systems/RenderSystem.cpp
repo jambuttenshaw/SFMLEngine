@@ -9,7 +9,7 @@ namespace SFMLEngine {
 
 		Material::GetAllMaterialsInUse(m_Materials);
 
-		// lighting system
+		// lighting systems
 		m_PointLightSystem = m_Coordinator->RegisterSystem<PointLightSystem>();
 		m_PointLightSystem->Init(coordinator);
 		{
@@ -17,6 +17,13 @@ namespace SFMLEngine {
 			signature.set(m_Coordinator->GetComponentType<Transform>());
 			signature.set(m_Coordinator->GetComponentType<PointLight>());
 			m_Coordinator->SetSystemSignature<PointLightSystem>(signature);
+		}
+		m_DirectionalLightSystem = m_Coordinator->RegisterSystem<DirectionalLightSystem>();
+		m_DirectionalLightSystem->Init(coordinator);
+		{
+			Signature signature;
+			signature.set(m_Coordinator->GetComponentType<DirectionalLight>());
+			m_Coordinator->SetSystemSignature<DirectionalLightSystem>(signature);
 		}
 	}
 
@@ -46,7 +53,8 @@ namespace SFMLEngine {
 	void RenderSystem::Render()
 	{
 		// retrieve lighting data from lighting system
-		m_NumLights = m_PointLightSystem->GetLightingData(m_Lights);
+		m_NumPointLights = m_PointLightSystem->GetLightingData(m_PointLights);
+		m_NumDirectionalLights = m_DirectionalLightSystem->GetLightingData(m_DirectionalLights);
 
 		for (const auto& materialData : m_Materials)
 		{
@@ -106,15 +114,24 @@ namespace SFMLEngine {
 
 	void RenderSystem::UploadLightingData(Material* material)
 	{
-		material->SetProperty("u_NumLights", m_NumLights);
-		for (int i = 0; i < m_NumLights; i++)
+		material->SetProperty("u_NumPointLights", m_NumPointLights);
+		for (int i = 0; i < m_NumPointLights; i++)
 		{
-			std::string lightIndex("u_Lights[" + std::to_string(i) + "]");
-			// LOG_CORE_TRACE(lightIndex);
-			material->SetProperty(lightIndex + ".Position", m_Lights[i].Position);
-			material->SetProperty(lightIndex + ".Intensity", m_Lights[i].Intensity);
-			material->SetProperty(lightIndex + ".Range", m_Lights[i].Range);
-			material->SetProperty(lightIndex + ".Color", m_Lights[i].Color);
+			std::string lightIndex("u_PointLights[" + std::to_string(i) + "]");
+			material->SetProperty(lightIndex + ".Position", m_PointLights[i].Position);
+			material->SetProperty(lightIndex + ".Intensity", m_PointLights[i].Intensity);
+			material->SetProperty(lightIndex + ".Range", m_PointLights[i].Range);
+			material->SetProperty(lightIndex + ".Color", m_PointLights[i].Color);
+		}
+
+
+		material->SetProperty("u_NumDirectionalLights", m_NumDirectionalLights);
+		for (int i = 0; i < m_NumDirectionalLights; i++)
+		{
+			std::string lightIndex("u_DirectionalLights[" + std::to_string(i) + "]");
+			material->SetProperty(lightIndex + ".Direction", m_DirectionalLights[i].Direction);
+			material->SetProperty(lightIndex + ".Intensity", m_DirectionalLights[i].Intensity);
+			material->SetProperty(lightIndex + ".Color", m_DirectionalLights[i].Color);
 		}
 	}
 
