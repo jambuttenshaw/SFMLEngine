@@ -19,7 +19,7 @@ namespace SFMLEngine {
 			}
 			return index;
 		}
-
+		LOG_CORE_ERROR("Too many lights in the scene! Cannot submit lighting data to shader.");
 		return 0;
 	}
 

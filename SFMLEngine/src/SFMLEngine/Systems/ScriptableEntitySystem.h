@@ -33,9 +33,8 @@ namespace SFMLEngine {
 			m_Coordinator = coordinator;
 		}
 
-		void EntityAddedToSystem(Entity entity) override
-		{
-		}
+		void EntityAddedToSystem(Entity entity) override {}
+		void EntityRemovedFromSystem(Entity entity) override {}
 
 		void Start()
 		{

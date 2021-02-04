@@ -1,7 +1,6 @@
 #pragma once
 
-#include "../../ECS/Coordinator.h"
-#include "../../ECS/Components.h"
+#include "LightSystem.h"
 
 namespace SFMLEngine {
 
@@ -26,23 +25,13 @@ namespace SFMLEngine {
 		}
 	};
 
-	class PointLightSystem : public System
+	class PointLightSystem : public LightSystem
 	{
 	public:
 		PointLightSystem() = default;
 		~PointLightSystem() = default;
 
-		void Init(Coordinator* coordinator)
-		{
-			m_Coordinator = coordinator;
-		}
-
-		void EntityAddedToSystem(Entity entity) override {};
-
 		int GetLightingData(PointLightData* lightArray);
-
-	private:
-		Coordinator* m_Coordinator = nullptr;
 	};
 
 }
