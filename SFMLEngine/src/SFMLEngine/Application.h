@@ -16,7 +16,7 @@ namespace SFMLEngine {
 	class Application
 	{
 	public:
-		Application();
+		Application(const std::string& name, const sf::Vector2i& windowDimensions);
 		virtual ~Application();
 
 		void Run();

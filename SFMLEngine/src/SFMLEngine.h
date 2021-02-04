@@ -6,6 +6,7 @@
 
 #include "SFMLEngine/Application.h"
 #include "SFMLEngine/Layer.h"
+#include "SFMLEngine/Input.h"
 
 #include "SFMLEngine/Timestep.h"
 

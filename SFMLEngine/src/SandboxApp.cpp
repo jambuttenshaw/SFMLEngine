@@ -19,35 +19,23 @@ public:
 		// create a new scene
 		m_Scene = Application::GetApplicationHandle()->CreateScene();
 
+		for (int x = 0; x < 13; x++)
 		{
-			// creating a second entity
-			m_Entity = m_Scene->CreateEntity();
+			for (int y = 0; y < 10; y++)
+			{
+				// creating a second entity
+				Entity entity = m_Scene->CreateEntity();
 
-			// give the entity a transform
-			m_Scene->AddComponent(m_Entity, Transform{ sf::Vector2f(272, 172), 0, sf::Vector2f(4, 4) });
-			// add the sprite renderer component
-			m_Scene->AddComponent(m_Entity, SpriteRenderer{
-				Texture::Create("assets/textures/texture2.png"),
-				Material::Create("Lit"),
-				2, 0,
-				Texture::Create("assets/textures/textureNormalMap.png") });
+				// give the entity a transform
+				m_Scene->AddComponent(entity, Transform{ sf::Vector2f((float)(x * 64), (float)(536 - y * 64)) });
+				// add the sprite renderer component
+				m_Scene->AddComponent(entity, SpriteRenderer{
+					Texture::Create("assets/textures/cobblestoneTexture.png"),
+					Material::Create("Lit"),
+					0, 0,
+					Texture::Create("assets/textures/cobblestoneNormal.png") });
+			}
 		}
-
-
-		{
-			// creating a second entity
-			m_Entity2 = m_Scene->CreateEntity();
-
-			// give the entity a transform
-			m_Scene->AddComponent(m_Entity2, Transform{ sf::Vector2f(100, 300), 0, sf::Vector2f(2, 2) });
-			// add the sprite renderer component
-			m_Scene->AddComponent(m_Entity2, SpriteRenderer{
-				Texture::Create("assets/textures/texture.png"),
-				Material::Create("Lit"),
-				0, 0,
-				Texture::Create("assets/textures/textureNormalMap.png") });
-		}
-
 
 		{
 			m_Light = m_Scene->CreateEntity();
@@ -77,8 +65,9 @@ public:
 
 	void GameLayer::OnDetach()
 	{
-		m_Scene->DestroyEntity(m_Entity);
-		m_Scene->DestroyEntity(m_Entity2);
+		for (auto const& e : m_Tiles)
+			m_Scene->DestroyEntity(e);
+		
 
 		m_Scene->DestroyEntity(m_Light);
 		m_Scene->DestroyEntity(m_Light2);
@@ -94,8 +83,7 @@ public:
 private:
 	std::shared_ptr<Scene> m_Scene;
 	
-	Entity m_Entity;
-	Entity m_Entity2;
+	std::vector<Entity> m_Tiles;
 
 	Entity m_Light;
 	Entity m_Light2;
@@ -107,7 +95,7 @@ class SandboxApp : public Application
 {
 public:
 	SandboxApp()
-		: Application()
+		: Application("Sandbox", sf::Vector2i(1200, 675))
 	{
 		PushLayer(new GameLayer());
 	}

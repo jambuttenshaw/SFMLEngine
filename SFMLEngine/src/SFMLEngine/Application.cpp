@@ -3,6 +3,8 @@
 #include "ECS/Components.h"
 #include "Timestep.h"
 
+#include "Input.h"
+
 #include "ResourceManagement/ResourceManager.h"
 #include "Renderer/Renderer.h"
 #include "Renderer/ShaderLibrary.h"
@@ -16,7 +18,7 @@ namespace SFMLEngine
 
     Application* Application::s_Instance = nullptr;
 
-    Application::Application()
+    Application::Application(const std::string& name, const sf::Vector2i& windowDimensions)
     {
         if (!s_Instance)
             s_Instance = this;
@@ -37,7 +39,7 @@ namespace SFMLEngine
 
         auto const& contextSettings = Renderer::Init();
 
-        m_Window = new sf::RenderWindow(sf::VideoMode(800, 600), "SFML window", sf::Style::Default, contextSettings);
+        m_Window = new sf::RenderWindow(sf::VideoMode(windowDimensions.x, windowDimensions.y), name, sf::Style::Default, contextSettings);
         m_Window->setFramerateLimit(60);
         m_DefaultWindowCentre = m_Window->getView().getCenter();
 
@@ -45,6 +47,14 @@ namespace SFMLEngine
 
         // load up the shader library
         ShaderLibrary::Init();
+
+        /*
+        ----------
+        INIT INPUT
+        ----------
+        */
+
+        Input::Init(m_Window);
 
         /*
         ----------

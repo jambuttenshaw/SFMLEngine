@@ -17,8 +17,8 @@ public:
 	{
 		// do something every frame
 
-		sf::Vector2i mouse = sf::Mouse::getPosition(*Application::GetApplicationHandle()->GetWindowHandle());
-		lightPosition = sf::Vector3f((float)mouse.x, (float)mouse.y, -5.0f);
+		sf::Vector2f mouse = Input::GetMouseWorldPos();
+		lightPosition = sf::Vector3f(mouse.x, mouse.y, -5.0f);
 
 		m_Material->SetProperty("u_Lights[0].Position", lightPosition);
 	}
