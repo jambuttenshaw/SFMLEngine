@@ -40,7 +40,7 @@ namespace SFMLEngine
         auto const& contextSettings = Renderer::Init();
 
         m_Window = new sf::RenderWindow(sf::VideoMode(windowDimensions.x, windowDimensions.y), name, sf::Style::Default, contextSettings);
-        m_Window->setFramerateLimit(60);
+        m_Window->setVerticalSyncEnabled(true);
         m_DefaultWindowCentre = m_Window->getView().getCenter();
 
         Renderer::InitGLEW();
