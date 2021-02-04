@@ -18,7 +18,25 @@ public:
 		// create a new scene
 		m_Scene = Application::GetApplicationHandle()->CreateScene();
 
-		for (int x = 0; x < 13; x++)
+		for (int x = 0; x < 5; x++)
+		{
+			for (int y = 0; y < 1; y++)
+			{
+				// creating a second entity
+				Entity entity = m_Scene->CreateEntity();
+
+				// give the entity a transform
+				m_Scene->AddComponent(entity, Transform{ sf::Vector2f((float)(x * 64), (float)(536 - y * 64)), 90, sf::Vector2f(1, 1) });
+				// add the sprite renderer component
+				m_Scene->AddComponent(entity, SpriteRenderer{
+					Texture::Create("assets/textures/cobblestoneTexture.png"),
+					Material::Create("Lit"),
+					0, 0,
+					Texture::Create("assets/textures/sharpNormalMap.png") });
+			}
+		}
+
+		for (int x = 0; x < 5; x++)
 		{
 			for (int y = 0; y < 10; y++)
 			{
@@ -26,13 +44,12 @@ public:
 				Entity entity = m_Scene->CreateEntity();
 
 				// give the entity a transform
-				m_Scene->AddComponent(entity, Transform{ sf::Vector2f((float)(x * 64), (float)(536 - y * 64)) });
+				m_Scene->AddComponent(entity, Transform{ sf::Vector2f((float)(400 + x * 64), (float)(536 - y * 64)) });
 				// add the sprite renderer component
 				m_Scene->AddComponent(entity, SpriteRenderer{
 					Texture::Create("assets/textures/cobblestoneTexture.png"),
-					Material::Create("Lit"),
-					0, 0,
-					Texture::Create("assets/textures/cobblestoneNormal.png") });
+					Material::Create("Basic"),
+					0, 0 });
 			}
 		}
 
@@ -40,7 +57,7 @@ public:
 			m_Light = m_Scene->CreateEntity();
 
 			m_Scene->AddComponent(m_Light, Transform{});
-			m_Scene->AddComponent(m_Light, PointLight{ 2.0f, 0.007f, sf::Color{200, 50, 50, 255} });
+			m_Scene->AddComponent(m_Light, PointLight{ 2.0f, 0.007f, sf::Color{180, 120, 120, 255} });
 
 			m_Scene->AddNativeScript<GoToMouse>(m_Light);
 		}
@@ -48,8 +65,8 @@ public:
 		{
 			m_Light2 = m_Scene->CreateEntity();
 
-			m_Scene->AddComponent(m_Light2, Transform{sf::Vector2f(530, 420)});
-			m_Scene->AddComponent(m_Light2, PointLight{ 4.0f, 0.007f, sf::Color{50, 50, 200, 255} });
+			m_Scene->AddComponent(m_Light2, Transform{sf::Vector2f(360, 350)});
+			m_Scene->AddComponent(m_Light2, PointLight{ 4.0f, 0.007f, sf::Color{100, 100, 200, 255} });
 		}
 	}
 

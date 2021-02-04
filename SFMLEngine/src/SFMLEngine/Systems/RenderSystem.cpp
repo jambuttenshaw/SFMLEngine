@@ -55,7 +55,13 @@ namespace SFMLEngine {
 				// set shader uniforms
 				float depth = (sR.RenderLayer + (sR.OrderInLayer * m_OrderInLayerNormalizeFactor)) * m_RenderLayerNormaizeFactor;
 				shader->setUniform("u_DepthValue", depth);
-				if (materialData.Lit) shader->setUniform("u_NormalMap", *ResourceManager::GetResourceHandle<sf::Texture>(sR.NormalMapHandle));
+				if (materialData.Lit)
+				{
+					shader->setUniform("u_NormalMap", *ResourceManager::GetResourceHandle<sf::Texture>(sR.NormalMapHandle));
+					// rotation value is used to compute transformed normals so lighting is correct for rotated sprites
+					// requires negated because of the y axis being flipped
+					shader->setUniform("u_Rotation", -t.Rotation * DEG_TO_RAD);
+				}
 
 				// create a transform
 				m_RenderState.transform = t.GetTransformMatrix();

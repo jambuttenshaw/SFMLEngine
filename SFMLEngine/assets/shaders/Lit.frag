@@ -12,6 +12,8 @@ struct LightData
 uniform LightData u_Lights[16];
 uniform int u_NumLights;
 
+uniform float u_Rotation;
+
 varying vec3 v_FragPos;
 
 vec3 CalculateDiffuse(int lightIndex, vec3 normal, vec3 worldPos)
@@ -44,6 +46,9 @@ void main()
 	// get the normal of the fragment
 	vec3 normal = texture2D(u_NormalMap, gl_TexCoord[0].xy).rgb;
 	normal = normalize(normal * 2.0 - 1.0);
+
+	// if the sprite is rotated then we want to transform the normal by the rotation
+	normal = vec3(normal.x * cos(u_Rotation) - normal.y * sin(u_Rotation), normal.x * sin(u_Rotation) + normal.y * cos(u_Rotation), normal.z);
 
 	vec3 lightColor = vec3(0, 0, 0);
 	for (int i = 0; i < u_NumLights; i++)
