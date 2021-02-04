@@ -1,9 +1,9 @@
-#include "LightingSystem.h"
+#include "PointLightSystem.h"
 
 
 namespace SFMLEngine {
 
-	int LightingSystem::GetLightingData(LightData* lightArray)
+	int PointLightSystem::GetLightingData(PointLightData* lightArray)
 	{
 		if (m_Entities.size() < MAX_LIGHTS)
 		{
@@ -14,7 +14,7 @@ namespace SFMLEngine {
 			{
 				PointLight light = m_Coordinator->GetComponent<PointLight>(entity);
 				Transform transform = m_Coordinator->GetComponent<Transform>(entity);
-				lightArray[index] = LightData{ sf::Vector3f({transform.Position.x, transform.Position.y, 5}), light.Intensity, light.Range, light.Color };
+				lightArray[index] = PointLightData{ sf::Vector3f({transform.Position.x, transform.Position.y, 5}), light.Intensity, light.Range, light.Color };
 				++index;
 			}
 			return index;

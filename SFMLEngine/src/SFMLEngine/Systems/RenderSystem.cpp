@@ -2,6 +2,24 @@
 
 namespace SFMLEngine {
 
+	void RenderSystem::Init(Coordinator* coordinator, sf::RenderWindow* window)
+	{
+		m_Coordinator = coordinator;
+		m_RenderWindow = window;
+
+		Material::GetAllMaterialsInUse(m_Materials);
+
+		// lighting system
+		m_PointLightSystem = m_Coordinator->RegisterSystem<PointLightSystem>();
+		m_PointLightSystem->Init(coordinator);
+		{
+			Signature signature;
+			signature.set(m_Coordinator->GetComponentType<Transform>());
+			signature.set(m_Coordinator->GetComponentType<PointLight>());
+			m_Coordinator->SetSystemSignature<PointLightSystem>(signature);
+		}
+	}
+
 
 	void RenderSystem::EntityAddedToSystem(Entity entity)
 	{
@@ -28,7 +46,7 @@ namespace SFMLEngine {
 	void RenderSystem::Render()
 	{
 		// retrieve lighting data from lighting system
-		m_NumLights = m_LightingSystem->GetLightingData(m_Lights);
+		m_NumLights = m_PointLightSystem->GetLightingData(m_Lights);
 
 		for (const auto& materialData : m_Materials)
 		{

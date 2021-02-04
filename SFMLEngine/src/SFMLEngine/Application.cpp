@@ -93,22 +93,9 @@ namespace SFMLEngine
             m_Coordinator->SetSystemSignature<ScriptableEntitySystem>(signature);
         }
 
-
-        // lighting system
-        m_LightingSystem = m_Coordinator->RegisterSystem<LightingSystem>();
-
-        {
-            Signature signature;
-            signature.set(m_Coordinator->GetComponentType<Transform>());
-            signature.set(m_Coordinator->GetComponentType<PointLight>());
-            m_Coordinator->SetSystemSignature<LightingSystem>(signature);
-        }
-
-
         // init systems
-        m_RenderSystem->Init(m_Coordinator, m_Window, m_LightingSystem);
+        m_RenderSystem->Init(m_Coordinator, m_Window);
         m_ScriptableEntitySystem->Init(m_Coordinator);
-        m_LightingSystem->Init(m_Coordinator);
     }
 
     Application::~Application()

@@ -20,10 +20,10 @@ namespace SFMLEngine {
 		Transform()
 			: Position(sf::Vector2f(0, 0)), Rotation(0), Scale(sf::Vector2f(1, 1))
 		{}
-		Transform(sf::Vector2f pos)
+		Transform(const sf::Vector2f& pos)
 			: Position(pos), Rotation(0), Scale(sf::Vector2f(1, 1))
 		{}
-		Transform(sf::Vector2f pos, float rot, sf::Vector2f scale)
+		Transform(const sf::Vector2f& pos, float rot, const sf::Vector2f& scale)
 			: Position(pos), Rotation(rot), Scale(scale)
 		{}
 
@@ -86,8 +86,22 @@ namespace SFMLEngine {
 		PointLight()
 			: Range(10.0f), Intensity(1.0f), Color(sf::Color::White)
 		{}
-		PointLight(float intensity, float range, sf::Color color)
+		PointLight(float intensity, float range, const sf::Color& color)
 			: Intensity(intensity), Range(range), Color(color)
+		{}
+	};
+
+	struct DirectionalLight
+	{
+		sf::Vector3f Direction;
+		float Intensity;
+		sf::Color Color;
+
+		DirectionalLight()
+			: Direction(sf::Vector3f(0, 0, 1)), Intensity(1), Color(sf::Color::White)
+		{}
+		DirectionalLight(const sf::Vector3f& direction, float intensity, const sf::Color& color)
+			: Direction(direction), Intensity(intensity), Color(color)
 		{}
 	};
 

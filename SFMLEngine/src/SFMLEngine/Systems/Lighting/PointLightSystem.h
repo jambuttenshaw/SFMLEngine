@@ -1,24 +1,24 @@
 #pragma once
 
-#include "../ECS/Coordinator.h"
-#include "../ECS/Components.h"
+#include "../../ECS/Coordinator.h"
+#include "../../ECS/Components.h"
 
 namespace SFMLEngine {
 
-	struct LightData
+	struct PointLightData
 	{
 		sf::Vector3f Position;
 		float Intensity;
 		float Range;
 		sf::Color Color;
 
-		LightData()
+		PointLightData()
 			: Position(), Intensity(0), Range(0), Color(sf::Color::White)
 		{}
-		LightData(const sf::Vector3f& pos, float intensity, float range, const sf::Color& color)
+		PointLightData(const sf::Vector3f& pos, float intensity, float range, const sf::Color& color)
 			: Position(pos), Intensity(intensity), Range(range), Color(color)
 		{}
-		LightData(const LightData& lightData)
+		PointLightData(const PointLightData& lightData)
 			: Intensity(lightData.Intensity), Range(lightData.Range)
 		{
 			this->Position = lightData.Position;
@@ -26,11 +26,11 @@ namespace SFMLEngine {
 		}
 	};
 
-	class LightingSystem : public System
+	class PointLightSystem : public System
 	{
 	public:
-		LightingSystem() = default;
-		~LightingSystem() = default;
+		PointLightSystem() = default;
+		~PointLightSystem() = default;
 
 		void Init(Coordinator* coordinator)
 		{
@@ -39,7 +39,7 @@ namespace SFMLEngine {
 
 		void EntityAddedToSystem(Entity entity) override {};
 
-		int GetLightingData(LightData* lightArray);
+		int GetLightingData(PointLightData* lightArray);
 
 	private:
 		Coordinator* m_Coordinator = nullptr;

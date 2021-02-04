@@ -6,7 +6,6 @@
 
 #include "Systems/RenderSystem.h"
 #include "Systems/ScriptableEntitySystem.h"
-#include "Systems/LightingSystem.h"
 
 #include "LayerStack.h"
 #include "Scene.h"
@@ -43,7 +42,6 @@ namespace SFMLEngine {
 		// ECS systems
 		std::shared_ptr<RenderSystem> m_RenderSystem;
 		std::shared_ptr<ScriptableEntitySystem> m_ScriptableEntitySystem;
-		std::shared_ptr<LightingSystem> m_LightingSystem;
 
 		sf::Vector2f m_DefaultWindowCentre;
 

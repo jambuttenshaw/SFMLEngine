@@ -5,9 +5,10 @@
 #include "../ECS/Coordinator.h"
 #include "../ECS/Components.h"
 
-#include "../Systems/LightingSystem.h"
+#include "Lighting/PointLightSystem.h"
 
 #include "../ResourceManagement/ResourceManager.h"
+
 #include "../Renderer/Renderer.h"
 #include "../Renderer/ShaderLibrary.h"
 #include "../Renderer/Material.h"
@@ -21,14 +22,7 @@ namespace SFMLEngine {
 		RenderSystem() = default;
 		~RenderSystem() = default;
 		
-		void Init(Coordinator* coordinator, sf::RenderWindow* window, std::shared_ptr<LightingSystem> lightingSystem)
-		{
-			m_Coordinator = coordinator;
-			m_RenderWindow = window;
-			m_LightingSystem = lightingSystem;
-
-			Material::GetAllMaterialsInUse(m_Materials);
-		}
+		void Init(Coordinator* coordinator, sf::RenderWindow* window);
 
 		void EntityAddedToSystem(Entity entity) override;
 
@@ -41,7 +35,7 @@ namespace SFMLEngine {
 	private:
 		Coordinator* m_Coordinator = nullptr;
 		sf::RenderWindow* m_RenderWindow = nullptr;
-		std::shared_ptr<LightingSystem> m_LightingSystem;
+		std::shared_ptr<PointLightSystem> m_PointLightSystem;
 
 		std::vector<MaterialData> m_Materials;
 		std::vector<Entity> m_CurrentEntities;
@@ -53,7 +47,7 @@ namespace SFMLEngine {
 
 		sf::RenderStates m_RenderState;
 
-		LightData m_Lights[MAX_LIGHTS];
+		PointLightData m_Lights[MAX_LIGHTS];
 		int m_NumLights = 0;
 	};
 
