@@ -74,7 +74,7 @@ namespace SFMLEngine {
 		static ResourceID CreateInstance(const std::string& shader);
 
 		// get all the materials in use
-		static void GetAllMaterialsInUse(std::vector<MaterialData>& materials) { materials = s_MaterialCache; }
+		static const std::vector<MaterialData>& GetAllMaterialsInUse() { return s_MaterialCache; }
 
 		// deletes all cached materials from memory
 		// should be called on shutdown

@@ -32,13 +32,11 @@ namespace SFMLEngine {
 
 	private:
 		void GetAllEntitiesWithMaterial(MaterialData material);
-		void UploadLightingData(Material* material);
 
 	private:
 		Coordinator* m_Coordinator = nullptr;
 		sf::RenderWindow* m_RenderWindow = nullptr;
 
-		std::vector<MaterialData> m_Materials;
 		std::vector<Entity> m_CurrentEntities;
 
 		int m_MaxOrderInLayer = 0;
@@ -50,12 +48,6 @@ namespace SFMLEngine {
 
 		std::shared_ptr<PointLightSystem> m_PointLightSystem;
 		std::shared_ptr<DirectionalLightSystem> m_DirectionalLightSystem;
-
-		int m_NumPointLights = 0;
-		PointLightData m_PointLights[MAX_POINT_LIGHTS];
-
-		int m_NumDirectionalLights = 0;
-		DirectionalLightData m_DirectionalLights[MAX_DIRECTIONAL_LIGHTS];
 	};
 
 }
