@@ -82,12 +82,13 @@ namespace SFMLEngine {
 		float Intensity;
 		float Range;
 		sf::Color Color;
+		bool Static;
 
 		PointLight()
-			: Range(10.0f), Intensity(1.0f), Color(sf::Color::White)
+			: Range(10.0f), Intensity(1.0f), Color(sf::Color::White), Static(false)
 		{}
-		PointLight(float intensity, float range, const sf::Color& color)
-			: Intensity(intensity), Range(range), Color(color)
+		PointLight(float intensity, float range, const sf::Color& color, bool staticLight = false)
+			: Intensity(intensity), Range(range), Color(color), Static(staticLight)
 		{}
 	};
 
@@ -96,12 +97,13 @@ namespace SFMLEngine {
 		sf::Vector3f Direction;
 		float Intensity;
 		sf::Color Color;
+		bool Static;
 
 		DirectionalLight()
-			: Direction(sf::Vector3f(0, 0, 1)), Intensity(1), Color(sf::Color::White)
+			: Direction(sf::Vector3f(0, 0, 1)), Intensity(1), Color(sf::Color::White), Static(false)
 		{}
-		DirectionalLight(const sf::Vector3f& direction, float intensity, const sf::Color& color)
-			: Direction(direction), Intensity(intensity), Color(color)
+		DirectionalLight(const sf::Vector3f& direction, float intensity, const sf::Color& color, bool staticLight = false)
+			: Direction(direction), Intensity(intensity), Color(color), Static(staticLight)
 		{}
 	};
 

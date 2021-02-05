@@ -48,7 +48,7 @@ public:
 		{
 			m_Light2 = m_Scene->CreateEntity();
 
-			m_Scene->AddComponent(m_Light2, DirectionalLight{ sf::Vector3f(1, 0, 0), 0.4f, sf::Color{32, 220, 70, 255} });
+			m_Scene->AddComponent(m_Light2, DirectionalLight{ sf::Vector3f(1, 0, 0), 0.4f, sf::Color{32, 220, 70, 255}, true });
 		}
 	}
 

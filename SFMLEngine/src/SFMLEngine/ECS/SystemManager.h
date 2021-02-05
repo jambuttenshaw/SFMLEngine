@@ -44,7 +44,7 @@ namespace SFMLEngine {
 			{
 				auto const& system = pair.second;
 
-				system->EntityRemovedFromSystem(entity);
+				if (system->m_Entities.find(entity) != system->m_Entities.end()) system->EntityRemovedFromSystem(entity);
 				system->m_Entities.erase(entity);
 			}
 		}

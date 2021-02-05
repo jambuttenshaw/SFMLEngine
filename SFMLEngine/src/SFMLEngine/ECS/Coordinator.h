@@ -26,11 +26,9 @@ namespace SFMLEngine {
 
 		void DestroyEntity(Entity entity)
 		{
-			m_EntityManager->DestroyEntity(entity);
-
-			m_ComponentManager->EntityDestroyed(entity);
-
 			m_SystemManager->EntityDestroyed(entity);
+			m_ComponentManager->EntityDestroyed(entity);
+			m_EntityManager->DestroyEntity(entity);
 		}
 
 
