@@ -33,6 +33,8 @@ public:
 					Material::Create("Lit"),
 					0, 0,
 					Texture::Create("assets/textures/cobblestoneNormal.png") });
+
+				m_Tiles.push_back(entity);
 			}
 		}
 

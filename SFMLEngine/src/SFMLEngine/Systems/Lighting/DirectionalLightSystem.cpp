@@ -42,7 +42,8 @@ namespace SFMLEngine {
 		{
 			for (auto const& entity : m_Entities)
 			{
-				DirectionalLight light = m_Coordinator->GetComponent<DirectionalLight>(entity);
+				DirectionalLight& light = m_Coordinator->GetComponent<DirectionalLight>(entity);
+				if (!ComponentModified(light) || light.Static) continue;
 
 				for (const auto& matData : Material::GetAllMaterialsInUse())
 				{
@@ -57,6 +58,8 @@ namespace SFMLEngine {
 						mat->SetProperty(lightIndex + ".Color", light.Color);
 					}
 				}
+
+				ResetModified(light);
 
 			}
 		}

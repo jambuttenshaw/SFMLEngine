@@ -61,12 +61,16 @@ namespace SFMLEngine {
 				// Entity signature matches system signature - insert into set
 				if ((entitySignature & systemSignature) == systemSignature)
 				{
+					// make sure the system doesnt already contain the system
+					if (system->m_Entities.find(entity) == system->m_Entities.end()) system->EntityAddedToSystem(entity);
+
 					system->m_Entities.insert(entity);
-					system->EntityAddedToSystem(entity);
 				}
 				// Entity signature does not match system signature - erase from set
 				else
 				{
+					if (system->m_Entities.find(entity) != system->m_Entities.end()) system->EntityRemovedFromSystem(entity);
+
 					system->m_Entities.erase(entity);
 				}
 			}

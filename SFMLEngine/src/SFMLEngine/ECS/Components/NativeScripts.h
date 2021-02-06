@@ -14,7 +14,7 @@ namespace SFMLEngine {
 		std::unordered_map<const char*, ScriptableEntity*> Scripts;
 
 	private:
-		bool m_Modified = false;
+		bool m_Modified = true;
 	};
 
 }

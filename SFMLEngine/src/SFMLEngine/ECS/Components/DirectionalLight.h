@@ -24,7 +24,7 @@ namespace SFMLEngine {
 		{}
 
 	private:
-		bool m_Modified = false;
+		bool m_Modified = true;
 
 	};
 

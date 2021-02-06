@@ -45,8 +45,12 @@ namespace SFMLEngine {
 			return ResourceManager::GetResourceHandle<sf::Texture>(NormalMapHandle);
 		}
 
+		void SetRenderLayer(int newRenderLayer) { RenderLayer = newRenderLayer; m_Modified = true; }
+
+		void SetOrderInLayer(int newOrderInLayer) { OrderInLayer = newOrderInLayer; m_Modified = true; }
+
 	private:
-		bool m_Modified = false;
+		bool m_Modified = true;
 	};
 
 }

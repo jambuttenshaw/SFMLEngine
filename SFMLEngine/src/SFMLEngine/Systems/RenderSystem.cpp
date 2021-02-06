@@ -29,9 +29,9 @@ namespace SFMLEngine {
 
 	void RenderSystem::Update()
 	{
-		auto spriteRenderers = m_Coordinator->GetComponents<SpriteRenderer>(m_Entities);
-		for (auto& spriteRenderer : spriteRenderers)
+		for (auto& e : m_Entities)
 		{
+			SpriteRenderer& spriteRenderer = m_Coordinator->GetComponent<SpriteRenderer>(e);
 			if (ComponentModified(spriteRenderer))
 			{
 				// if a sprite renderer has been modified then we need to update the order in layer factors etc
