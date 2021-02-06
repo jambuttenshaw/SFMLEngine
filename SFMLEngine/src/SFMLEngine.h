@@ -21,4 +21,5 @@
 // Graphics
 #include "SFMLEngine/Renderer/Material.h"
 #include "SFMLEngine/Renderer/Texture.h"
+#include "SFMLEngine/FontLibrary.h"
 

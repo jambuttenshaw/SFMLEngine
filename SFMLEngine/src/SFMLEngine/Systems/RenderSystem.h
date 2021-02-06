@@ -5,13 +5,7 @@
 #include "../ECS/Coordinator.h"
 #include "../ECS/Components.h"
 
-#include "Lighting/PointLightSystem.h"
-#include "Lighting/DirectionalLightSystem.h"
-
-#include "../ResourceManagement/ResourceManager.h"
-
 #include "../Renderer/Renderer.h"
-#include "../Renderer/ShaderLibrary.h"
 #include "../Renderer/Material.h"
 
 

@@ -112,6 +112,17 @@ namespace SFMLEngine
             signature.set(m_Coordinator->GetComponentType<DirectionalLight>());
             m_Coordinator->SetSystemSignature<DirectionalLightSystem>(signature);
         }
+
+
+        // GUI system
+        m_GUISystem = m_Coordinator->RegisterSystem<GUISystem>();
+        m_GUISystem->Init(m_Coordinator, m_Window);
+        {
+            Signature signature;
+            signature.set(m_Coordinator->GetComponentType<Transform>());
+            signature.set(m_Coordinator->GetComponentType<Text>());
+            m_Coordinator->SetSystemSignature<GUISystem>(signature);
+        }
     }
 
     Application::~Application()
@@ -175,10 +186,13 @@ namespace SFMLEngine
             }
 
             // Update the systems
+
+            // upadte all native scripts
             m_ScriptableEntitySystem->Update(ts);
 
             // apply any changes made to components
             m_RenderSystem->Update();
+            m_GUISystem->Update();
 
             // ---------
             // RENDERING
@@ -200,6 +214,10 @@ namespace SFMLEngine
 
             // draw to the screen
             m_RenderSystem->Render();
+
+
+            // draw the GUI onto the display
+            m_GUISystem->Render();
             
             m_Window->setActive(false);
 

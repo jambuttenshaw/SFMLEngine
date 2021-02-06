@@ -10,6 +10,8 @@
 #include "Systems/Lighting/PointLightSystem.h"
 #include "Systems/Lighting/DirectionalLightSystem.h"
 
+#include "Systems/GUISystem.h"
+
 #include "LayerStack.h"
 #include "Scene.h"
 
@@ -45,8 +47,11 @@ namespace SFMLEngine {
 		// ECS systems
 		std::shared_ptr<RenderSystem> m_RenderSystem;
 		std::shared_ptr<ScriptableEntitySystem> m_ScriptableEntitySystem;
+
 		std::shared_ptr<PointLightSystem> m_PointLightSystem;
 		std::shared_ptr<DirectionalLightSystem> m_DirectionalLightSystem;
+
+		std::shared_ptr<GUISystem> m_GUISystem;
 
 		sf::Vector2f m_DefaultWindowCentre;
 

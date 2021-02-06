@@ -16,7 +16,7 @@ namespace SFMLEngine {
 		static void Shutdown();
 
 		static ResourceID LoadNewFont(const std::string& name, const std::string& filepath);
-		static ResourceID GetFontID(const std::string& name);
+		static ResourceID GetFont(const std::string& name);
 
 	private:
 		static std::unordered_map<std::string, ResourceID> s_FontLibrary;

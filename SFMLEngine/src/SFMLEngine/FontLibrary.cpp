@@ -27,7 +27,7 @@ namespace SFMLEngine {
 		if (s_FontLibrary.find(name) != s_FontLibrary.end())
 		{
 			LOG_CORE_WARN("Font '{0}' has already been loaded.", name);
-			return GetFontID(name);
+			return GetFont(name);
 		}
 
 		ResourceID newFont = ResourceManager::LoadFromFile<sf::Font>(filepath);
@@ -41,7 +41,7 @@ namespace SFMLEngine {
 		return newFont;
 	}
 
-	ResourceID FontLibrary::GetFontID(const std::string& name)
+	ResourceID FontLibrary::GetFont(const std::string& name)
 	{
 		if (s_FontLibrary.find(name) == s_FontLibrary.end())
 		{
