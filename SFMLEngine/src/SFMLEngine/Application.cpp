@@ -76,7 +76,7 @@ namespace SFMLEngine
 
         // render system
         m_RenderSystem = m_Coordinator->RegisterSystem<RenderSystem>();
-
+        m_RenderSystem->Init(m_Coordinator, m_Window);
         {
             Signature signature;
             signature.set(m_Coordinator->GetComponentType<Transform>());
@@ -87,16 +87,29 @@ namespace SFMLEngine
 
         // native scripting system
         m_ScriptableEntitySystem = m_Coordinator->RegisterSystem<ScriptableEntitySystem>();
-
+        m_ScriptableEntitySystem->Init(m_Coordinator);
         {
             Signature signature;
             signature.set(m_Coordinator->GetComponentType<NativeScripts>());
             m_Coordinator->SetSystemSignature<ScriptableEntitySystem>(signature);
         }
 
-        // init systems
-        m_RenderSystem->Init(m_Coordinator, m_Window);
-        m_ScriptableEntitySystem->Init(m_Coordinator);
+        // lighting systems
+        m_PointLightSystem = m_Coordinator->RegisterSystem<PointLightSystem>();
+        m_PointLightSystem->Init(m_Coordinator);
+        {
+            Signature signature;
+            signature.set(m_Coordinator->GetComponentType<Transform>());
+            signature.set(m_Coordinator->GetComponentType<PointLight>());
+            m_Coordinator->SetSystemSignature<PointLightSystem>(signature);
+        }
+        m_DirectionalLightSystem = m_Coordinator->RegisterSystem<DirectionalLightSystem>();
+        m_DirectionalLightSystem->Init(m_Coordinator);
+        {
+            Signature signature;
+            signature.set(m_Coordinator->GetComponentType<DirectionalLight>());
+            m_Coordinator->SetSystemSignature<DirectionalLightSystem>(signature);
+        }
     }
 
     Application::~Application()
@@ -176,6 +189,10 @@ namespace SFMLEngine
 
             // set up the renderer for drawing
             Renderer::SetOpenGLStates();
+
+            // upload all lighting data to shaders
+            m_PointLightSystem->UploadAllLightingData();
+            m_DirectionalLightSystem->UploadAllLightingData();
 
             // draw to the screen
             m_RenderSystem->Render();

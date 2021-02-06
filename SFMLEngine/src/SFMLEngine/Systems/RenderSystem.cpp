@@ -6,23 +6,6 @@ namespace SFMLEngine {
 	{
 		m_Coordinator = coordinator;
 		m_RenderWindow = window;
-
-		// lighting systems
-		m_PointLightSystem = m_Coordinator->RegisterSystem<PointLightSystem>();
-		m_PointLightSystem->Init(coordinator);
-		{
-			Signature signature;
-			signature.set(m_Coordinator->GetComponentType<Transform>());
-			signature.set(m_Coordinator->GetComponentType<PointLight>());
-			m_Coordinator->SetSystemSignature<PointLightSystem>(signature);
-		}
-		m_DirectionalLightSystem = m_Coordinator->RegisterSystem<DirectionalLightSystem>();
-		m_DirectionalLightSystem->Init(coordinator);
-		{
-			Signature signature;
-			signature.set(m_Coordinator->GetComponentType<DirectionalLight>());
-			m_Coordinator->SetSystemSignature<DirectionalLightSystem>(signature);
-		}
 	}
 
 
@@ -47,11 +30,6 @@ namespace SFMLEngine {
 
 	void RenderSystem::Render()
 	{
-
-		// upload lighting data to shaders
-		m_PointLightSystem->UploadAllLightingData();
-		m_DirectionalLightSystem->UploadAllLightingData();
-
 		for (const auto& materialData : Material::GetAllMaterialsInUse())
 		{
 			// get all the entities that use that material

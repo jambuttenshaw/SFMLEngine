@@ -45,9 +45,6 @@ namespace SFMLEngine {
 		float m_RenderLayerNormaizeFactor = 1.0f;
 
 		sf::RenderStates m_RenderState;
-
-		std::shared_ptr<PointLightSystem> m_PointLightSystem;
-		std::shared_ptr<DirectionalLightSystem> m_DirectionalLightSystem;
 	};
 
 }
