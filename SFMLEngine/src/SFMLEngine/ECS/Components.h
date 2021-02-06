@@ -2,6 +2,8 @@
 
 #include <SFML/Graphics.hpp>
 
+#include "System.h"
+
 #include "ScriptableEntity.h"
 #include "../ResourceManagement/ResourceManager.h"
 
@@ -12,6 +14,8 @@ namespace SFMLEngine {
 
 	struct Transform 
 	{
+		friend class System;
+
 		sf::Vector2f Position;
 		float Rotation = 0.0f;
 		sf::Vector2f Scale;
@@ -35,10 +39,15 @@ namespace SFMLEngine {
 			t.scale(Scale);
 			return t;
 		}
+
+	private:
+		bool m_Modified = false;
 	};
 
 	struct SpriteRenderer
 	{
+		friend class System;
+
 		ResourceID TextureHandle;
 		ResourceID MaterialHandle;
 		int RenderLayer;
@@ -70,15 +79,25 @@ namespace SFMLEngine {
 		{
 			return ResourceManager::GetResourceHandle<sf::Texture>(NormalMapHandle);
 		}
+
+	private:
+		bool m_Modified = false;
 	};
 
 	struct NativeScripts
 	{
+		friend class System;
+
 		std::unordered_map<const char*, ScriptableEntity*> Scripts;
+
+	private:
+		bool m_Modified = false;
 	};
 
 	struct PointLight
 	{
+		friend class System;
+
 		float Intensity;
 		float Range;
 		sf::Color Color;
@@ -90,10 +109,15 @@ namespace SFMLEngine {
 		PointLight(float intensity, float range, const sf::Color& color, bool staticLight = false)
 			: Intensity(intensity), Range(range), Color(color), Static(staticLight)
 		{}
+
+	private:
+		bool m_Modified = false;
 	};
 
 	struct DirectionalLight
 	{
+		friend class System;
+		
 		sf::Vector3f Direction;
 		float Intensity;
 		sf::Color Color;
@@ -105,6 +129,10 @@ namespace SFMLEngine {
 		DirectionalLight(const sf::Vector3f& direction, float intensity, const sf::Color& color, bool staticLight = false)
 			: Direction(direction), Intensity(intensity), Color(color), Static(staticLight)
 		{}
+
+	private:
+		bool m_Modified = false;
+
 	};
 
 }
