@@ -13,13 +13,14 @@ namespace SFMLEngine {
 		friend class System;
 
 		sf::Vector2f Size;
-		sf::Vector2f ViewportSize;
+		sf::FloatRect Viewport;
+		bool Main;
 
 		Camera()
-			: Size(), ViewportSize()
+			: Size(), Viewport(), Main(false)
 		{}
-		Camera(const sf::Vector2f& size, const sf::Vector2f& viewportSize)
-			: Size(size), ViewportSize(viewportSize)
+		Camera(const sf::Vector2f& size, const sf::FloatRect& viewportSize, bool main)
+			: Size(size), Viewport(viewportSize), Main(main)
 		{}
 
 	private:

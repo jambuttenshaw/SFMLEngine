@@ -7,4 +7,38 @@ namespace SFMLEngine {
 		m_Coordinator = coordinator;
 	}
 
+	void CameraSystem::EntityAddedToSystem(Entity entity)
+	{
+		Camera& camera = m_Coordinator->GetComponent<Camera>(entity);
+		if (camera.Main) m_MainCamera = entity;
+	}
+
+	void CameraSystem::Update()
+	{
+		for (const auto& entity : m_Entities)
+		{
+			auto& cam = m_Coordinator->GetComponent<Camera>(entity);
+			if (ComponentModified(cam))
+			{
+				ResetModified(cam);
+				if (cam.Main)
+				{
+					m_MainCamera = entity;
+					break;
+				}
+			}
+		}
+	}
+
+	sf::View CameraSystem::GetMainCameraView()
+	{
+		auto& cam = m_Coordinator->GetComponent<Camera>(m_MainCamera);
+		auto& transform = m_Coordinator->GetComponent<Transform>(m_MainCamera);
+
+		sf::View view(transform.Position, cam.Size);
+		view.setViewport(cam.Viewport);
+
+		return view;
+	}
+
 }

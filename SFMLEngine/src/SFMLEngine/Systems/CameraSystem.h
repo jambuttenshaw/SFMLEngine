@@ -13,13 +13,18 @@ namespace SFMLEngine {
 
 		void Init(Coordinator* coordinator);
 
-		void EntityAddedToSystem(Entity entity) override {}
+		void EntityAddedToSystem(Entity entity) override;
 		void EntityRemovedFromSystem(Entity entity) override {}
+
+		void Update();
+
+		sf::View GetMainCameraView();
 
 	private:
 
 		Coordinator* m_Coordinator = nullptr;
 
+		Entity m_MainCamera;
 	};
 
 }

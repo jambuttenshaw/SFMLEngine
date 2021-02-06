@@ -18,6 +18,13 @@ public:
 		// create a new scene
 		m_Scene = Application::GetApplicationHandle()->CreateScene();
 
+		{
+			m_Camera = m_Scene->CreateEntity();
+
+			m_Scene->AddComponent(m_Camera, Transform{ sf::Vector2f(0, 0) });
+			m_Scene->AddComponent(m_Camera, Camera{ sf::Vector2f(600, 400), sf::FloatRect(0.0f, 0.0f, 1.0f, 1.0f), true });
+		}
+
 		for (int x = 0; x < 10; x++)
 		{
 			for (int y = 0; y < 10; y++)
@@ -72,12 +79,15 @@ public:
 
 	void GameLayer::OnDetach()
 	{
+		m_Scene->DestroyEntity(m_Camera);
+
 		for (auto const& e : m_Tiles)
 			m_Scene->DestroyEntity(e);
-		
 
 		m_Scene->DestroyEntity(m_Light);
 		m_Scene->DestroyEntity(m_Light2);
+
+		m_Scene->DestroyEntity(m_Text);
 	}
 
 	void GameLayer::OnEvent(sf::Event) {}
@@ -90,6 +100,8 @@ public:
 private:
 	std::shared_ptr<Scene> m_Scene;
 	
+	Entity m_Camera;
+
 	std::vector<Entity> m_Tiles;
 
 	Entity m_Light;

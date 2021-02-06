@@ -205,6 +205,7 @@ namespace SFMLEngine
             // apply any changes made to components
             m_RenderSystem->Update();
             m_GUISystem->Update();
+            m_CameraSystem->Update();
 
             // ---------
             // RENDERING
@@ -224,10 +225,14 @@ namespace SFMLEngine
             m_PointLightSystem->UploadAllLightingData();
             m_DirectionalLightSystem->UploadAllLightingData();
 
+            // set the windows view for the game world using the main camera
+            m_Window->setView(m_CameraSystem->GetMainCameraView());
+
             // draw to the screen
             m_RenderSystem->Render();
 
-
+            // set the windows view to the default for the GUI
+            m_Window->setView(m_Window->getDefaultView());
             // draw the GUI onto the display
             m_GUISystem->Render();
             
