@@ -11,6 +11,7 @@ public:
 	{
 		// do something when the game starts
 		m_Transform = &GetComponent<Transform>();
+		m_Camera = &GetComponent<Camera>();
 	}
 
 	void Update(Timestep ts) override
@@ -26,10 +27,20 @@ public:
 		if (Input::IsKeyDown(sf::Keyboard::W))
 			m_Transform->Position += ts * m_MoveSpeed * sf::Vector2f(0, -1);
 		
+		if (Input::IsKeyDown(sf::Keyboard::Q))
+			m_Transform->Rotation -= 25 * ts;
+		if (Input::IsKeyDown(sf::Keyboard::E))
+			m_Transform->Rotation += 25 * ts;
+
+		if (Input::IsKeyDown(sf::Keyboard::Up))
+			m_Camera->Zoom -= ts;
+		if (Input::IsKeyDown(sf::Keyboard::Down))
+			m_Camera->Zoom += ts;
 	}
 
 private:
 	Transform* m_Transform = nullptr;
+	Camera* m_Camera = nullptr;
 
 	float m_MoveSpeed = 250.0f;
 };

@@ -52,7 +52,7 @@ public:
 			m_Light = m_Scene->CreateEntity();
 
 			m_Scene->AddComponent(m_Light, Transform{});
-			m_Scene->AddComponent(m_Light, PointLight{ 2.0f, 0.007f, sf::Color{180, 120, 120, 255} });
+			m_Scene->AddComponent(m_Light, PointLight{ 3.0f, 0.007f, sf::Color{220, 80, 80, 255} });
 
 			m_Scene->AddNativeScript<GoToMouse>(m_Light);
 		}
@@ -60,7 +60,7 @@ public:
 		{
 			m_Light2 = m_Scene->CreateEntity();
 
-			m_Scene->AddComponent(m_Light2, DirectionalLight{ sf::Vector3f(1, 0, 0), 0.4f, sf::Color{32, 220, 70, 255}, true });
+			m_Scene->AddComponent(m_Light2, DirectionalLight{ sf::Vector3f(1, 0, 0), 1.3f, sf::Color{70, 32, 220, 255}, true });
 		}
 	}
 

@@ -47,6 +47,9 @@ namespace SFMLEngine {
 		sf::View view(transform.Position, cam.Size);
 		view.setViewport(cam.Viewport);
 
+		view.setRotation(transform.Rotation);
+		view.zoom(cam.Zoom);
+
 		return view;
 	}
 

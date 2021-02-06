@@ -14,11 +14,12 @@ namespace SFMLEngine {
 
 		sf::Vector2f Size;
 		sf::FloatRect Viewport;
+		float Zoom;
 		bool Main;
 
 		Camera();
-		Camera(const sf::Vector2f& size, const sf::FloatRect& viewportSize, bool main)
-			: Size(size), Viewport(viewportSize), Main(main)
+		Camera(const sf::Vector2f& size, const sf::FloatRect& viewportSize, float zoom, bool main)
+			: Size(size), Viewport(viewportSize), Zoom(zoom), Main(main)
 		{}
 
 		void SetMain(bool main = true)
