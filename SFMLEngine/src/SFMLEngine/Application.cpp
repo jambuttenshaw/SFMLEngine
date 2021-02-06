@@ -5,15 +5,12 @@
 
 #include "Input.h"
 
-#include "ResourceManagement/ResourceManager.h"
 #include "Renderer/Renderer.h"
-#include "Renderer/ShaderLibrary.h"
 #include "Renderer/Material.h"
 #include "Renderer/Texture.h"
 
 #include "FontLibrary.h"
 
-#include "Log.h"
 
 namespace SFMLEngine
 {
@@ -75,6 +72,7 @@ namespace SFMLEngine
         m_Coordinator->RegisterComponent<NativeScripts>();
         m_Coordinator->RegisterComponent<PointLight>();
         m_Coordinator->RegisterComponent<DirectionalLight>();
+        m_Coordinator->RegisterComponent<Text>();
 
         // register systems
 
