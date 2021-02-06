@@ -27,6 +27,23 @@ namespace SFMLEngine {
 		m_RenderLayerNormaizeFactor = m_MaxRenderLayer == 0 ? 1.0f : 1.0f / (float)(m_MaxRenderLayer);
 	}
 
+	void RenderSystem::Update()
+	{
+		auto spriteRenderers = m_Coordinator->GetComponents<SpriteRenderer>(m_Entities);
+		for (auto& spriteRenderer : spriteRenderers)
+		{
+			if (ComponentModified(spriteRenderer))
+			{
+				// if a sprite renderer has been modified then we need to update the order in layer factors etc
+				m_MaxOrderInLayer = std::max(m_MaxOrderInLayer, abs(spriteRenderer.OrderInLayer));
+				m_MaxRenderLayer = std::max(m_MaxRenderLayer, abs(spriteRenderer.RenderLayer));
+				m_OrderInLayerNormalizeFactor = m_MaxOrderInLayer == 0 ? 0 : 1.0f / (float)(m_MaxOrderInLayer + 1.0f);
+				m_RenderLayerNormaizeFactor = m_MaxRenderLayer == 0 ? 1.0f : 1.0f / (float)(m_MaxRenderLayer);
+
+				ResetModified(spriteRenderer);
+			}
+		}
+	}
 
 	void RenderSystem::Render()
 	{

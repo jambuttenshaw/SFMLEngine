@@ -28,6 +28,7 @@ namespace SFMLEngine {
 		void EntityAddedToSystem(Entity entity) override;
 		void EntityRemovedFromSystem(Entity entity) override {}
 
+		void Update();
 		void Render();
 
 	private:

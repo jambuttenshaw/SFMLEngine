@@ -179,6 +179,8 @@ namespace SFMLEngine
             // Update the systems
             m_ScriptableEntitySystem->Update(ts);
 
+            // apply any changes made to components
+            m_RenderSystem->Update();
 
             // ---------
             // RENDERING
