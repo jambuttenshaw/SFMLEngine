@@ -2,13 +2,15 @@
 
 #include <SFML/Graphics.hpp>
 
+#include "Systems/CameraSystem.h"
+
 namespace SFMLEngine {
 
 	class Input
 	{
 	public:
 
-		static void Init(sf::RenderWindow* window);
+		static void Init(sf::RenderWindow* window, std::shared_ptr<CameraSystem> cameraSystem);
 
 		static bool IsKeyDown(sf::Keyboard::Key key);
 
@@ -18,8 +20,8 @@ namespace SFMLEngine {
 		static sf::Vector2f GetMouseWorldPos();
 
 	private:
-
 		static sf::RenderWindow* s_Window;
+		static std::shared_ptr<CameraSystem> s_CameraSystem;
 
 	};
 

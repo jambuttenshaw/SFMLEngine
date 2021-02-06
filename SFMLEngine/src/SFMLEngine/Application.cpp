@@ -49,14 +49,7 @@ namespace SFMLEngine
         // load up the font library
         FontLibrary::Init();
 
-        /*
-        ----------
-        INIT INPUT
-        ----------
-        */
-
-        Input::Init(m_Window);
-
+        
         /*
         ----------
         SET UP ECS
@@ -135,6 +128,15 @@ namespace SFMLEngine
             signature.set(m_Coordinator->GetComponentType<Camera>());
             m_Coordinator->SetSystemSignature<CameraSystem>(signature);
         }
+
+        /*
+        ----------
+        INIT INPUT
+        ----------
+        */
+
+        Input::Init(m_Window, m_CameraSystem);
+
     }
 
     Application::~Application()

@@ -5,10 +5,12 @@
 namespace SFMLEngine {
 
 	sf::RenderWindow* Input::s_Window = nullptr;
+	std::shared_ptr<CameraSystem> Input::s_CameraSystem;
 
-	void Input::Init(sf::RenderWindow* window)
+	void Input::Init(sf::RenderWindow* window, std::shared_ptr<CameraSystem> cameraSystem)
 	{
 		s_Window = window;
+		s_CameraSystem = cameraSystem;
 	}
 
 	bool Input::IsKeyDown(sf::Keyboard::Key key)
@@ -28,7 +30,7 @@ namespace SFMLEngine {
 
 	sf::Vector2f Input::GetMouseWorldPos()
 	{
-		return s_Window->mapPixelToCoords(GetMouseScreenPos(), s_Window->getView());
+		return s_Window->mapPixelToCoords(GetMouseScreenPos(), s_CameraSystem->GetMainCameraView());
 	}
 
 }
