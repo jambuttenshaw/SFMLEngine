@@ -11,6 +11,8 @@
 #include "Renderer/Material.h"
 #include "Renderer/Texture.h"
 
+#include "FontLibrary.h"
+
 #include "Log.h"
 
 namespace SFMLEngine
@@ -47,6 +49,8 @@ namespace SFMLEngine
 
         // load up the shader library
         ShaderLibrary::Init();
+        // load up the font library
+        FontLibrary::Init();
 
         /*
         ----------
@@ -223,6 +227,7 @@ namespace SFMLEngine
         Material::DestroyAllCached();
         Texture::DestroyAllCached();
 
+        FontLibrary::Shutdown();
         ShaderLibrary::Shutdown();
         ResourceManager::Shutdown();
     }
