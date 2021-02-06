@@ -73,6 +73,7 @@ namespace SFMLEngine
         m_Coordinator->RegisterComponent<PointLight>();
         m_Coordinator->RegisterComponent<DirectionalLight>();
         m_Coordinator->RegisterComponent<Text>();
+        m_Coordinator->RegisterComponent<Camera>();
 
         // register systems
 

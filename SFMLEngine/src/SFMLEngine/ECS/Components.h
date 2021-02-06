@@ -11,3 +11,5 @@
 #include "Components/DirectionalLight.h"
 
 #include "Components/Text.h"
+
+#include "Components/Camera.h"
