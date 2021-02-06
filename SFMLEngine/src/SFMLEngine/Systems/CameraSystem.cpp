@@ -1,5 +1,8 @@
 #include "CameraSystem.h"
 
+#include "../ECS/Components/Transform.h"
+#include "../ECS/Components/Camera.h"
+
 namespace SFMLEngine {
 
 	void CameraSystem::Init(Coordinator* coordinator)

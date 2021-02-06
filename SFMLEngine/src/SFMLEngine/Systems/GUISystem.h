@@ -1,8 +1,8 @@
 #pragma once
 
+#include <SFML/Graphics.hpp>
 
 #include "../ECS/Coordinator.h"
-#include "../ECS/Components.h"
 
 
 namespace SFMLEngine {

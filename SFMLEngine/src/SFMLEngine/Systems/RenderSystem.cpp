@@ -1,5 +1,8 @@
 #include "RenderSystem.h"
 
+#include "../ECS/Components/Transform.h"
+#include "../ECS/Components/SpriteRenderer.h"
+
 namespace SFMLEngine {
 
 	void RenderSystem::Init(Coordinator* coordinator, sf::RenderWindow* window)

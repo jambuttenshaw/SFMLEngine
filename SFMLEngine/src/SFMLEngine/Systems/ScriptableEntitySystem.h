@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../ECS/Coordinator.h"
-#include "../ECS/Components.h"
+#include "../ECS/Components/NativeScripts.h"
 #include "../ECS/System.h"
 
 #include "../Timestep.h"

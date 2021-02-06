@@ -264,7 +264,7 @@ namespace SFMLEngine
             {
                 // collect debug info
 
-                int y = 0;
+                float y = 0;
                 for (auto const& s : m_DebugInfo)
                 {
                     // display debug info

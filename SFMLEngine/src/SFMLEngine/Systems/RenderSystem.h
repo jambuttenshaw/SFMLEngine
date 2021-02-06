@@ -3,9 +3,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "../ECS/Coordinator.h"
-#include "../ECS/Components.h"
 
-#include "../Renderer/Renderer.h"
 #include "../Renderer/Material.h"
 
 
