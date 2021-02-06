@@ -11,6 +11,7 @@
 #include "Systems/Lighting/DirectionalLightSystem.h"
 
 #include "Systems/GUISystem.h"
+#include "Systems/CameraSystem.h"
 
 #include "LayerStack.h"
 #include "Scene.h"
@@ -52,6 +53,8 @@ namespace SFMLEngine {
 		std::shared_ptr<DirectionalLightSystem> m_DirectionalLightSystem;
 
 		std::shared_ptr<GUISystem> m_GUISystem;
+
+		std::shared_ptr<CameraSystem> m_CameraSystem;
 
 		sf::Vector2f m_DefaultWindowCentre;
 

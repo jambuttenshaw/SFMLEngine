@@ -124,6 +124,17 @@ namespace SFMLEngine
             signature.set(m_Coordinator->GetComponentType<Text>());
             m_Coordinator->SetSystemSignature<GUISystem>(signature);
         }
+
+
+        // Camera system
+        m_CameraSystem = m_Coordinator->RegisterSystem<CameraSystem>();
+        m_CameraSystem->Init(m_Coordinator);
+        {
+            Signature signature;
+            signature.set(m_Coordinator->GetComponentType<Transform>());
+            signature.set(m_Coordinator->GetComponentType<Camera>());
+            m_Coordinator->SetSystemSignature<CameraSystem>(signature);
+        }
     }
 
     Application::~Application()
