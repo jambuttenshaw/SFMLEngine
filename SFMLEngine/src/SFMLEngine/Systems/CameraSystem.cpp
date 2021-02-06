@@ -51,7 +51,7 @@ namespace SFMLEngine {
 		view.setViewport(cam.Viewport);
 
 		view.setRotation(transform.Rotation);
-		view.zoom(cam.Zoom);
+		view.zoom(cam.Zoom < 0 ? 0 : cam.Zoom);
 
 		return view;
 	}
