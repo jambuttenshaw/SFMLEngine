@@ -32,10 +32,7 @@ public:
 		if (Input::IsKeyDown(sf::Keyboard::E))
 			m_Transform->Rotation += 25 * ts;
 
-		if (Input::IsKeyDown(sf::Keyboard::Up))
-			m_Camera->Zoom -= ts;
-		if (Input::IsKeyDown(sf::Keyboard::Down))
-			m_Camera->Zoom += ts;
+		m_Camera->Zoom -= m_ScrollSpeed * Input::GetMouseWheelDelta() * ts;
 	}
 
 private:
@@ -43,4 +40,5 @@ private:
 	Camera* m_Camera = nullptr;
 
 	float m_MoveSpeed = 250.0f;
+	float m_ScrollSpeed = 10.0f;
 };

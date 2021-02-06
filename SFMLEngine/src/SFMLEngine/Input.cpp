@@ -7,6 +7,10 @@ namespace SFMLEngine {
 	sf::RenderWindow* Input::s_Window = nullptr;
 	std::shared_ptr<CameraSystem> Input::s_CameraSystem;
 
+	sf::Vector2f Input::s_MouseDelta;
+	sf::Vector2f Input::s_OldMousePos;
+	float Input::s_WheelDelta = 0.0f;
+
 	void Input::Init(sf::RenderWindow* window, std::shared_ptr<CameraSystem> cameraSystem)
 	{
 		s_Window = window;

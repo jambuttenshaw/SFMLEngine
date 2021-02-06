@@ -9,6 +9,7 @@ namespace SFMLEngine {
 	class Input
 	{
 	public:
+		friend class Application;
 
 		static void Init(sf::RenderWindow* window, std::shared_ptr<CameraSystem> cameraSystem);
 
@@ -19,9 +20,22 @@ namespace SFMLEngine {
 		static sf::Vector2i GetMouseScreenPos();
 		static sf::Vector2f GetMouseWorldPos();
 
+		static const sf::Vector2f& GetMouseDelta() { return s_MouseDelta; }
+		static float GetMouseWheelDelta() { return s_WheelDelta; }
+
+	private:
+
+		static void ResetDeltas() { s_MouseDelta = sf::Vector2f(0, 0); s_WheelDelta = 0; }
+		static void SetMouseDelta(const sf::Vector2f& newPos) { s_MouseDelta = s_OldMousePos - newPos; s_OldMousePos = newPos; }
+		static void SetWheelDelta(float delta) { s_WheelDelta = delta; }
+
 	private:
 		static sf::RenderWindow* s_Window;
 		static std::shared_ptr<CameraSystem> s_CameraSystem;
+
+		static sf::Vector2f s_MouseDelta;
+		static sf::Vector2f s_OldMousePos;
+		static float s_WheelDelta;
 
 	};
 

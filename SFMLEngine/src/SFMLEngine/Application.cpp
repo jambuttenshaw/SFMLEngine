@@ -169,12 +169,11 @@ namespace SFMLEngine
         */
         m_ScriptableEntitySystem->Start();
 
-        sf::Clock clock;
-        float fps = 0;
-
         while (m_Window->isOpen())
         {
             Timestep ts(m_Clock.restart().asSeconds());
+
+            Input::ResetDeltas();
 
             // Process events
             sf::Event event;
@@ -192,7 +191,13 @@ namespace SFMLEngine
                     m_CameraSystem->WindowResized(sf::Vector2f((float)event.size.width, (float)event.size.height));
                     continue;
                 }
-                   
+
+                if (event.type == sf::Event::MouseMoved)
+                    Input::SetMouseDelta(sf::Vector2f((float)event.mouseMove.x, (float)event.mouseMove.y));
+
+                if (event.type == sf::Event::MouseWheelMoved)
+                    Input::SetWheelDelta((float)event.mouseWheel.delta);
+
                 if (event.type == sf::Event::KeyPressed)
                 {
                     if (event.key.code == sf::Keyboard::F3)
@@ -282,8 +287,6 @@ namespace SFMLEngine
 
             // Update the window
             m_Window->display();
-
-            fps = 1.0f / clock.restart().asSeconds();
         }
 
         Shutdown();
