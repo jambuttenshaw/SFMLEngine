@@ -59,7 +59,11 @@ namespace SFMLEngine {
 
 		std::shared_ptr<CameraSystem> m_CameraSystem;
 
-		sf::Vector2f m_DefaultWindowCentre;
+
+		// Debug mode stuff
+		bool m_DisplayDebug = false;
+		sf::Text m_DebugText;
+		std::vector<std::string> m_DebugInfo;
 
 	public:
 		static Application* GetApplicationHandle() { return s_Instance; }

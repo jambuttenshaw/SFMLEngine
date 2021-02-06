@@ -40,7 +40,6 @@ namespace SFMLEngine
 
         m_Window = new sf::RenderWindow(sf::VideoMode(windowDimensions.x, windowDimensions.y), name, sf::Style::Default, contextSettings);
         m_Window->setVerticalSyncEnabled(true);
-        m_DefaultWindowCentre = m_Window->getView().getCenter();
 
         Renderer::InitGLEW();
 
@@ -137,6 +136,11 @@ namespace SFMLEngine
 
         Input::Init(m_Window, m_CameraSystem);
 
+
+        // debug info
+        m_DebugText.setFillColor(sf::Color::White);
+        m_DebugText.setFont(*ResourceManager::GetResourceHandle<sf::Font>(FontLibrary::GetFont("arial")));
+        m_DebugText.setCharacterSize(16);
     }
 
     Application::~Application()
@@ -178,18 +182,30 @@ namespace SFMLEngine
             {
                 // window events should be handled by the application
                 if (event.type == sf::Event::Closed)
+                {
                     m_Window->close();
+                    continue;
+                }
                 
                 if (event.type == sf::Event::Resized)
-                    m_CameraSystem->WindowResized(sf::Vector2f((float)event.size.width, (float)event.size.height));
-                    
-                else
                 {
-                    // send event callback through to the layer stack
-                    for (Layer* layer : m_LayerStack)
+                    m_CameraSystem->WindowResized(sf::Vector2f((float)event.size.width, (float)event.size.height));
+                    continue;
+                }
+                   
+                if (event.type == sf::Event::KeyPressed)
+                {
+                    if (event.key.code == sf::Keyboard::F3)
                     {
-                        layer->OnEvent(event);
+                        m_DisplayDebug = !m_DisplayDebug;
+                        continue;
                     }
+                }
+                
+                // send event callback through to the layer stack
+                for (Layer* layer : m_LayerStack)
+                {
+                    layer->OnEvent(event);
                 }
             }
             
@@ -223,21 +239,45 @@ namespace SFMLEngine
             // set up the renderer for drawing
             Renderer::SetOpenGLStates();
 
-            // upload all lighting data to shaders
-            m_PointLightSystem->UploadAllLightingData();
-            m_DirectionalLightSystem->UploadAllLightingData();
+            {
+                // upload all lighting data to shaders
+                m_PointLightSystem->UploadAllLightingData();
+                m_DirectionalLightSystem->UploadAllLightingData();
 
-            // set the windows view for the game world using the main camera
-            m_Window->setView(m_CameraSystem->GetMainCameraView());
+                // set the windows view for the game world using the main camera
+                m_Window->setView(m_CameraSystem->GetMainCameraView());
 
-            // draw to the screen
-            m_RenderSystem->Render();
+                // draw to the screen
+                m_RenderSystem->Render();
+            }
 
-            // set the windows view to the default for the GUI
-            m_Window->setView(m_Window->getDefaultView());
-            // draw the GUI onto the display
-            m_GUISystem->Render();
-            
+
+            {
+                // set the windows view to the default for the GUI
+                m_Window->setView(m_Window->getDefaultView());
+                // draw the GUI onto the display
+                m_GUISystem->Render();
+            }
+
+
+            if (m_DisplayDebug) 
+            {
+                // collect debug info
+
+                int y = 0;
+                for (auto const& s : m_DebugInfo)
+                {
+                    // display debug info
+                    m_DebugText.setPosition(0, y);
+                    m_DebugText.setString(s);
+                    m_Window->draw(m_DebugText);
+
+                    y += 10;
+                }
+                m_DebugInfo.clear();
+            }
+
+
             m_Window->setActive(false);
 
             // Update the window

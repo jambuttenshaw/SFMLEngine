@@ -5,6 +5,7 @@
 
 // scripts
 #include "Scripts/GoToMouse.h"
+#include "Scripts/MoveByWASD.h"
 
 
 using namespace SFMLEngine;
@@ -23,6 +24,8 @@ public:
 
 			m_Scene->AddComponent(m_Camera, Transform{ sf::Vector2f(0, 0) });
 			m_Scene->AddComponent(m_Camera, Camera{ });
+
+			m_Scene->AddNativeScript<MoveByWASD>(m_Camera);
 		}
 
 		for (int x = 0; x < 10; x++)
@@ -59,13 +62,6 @@ public:
 
 			m_Scene->AddComponent(m_Light2, DirectionalLight{ sf::Vector3f(1, 0, 0), 0.4f, sf::Color{32, 220, 70, 255}, true });
 		}
-
-		{
-			m_Text = m_Scene->CreateEntity();
-
-			m_Scene->AddComponent(m_Text, Transform{ sf::Vector2f(200.0f, 20.0f) });
-			m_Scene->AddComponent(m_Text, Text{ FontLibrary::GetFont("arial"), "This is some text", 30, sf::Color::Red });
-		}
 	}
 
 	~GameLayer()
@@ -86,8 +82,6 @@ public:
 
 		m_Scene->DestroyEntity(m_Light);
 		m_Scene->DestroyEntity(m_Light2);
-
-		m_Scene->DestroyEntity(m_Text);
 	}
 
 	void GameLayer::OnEvent(sf::Event) {}
@@ -106,8 +100,6 @@ private:
 
 	Entity m_Light;
 	Entity m_Light2;
-
-	Entity m_Text;
 };
 
 
