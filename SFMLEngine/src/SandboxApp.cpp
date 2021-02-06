@@ -22,7 +22,7 @@ public:
 			m_Camera = m_Scene->CreateEntity();
 
 			m_Scene->AddComponent(m_Camera, Transform{ sf::Vector2f(0, 0) });
-			m_Scene->AddComponent(m_Camera, Camera{ sf::Vector2f(600, 400), sf::FloatRect(0.0f, 0.0f, 1.0f, 1.0f), true });
+			m_Scene->AddComponent(m_Camera, Camera{ });
 		}
 
 		for (int x = 0; x < 10; x++)

@@ -36,6 +36,9 @@ namespace SFMLEngine {
 		std::shared_ptr<Scene> CreateScene() { return std::make_shared<Scene>(m_Coordinator, m_ScriptableEntitySystem); }
 
 	private:
+		sf::Vector2u GetWindowDimensions() { return m_Window->getSize(); }
+
+	private:
 		sf::RenderWindow* m_Window;
 
 		sf::Clock m_Clock;
@@ -60,6 +63,7 @@ namespace SFMLEngine {
 
 	public:
 		static Application* GetApplicationHandle() { return s_Instance; }
+		static sf::Vector2u GetWindowSize() { return GetApplicationHandle()->GetWindowDimensions(); }
 
 	private:
 		static Application* s_Instance;

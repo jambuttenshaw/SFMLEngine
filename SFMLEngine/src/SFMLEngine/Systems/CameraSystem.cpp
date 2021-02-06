@@ -30,6 +30,15 @@ namespace SFMLEngine {
 		}
 	}
 
+	void CameraSystem::WindowResized(const sf::Vector2f& newSize)
+	{
+		for (auto const& e : m_Entities)
+		{
+			auto& cam = m_Coordinator->GetComponent<Camera>(e);
+			cam.Size = newSize;
+		}
+	}
+
 	sf::View CameraSystem::GetMainCameraView()
 	{
 		auto& cam = m_Coordinator->GetComponent<Camera>(m_MainCamera);

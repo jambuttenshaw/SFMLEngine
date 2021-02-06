@@ -181,7 +181,7 @@ namespace SFMLEngine
                     m_Window->close();
                 
                 if (event.type == sf::Event::Resized)
-                    m_Window->setView(sf::View(m_DefaultWindowCentre, sf::Vector2f((float)event.size.width, (float)event.size.height)));
+                    m_CameraSystem->WindowResized(sf::Vector2f((float)event.size.width, (float)event.size.height));
                     
                 else
                 {

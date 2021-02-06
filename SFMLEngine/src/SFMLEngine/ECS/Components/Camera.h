@@ -16,12 +16,16 @@ namespace SFMLEngine {
 		sf::FloatRect Viewport;
 		bool Main;
 
-		Camera()
-			: Size(), Viewport(), Main(false)
-		{}
+		Camera();
 		Camera(const sf::Vector2f& size, const sf::FloatRect& viewportSize, bool main)
 			: Size(size), Viewport(viewportSize), Main(main)
 		{}
+
+		void SetMain(bool main = true)
+		{
+			Main = main;
+			m_Modified = true;
+		}
 
 	private:
 		bool m_Modified = true;

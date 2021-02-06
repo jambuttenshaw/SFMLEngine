@@ -18,6 +18,7 @@ namespace SFMLEngine {
 
 		void Update();
 
+		void WindowResized(const sf::Vector2f& newSize);
 		sf::View GetMainCameraView();
 
 	private:
