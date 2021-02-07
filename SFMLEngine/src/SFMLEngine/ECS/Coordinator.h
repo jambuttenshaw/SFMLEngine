@@ -4,6 +4,8 @@
 #include "EntityManager.h"
 #include "SystemManager.h"
 
+#include <Tracy.hpp>
+
 namespace SFMLEngine {
 
 	class Coordinator
@@ -68,6 +70,7 @@ namespace SFMLEngine {
 		template<typename T>
 		T& GetComponent(Entity entity)
 		{
+			ZoneScoped;
 			return m_ComponentManager->GetComponent<T>(entity);
 		}
 

@@ -11,6 +11,7 @@
 
 #include "FontLibrary.h"
 
+#include <Tracy.hpp>
 
 namespace SFMLEngine
 {
@@ -169,9 +170,14 @@ namespace SFMLEngine
         */
         m_ScriptableEntitySystem->Start();
 
+        float fps = 0;
+
         while (m_Window->isOpen())
         {
             Timestep ts(m_Clock.restart().asSeconds());
+            fps = 1 / ts;
+            if (m_DisplayDebug)
+                m_DebugInfo.push_back("FPS: " + std::to_string(fps));
 
             Input::ResetDeltas();
 
@@ -233,7 +239,7 @@ namespace SFMLEngine
             // ---------
             // RENDERING
             // ---------
-
+            
             // Clear screen
             m_Window->clear();
             Renderer::Clear();
@@ -282,11 +288,12 @@ namespace SFMLEngine
                 m_DebugInfo.clear();
             }
 
-
             m_Window->setActive(false);
 
             // Update the window
             m_Window->display();
+
+            FrameMark;
         }
 
         Shutdown();

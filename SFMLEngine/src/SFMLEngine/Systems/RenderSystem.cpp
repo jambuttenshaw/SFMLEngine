@@ -3,6 +3,8 @@
 #include "../ECS/Components/Transform.h"
 #include "../ECS/Components/SpriteRenderer.h"
 
+#include <Tracy.hpp>
+
 namespace SFMLEngine {
 
 	void RenderSystem::Init(Coordinator* coordinator, sf::RenderWindow* window)
@@ -32,6 +34,7 @@ namespace SFMLEngine {
 
 	void RenderSystem::Update()
 	{
+		ZoneScoped;
 		for (auto& e : m_Entities)
 		{
 			SpriteRenderer& spriteRenderer = m_Coordinator->GetComponent<SpriteRenderer>(e);
@@ -50,6 +53,7 @@ namespace SFMLEngine {
 
 	void RenderSystem::Render()
 	{
+		ZoneScoped;
 		for (const auto& materialData : Material::GetAllMaterialsInUse())
 		{
 			// get all the entities that use that material
@@ -64,30 +68,49 @@ namespace SFMLEngine {
 
 			for (const auto& entity : m_CurrentEntities)
 			{
+				ZoneScoped;
+				ZoneName("DrawSprite", 10);
+
 				auto const& sR = m_Coordinator->GetComponent<SpriteRenderer>(entity);
 				auto const& t = m_Coordinator->GetComponent<Transform>(entity);
 
-				// set shader uniforms
-				float depth = (sR.RenderLayer + (sR.OrderInLayer * m_OrderInLayerNormalizeFactor)) * m_RenderLayerNormaizeFactor;
-				shader->setUniform("u_DepthValue", depth);
+				{
+					ZoneScoped;
+					ZoneName("SetDepth", 8);
+					// set shader uniforms
+					float depth = (sR.RenderLayer + (sR.OrderInLayer * m_OrderInLayerNormalizeFactor)) * m_RenderLayerNormaizeFactor;
+					shader->setUniform("u_DepthValue", depth);
+				}
+				
 				if (materialData.Lit)
 				{
+					ZoneScoped;
+					ZoneName("SetLightUnif", 12);
 					shader->setUniform("u_NormalMap", *ResourceManager::GetResourceHandle<sf::Texture>(sR.NormalMapHandle));
 					// rotation value is used to compute transformed normals so lighting is correct for rotated sprites
 					// requires negated because of the y axis being flipped
 					shader->setUniform("u_Rotation", -t.Rotation * DEG_TO_RAD);
 				}
 				
-				// create a transform
-				m_RenderState.transform = t.GetTransformMatrix();
+				{
+					ZoneScoped;
+					ZoneName("SetTrans", 8);
+					// create a transform
+					m_RenderState.transform = t.GetTransformMatrix();
+				}
 
-				m_RenderWindow->draw(sR.Sprite, m_RenderState);
+				{
+					ZoneScoped;
+					ZoneName("Draw", 4);
+					m_RenderWindow->draw(sR.Sprite, m_RenderState);
+				}
 			}
 		}
 	}
 
 	void RenderSystem::GetAllEntitiesWithMaterial(MaterialData material)
 	{
+		ZoneScoped;
 		m_CurrentEntities.clear();
 
 		for (auto& entity : m_Entities)

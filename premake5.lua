@@ -13,6 +13,7 @@ IncludeDir = {}
 IncludeDir["SFML"] = "%{wks.location}/SFMLEngine/vendor/SFML/include"
 IncludeDir["spdlog"] = "%{wks.location}/SFMLEngine/vendor/spdlog/include"
 IncludeDir["glew"] = "%{wks.location}/SFMLEngine/vendor/glew/include"
+IncludeDir["tracy"] = "%{wks.location}/SFMLEngine/vendor/tracy"
 
 
 LibraryDir = {}
@@ -32,13 +33,15 @@ project "SFMLEngine"
 	files
 	{
 		"SFMLEngine/src/**.h",
-		"SFMLEngine/src/**.cpp"
+		"SFMLEngine/src/**.cpp",
+		"SFMLEngine/vendor/tracy/TracyClient.cpp"
 	}
 
 	defines
 	{
 		"SFML_STATIC",
-		"GLEW_STATIC"
+		"GLEW_STATIC",
+		"TRACY_ENABLE"
 	}
 
 	includedirs
@@ -46,7 +49,8 @@ project "SFMLEngine"
 		"src",
 		"%{IncludeDir.SFML}",
 		"%{IncludeDir.spdlog}",
-		"%{IncludeDir.glew}"
+		"%{IncludeDir.glew}",
+		"%{IncludeDir.tracy}"
 	}
 	
 	libdirs

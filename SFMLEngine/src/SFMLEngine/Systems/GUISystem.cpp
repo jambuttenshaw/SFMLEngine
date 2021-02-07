@@ -29,6 +29,7 @@ namespace SFMLEngine {
 
 	void GUISystem::Update()
 	{
+		ZoneScoped;
 		for (auto& e : m_Entities)
 		{
 			Text& text = m_Coordinator->GetComponent<Text>(e);
@@ -45,6 +46,7 @@ namespace SFMLEngine {
 
 	void GUISystem::Render()
 	{
+		ZoneScoped;
 		sf::RenderStates renderState;
 
 		for (auto& e : m_Entities)

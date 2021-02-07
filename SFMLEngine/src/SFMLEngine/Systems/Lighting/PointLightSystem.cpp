@@ -4,6 +4,7 @@
 #include "../../ECS/Components/Transform.h"
 #include "../../Renderer/Material.h"
 
+#include <Tracy.hpp>
 
 namespace SFMLEngine {
 
@@ -39,6 +40,7 @@ namespace SFMLEngine {
 
 	void PointLightSystem::UploadAllLightingData()
 	{
+		ZoneScoped;
 		// make sure there arent too many lights
 		// so we dont overflow the buffer
 		if (m_LightCount + m_StaticLightCount < MAX_POINT_LIGHTS)

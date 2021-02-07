@@ -1,6 +1,8 @@
 #include "Material.h"
 
 
+#include <Tracy.hpp>
+
 namespace SFMLEngine {
 
 	std::vector<MaterialData> Material::s_MaterialCache;
@@ -131,7 +133,7 @@ namespace SFMLEngine {
 
 	sf::Shader* Material::SetUniforms()
 	{
-
+		ZoneScoped;
 		// get a pointer to the shader object from the resource manager
 		sf::Shader* shaderHandle = ResourceManager::GetResourceHandle<sf::Shader>(m_ShaderResourceID);
 

@@ -18,6 +18,7 @@ namespace SFMLEngine {
 
 	void CameraSystem::Update()
 	{
+		ZoneScoped;
 		for (const auto& entity : m_Entities)
 		{
 			auto& cam = m_Coordinator->GetComponent<Camera>(entity);
@@ -44,6 +45,7 @@ namespace SFMLEngine {
 
 	sf::View CameraSystem::GetMainCameraView()
 	{
+		ZoneScoped;
 		auto& cam = m_Coordinator->GetComponent<Camera>(m_MainCamera);
 		auto& transform = m_Coordinator->GetComponent<Transform>(m_MainCamera);
 

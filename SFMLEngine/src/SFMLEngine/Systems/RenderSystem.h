@@ -6,7 +6,6 @@
 
 #include "../Renderer/Material.h"
 
-
 namespace SFMLEngine {
 
 	class RenderSystem : public System

@@ -50,6 +50,7 @@ namespace SFMLEngine {
 
 	void Renderer::SetOpenGLStates()
 	{
+		ZoneScoped;
 		glEnable(GL_DEPTH_TEST);
 	}
 

@@ -8,6 +8,7 @@
 #include <queue>
 #include <unordered_map>
 
+#include <Tracy.hpp>
 
 namespace SFMLEngine {
 
@@ -99,6 +100,7 @@ namespace SFMLEngine {
 		template<typename T>
 		static T* GetResourceHandle(ResourceID resourceID)
 		{
+			ZoneScoped;
 			// find the resource in the resources map
 			auto location = s_Resources.find(resourceID);
 

@@ -4,6 +4,8 @@
 
 #include <memory>
 
+#include <Tracy.hpp>
+
 namespace SFMLEngine {
 
 	class Log

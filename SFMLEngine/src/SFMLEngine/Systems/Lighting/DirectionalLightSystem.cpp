@@ -3,6 +3,7 @@
 #include "../../ECS/Components/DirectionalLight.h"
 #include "../../Renderer/Material.h"
 
+#include <Tracy.hpp>
 
 namespace SFMLEngine {
 
@@ -39,6 +40,7 @@ namespace SFMLEngine {
 
 	void DirectionalLightSystem::UploadAllLightingData()
 	{
+		ZoneScoped;
 		if (m_LightCount + m_StaticLightCount < MAX_DIRECTIONAL_LIGHTS)
 		{
 			for (auto const& entity : m_Entities)
