@@ -20,6 +20,10 @@ namespace SFMLEngine {
 		ResourceID NormalMapHandle;
 		sf::Sprite Sprite;
 
+		// for speed when rendering
+		Material* MaterialPtr = nullptr;
+		sf::Texture* NormalMapPtr = nullptr;
+
 		SpriteRenderer()
 			: TextureHandle(NULL_RESOURCE_ID), MaterialHandle(NULL_RESOURCE_ID), RenderLayer(0), OrderInLayer(0), NormalMapHandle(NULL_RESOURCE_ID), Sprite()
 		{}

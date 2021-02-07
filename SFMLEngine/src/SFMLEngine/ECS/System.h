@@ -17,7 +17,11 @@ namespace SFMLEngine {
 		template<typename T>
 		bool ComponentModified(const T& component) const { return component.m_Modified; }
 		template<typename T>
+		bool ComponentModified(T* component) const { return component->m_Modified; }
+		template<typename T>
 		void ResetModified(T& component) { component.m_Modified = false; }
+		template<typename T>
+		void ResetModified(T* component) { component->m_Modified = false; }
 
 		std::set<Entity> m_Entities;
 	};

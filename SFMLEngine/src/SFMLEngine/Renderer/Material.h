@@ -29,23 +29,17 @@ namespace SFMLEngine {
 		void* Data;
 	};
 
-	struct MaterialData
-	{
-		std::string ShaderName;
-		ResourceID MaterialID;
-		bool Shared;
-		bool Lit;
-	};
-
+	struct MaterialData;
 
 	class Material
 	{
 	public:
 		Material(const std::string& shaderName);
-		Material(ResourceID shaderResourceID);
 		~Material();
 
 		sf::Shader* SetUniforms();
+		sf::Shader* GetShaderPtr() { return m_ShaderPtr; }
+		bool IsLit() { return m_Lit; }
 
 		// even though the function bodies are all the same,
 		// I overloaded SetProperty for each allowed data type to be assigned to a shader uniform
@@ -117,6 +111,8 @@ namespace SFMLEngine {
 
 	private:
 		ResourceID m_ShaderResourceID;
+		sf::Shader* m_ShaderPtr;
+		bool m_Lit = false;
 
 		std::vector<Uniform> m_Uniforms;
 
@@ -124,6 +120,18 @@ namespace SFMLEngine {
 		static std::vector<MaterialData> s_MaterialCache;
 		static bool s_WarnOnUnknownUniform;
 
+	};
+
+
+	struct MaterialData
+	{
+		std::string ShaderName;
+		ResourceID MaterialID;
+		bool Shared;
+		bool Lit;
+		// to save time retrieving resources each frame
+		Material* MaterialPtr;
+		sf::Shader* ShaderPtr;
 	};
 
 }

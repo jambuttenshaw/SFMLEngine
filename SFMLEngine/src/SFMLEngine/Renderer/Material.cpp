@@ -11,12 +11,9 @@ namespace SFMLEngine {
 	Material::Material(const std::string& shaderName)
 	{
 		m_ShaderResourceID = ShaderLibrary::GetShaderResourceID(shaderName);
-		Init();
-	}
+		m_ShaderPtr = ResourceManager::GetResourceHandle<sf::Shader>(m_ShaderResourceID);
+		m_Lit = ShaderLibrary::IsLitShader(shaderName);
 
-	Material::Material(ResourceID shaderResourceID)
-		: m_ShaderResourceID(shaderResourceID)
-	{
 		Init();
 	}
 
@@ -26,7 +23,7 @@ namespace SFMLEngine {
 		// all uniforms with the 'u_' prefix should be exposed to the material
 
 		// get the native opengl handle of the shader object
-		GLuint nativeShaderHandle = ResourceManager::GetResourceHandle<sf::Shader>(m_ShaderResourceID)->getNativeHandle();
+		GLuint nativeShaderHandle = m_ShaderPtr->getNativeHandle();
 
 		// the number of uniforms used in the shader
 		GLint uniformCount;
@@ -219,9 +216,12 @@ namespace SFMLEngine {
 		// this gives us the resource ID of the material
 		ResourceID newID = ResourceManager::ManageResource(newMat);
 
+		// for quick access to the shader during rendering we want to store a pointer to the shader in the material data
+		sf::Shader* shaderPtr = ResourceManager::GetResourceHandle<sf::Shader>(ShaderLibrary::GetShaderResourceID(shader));
+
 		// now that we have created a material, we cache it into the map
 		// so that it can be shared between sprites that want the same material
-		s_MaterialCache.push_back(MaterialData{ shader, newID, true, ShaderLibrary::IsLitShader(shader) });
+		s_MaterialCache.push_back(MaterialData{ shader, newID, true, ShaderLibrary::IsLitShader(shader), newMat, shaderPtr });
 
 		return newID;
 	}

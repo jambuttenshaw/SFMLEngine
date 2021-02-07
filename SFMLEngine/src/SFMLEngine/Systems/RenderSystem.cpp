@@ -1,8 +1,5 @@
 #include "RenderSystem.h"
 
-#include "../ECS/Components/Transform.h"
-#include "../ECS/Components/SpriteRenderer.h"
-
 #include <Tracy.hpp>
 
 namespace SFMLEngine {
@@ -16,111 +13,114 @@ namespace SFMLEngine {
 
 	void RenderSystem::EntityAddedToSystem(Entity entity)
 	{
-		auto& sRenderer = m_Coordinator->GetComponent<SpriteRenderer>(entity);
-		if (sRenderer.TextureHandle != NULL_RESOURCE_ID)
+		SpriteRenderer* sRenderer = &m_Coordinator->GetComponent<SpriteRenderer>(entity);
+		Transform* transform = &m_Coordinator->GetComponent<Transform>(entity);
+		
+		if (sRenderer->TextureHandle != NULL_RESOURCE_ID)
 		{
-			sRenderer.Sprite.setTexture(*ResourceManager::GetResourceHandle<sf::Texture>(sRenderer.TextureHandle));
+			sRenderer->Sprite.setTexture(*ResourceManager::GetResourceHandle<sf::Texture>(sRenderer->TextureHandle));
+			
 		}
 		else
 		{
 			LOG_WARN("No texture was supplied for entity ID {0}", entity);
 		}
 
-		m_MaxOrderInLayer = std::max(m_MaxOrderInLayer, abs(sRenderer.OrderInLayer));
-		m_MaxRenderLayer = std::max(m_MaxRenderLayer, abs(sRenderer.RenderLayer));
+		m_MaxOrderInLayer = std::max(m_MaxOrderInLayer, abs(sRenderer->OrderInLayer));
+		m_MaxRenderLayer = std::max(m_MaxRenderLayer, abs(sRenderer->RenderLayer));
 		m_OrderInLayerNormalizeFactor = m_MaxOrderInLayer == 0 ? 0 : 1.0f / (float)(m_MaxOrderInLayer + 1.0f);
 		m_RenderLayerNormaizeFactor = m_MaxRenderLayer == 0 ? 1.0f : 1.0f / (float)(m_MaxRenderLayer);
+
+		m_SpriteRenderers.insert(std::make_pair(entity, sRenderer));
+		m_Transforms.insert(std::make_pair(entity, transform));
+
+		sRenderer->MaterialPtr = ResourceManager::GetResourceHandle<Material>(sRenderer->MaterialHandle);
+		sRenderer->NormalMapPtr = ResourceManager::GetResourceHandle<sf::Texture>(sRenderer->NormalMapHandle);
+	}
+
+	void RenderSystem::EntityRemovedFromSystem(Entity entity)
+	{
+		m_SpriteRenderers.erase(entity);
+		m_Transforms.erase(entity);
 	}
 
 	void RenderSystem::Update()
 	{
 		ZoneScoped;
+
+		bool anyChanged = false;
 		for (auto& e : m_Entities)
 		{
-			SpriteRenderer& spriteRenderer = m_Coordinator->GetComponent<SpriteRenderer>(e);
+			SpriteRenderer* spriteRenderer = m_SpriteRenderers[e];
 			if (ComponentModified(spriteRenderer))
 			{
 				// if a sprite renderer has been modified then we need to update the order in layer factors etc
-				m_MaxOrderInLayer = std::max(m_MaxOrderInLayer, abs(spriteRenderer.OrderInLayer));
-				m_MaxRenderLayer = std::max(m_MaxRenderLayer, abs(spriteRenderer.RenderLayer));
-				m_OrderInLayerNormalizeFactor = m_MaxOrderInLayer == 0 ? 0 : 1.0f / (float)(m_MaxOrderInLayer + 1.0f);
-				m_RenderLayerNormaizeFactor = m_MaxRenderLayer == 0 ? 1.0f : 1.0f / (float)(m_MaxRenderLayer);
+				m_MaxOrderInLayer = std::max(m_MaxOrderInLayer, abs(spriteRenderer->OrderInLayer));
+				m_MaxRenderLayer = std::max(m_MaxRenderLayer, abs(spriteRenderer->RenderLayer));
+				anyChanged = true;
 
 				ResetModified(spriteRenderer);
 			}
+		}
+
+		if (anyChanged)
+		{
+			m_OrderInLayerNormalizeFactor = m_MaxOrderInLayer == 0 ? 0 : 1.0f / (float)(m_MaxOrderInLayer + 1.0f);
+			m_RenderLayerNormaizeFactor = m_MaxRenderLayer == 0 ? 1.0f : 1.0f / (float)(m_MaxRenderLayer);
 		}
 	}
 
 	void RenderSystem::Render()
 	{
-		ZoneScoped;
-		for (const auto& materialData : Material::GetAllMaterialsInUse())
+		ZoneScoped
 		{
-			// get all the entities that use that material
-			// this populates m_CurrentEntities with the entities using this material
-			GetAllEntitiesWithMaterial(materialData);
+			for (const auto& materialData : Material::GetAllMaterialsInUse())
+			{
+				// set the shader uniforms (with the exception of the depth value) once per material, rather than once per sprite
+				materialData.MaterialPtr->SetUniforms();
+			}
+		}
 
-			// set the shader uniforms (with the exception of the depth value) once per material, rather than once per sprite
-			Material* mat = ResourceManager::GetResourceHandle<Material>(materialData.MaterialID);
+		for (const auto& entity : m_Entities)
+		{
+			ZoneScoped
+			ZoneName("DrawSprite", 10)
+			SpriteRenderer* sR = m_SpriteRenderers[entity];
+			Transform* t = m_Transforms[entity];
+			
+			sf::Shader* shader = sR->MaterialPtr->GetShaderPtr();
+			
 
-			sf::Shader* shader = mat->SetUniforms();
+			{
+				ZoneScoped
+				ZoneName("SetDepth", 8)
+				// set shader uniforms
+				float depth = (sR->RenderLayer + (sR->OrderInLayer * m_OrderInLayerNormalizeFactor)) * m_RenderLayerNormaizeFactor;
+				shader->setUniform("u_DepthValue", depth);
+			}
+			
+			if (sR->MaterialPtr->IsLit())
+			{
+				ZoneScoped
+				ZoneName("SetLight", 8)
+				shader->setUniform("u_NormalMap", *sR->NormalMapPtr);
+					
+				// rotation value is used to compute transformed normals so lighting is correct for rotated sprites
+				// requires negated because of the y axis being flipped
+				// shader->setUniform("u_Rotation", -t->Rotation * DEG_TO_RAD);
+					
+			}
+				
+			// create a transform
+			m_RenderState.transform = t->GetTransformMatrix();
 			m_RenderState.shader = shader;
-
-			for (const auto& entity : m_CurrentEntities)
+				
 			{
-				ZoneScoped;
-				ZoneName("DrawSprite", 10);
-
-				auto const& sR = m_Coordinator->GetComponent<SpriteRenderer>(entity);
-				auto const& t = m_Coordinator->GetComponent<Transform>(entity);
-
-				{
-					ZoneScoped;
-					ZoneName("SetDepth", 8);
-					// set shader uniforms
-					float depth = (sR.RenderLayer + (sR.OrderInLayer * m_OrderInLayerNormalizeFactor)) * m_RenderLayerNormaizeFactor;
-					shader->setUniform("u_DepthValue", depth);
-				}
-				
-				if (materialData.Lit)
-				{
-					ZoneScoped;
-					ZoneName("SetLightUnif", 12);
-					shader->setUniform("u_NormalMap", *ResourceManager::GetResourceHandle<sf::Texture>(sR.NormalMapHandle));
-					// rotation value is used to compute transformed normals so lighting is correct for rotated sprites
-					// requires negated because of the y axis being flipped
-					shader->setUniform("u_Rotation", -t.Rotation * DEG_TO_RAD);
-				}
-				
-				{
-					ZoneScoped;
-					ZoneName("SetTrans", 8);
-					// create a transform
-					m_RenderState.transform = t.GetTransformMatrix();
-				}
-
-				{
-					ZoneScoped;
-					ZoneName("Draw", 4);
-					m_RenderWindow->draw(sR.Sprite, m_RenderState);
-				}
+				ZoneScoped
+				ZoneName("Draw", 4)
+				m_RenderWindow->draw(sR->Sprite, m_RenderState);
 			}
 		}
-	}
-
-	void RenderSystem::GetAllEntitiesWithMaterial(MaterialData material)
-	{
-		ZoneScoped;
-		m_CurrentEntities.clear();
-
-		for (auto& entity : m_Entities)
-		{
-			if (m_Coordinator->GetComponent<SpriteRenderer>(entity).MaterialHandle == material.MaterialID)
-			{
-				m_CurrentEntities.push_back(entity);
-				if (!material.Shared) return;
-			}
-		}
-
+		
 	}
 }

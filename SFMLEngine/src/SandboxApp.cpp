@@ -28,15 +28,15 @@ public:
 			m_Scene->AddNativeScript<MoveByWASD>(m_Camera);
 		}
 
-		for (int x = 0; x < 30; x++)
+		for (int x = 0; x < 1; x++)
 		{
-			for (int y = 0; y < 30; y++)
+			for (int y = 0; y < 1; y++)
 			{
 				// creating a second entity
 				Entity entity = m_Scene->CreateEntity();
 
 				// give the entity a transform
-				m_Scene->AddComponent(entity, Transform{ sf::Vector2f((float)(x * 64 - 960), (float)(y * 64 - 960)) });
+				m_Scene->AddComponent(entity, Transform{ sf::Vector2f((float)(x * 64), (float)(y * 64)) });
 				// add the sprite renderer component
 				m_Scene->AddComponent(entity, SpriteRenderer{
 					Texture::Create("assets/textures/cobblestoneTexture.png"),

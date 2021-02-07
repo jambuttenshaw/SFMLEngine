@@ -3,6 +3,8 @@
 #include <SFML/Graphics.hpp>
 
 #include "../ECS/Coordinator.h"
+#include "../ECS/Components/Transform.h"
+#include "../ECS/Components/SpriteRenderer.h"
 
 #include "../Renderer/Material.h"
 
@@ -17,19 +19,17 @@ namespace SFMLEngine {
 		void Init(Coordinator* coordinator, sf::RenderWindow* window);
 
 		void EntityAddedToSystem(Entity entity) override;
-		void EntityRemovedFromSystem(Entity entity) override {}
+		void EntityRemovedFromSystem(Entity entity) override;
 
 		void Update();
 		void Render();
 
 	private:
-		void GetAllEntitiesWithMaterial(MaterialData material);
-
-	private:
 		Coordinator* m_Coordinator = nullptr;
 		sf::RenderWindow* m_RenderWindow = nullptr;
 
-		std::vector<Entity> m_CurrentEntities;
+		std::unordered_map<Entity, SpriteRenderer*> m_SpriteRenderers;
+		std::unordered_map<Entity, Transform*> m_Transforms;
 
 		int m_MaxOrderInLayer = 0;
 		int m_MaxRenderLayer = 0;
