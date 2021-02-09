@@ -17,3 +17,4 @@
 #include "Components/Tilemap.h"
 #include "Components/TilemapRenderer.h"
 
+#include "Components/Rigidbody.h"

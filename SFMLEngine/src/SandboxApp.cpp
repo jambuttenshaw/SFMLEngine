@@ -61,25 +61,22 @@ public:
 			m_Scene->AddNativeScript<ClickToDestroyTile>(m_Tilemap);
 		}
 
-		/*for (int x = 0; x < 1; x++)
 		{
-			for (int y = 0; y < 1; y++)
-			{
-				// creating a second entity
-				Entity entity = m_Scene->CreateEntity();
+			// creating a second entity
+			m_PhysicsEntity = m_Scene->CreateEntity();
 
-				// give the entity a transform
-				m_Scene->AddComponent(entity, Transform{ sf::Vector2f((float)(x * 64), (float)(y * 64)) });
-				// add the sprite renderer component
-				m_Scene->AddComponent(entity, SpriteRenderer{
-					Texture::Create("assets/textures/cobblestoneTexture.png"),
-					Material::Create("Lit"),
-					0, 0,
-					Texture::Create("assets/textures/cobblestoneNormal.png") });
+			// give the entity a transform
+			m_Scene->AddComponent(m_PhysicsEntity, Transform{ sf::Vector2f(0, -300) });
+			// add a rigidbody so this entity is affected by physics
+			m_Scene->AddComponent(m_PhysicsEntity, Rigidbody{ });
 
-				m_Tiles.push_back(entity);
-			}
-		}*/
+			// add the sprite renderer component
+			m_Scene->AddComponent(m_PhysicsEntity, SpriteRenderer{
+				Texture::Create("assets/textures/cobblestoneTexture.png"),
+				Material::Create("Lit"),
+				-1, 0,
+				Texture::Create("assets/textures/cobblestoneNormal.png") });
+		}
 
 		{
 			m_Light = m_Scene->CreateEntity();
@@ -111,8 +108,7 @@ public:
 		m_Scene->DestroyEntity(m_Tilemap);
 		m_Scene->DestroyEntity(m_Camera);
 
-		for (auto const& e : m_Tiles)
-			m_Scene->DestroyEntity(e);
+		m_Scene->DestroyEntity(m_PhysicsEntity);
 
 		m_Scene->DestroyEntity(m_Light);
 		m_Scene->DestroyEntity(m_Light2);
@@ -132,7 +128,7 @@ private:
 
 	Entity m_Camera;
 
-	std::vector<Entity> m_Tiles;
+	Entity m_PhysicsEntity;
 
 	Entity m_Light;
 	Entity m_Light2;

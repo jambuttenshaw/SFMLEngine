@@ -70,6 +70,7 @@ namespace SFMLEngine
         m_Coordinator->RegisterComponent<Camera>();
         m_Coordinator->RegisterComponent<Tilemap>();
         m_Coordinator->RegisterComponent<TilemapRenderer>();
+        m_Coordinator->RegisterComponent<Rigidbody>();
 
         // register systems
 
@@ -141,6 +142,17 @@ namespace SFMLEngine
             signature.set(m_Coordinator->GetComponentType<Transform>());
             signature.set(m_Coordinator->GetComponentType<Camera>());
             m_Coordinator->SetSystemSignature<CameraSystem>(signature);
+        }
+
+
+        // Physics system
+        m_PhysicsSystem = m_Coordinator->RegisterSystem<PhysicsSystem>();
+        m_PhysicsSystem->Init(m_Coordinator);
+        {
+            Signature signature;
+            signature.set(m_Coordinator->GetComponentType<Transform>());
+            signature.set(m_Coordinator->GetComponentType<Rigidbody>());
+            m_Coordinator->SetSystemSignature<PhysicsSystem>(signature);
         }
 
         /*
@@ -248,6 +260,9 @@ namespace SFMLEngine
 
             // upadte all native scripts
             m_ScriptableEntitySystem->Update(ts);
+
+            // update all physics
+            m_PhysicsSystem->Update(ts);
 
             // apply any changes made to components
             m_SpriteRenderSystem->Update();

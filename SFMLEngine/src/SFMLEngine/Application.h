@@ -13,7 +13,10 @@
 #include "Systems/Lighting/DirectionalLightSystem.h"
 
 #include "Systems/GUISystem.h"
+
 #include "Systems/CameraSystem.h"
+
+#include "Systems/PhysicsSystem.h"
 
 #include "LayerStack.h"
 #include "Scene.h"
@@ -62,6 +65,8 @@ namespace SFMLEngine {
 		std::shared_ptr<GUISystem> m_GUISystem;
 
 		std::shared_ptr<CameraSystem> m_CameraSystem;
+
+		std::shared_ptr<PhysicsSystem> m_PhysicsSystem;
 
 
 		// Debug mode stuff
