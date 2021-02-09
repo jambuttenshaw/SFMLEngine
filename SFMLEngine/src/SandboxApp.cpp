@@ -37,13 +37,14 @@ public:
 			ResourceID tilePaletteID = TilePalette::Create(sf::Vector2u(64, 64));
 			TilePalette* tilePalette = ResourceManager::GetResourceHandle<TilePalette>(tilePaletteID);
 
-			TileID cobblestone = tilePalette->CreateTile("cobblestone", Texture::Create("cobblestone", "assets/textures/cobblestoneTexture.png"), Texture::Create("assets/textures/cobblestoneNormal.png"));
+			TileID cobblestone = tilePalette->CreateTile("cobblestone", Texture::Create("assets/textures/cobblestoneTexture.png"), Texture::Create("assets/textures/cobblestoneNormal.png"));
 
 			Tilemap tilemapComponent{ tilePaletteID, {
 				{ cobblestone, sf::Vector2i(0, 0) },
-				{ cobblestone, sf::Vector2i(1, 1) } 
+				{ cobblestone, sf::Vector2i(-1, 0) },
+				{ cobblestone, sf::Vector2i(0, 2) } 
 			} };
-			tilemapComponent.PlaceTile(sf::Vector2i(0, 0), cobblestone);
+			tilemapComponent.PlaceTile(sf::Vector2i(1, 1), cobblestone);
 			m_Scene->AddComponent(m_Tilemap, tilemapComponent);
 
 			TilemapRenderer tilemapRendererComponent{ Material::Create("Lit"), 1, 0 };

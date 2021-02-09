@@ -29,10 +29,15 @@ namespace SFMLEngine {
 		{}
 		SpriteRenderer(ResourceID texHandle, ResourceID material, int renderLayer, int orderInLayer)
 			: TextureHandle(texHandle), MaterialHandle(material), RenderLayer(renderLayer), OrderInLayer(orderInLayer), NormalMapHandle(NULL_RESOURCE_ID), Sprite()
-		{}
+		{
+			MaterialPtr = ResourceManager::GetResourceHandle<Material>(MaterialHandle);
+		}
 		SpriteRenderer(ResourceID texHandle, ResourceID material, int renderLayer, int orderInLayer, ResourceID normalMap)
 			: TextureHandle(texHandle), MaterialHandle(material), RenderLayer(renderLayer), OrderInLayer(orderInLayer), NormalMapHandle(normalMap), Sprite()
-		{}
+		{
+			MaterialPtr = ResourceManager::GetResourceHandle<Material>(MaterialHandle);
+			NormalMapPtr = ResourceManager::GetResourceHandle<sf::Texture>(NormalMapHandle);
+		}
 
 		sf::Texture* GetTexture() const
 		{

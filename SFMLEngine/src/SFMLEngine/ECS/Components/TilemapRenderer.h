@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../../ResourceManagement/ResourceManager.h"
-
+#include "../../Renderer/Material.h"
 
 namespace SFMLEngine {
 

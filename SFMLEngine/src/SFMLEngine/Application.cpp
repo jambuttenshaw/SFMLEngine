@@ -68,10 +68,12 @@ namespace SFMLEngine
         m_Coordinator->RegisterComponent<DirectionalLight>();
         m_Coordinator->RegisterComponent<Text>();
         m_Coordinator->RegisterComponent<Camera>();
+        m_Coordinator->RegisterComponent<Tilemap>();
+        m_Coordinator->RegisterComponent<TilemapRenderer>();
 
         // register systems
 
-        // render system
+        // sprite render system
         m_SpriteRenderSystem = m_Coordinator->RegisterSystem<SpriteRenderSystem>();
         m_SpriteRenderSystem->Init(m_Coordinator, m_Window);
         {
@@ -79,6 +81,17 @@ namespace SFMLEngine
             signature.set(m_Coordinator->GetComponentType<Transform>());
             signature.set(m_Coordinator->GetComponentType<SpriteRenderer>());
             m_Coordinator->SetSystemSignature<SpriteRenderSystem>(signature);
+        }
+
+        // tilemap render system
+        m_TilemapRenderSystem = m_Coordinator->RegisterSystem<TilemapRenderSystem>();
+        m_TilemapRenderSystem->Init(m_Coordinator, m_Window);
+        {
+            Signature signature;
+            signature.set(m_Coordinator->GetComponentType<Transform>());
+            signature.set(m_Coordinator->GetComponentType<Tilemap>());
+            signature.set(m_Coordinator->GetComponentType<TilemapRenderer>());
+            m_Coordinator->SetSystemSignature<TilemapRenderSystem>(signature);
         }
 
 
@@ -176,9 +189,13 @@ namespace SFMLEngine
         while (m_Window->isOpen())
         {
             Timestep ts(m_Clock.restart().asSeconds());
-            fps = 1 / ts;
+            
             if (m_DisplayDebug)
+            {
+                fps = 1 / ts;
                 m_DebugInfo.push_back("FPS: " + std::to_string(fps));
+            }
+
 
             Input::ResetDeltas();
 
@@ -234,6 +251,7 @@ namespace SFMLEngine
 
             // apply any changes made to components
             m_SpriteRenderSystem->Update();
+            m_TilemapRenderSystem->Update();
             m_GUISystem->Update();
             m_CameraSystem->Update();
 
@@ -260,7 +278,11 @@ namespace SFMLEngine
                 m_Window->setView(m_CameraSystem->GetMainCameraView());
 
                 // draw to the screen
+
+                // since I have used the opengl depth buffer for ordering every drawable,
+                // I dont need to care about the order in which I draw them
                 m_SpriteRenderSystem->Render();
+                m_TilemapRenderSystem->Render();
             }
 
 

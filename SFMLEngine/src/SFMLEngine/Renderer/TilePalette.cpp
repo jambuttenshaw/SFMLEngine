@@ -12,6 +12,13 @@ namespace SFMLEngine {
 		// by default create a palette that will hold 1 tile
 		m_PaletteTextureID = Texture::Create((sf::Vector2u)m_TileSize);
 		m_NormalMapTextureID = Texture::Create((sf::Vector2u)m_TileSize);
+
+
+		// create the queue for tile IDs
+		for (TileID i = 0; i < MAX_TILES; i++)
+		{
+			m_AvailableTileIDs.push(i);
+		}
 	}
 
 	TilePalette::~TilePalette()

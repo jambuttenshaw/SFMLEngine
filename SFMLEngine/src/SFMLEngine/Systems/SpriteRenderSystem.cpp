@@ -33,9 +33,6 @@ namespace SFMLEngine {
 
 		m_SpriteRenderers.insert(std::make_pair(entity, sRenderer));
 		m_Transforms.insert(std::make_pair(entity, transform));
-
-		sRenderer->MaterialPtr = ResourceManager::GetResourceHandle<Material>(sRenderer->MaterialHandle);
-		sRenderer->NormalMapPtr = ResourceManager::GetResourceHandle<sf::Texture>(sRenderer->NormalMapHandle);
 	}
 
 	void SpriteRenderSystem::EntityRemovedFromSystem(Entity entity)
@@ -73,13 +70,13 @@ namespace SFMLEngine {
 	void SpriteRenderSystem::Render()
 	{
 		ZoneScoped
+		
+		for (const auto& materialData : Material::GetAllMaterialsInUse())
 		{
-			for (const auto& materialData : Material::GetAllMaterialsInUse())
-			{
-				// set the shader uniforms (with the exception of the depth value) once per material, rather than once per sprite
-				materialData.MaterialPtr->SetUniforms();
-			}
+			// set the shader uniforms (with the exception of the depth value) once per material, rather than once per sprite
+			materialData.MaterialPtr->SetUniforms();
 		}
+		
 
 		for (const auto& entity : m_Entities)
 		{

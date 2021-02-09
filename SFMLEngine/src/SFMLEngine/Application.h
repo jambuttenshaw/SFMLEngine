@@ -5,6 +5,8 @@
 #include "ECS/Coordinator.h"
 
 #include "Systems/SpriteRenderSystem.h"
+#include "Systems/TilemapRenderSystem.h"
+
 #include "Systems/ScriptableEntitySystem.h"
 
 #include "Systems/Lighting/PointLightSystem.h"
@@ -50,6 +52,8 @@ namespace SFMLEngine {
 
 		// ECS systems
 		std::shared_ptr<SpriteRenderSystem> m_SpriteRenderSystem;
+		std::shared_ptr<TilemapRenderSystem> m_TilemapRenderSystem;
+
 		std::shared_ptr<ScriptableEntitySystem> m_ScriptableEntitySystem;
 
 		std::shared_ptr<PointLightSystem> m_PointLightSystem;

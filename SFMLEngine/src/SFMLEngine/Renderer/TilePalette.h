@@ -27,6 +27,9 @@ namespace SFMLEngine {
 
 		const sf::Vector2u& GetTileSize() { return m_TileSize; }
 
+		ResourceID GetTexture() { return m_PaletteTextureID; }
+		ResourceID GetNormalMap() { return m_NormalMapTextureID; }
+
 	private:
 		TileID GetNextTileID();
 
@@ -41,8 +44,10 @@ namespace SFMLEngine {
 
 	private:
 		sf::Vector2u m_TileSize;
+
 		ResourceID m_PaletteTextureID;
 		ResourceID m_NormalMapTextureID;
+
 		std::unordered_map<TileID, TileData> m_TileAtlas;
 
 		// not using a vector since we normally operate on these values individually
