@@ -72,12 +72,6 @@ namespace SFMLEngine {
 		ZoneScoped;
 
 		if (!m_Entities.size()) return;
-		for (const auto& materialData : Material::GetAllMaterialsInUse())
-		{
-			// set the shader uniforms (with the exception of the depth value) once per material, rather than once per sprite
-			materialData.MaterialPtr->SetUniforms();
-		}
-		
 
 		for (const auto& entity : m_Entities)
 		{

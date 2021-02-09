@@ -308,9 +308,6 @@ namespace SFMLEngine
                 }
                 Renderer::Clear();
 
-                // set the context active
-                m_Window->setActive();
-
                 // set up the renderer for drawing
                 Renderer::SetOpenGLStates();
             }
@@ -325,6 +322,9 @@ namespace SFMLEngine
 
                 // set the windows view for the game world using the main camera
                 m_Window->setView(m_CameraSystem->GetMainCameraView());
+
+                // set the material uniforms
+                Renderer::SetUniforms();
 
                 // draw to the screen
 
@@ -364,8 +364,6 @@ namespace SFMLEngine
                 }
                 m_DebugInfo.clear();
             }
-
-            m_Window->setActive(false);
 
             // Update the window
             {

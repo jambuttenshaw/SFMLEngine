@@ -5,6 +5,8 @@
 
 #include "../Core.h"
 
+#include "Material.h"
+
 namespace SFMLEngine {
 
 	sf::ContextSettings* Renderer::s_ContextSettings = nullptr;
@@ -62,6 +64,17 @@ namespace SFMLEngine {
 		ZoneScoped;
 		ZoneName("SetOpenGL", 9);
 		glEnable(GL_DEPTH_TEST);
+	}
+
+	void Renderer::SetUniforms()
+	{
+		ZoneScoped;
+
+		for (const auto& materialData : Material::GetAllMaterialsInUse())
+		{
+			// set the shader uniforms (with the exception of the depth value) once per material, rather than once per sprite
+			materialData.MaterialPtr->SetUniforms();
+		}
 	}
 
 }

@@ -17,6 +17,8 @@ namespace SFMLEngine {
 
 		static void SetOpenGLStates();
 
+		static void SetUniforms();
+
 	private:
 		static sf::ContextSettings* s_ContextSettings;
 	};
