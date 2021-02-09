@@ -54,30 +54,36 @@ namespace SFMLEngine {
 
 		// find out where the tile to be removed is in the array
 		size_t tileIndex = GetTileIndex(location);
-		size_t geometryLocation = Tiles[tileIndex].GeometryIndex;
 
-		// we want to replace the deleted tile with the last tile in the geometry
-		// since all tiles are in the same order in the Tiles vector as in the geometry
-		// we can just access the last element of the tiles vector and move it into the 
-		// newly freed space
-		
-		// copy the last item into the empty space
-		Tiles[tileIndex] = Tiles[Tiles.size() - 1];
-		// remove the last item in the tiles array
-		Tiles.pop_back();
+		// we dont need to move any data about if were deleting the last tile in the array
+		if (tileIndex != Tiles.size() - 1)
+		{
+			// we need to move the last tile in the array into the empty gap left by the deleted one
+			size_t geometryLocation = Tiles[tileIndex].GeometryIndex;
 
-		// now we want to copy the geometry data over to the new location
-		size_t oldGeometryLocation = Tiles[tileIndex].GeometryIndex;
+			// we want to replace the deleted tile with the last tile in the geometry
+			// since all tiles are in the same order in the Tiles vector as in the geometry
+			// we can just access the last element of the tiles vector and move it into the 
+			// newly freed space
 
-		Geometry[geometryLocation] = Geometry[oldGeometryLocation];
-		Geometry[geometryLocation + 1] = Geometry[oldGeometryLocation + 1];
-		Geometry[geometryLocation + 2] = Geometry[oldGeometryLocation + 2];
-		Geometry[geometryLocation + 3] = Geometry[oldGeometryLocation + 3];
-		Geometry[geometryLocation + 4] = Geometry[oldGeometryLocation + 4];
-		Geometry[geometryLocation + 5] = Geometry[oldGeometryLocation + 5];
+			// copy the last item into the empty space
+			Tiles[tileIndex] = Tiles[Tiles.size() - 1];
+			// remove the last item in the tiles array
+			Tiles.pop_back();
 
-		// update the geometry location of the moved tile
-		Tiles[tileIndex].GeometryIndex = geometryLocation;
+			// now we want to copy the geometry data over to the new location
+			size_t oldGeometryLocation = Tiles[tileIndex].GeometryIndex;
+
+			Geometry[geometryLocation] = Geometry[oldGeometryLocation];
+			Geometry[geometryLocation + 1] = Geometry[oldGeometryLocation + 1];
+			Geometry[geometryLocation + 2] = Geometry[oldGeometryLocation + 2];
+			Geometry[geometryLocation + 3] = Geometry[oldGeometryLocation + 3];
+			Geometry[geometryLocation + 4] = Geometry[oldGeometryLocation + 4];
+			Geometry[geometryLocation + 5] = Geometry[oldGeometryLocation + 5];
+
+			// update the geometry location of the moved tile
+			Tiles[tileIndex].GeometryIndex = geometryLocation;
+		}
 
 		// finally resize the geometry vertex array
 		Geometry.resize(6 * Tiles.size());
@@ -86,15 +92,15 @@ namespace SFMLEngine {
 
 	sf::Vector2i Tilemap::WorldToTileCoordinates(const sf::Vector2f& worldCoords)
 	{
-		return sf::Vector2i(floorf(worldCoords.x / (float)TileSize.x),
-							floorf(worldCoords.y / (float)TileSize.y));
+		return sf::Vector2i((int)floorf(worldCoords.x / (float)TileSize.x),
+							(int)floorf(worldCoords.y / (float)TileSize.y));
 	}
 
 
 	void Tilemap::AddTileToGeometry(Tile& tile)
 	{
 		// update the tile with the location in the geometry it has been inserted
-		tile.GeometryIndex = m_TriangleIndex;
+		Tiles[Tiles.size() - 1].GeometryIndex = m_TriangleIndex;
 
 		// place a tile into the geometry
 		// this can be done by inserting 2 triangles
@@ -139,6 +145,7 @@ namespace SFMLEngine {
 		for (auto const& tile : Tiles)
 		{
 			if (tile.Position == pos) return index;
+			index++;
 		}
 		return -1;
 	}

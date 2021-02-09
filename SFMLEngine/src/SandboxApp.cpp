@@ -6,6 +6,7 @@
 // scripts
 #include "Scripts/GoToMouse.h"
 #include "Scripts/MoveByWASD.h"
+#include "Scripts/ClickToDestroyTile.h"
 
 
 using namespace SFMLEngine;
@@ -43,7 +44,7 @@ public:
 			Tilemap tilemapComponent{ tilePaletteID };
 
 			// place tiles into the tilemap
-			int numTiles = 500;
+			int numTiles = 30;
 			for (int x = 0; x < numTiles; x++)
 			{
 				for (int y = 0; y < numTiles; y++)
@@ -56,6 +57,8 @@ public:
 
 			TilemapRenderer tilemapRendererComponent{ Material::Create("Lit"), 1, 0 };
 			m_Scene->AddComponent(m_Tilemap, tilemapRendererComponent);
+
+			m_Scene->AddNativeScript<ClickToDestroyTile>(m_Tilemap);
 		}
 
 		/*for (int x = 0; x < 1; x++)

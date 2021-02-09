@@ -29,7 +29,7 @@ namespace SFMLEngine {
 
 
 	private:
-		Coordinator* m_Coordinator;
+		Coordinator* m_Coordinator = nullptr;
 		sf::RenderWindow* m_RenderWindow = nullptr;
 
 		std::unordered_map<Entity, TilemapRenderer*> m_TilemapRenderers;
