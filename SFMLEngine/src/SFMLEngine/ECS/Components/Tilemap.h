@@ -12,6 +12,11 @@ namespace SFMLEngine {
 	{
 		TileID TileType;
 		sf::Vector2i Position;
+		size_t GeometryIndex;
+
+		Tile(TileID type, const sf::Vector2i& pos)
+			: TileType(type), Position(pos), GeometryIndex(0)
+		{}
 	};
 
 	struct Tilemap
@@ -34,10 +39,16 @@ namespace SFMLEngine {
 		Tilemap(ResourceID tilePalette, std::initializer_list<Tile> tiles);
 
 		void PlaceTile(const sf::Vector2i& location, TileID tileType);
+		void RemoveTile(const sf::Vector2i& location);
+
+		sf::Vector2i WorldToTileCoordinates(const sf::Vector2f& worldCoords);
 
 	private:
 		
-		void BuildInitialGeometry();
+		void AddTileToGeometry(Tile& tile);
+
+		bool TileAtLocation(const sf::Vector2i& pos);
+		size_t GetTileIndex(const sf::Vector2i& pos);
 
 	private:
 		bool m_Modified = false;
