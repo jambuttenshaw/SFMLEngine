@@ -38,20 +38,27 @@ public:
 			TilePalette* tilePalette = ResourceManager::GetResourceHandle<TilePalette>(tilePaletteID);
 
 			TileID cobblestone = tilePalette->CreateTile("cobblestone", Texture::Create("assets/textures/cobblestoneTexture.png"), Texture::Create("assets/textures/cobblestoneNormal.png"));
+			TileID mossyCobblestone = tilePalette->CreateTile("mossyCobblestone", Texture::Create("assets/textures/mossyCobblestoneTexture.png"), Texture::Create("assets/textures/cobblestoneNormal.png"));
 
-			Tilemap tilemapComponent{ tilePaletteID, {
-				{ cobblestone, sf::Vector2i(0, 0) },
-				{ cobblestone, sf::Vector2i(-1, 0) },
-				{ cobblestone, sf::Vector2i(0, 2) } 
-			} };
-			tilemapComponent.PlaceTile(sf::Vector2i(1, 1), cobblestone);
+			Tilemap tilemapComponent{ tilePaletteID };
+
+			// place tiles into the tilemap
+			int numTiles = 500;
+			for (int x = 0; x < numTiles; x++)
+			{
+				for (int y = 0; y < numTiles; y++)
+				{
+					tilemapComponent.PlaceTile(sf::Vector2i(x - numTiles / 2, y - numTiles / 2), ((10 * y + x) % 13 == 0 ? mossyCobblestone : cobblestone));
+				}
+			}
+
 			m_Scene->AddComponent(m_Tilemap, tilemapComponent);
 
 			TilemapRenderer tilemapRendererComponent{ Material::Create("Lit"), 1, 0 };
 			m_Scene->AddComponent(m_Tilemap, tilemapRendererComponent);
 		}
 
-		for (int x = 0; x < 1; x++)
+		/*for (int x = 0; x < 1; x++)
 		{
 			for (int y = 0; y < 1; y++)
 			{
@@ -69,13 +76,13 @@ public:
 
 				m_Tiles.push_back(entity);
 			}
-		}
+		}*/
 
 		{
 			m_Light = m_Scene->CreateEntity();
 
 			m_Scene->AddComponent(m_Light, Transform{});
-			m_Scene->AddComponent(m_Light, PointLight{ 3.0f, 0.007f, sf::Color{220, 80, 80, 255} });
+			m_Scene->AddComponent(m_Light, PointLight{ 3.0f, 0.007f, sf::Color{220, 130, 160, 255} });
 
 			m_Scene->AddNativeScript<GoToMouse>(m_Light);
 		}
@@ -83,7 +90,7 @@ public:
 		{
 			m_Light2 = m_Scene->CreateEntity();
 
-			m_Scene->AddComponent(m_Light2, DirectionalLight{ sf::Vector3f(1, 0, 0), 1.3f, sf::Color{70, 32, 220, 255}, true });
+			m_Scene->AddComponent(m_Light2, DirectionalLight{ sf::Vector3f(1, 0, 0), 1.3f, sf::Color{94, 154, 220, 255}, true });
 		}
 	}
 

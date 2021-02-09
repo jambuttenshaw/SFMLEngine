@@ -27,10 +27,12 @@ public:
 		if (Input::IsKeyDown(sf::Keyboard::W))
 			m_Transform->Position += ts * m_MoveSpeed * sf::Vector2f(0, -1);
 		
+		/*
 		if (Input::IsKeyDown(sf::Keyboard::Q))
 			m_Transform->Rotation -= 25 * ts;
 		if (Input::IsKeyDown(sf::Keyboard::E))
 			m_Transform->Rotation += 25 * ts;
+		*/
 
 		m_Camera->Zoom -= m_ScrollSpeed * Input::GetMouseWheelDelta() * ts;
 	}

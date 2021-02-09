@@ -184,7 +184,7 @@ namespace SFMLEngine
         */
         m_ScriptableEntitySystem->Start();
 
-        float fps = 0;
+        int fps = 0;
 
         while (m_Window->isOpen())
         {
@@ -192,7 +192,7 @@ namespace SFMLEngine
             
             if (m_DisplayDebug)
             {
-                fps = 1 / ts;
+                fps = round(1 / ts);
                 m_DebugInfo.push_back("FPS: " + std::to_string(fps));
             }
 

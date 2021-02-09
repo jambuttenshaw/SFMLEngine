@@ -8,6 +8,13 @@ namespace SFMLEngine {
 		: TileSize(), PaletteHandle(NULL_RESOURCE_ID), Tiles(), Geometry(sf::Triangles)
 	{}
 
+	Tilemap::Tilemap(ResourceID tilePalette)
+		: PaletteHandle(tilePalette), Tiles(), Geometry(sf::Triangles)
+	{
+		PalettePtr = ResourceManager::GetResourceHandle<TilePalette>(PaletteHandle);
+		TileSize = (sf::Vector2f)PalettePtr->GetTileSize();
+	}
+
 	Tilemap::Tilemap(ResourceID tilePalette, std::initializer_list<Tile> tiles)
 		: PaletteHandle(tilePalette), Tiles(tiles), Geometry(sf::Triangles)
 	{

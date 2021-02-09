@@ -30,6 +30,7 @@ namespace SFMLEngine {
 
 	public:
 		Tilemap();
+		Tilemap(ResourceID tilePalette);
 		Tilemap(ResourceID tilePalette, std::initializer_list<Tile> tiles);
 
 		void PlaceTile(const sf::Vector2i& location, TileID tileType);
