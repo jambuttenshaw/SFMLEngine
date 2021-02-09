@@ -69,8 +69,9 @@ namespace SFMLEngine {
 
 	void SpriteRenderSystem::Render()
 	{
-		ZoneScoped
-		
+		ZoneScoped;
+
+		if (!m_Entities.size()) return;
 		for (const auto& materialData : Material::GetAllMaterialsInUse())
 		{
 			// set the shader uniforms (with the exception of the depth value) once per material, rather than once per sprite
@@ -80,8 +81,8 @@ namespace SFMLEngine {
 
 		for (const auto& entity : m_Entities)
 		{
-			ZoneScoped
-			ZoneName("DrawSprite", 10)
+			ZoneScoped;
+			ZoneName("DrawSprite", 10);
 			SpriteRenderer* sR = m_SpriteRenderers[entity];
 			Transform* t = m_Transforms[entity];
 			
@@ -89,8 +90,8 @@ namespace SFMLEngine {
 			
 
 			{
-				ZoneScoped
-				ZoneName("SetDepth", 8)
+				ZoneScoped;
+				ZoneName("SetDepth", 8);
 				// set shader uniforms
 				float depth = (sR->RenderLayer + (sR->OrderInLayer * m_OrderInLayerNormalizeFactor)) * m_RenderLayerNormaizeFactor;
 				shader->setUniform("u_DepthValue", depth);
@@ -98,8 +99,8 @@ namespace SFMLEngine {
 			
 			if (sR->MaterialPtr->IsLit())
 			{
-				ZoneScoped
-				ZoneName("SetLight", 8)
+				ZoneScoped;
+				ZoneName("SetLight", 8);
 				shader->setUniform("u_NormalMap", *sR->NormalMapPtr);
 					
 				// rotation value is used to compute transformed normals so lighting is correct for rotated sprites
@@ -113,8 +114,8 @@ namespace SFMLEngine {
 			m_RenderState.shader = shader;
 				
 			{
-				ZoneScoped
-				ZoneName("Draw", 4)
+				ZoneScoped;
+				ZoneName("Draw", 4);
 				m_RenderWindow->draw(sR->Sprite, m_RenderState);
 			}
 		}

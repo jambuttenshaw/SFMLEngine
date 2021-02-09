@@ -21,6 +21,8 @@ namespace SFMLEngine {
 		template<typename T>
 		static ResourceID LoadFromFile(std::string filepath)
 		{
+			ZoneScoped;
+
 			T* resource = new T;
 			
 			// load if from the file
@@ -46,6 +48,8 @@ namespace SFMLEngine {
 		template<typename T>
 		static ResourceID LoadFromFile(const std::string& filepath1, const std::string& filepath2)
 		{
+			ZoneScoped;
+
 			// create a new instance of the resource
 			T* resource = new T;
 
@@ -73,6 +77,8 @@ namespace SFMLEngine {
 		template<typename T>
 		static ResourceID ManageResource(T* resource)
 		{
+			ZoneScoped;
+
 			// create an ID for the resource
 			ResourceID newID = GetNextID();
 
@@ -87,6 +93,8 @@ namespace SFMLEngine {
 		template<typename T>
 		static void DeleteResource(ResourceID resourceID)
 		{
+			ZoneScoped;
+
 			auto location = s_Resources.find(resourceID);
 			
 			// make sure that we actually found a resource associated with that ID
@@ -106,6 +114,7 @@ namespace SFMLEngine {
 		static T* GetResourceHandle(ResourceID resourceID)
 		{
 			ZoneScoped;
+
 			// find the resource in the resources map
 			auto location = s_Resources.find(resourceID);
 

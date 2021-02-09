@@ -24,6 +24,8 @@ namespace SFMLEngine {
 
 		static void Init()
 		{
+			ZoneScoped;
+
 			// load in the shaders
 			LoadNewShader("Basic", "assets/shaders/Basic.vert", "assets/shaders/Basic.frag");
 			LoadNewShader("TextureMask", "assets/shaders/Basic.vert", "assets/shaders/TextureMask.frag");
@@ -32,6 +34,8 @@ namespace SFMLEngine {
 
 		static void Shutdown()
 		{
+			ZoneScoped;
+
 			for (auto const& shader : s_ShaderLibrary)
 			{
 				ResourceManager::DeleteResource<sf::Shader>(shader.second.ShaderID);

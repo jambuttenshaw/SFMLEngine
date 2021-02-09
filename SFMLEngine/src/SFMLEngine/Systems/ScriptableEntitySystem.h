@@ -48,6 +48,8 @@ namespace SFMLEngine {
 
 		void Update(Timestep ts)
 		{
+			ZoneScoped;
+
 			for (auto const& entity : m_Entities)
 			{
 				auto& scriptComponent = m_Coordinator->GetComponent<NativeScripts>(entity);

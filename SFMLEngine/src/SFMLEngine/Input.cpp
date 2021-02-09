@@ -13,6 +13,8 @@ namespace SFMLEngine {
 
 	void Input::Init(sf::RenderWindow* window, std::shared_ptr<CameraSystem> cameraSystem)
 	{
+		ZoneScoped;
+
 		s_Window = window;
 		s_CameraSystem = cameraSystem;
 	}

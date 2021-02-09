@@ -11,6 +11,9 @@ namespace SFMLEngine {
 
 	const sf::ContextSettings& Renderer::Init()
 	{
+		ZoneScoped;
+		ZoneName("RendererBegin", 13);
+
 		// create the context settings
 		s_ContextSettings = new sf::ContextSettings();
 		s_ContextSettings->depthBits = 24;
@@ -26,6 +29,9 @@ namespace SFMLEngine {
 
 	void Renderer::InitGLEW()
 	{
+		ZoneScoped;
+		ZoneName("InitGLEW", 8);
+
 		// initialise glew
 		// this must be after a valid openGL context is created
 		GLenum err = glewInit();
@@ -43,6 +49,9 @@ namespace SFMLEngine {
 
 	void Renderer::Clear()
 	{
+		ZoneScoped;
+		ZoneName("ClearDepth", 10);
+
 		// SFML only clears the colour buffer,
 		// but since were also using the depth buffer we need to clear that too
 		glClear(GL_DEPTH_BUFFER_BIT);
@@ -51,6 +60,7 @@ namespace SFMLEngine {
 	void Renderer::SetOpenGLStates()
 	{
 		ZoneScoped;
+		ZoneName("SetOpenGL", 9);
 		glEnable(GL_DEPTH_TEST);
 	}
 

@@ -9,12 +9,16 @@ namespace SFMLEngine {
 
 	void FontLibrary::Init()
 	{
+		ZoneScoped;
+
 		// load any default fonts here
 		LoadNewFont("arial", "assets/fonts/arial.ttf");
 	}
 
 	void FontLibrary::Shutdown()
 	{
+		ZoneScoped; 
+
 		for (auto const& font : s_FontLibrary)
 		{
 			ResourceManager::DeleteResource<sf::Font>(font.second);
@@ -24,6 +28,8 @@ namespace SFMLEngine {
 
 	ResourceID FontLibrary::LoadNewFont(const std::string& name, const std::string& filepath)
 	{
+		ZoneScoped;
+
 		if (s_FontLibrary.find(name) != s_FontLibrary.end())
 		{
 			LOG_CORE_WARN("Font '{0}' has already been loaded.", name);
@@ -43,6 +49,8 @@ namespace SFMLEngine {
 
 	ResourceID FontLibrary::GetFont(const std::string& name)
 	{
+		ZoneScoped;
+
 		if (s_FontLibrary.find(name) == s_FontLibrary.end())
 		{
 			LOG_CORE_ERROR("Font '{0}' does not exist.", name);

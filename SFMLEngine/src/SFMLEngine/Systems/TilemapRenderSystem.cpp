@@ -35,6 +35,8 @@ namespace SFMLEngine {
 
 	void TilemapRenderSystem::Update()
 	{
+		ZoneScoped;
+
 		bool anyChanged = false;
 		for (auto& e : m_Entities)
 		{
@@ -59,6 +61,9 @@ namespace SFMLEngine {
 
 	void TilemapRenderSystem::Render()
 	{
+		ZoneScoped;
+
+		if (!m_Entities.size()) return;
 		for (const auto& materialData : Material::GetAllMaterialsInUse())
 		{
 			// set the shader uniforms (with the exception of the depth value) once per material, rather than once per sprite
@@ -68,6 +73,9 @@ namespace SFMLEngine {
 
 		for (const auto& entity : m_Entities)
 		{
+			ZoneScoped;
+			ZoneName("DrawTilemap", 11);
+
 			TilemapRenderer* tilemapRenderer = m_TilemapRenderers[entity];
 			Tilemap* tilemap = m_Tilemaps[entity];
 			Transform* transform = m_Transforms[entity];
@@ -99,6 +107,8 @@ namespace SFMLEngine {
 			m_RenderState.shader = shader;
 
 			{
+				ZoneScoped;
+				ZoneName("Draw", 4);
 				m_RenderWindow->draw(tilemap->Geometry, m_RenderState);
 			}
 		}

@@ -21,6 +21,8 @@ namespace SFMLEngine {
 
 	void PhysicsSystem::Update(Timestep ts)
 	{
+		ZoneScoped;
+
 		for (auto const& entity : m_Entities)
 		{
 			auto& rigidbody = m_Coordinator->GetComponent<Rigidbody>(entity);

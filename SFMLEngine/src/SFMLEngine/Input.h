@@ -25,7 +25,7 @@ namespace SFMLEngine {
 
 	private:
 
-		static void ResetDeltas() { s_MouseDelta = sf::Vector2f(0, 0); s_WheelDelta = 0; }
+		static void ResetDeltas() { ZoneScoped; s_MouseDelta = sf::Vector2f(0, 0); s_WheelDelta = 0; }
 		static void SetMouseDelta(const sf::Vector2f& newPos) { s_MouseDelta = s_OldMousePos - newPos; s_OldMousePos = newPos; }
 		static void SetWheelDelta(float delta) { s_WheelDelta = delta; }
 

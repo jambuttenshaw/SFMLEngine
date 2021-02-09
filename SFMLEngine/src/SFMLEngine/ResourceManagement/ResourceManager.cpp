@@ -10,6 +10,8 @@ namespace SFMLEngine {
 
 	void ResourceManager::Init()
 	{
+		ZoneScoped;
+
 		for (ResourceID resource = 0; resource < MAX_RESOURCES; ++resource)
 		{
 			s_AvailableResourceIDs.push(resource);
@@ -18,6 +20,8 @@ namespace SFMLEngine {
 
 	void ResourceManager::Shutdown()
 	{
+		ZoneScoped;
+
 		for (auto const& resource : s_Resources)
 		{
 			LOG_CORE_WARN("Resource ID {0} was not explicitly deleted, type could not be assumed.", resource.first);
@@ -28,6 +32,8 @@ namespace SFMLEngine {
 
 	ResourceID ResourceManager::GetNextID()
 	{
+		ZoneScoped;
+
 		SFMLE_CORE_ASSERT(s_LivingResourceCount < MAX_RESOURCES, "Too many resources in existance!");
 
 		ResourceID nextID = s_AvailableResourceIDs.front();

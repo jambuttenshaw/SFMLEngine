@@ -6,6 +6,8 @@ namespace SFMLEngine {
 
 	ResourceID ShaderLibrary::LoadNewShader(const std::string& name, const std::string& vertShader, const std::string& fragShader, bool lit)
 	{
+		ZoneScoped;
+
 		if (s_ShaderLibrary.find(name) != s_ShaderLibrary.end())
 		{
 			LOG_CORE_WARN("Shader '{0}' has already been loaded.", name);
@@ -26,6 +28,8 @@ namespace SFMLEngine {
 
 	ShaderData ShaderLibrary::GetShaderData(const std::string& name)
 	{
+		ZoneScoped;
+
 		auto location = s_ShaderLibrary.find(name);
 
 		if (location == s_ShaderLibrary.end())
