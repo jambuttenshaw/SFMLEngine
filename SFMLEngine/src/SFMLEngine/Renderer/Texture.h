@@ -17,46 +17,17 @@ namespace SFMLEngine {
 	class Texture
 	{
 	public:
-		static ResourceID Create(const std::string& path, bool shared = true)
-		{
-			ResourceID newID = NULL_RESOURCE_ID;
-			if (shared)
-			{
-				// check to see if there this texture has been loaded before
-				newID = TextureCached(path);
-				if (newID != NULL_RESOURCE_ID)
-					return newID;
-			}
+		static ResourceID Create(const std::string& path, bool shared = true);
+		static ResourceID Create(const sf::Vector2u& dimensions);
 
-			// load from file
-			newID = ResourceManager::LoadFromFile<sf::Texture>(path);
+		static ResourceID Resize(ResourceID texture, const sf::Vector2u& newSize);
 
-			// register texture into the cache
-			s_TextureCache.push_back(TextureCacheEntry{ path, newID, shared });
-
-			return newID;
-		}
-
-		static void DestroyAllCached()
-		{
-			for (auto& texture : s_TextureCache)
-			{
-				ResourceManager::DeleteResource<sf::Texture>(texture.TextureID);
-			}
-			s_TextureCache.clear();
-		}
+		static void Destroy(ResourceID textureID);
+		static void DestroyAllCached();
 
 	private:
 
-		static ResourceID TextureCached(const std::string& path)
-		{
-			for (auto const& texture : s_TextureCache)
-			{
-				if (texture.Filepath == path && texture.Shared)
-					return texture.TextureID;
-			}
-			return NULL_RESOURCE_ID;
-		}
+		static ResourceID TextureCached(const std::string& path);
 
 	private:
 

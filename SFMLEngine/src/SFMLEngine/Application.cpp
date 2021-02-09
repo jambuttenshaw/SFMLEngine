@@ -8,6 +8,7 @@
 #include "Renderer/Renderer.h"
 #include "Renderer/Material.h"
 #include "Renderer/Texture.h"
+#include "Renderer/TilePalette.h"
 
 #include "FontLibrary.h"
 
@@ -71,13 +72,13 @@ namespace SFMLEngine
         // register systems
 
         // render system
-        m_RenderSystem = m_Coordinator->RegisterSystem<RenderSystem>();
-        m_RenderSystem->Init(m_Coordinator, m_Window);
+        m_SpriteRenderSystem = m_Coordinator->RegisterSystem<SpriteRenderSystem>();
+        m_SpriteRenderSystem->Init(m_Coordinator, m_Window);
         {
             Signature signature;
             signature.set(m_Coordinator->GetComponentType<Transform>());
             signature.set(m_Coordinator->GetComponentType<SpriteRenderer>());
-            m_Coordinator->SetSystemSignature<RenderSystem>(signature);
+            m_Coordinator->SetSystemSignature<SpriteRenderSystem>(signature);
         }
 
 
@@ -232,7 +233,7 @@ namespace SFMLEngine
             m_ScriptableEntitySystem->Update(ts);
 
             // apply any changes made to components
-            m_RenderSystem->Update();
+            m_SpriteRenderSystem->Update();
             m_GUISystem->Update();
             m_CameraSystem->Update();
 
@@ -259,7 +260,7 @@ namespace SFMLEngine
                 m_Window->setView(m_CameraSystem->GetMainCameraView());
 
                 // draw to the screen
-                m_RenderSystem->Render();
+                m_SpriteRenderSystem->Render();
             }
 
 
@@ -311,6 +312,7 @@ namespace SFMLEngine
         // shutdown the renderer
         Renderer::Shutdown();
 
+        TilePalette::DestroyAllCached();
         Material::DestroyAllCached();
         Texture::DestroyAllCached();
 

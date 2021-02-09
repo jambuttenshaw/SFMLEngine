@@ -1,17 +1,17 @@
-#include "RenderSystem.h"
+#include "SpriteRenderSystem.h"
 
 #include <Tracy.hpp>
 
 namespace SFMLEngine {
 
-	void RenderSystem::Init(Coordinator* coordinator, sf::RenderWindow* window)
+	void SpriteRenderSystem::Init(Coordinator* coordinator, sf::RenderWindow* window)
 	{
 		m_Coordinator = coordinator;
 		m_RenderWindow = window;
 	}
 
 
-	void RenderSystem::EntityAddedToSystem(Entity entity)
+	void SpriteRenderSystem::EntityAddedToSystem(Entity entity)
 	{
 		SpriteRenderer* sRenderer = &m_Coordinator->GetComponent<SpriteRenderer>(entity);
 		Transform* transform = &m_Coordinator->GetComponent<Transform>(entity);
@@ -38,13 +38,13 @@ namespace SFMLEngine {
 		sRenderer->NormalMapPtr = ResourceManager::GetResourceHandle<sf::Texture>(sRenderer->NormalMapHandle);
 	}
 
-	void RenderSystem::EntityRemovedFromSystem(Entity entity)
+	void SpriteRenderSystem::EntityRemovedFromSystem(Entity entity)
 	{
 		m_SpriteRenderers.erase(entity);
 		m_Transforms.erase(entity);
 	}
 
-	void RenderSystem::Update()
+	void SpriteRenderSystem::Update()
 	{
 		ZoneScoped;
 
@@ -70,7 +70,7 @@ namespace SFMLEngine {
 		}
 	}
 
-	void RenderSystem::Render()
+	void SpriteRenderSystem::Render()
 	{
 		ZoneScoped
 		{

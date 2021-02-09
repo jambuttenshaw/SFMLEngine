@@ -28,6 +28,28 @@ public:
 			m_Scene->AddNativeScript<MoveByWASD>(m_Camera);
 		}
 
+		{
+
+			m_Tilemap = m_Scene->CreateEntity();
+
+			m_Scene->AddComponent(m_Tilemap, Transform{ });
+			
+			ResourceID tilePaletteID = TilePalette::Create(sf::Vector2u(64, 64));
+			TilePalette* tilePalette = ResourceManager::GetResourceHandle<TilePalette>(tilePaletteID);
+
+			TileID cobblestone = tilePalette->CreateTile("cobblestone", Texture::Create("cobblestone", "assets/textures/cobblestoneTexture.png"), Texture::Create("assets/textures/cobblestoneNormal.png"));
+
+			Tilemap tilemapComponent{ tilePaletteID, {
+				{ cobblestone, sf::Vector2i(0, 0) },
+				{ cobblestone, sf::Vector2i(1, 1) } 
+			} };
+			tilemapComponent.PlaceTile(sf::Vector2i(0, 0), cobblestone);
+			m_Scene->AddComponent(m_Tilemap, tilemapComponent);
+
+			TilemapRenderer tilemapRendererComponent{ Material::Create("Lit"), 1, 0 };
+			m_Scene->AddComponent(m_Tilemap, tilemapRendererComponent);
+		}
+
 		for (int x = 0; x < 1; x++)
 		{
 			for (int y = 0; y < 1; y++)
@@ -75,6 +97,7 @@ public:
 
 	void GameLayer::OnDetach()
 	{
+		m_Scene->DestroyEntity(m_Tilemap);
 		m_Scene->DestroyEntity(m_Camera);
 
 		for (auto const& e : m_Tiles)
@@ -94,6 +117,8 @@ public:
 private:
 	std::shared_ptr<Scene> m_Scene;
 	
+	Entity m_Tilemap;
+
 	Entity m_Camera;
 
 	std::vector<Entity> m_Tiles;

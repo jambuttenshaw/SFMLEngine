@@ -13,3 +13,7 @@
 #include "Components/Text.h"
 
 #include "Components/Camera.h"
+
+#include "Components/Tilemap.h"
+#include "Components/TilemapRenderer.h"
+

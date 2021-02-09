@@ -64,4 +64,14 @@ namespace SFMLEngine {
 	const int MAX_POINT_LIGHTS = 8;
 	const int MAX_DIRECTIONAL_LIGHTS = 2;
 
+
+
+	// --------
+	// TILEMAPS
+	// --------
+
+	using TileID = uint8_t;
+	const TileID MAX_TILES = 254;
+	const TileID NULL_TILE_ID = 255;
+
 }

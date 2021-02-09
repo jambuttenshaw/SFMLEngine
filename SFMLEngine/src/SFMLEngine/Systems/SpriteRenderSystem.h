@@ -10,11 +10,11 @@
 
 namespace SFMLEngine {
 
-	class RenderSystem : public System
+	class SpriteRenderSystem : public System
 	{
 	public:
-		RenderSystem() = default;
-		~RenderSystem() = default;
+		SpriteRenderSystem() = default;
+		~SpriteRenderSystem() = default;
 		
 		void Init(Coordinator* coordinator, sf::RenderWindow* window);
 

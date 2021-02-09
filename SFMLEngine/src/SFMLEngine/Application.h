@@ -4,7 +4,7 @@
 
 #include "ECS/Coordinator.h"
 
-#include "Systems/RenderSystem.h"
+#include "Systems/SpriteRenderSystem.h"
 #include "Systems/ScriptableEntitySystem.h"
 
 #include "Systems/Lighting/PointLightSystem.h"
@@ -49,7 +49,7 @@ namespace SFMLEngine {
 		Coordinator* m_Coordinator;
 
 		// ECS systems
-		std::shared_ptr<RenderSystem> m_RenderSystem;
+		std::shared_ptr<SpriteRenderSystem> m_SpriteRenderSystem;
 		std::shared_ptr<ScriptableEntitySystem> m_ScriptableEntitySystem;
 
 		std::shared_ptr<PointLightSystem> m_PointLightSystem;
