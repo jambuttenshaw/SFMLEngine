@@ -95,6 +95,11 @@ namespace SFMLEngine {
 			delete static_cast<T*> (s_Resources.at(resourceID));
 			
 			s_Resources.erase(location);
+
+
+			// replace the ResourceID in the available resources
+			s_AvailableResourceIDs.push(resourceID);
+			--s_LivingResourceCount;
 		}
 
 		template<typename T>
