@@ -5,12 +5,9 @@
 
 
 namespace SFMLEngine {
-
-	struct Collision
-	{
-		bool Collided;
-		Entity Other;
-	};
+	
+	struct BoxCollider;
+	struct CircleCollider;
 
 	enum class ColliderType
 	{
@@ -20,6 +17,10 @@ namespace SFMLEngine {
 	struct ICollider
 	{
 		friend class System;
+		virtual ~ICollider() = default;
+
+		virtual bool Colliding(const BoxCollider& other) abstract;
+		virtual bool Colliding(const CircleCollider& other) abstract;
 
 		ColliderType Type;
 

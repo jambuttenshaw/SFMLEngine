@@ -7,6 +7,8 @@
 
 namespace SFMLEngine {
 
+	struct CircleCollider;
+
 	struct BoxCollider : public ICollider
 	{
 		sf::Vector2f Size;
@@ -22,6 +24,10 @@ namespace SFMLEngine {
 		{
 			Type = ColliderType::Box;
 		}
+
+
+		bool Colliding(const BoxCollider& other);
+		bool Colliding(const CircleCollider& other);
 
 	};
 

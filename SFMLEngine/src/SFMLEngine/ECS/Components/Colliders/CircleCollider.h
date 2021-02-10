@@ -7,6 +7,8 @@
 
 namespace SFMLEngine {
 
+	struct BoxCollider;
+
 	struct CircleCollider : public ICollider
 	{
 		float Radius;
@@ -22,6 +24,10 @@ namespace SFMLEngine {
 		{
 			Type = ColliderType::Circle;
 		}
+
+
+		bool Colliding(const CircleCollider& other) override;
+		bool Colliding(const BoxCollider& other) override;
 
 	};
 
