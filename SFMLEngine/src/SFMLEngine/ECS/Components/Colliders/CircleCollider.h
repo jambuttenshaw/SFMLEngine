@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "../../System.h"
+#include "CollisionData.h"
 
 
 namespace SFMLEngine {
@@ -25,8 +26,10 @@ namespace SFMLEngine {
 		{}
 
 
-		bool Colliding(const CircleCollider& other, const sf::Vector2f& otherPos);
-		bool Colliding(const BoxCollider& other, const sf::Vector2f& otherPos);
+		CollisionData Colliding(const CircleCollider& other, const sf::Vector2f& otherPos);
+		CollisionData Colliding(const BoxCollider& other, const sf::Vector2f& otherPos);
+
+		const sf::Vector2f GetBounds() const { return 2.0f * sf::Vector2f(Radius, Radius); }
 
 	private:
 		bool m_Modified = false;

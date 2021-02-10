@@ -12,6 +12,8 @@ namespace SFMLEngine {
 	{
 		bool Collided;
 		Entity Other;
+		sf::FloatRect Bounds; // the boundaries of this objects collider
+		sf::FloatRect OtherBounds; // the boundaries of the object the collision occurred with
 	};
 
 	class CollisionSystem : public System
@@ -33,6 +35,7 @@ namespace SFMLEngine {
 		template<typename T>
 		const Collision DoCollisionTest(const T& collider, const sf::Vector2f& position, Entity& thisEntity)
 		{
+			ZoneScoped;
 			for (auto& entity : m_Entities)
 			{
 				if (entity == thisEntity) continue;
@@ -41,7 +44,7 @@ namespace SFMLEngine {
 				Transform& otherTransform = m_Coordinator->GetComponent<Transform>(entity);
 				sf::Vector2f diff = position - otherTransform.Position;
 				
-				bool collision = false;
+				CollisionData collision;
 				switch (other.Type)
 				{
 				case ColliderType::Invalid:	SFMLE_CORE_ASSERT(0, "Invalid collider type!"); break;
@@ -50,12 +53,12 @@ namespace SFMLEngine {
 				default:					SFMLE_CORE_ASSERT(0, "Unknown collider type!"); break;
 				}
 
-				if (collision)
+				if (collision.Collided)
 				{
-					return Collision{ true, entity };
+					return Collision{ true, entity, sf::FloatRect{position, collider.GetBounds()}, sf::FloatRect{otherTransform.Position, collision.Size} };
 				}
 			}
-			return Collision{ false, INVALID_ENTITY_ID };
+			return Collision{ false, INVALID_ENTITY_ID, sf::FloatRect(), sf::FloatRect() };
 		}
 
 	private:

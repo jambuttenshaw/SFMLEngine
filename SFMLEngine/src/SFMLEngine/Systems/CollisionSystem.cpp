@@ -24,6 +24,8 @@ namespace SFMLEngine {
 
 	const Collision CollisionSystem::TestCollision(Entity entity)
 	{
+		ZoneScoped;
+
 		auto const& collider = m_Coordinator->GetComponent<Collider>(entity);
 		auto const& transform = m_Coordinator->GetComponent<Transform>(entity);
 
