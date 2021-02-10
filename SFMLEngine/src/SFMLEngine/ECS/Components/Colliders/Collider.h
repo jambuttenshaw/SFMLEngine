@@ -8,7 +8,7 @@ namespace SFMLEngine {
 	
 	enum class ColliderType
 	{
-		Box = 0, Circle
+		Invalid = 0, Box, Circle
 	};
 
 	struct Collider
@@ -16,6 +16,13 @@ namespace SFMLEngine {
 		friend class System;
 
 		ColliderType Type;
+
+		Collider()
+			: Type(ColliderType::Invalid)
+		{}
+		Collider(ColliderType type)
+			: Type(type)
+		{}
 
 	private:
 		bool m_Modified = false;

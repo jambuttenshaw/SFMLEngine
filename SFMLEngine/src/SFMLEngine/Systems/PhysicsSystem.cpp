@@ -30,7 +30,20 @@ namespace SFMLEngine {
 			auto& transform = m_Coordinator->GetComponent<Transform>(entity);
 
 			rigidbody.Velocity += m_Gravity * (float)ts;
-			transform.Position += rigidbody.Velocity * (float)ts;
+			sf::Vector2f movement = rigidbody.Velocity * (float)ts;
+
+			// apply the movement to the transform
+			transform.Position += movement;
+			
+			// run collision test
+			auto const& collisionTest = m_CollisionSystem->TestCollision(entity);
+
+			// if there was a collision we should move the object back and zero its velocity
+			if (collisionTest.Collided)
+			{
+				transform.Position -= movement;
+				rigidbody.Velocity = sf::Vector2f(0, 0);
+			}
 		}
 	}
 

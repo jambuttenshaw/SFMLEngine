@@ -24,8 +24,8 @@ namespace SFMLEngine {
 		{}
 
 
-		bool Colliding(const BoxCollider& other);
-		bool Colliding(const CircleCollider& other);
+		bool Colliding(const BoxCollider& other, const sf::Vector2f& otherPos);
+		bool Colliding(const CircleCollider& other, const sf::Vector2f& otherPos);
 
 	private:
 		bool m_Modified = false;

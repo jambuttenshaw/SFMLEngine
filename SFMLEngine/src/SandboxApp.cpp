@@ -33,7 +33,7 @@ public:
 
 			m_Tilemap = m_Scene->CreateEntity();
 
-			m_Scene->AddComponent(m_Tilemap, Transform{ });
+			m_Scene->AddComponent(m_Tilemap, Transform{ sf::Vector2f(0, 300) });
 			
 			ResourceID tilePaletteID = TilePalette::Create(sf::Vector2u(64, 64));
 			TilePalette* tilePalette = ResourceManager::GetResourceHandle<TilePalette>(tilePaletteID);
@@ -44,19 +44,22 @@ public:
 			Tilemap tilemapComponent{ tilePaletteID };
 
 			// place tiles into the tilemap
-			int numTiles = 30;
+			int numTiles = 6;
 			for (int x = 0; x < numTiles; x++)
 			{
-				for (int y = 0; y < numTiles; y++)
-				{
-					tilemapComponent.PlaceTile(sf::Vector2i(x - numTiles / 2, y - numTiles / 2), ((10 * y + x) % 13 == 0 ? mossyCobblestone : cobblestone));
-				}
+				tilemapComponent.PlaceTile(sf::Vector2i(x - numTiles / 2, 0), cobblestone);
 			}
 
 			m_Scene->AddComponent(m_Tilemap, tilemapComponent);
 
 			TilemapRenderer tilemapRendererComponent{ Material::Create("Lit"), 1, 0 };
 			m_Scene->AddComponent(m_Tilemap, tilemapRendererComponent);
+
+
+			// this object should be solid
+			// add a collider
+			m_Scene->AddComponent(m_Tilemap, Collider{ ColliderType::Box });
+			m_Scene->AddComponent(m_Tilemap, BoxCollider{ sf::Vector2f(384, 64), sf::Vector2f(-192, -32) });
 
 			m_Scene->AddNativeScript<ClickToDestroyTile>(m_Tilemap);
 		}
@@ -69,6 +72,8 @@ public:
 			m_Scene->AddComponent(m_PhysicsEntity, Transform{ sf::Vector2f(0, -300) });
 			// add a rigidbody so this entity is affected by physics
 			m_Scene->AddComponent(m_PhysicsEntity, Rigidbody{ });
+			m_Scene->AddComponent(m_PhysicsEntity, Collider{ ColliderType::Box });
+			m_Scene->AddComponent(m_PhysicsEntity, BoxCollider{ sf::Vector2f(64, 64), sf::Vector2f(-32, -32) });
 
 			// add the sprite renderer component
 			m_Scene->AddComponent(m_PhysicsEntity, SpriteRenderer{
