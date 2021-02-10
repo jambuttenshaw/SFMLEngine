@@ -84,6 +84,11 @@ namespace SFMLEngine {
 			// update the geometry location of the moved tile
 			Tiles[tileIndex].GeometryIndex = geometryLocation;
 		}
+		else
+		{
+			// we have to remove the last tile from the tiles vector
+			Tiles.pop_back();
+		}
 
 		// finally resize the geometry vertex array
 		Geometry.resize(6 * Tiles.size());

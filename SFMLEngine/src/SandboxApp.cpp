@@ -83,7 +83,7 @@ public:
 				-1, 0,
 				Texture::Create("assets/textures/cobblestoneNormal.png") });
 
-			m_Scene->AddNativeScript<ClickToPlace>(m_PhysicsEntity);
+			// m_Scene->AddNativeScript<ClickToPlace>(m_PhysicsEntity);
 		}
 
 		{

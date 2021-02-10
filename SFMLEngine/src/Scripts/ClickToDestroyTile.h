@@ -11,6 +11,7 @@ public:
 	{
 		// do something when the game starts
 		m_Tilemap = &GetComponent<Tilemap>();
+		m_Transform = &GetComponent<Transform>();
 	}
 
 	void Update(Timestep ts) override
@@ -20,7 +21,7 @@ public:
 		if (mouseDown && !m_Click)
 		{
 			m_Click = true;
-			m_Tilemap->RemoveTile(m_Tilemap->WorldToTileCoordinates(Input::GetMouseWorldPos()));
+			m_Tilemap->RemoveTile(m_Tilemap->WorldToTileCoordinates(Input::GetMouseWorldPos() - m_Transform->Position));
 		}
 		else if (!mouseDown && m_Click)
 		{
@@ -30,6 +31,7 @@ public:
 
 private:
 	Tilemap* m_Tilemap = nullptr;
+	Transform* m_Transform = nullptr;
 	bool m_Click = false;
 
 };
