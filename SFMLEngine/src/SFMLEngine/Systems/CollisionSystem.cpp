@@ -22,13 +22,13 @@ namespace SFMLEngine {
 
 	}
 
-	const Collision CollisionSystem::TestCollision(const ICollider& collider)
+	const Collision CollisionSystem::TestCollision(Entity entity)
 	{
+		auto const& collider = m_Coordinator->GetComponent<Collider>(entity);
 		switch (collider.Type)
 		{
-		case ColliderType::Invalid:	SFMLE_CORE_ASSERT(0, "Invalid collider type!"); break;
-		case ColliderType::Box:		return DoCollisionTest(dynamic_cast<const BoxCollider&>(collider)); break;
-		case ColliderType::Circle:	return DoCollisionTest(dynamic_cast<const CircleCollider&>(collider)); break;
+		case ColliderType::Box:		return DoCollisionTest(m_Coordinator->GetComponent<BoxCollider>(entity)); break;
+		case ColliderType::Circle:	return DoCollisionTest(m_Coordinator->GetComponent<CircleCollider>(entity)); break;
 		default:					SFMLE_CORE_ASSERT(0, "Unknown collider type!"); break;
 		}
 

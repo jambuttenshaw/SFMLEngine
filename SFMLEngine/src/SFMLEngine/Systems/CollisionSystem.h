@@ -2,7 +2,7 @@
 
 
 #include "../ECS/Coordinator.h"
-#include "../ECS/Components/Colliders/ICollider.h"
+#include "../ECS/Components/Colliders/Collider.h"
 
 
 namespace SFMLEngine {
@@ -25,7 +25,7 @@ namespace SFMLEngine {
 		void EntityRemovedFromSystem(Entity entity) override;
 
 
-		const Collision TestCollision(const ICollider& collider);
+		const Collision TestCollision(Entity entity);
 
 	private:
 		template<typename T>
@@ -33,9 +33,17 @@ namespace SFMLEngine {
 		{
 			for (auto& entity : m_Entities)
 			{
-				ICollider& other = m_Coordinator->GetComponent<ICollider>(entity);
+				Collider& other = m_Coordinator->GetComponent<Collider>(entity);
 				
-				if (other.Colliding(collider))
+				bool collision = false;
+				switch (other.Type)
+				{
+				case ColliderType::Box:		collision =  m_Coordinator->GetComponent<BoxCollider>(entity).Colliding(collider); break;
+				case ColliderType::Circle:	collision = m_Coordinator->GetComponent<CircleCollider>(entity).Colliding(collider); break;
+				default:					SFMLE_CORE_ASSERT(0, "Unknown collider type!"); break;
+				}
+
+				if (collision)
 				{
 					return Collision{ true, entity };
 				}

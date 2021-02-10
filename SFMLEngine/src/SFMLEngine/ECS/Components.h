@@ -18,5 +18,6 @@
 #include "Components/TilemapRenderer.h"
 
 #include "Components/Rigidbody.h"
+#include "Components/Colliders/Collider.h"
 #include "Components/Colliders/BoxCollider.h"
 #include "Components/Colliders/CircleCollider.h"
