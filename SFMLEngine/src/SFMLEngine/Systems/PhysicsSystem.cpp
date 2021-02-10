@@ -26,6 +26,9 @@ namespace SFMLEngine {
 
 		for (auto const& entity : m_Entities)
 		{
+			ZoneScoped;
+			ZoneName("ProcessEntity", 13);
+
 			auto& rigidbody = m_Coordinator->GetComponent<Rigidbody>(entity);
 			auto& transform = m_Coordinator->GetComponent<Transform>(entity);
 

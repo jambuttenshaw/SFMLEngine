@@ -38,6 +38,9 @@ namespace SFMLEngine {
 			ZoneScoped;
 			for (auto& entity : m_Entities)
 			{
+				ZoneScoped;
+				ZoneName("ProcessEntity", 13);
+
 				if (entity == thisEntity) continue;
 
 				Collider& other = m_Coordinator->GetComponent<Collider>(entity);

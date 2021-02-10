@@ -8,6 +8,8 @@ namespace SFMLEngine {
 
 	CollisionData BoxCollider::Colliding(const BoxCollider& other, const sf::Vector2f& otherPos)
 	{
+		ZoneScoped;
+
 		// offset is the pos of this collider
 		// otherPos + other.Offset is the pos of the second collider
 		sf::Vector2f otherOffsetPos = other.Offset + otherPos;
