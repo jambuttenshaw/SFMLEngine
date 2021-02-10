@@ -45,10 +45,13 @@ public:
 			Tilemap tilemapComponent{ tilePaletteID };
 
 			// place tiles into the tilemap
-			int numTiles = 6;
+			int numTiles = 16;
 			for (int x = 0; x < numTiles; x++)
 			{
-				tilemapComponent.PlaceTile(sf::Vector2i(x - numTiles / 2, 0), cobblestone);
+				for (int y = 0; y < 2; y++)
+				{
+					tilemapComponent.PlaceTile(sf::Vector2i(x - numTiles / 2, y), cobblestone);
+				}
 			}
 
 			m_Scene->AddComponent(m_Tilemap, tilemapComponent);
@@ -60,7 +63,7 @@ public:
 			// this object should be solid
 			// add a collider
 			m_Scene->AddComponent(m_Tilemap, Collider{ ColliderType::Box });
-			m_Scene->AddComponent(m_Tilemap, BoxCollider{ sf::Vector2f(384, 64), sf::Vector2f(-192, -32) });
+			m_Scene->AddComponent(m_Tilemap, BoxCollider{ sf::Vector2f(1024, 128), sf::Vector2f(-512, -32) });
 
 			m_Scene->AddNativeScript<ClickToDestroyTile>(m_Tilemap);
 		}
@@ -83,7 +86,7 @@ public:
 				-1, 0,
 				Texture::Create("assets/textures/cobblestoneNormal.png") });
 
-			// m_Scene->AddNativeScript<ClickToPlace>(m_PhysicsEntity);
+			m_Scene->AddNativeScript<ClickToPlace>(m_PhysicsEntity);
 		}
 
 		{
