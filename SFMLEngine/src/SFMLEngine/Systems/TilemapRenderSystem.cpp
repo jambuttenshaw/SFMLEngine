@@ -88,6 +88,8 @@ namespace SFMLEngine {
 				// set the normal map to the normal map texture in the tile palette object
 				shader->setUniform("u_NormalMap", *ResourceManager::GetResourceHandle<sf::Texture>(tilemap->PalettePtr->GetNormalMap()));
 
+				shader->setUniform("u_PosOffset", transform->Position);
+
 				// rotation value is used to compute transformed normals so lighting is correct for rotated sprites
 				// requires negated because of the y axis being flipped
 				shader->setUniform("u_Rotation", -transform->Rotation * DEG_TO_RAD);

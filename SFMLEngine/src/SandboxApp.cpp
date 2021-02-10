@@ -56,14 +56,14 @@ public:
 
 			m_Scene->AddComponent(m_Tilemap, tilemapComponent);
 
-			TilemapRenderer tilemapRendererComponent{ Material::Create("Lit"), 1, 0 };
+			TilemapRenderer tilemapRendererComponent{ Material::Create("LitTilemap"), 1, 0 };
 			m_Scene->AddComponent(m_Tilemap, tilemapRendererComponent);
 
 
 			// this object should be solid
 			// add a collider
 			m_Scene->AddComponent(m_Tilemap, Collider{ ColliderType::Box });
-			m_Scene->AddComponent(m_Tilemap, BoxCollider{ sf::Vector2f(1024, 128), sf::Vector2f(-512, -32) });
+			m_Scene->AddComponent(m_Tilemap, BoxCollider{ sf::Vector2f(1024, 128), sf::Vector2f(-544, -32) });
 
 			m_Scene->AddNativeScript<ClickToDestroyTile>(m_Tilemap);
 		}
