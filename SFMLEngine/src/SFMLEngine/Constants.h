@@ -23,6 +23,7 @@ namespace SFMLEngine {
 	// the maximum entities a scene can contain
 	// used to define the size of arrays
 	const Entity MAX_ENTITIES = 5000;
+	Entity NULL_ENTITY_ID = MAX_ENTITIES + 1;
 
 
 	// a type alias for defining component types
