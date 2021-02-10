@@ -15,7 +15,7 @@ namespace SFMLEngine {
 	class PhysicsSystem : public System
 	{
 	public:
-		PhysicsSystem() : m_Gravity(0, 100) {}
+		PhysicsSystem() : m_Gravity(0, 250) {}
 		~PhysicsSystem() = default;
 
 		void Init(Coordinator* coordinator, std::shared_ptr<CollisionSystem> collisionSystem);

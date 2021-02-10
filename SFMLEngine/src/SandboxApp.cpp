@@ -7,6 +7,7 @@
 #include "Scripts/GoToMouse.h"
 #include "Scripts/MoveByWASD.h"
 #include "Scripts/ClickToDestroyTile.h"
+#include "Scripts/ClickToPlace.h"
 
 
 using namespace SFMLEngine;
@@ -81,6 +82,8 @@ public:
 				Material::Create("Lit"),
 				-1, 0,
 				Texture::Create("assets/textures/cobblestoneNormal.png") });
+
+			m_Scene->AddNativeScript<ClickToPlace>(m_PhysicsEntity);
 		}
 
 		{
