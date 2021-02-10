@@ -32,7 +32,7 @@ namespace SFMLEngine {
 		default:					SFMLE_CORE_ASSERT(0, "Unknown collider type!"); break;
 		}
 
-		return Collision{ false, NULL_ENTITY_ID };
+		return Collision{ false, INVALID_ENTITY_ID };
 	}
 
 }

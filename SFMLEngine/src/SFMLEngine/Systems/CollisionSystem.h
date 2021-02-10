@@ -15,6 +15,7 @@ namespace SFMLEngine {
 
 	class CollisionSystem : public System
 	{
+	public:
 		CollisionSystem() = default;
 		~CollisionSystem() = default;
 
@@ -48,7 +49,7 @@ namespace SFMLEngine {
 					return Collision{ true, entity };
 				}
 			}
-			return Collision{ false, NULL_ENTITY_ID };
+			return Collision{ false, INVALID_ENTITY_ID };
 		}
 
 	private:

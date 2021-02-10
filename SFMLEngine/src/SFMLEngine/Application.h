@@ -4,6 +4,9 @@
 
 #include "ECS/Coordinator.h"
 
+
+// systems
+
 #include "Systems/SpriteRenderSystem.h"
 #include "Systems/TilemapRenderSystem.h"
 
@@ -16,7 +19,9 @@
 
 #include "Systems/CameraSystem.h"
 
+#include "Systems/CollisionSystem.h"
 #include "Systems/PhysicsSystem.h"
+
 
 #include "LayerStack.h"
 #include "Scene.h"
@@ -66,6 +71,7 @@ namespace SFMLEngine {
 
 		std::shared_ptr<CameraSystem> m_CameraSystem;
 
+		std::shared_ptr<CollisionSystem> m_CollisionSystem;
 		std::shared_ptr<PhysicsSystem> m_PhysicsSystem;
 
 

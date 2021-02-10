@@ -69,15 +69,26 @@ namespace SFMLEngine
             ZoneScoped;
             ZoneName("InitComponents", 14);
             m_Coordinator->RegisterComponent<Transform>();
+
             m_Coordinator->RegisterComponent<SpriteRenderer>();
+
             m_Coordinator->RegisterComponent<NativeScripts>();
+
             m_Coordinator->RegisterComponent<PointLight>();
             m_Coordinator->RegisterComponent<DirectionalLight>();
+
             m_Coordinator->RegisterComponent<Text>();
+
             m_Coordinator->RegisterComponent<Camera>();
+
             m_Coordinator->RegisterComponent<Tilemap>();
             m_Coordinator->RegisterComponent<TilemapRenderer>();
+
             m_Coordinator->RegisterComponent<Rigidbody>();
+
+            m_Coordinator->RegisterComponent<Collider>();
+            m_Coordinator->RegisterComponent<BoxCollider>();
+            m_Coordinator->RegisterComponent<CircleCollider>();
         }
 
         {
@@ -156,9 +167,20 @@ namespace SFMLEngine
             }
 
 
+            // collision system
+            m_CollisionSystem = m_Coordinator->RegisterSystem<CollisionSystem>();
+            m_CollisionSystem->Init(m_Coordinator);
+            {
+                Signature signature;
+                signature.set(m_Coordinator->GetComponentType<Transform>());
+                signature.set(m_Coordinator->GetComponentType<Collider>());
+                m_Coordinator->SetSystemSignature<CollisionSystem>(signature);
+            }
+
+
             // Physics system
             m_PhysicsSystem = m_Coordinator->RegisterSystem<PhysicsSystem>();
-            m_PhysicsSystem->Init(m_Coordinator);
+            m_PhysicsSystem->Init(m_Coordinator, m_CollisionSystem);
             {
                 Signature signature;
                 signature.set(m_Coordinator->GetComponentType<Transform>());

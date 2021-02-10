@@ -4,9 +4,10 @@
 namespace SFMLEngine {
 
 
-	void PhysicsSystem::Init(Coordinator* coordinator)
+	void PhysicsSystem::Init(Coordinator* coordinator, std::shared_ptr<CollisionSystem> collisionSystem)
 	{
 		m_Coordinator = coordinator;
+		m_CollisionSystem = collisionSystem;
 	}
 
 	void PhysicsSystem::EntityAddedToSystem(Entity entity)
@@ -28,8 +29,8 @@ namespace SFMLEngine {
 			auto& rigidbody = m_Coordinator->GetComponent<Rigidbody>(entity);
 			auto& transform = m_Coordinator->GetComponent<Transform>(entity);
 
-			transform.Position += rigidbody.Velocity * (float)ts;
 			rigidbody.Velocity += m_Gravity * (float)ts;
+			transform.Position += rigidbody.Velocity * (float)ts;
 		}
 	}
 
