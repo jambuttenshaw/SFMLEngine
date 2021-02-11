@@ -59,7 +59,10 @@ namespace SFMLEngine {
 
 				if (collision.Collided)
 				{
-					return Collision{ true, entity, sf::FloatRect{position, collider.GetBounds()}, sf::FloatRect{otherTransform.Position, collision.Size} };
+					return Collision{ true, entity,
+						sf::FloatRect{position, collider.GetBounds()},
+						sf::FloatRect{ collision.Hitbox.left + otherTransform.Position.x, collision.Hitbox.top + otherTransform.Position.y,
+									   collision.Hitbox.width, collision.Hitbox.height } };
 				}
 			}
 			return Collision{ false, INVALID_ENTITY_ID, sf::FloatRect(), sf::FloatRect() };

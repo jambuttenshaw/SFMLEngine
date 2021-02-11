@@ -102,7 +102,7 @@ namespace SFMLEngine {
 	CollisionData TilemapCollider::Colliding(TilemapCollider& other, const sf::Vector2f& otherPos)
 	{
 		// tilemap vs tilemap collision
-		return CollisionData{ false, sf::Vector2f() };
+		return CollisionData{ false, sf::FloatRect() };
 	}
 
 	CollisionData TilemapCollider::Colliding(BoxCollider& other, const sf::Vector2f& otherPos)
@@ -114,23 +114,25 @@ namespace SFMLEngine {
 		sf::FloatRect otherBoundingBox{ otherOffsetPos, other.Size };
 
 		bool collides = false;
+		sf::FloatRect collidedQuad;
 		for (auto const& quad : m_CollisionGeometry)
 		{
 			if (quad.intersects(otherBoundingBox))
 			{
 				collides = true;
+				collidedQuad = sf::FloatRect{ quad.left - TilemapHandle->TileSize.x, quad.top - TilemapHandle->TileSize.y, quad.width, quad.height };
 				break;
 			}
 		}
 
-		return CollisionData{ collides, Size };
+		return CollisionData{ collides, collidedQuad };
 
 	}
 
 	CollisionData TilemapCollider::Colliding(CircleCollider& other, const sf::Vector2f& otherPos)
 	{
 		// tilemap vs circle collider collision
-		return CollisionData{ false, sf::Vector2f() };
+		return CollisionData{ false, sf::FloatRect() };
 	}
 
 }

@@ -18,12 +18,12 @@ namespace SFMLEngine {
 		bool overlapX = Offset.x + Size.x >= otherOffsetPos.x && otherOffsetPos.x + other.Size.x >= Offset.x;
 		bool overlapY = Offset.y + Size.y >= otherOffsetPos.y && otherOffsetPos.y + other.Size.y >= Offset.y;
 
-		return CollisionData{ overlapX && overlapY, Size };
+		return CollisionData{ overlapX && overlapY, sf::FloatRect{ Offset, Size } };
 	}
 
 	CollisionData BoxCollider::Colliding(CircleCollider& other, const sf::Vector2f& otherPos)
 	{
-		return CollisionData{ false, sf::Vector2f() };
+		return CollisionData{ false, sf::FloatRect() };
 	}
 
 	CollisionData BoxCollider::Colliding(TilemapCollider& other, const sf::Vector2f& otherPos)
