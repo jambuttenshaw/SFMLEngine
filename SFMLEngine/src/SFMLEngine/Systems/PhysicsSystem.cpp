@@ -12,7 +12,12 @@ namespace SFMLEngine {
 
 	void PhysicsSystem::EntityAddedToSystem(Entity entity)
 	{
+		auto& rigidbody = m_Coordinator->GetComponent<Rigidbody>(entity);
+		auto& transform = m_Coordinator->GetComponent<Transform>(entity);
 
+		// set up the rigidbody
+		rigidbody.Position = transform.Position;
+		rigidbody.OldPosition = transform.Position;
 	}
 
 	void PhysicsSystem::EntityRemovedFromSystem(Entity entity)
@@ -37,14 +42,16 @@ namespace SFMLEngine {
 			rigidbody.Acceleration = rigidbody.Force / rigidbody.Mass;
 
 			rigidbody.Velocity += rigidbody.Acceleration * (float)ts;
-			
+			rigidbody.Position += rigidbody.Velocity * (float)ts;
+
 
 			// once the final movement has been calculated, reset the force to 0
 			// each force only lasts for one frame, to apply a bigger impulse the force should be reapplied for many frames
 			rigidbody.Force *= 0.0f;
 
 			// the final amount the entity will move this frame
-			sf::Vector2f movement = rigidbody.Velocity * (float)ts;
+			sf::Vector2f movement = rigidbody.Position - rigidbody.OldPosition;
+			rigidbody.OldPosition = rigidbody.Position;
 
 			// deal with movement component-wise so we can detect collisions on each axis seperately
 			if (fabsf(movement.x) > 0.1f) {

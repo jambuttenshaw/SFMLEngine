@@ -11,6 +11,8 @@ namespace SFMLEngine {
 	{
 		friend class System;
 
+		sf::Vector2f Position;
+		sf::Vector2f OldPosition;
 		sf::Vector2f Velocity;
 		sf::Vector2f Acceleration;
 		sf::Vector2f Force;

@@ -80,7 +80,7 @@ public:
 			// give the entity a transform
 			m_Scene->AddComponent(m_PhysicsEntity, Transform{ sf::Vector2f(0, -300) });
 			// add a rigidbody so this entity is affected by physics
-			m_Scene->AddComponent(m_PhysicsEntity, Rigidbody{ });
+			m_Scene->AddComponent(m_PhysicsEntity, Rigidbody{ 0.1f });
 			m_Scene->AddComponent(m_PhysicsEntity, Collider{ ColliderType::Box });
 			m_Scene->AddComponent(m_PhysicsEntity, BoxCollider{ sf::Vector2f(64, 64), sf::Vector2f(-32, -32) });
 
