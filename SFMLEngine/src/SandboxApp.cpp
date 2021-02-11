@@ -67,7 +67,7 @@ public:
 			// add a collider
 			m_Scene->AddComponent(m_Tilemap, Collider{ ColliderType::Tilemap });
 			//m_Scene->AddComponent(m_Tilemap, BoxCollider{ sf::Vector2f(1024, 128), sf::Vector2f(-544, -32) });
-			m_Scene->AddComponent(m_Tilemap, TilemapCollider { &tilemapComponent });
+			m_Scene->AddComponent(m_Tilemap, TilemapCollider { });
 
 			m_Scene->AddNativeScript<ClickToDestroyTile>(m_Tilemap);
 		}

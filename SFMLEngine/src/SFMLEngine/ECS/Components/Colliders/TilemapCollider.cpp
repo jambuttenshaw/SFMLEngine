@@ -13,19 +13,22 @@ namespace SFMLEngine {
 	{
 		ZoneScoped;
 
+		// start with fresh geometry
+		m_CollisionGeometry.clear();
+
+		
+		// create a quad for each tile in the tilemap
+		for (auto& tile : TilemapHandle->Tiles)
 		{
-			// create a quad for each tile in the tilemap
-			for (auto& tile : TilemapHandle->Tiles)
-			{
-				// create a quad and add it to our collision geometry
-				// we want to deal with coordinates in tilemap space
-				// at the moment, to make the logic as simple as possible
-				m_CollisionGeometry.push_back(sf::FloatRect{
-					sf::Vector2f((tile.Position.x + 1) * TilemapHandle->TileSize.x, (tile.Position.y + 1) * TilemapHandle->TileSize.y),
-					TilemapHandle->TileSize
-					});
-			}
+			// create a quad and add it to our collision geometry
+			// we want to deal with coordinates in tilemap space
+			// at the moment, to make the logic as simple as possible
+			m_CollisionGeometry.push_back(sf::FloatRect{
+				sf::Vector2f((tile.Position.x + 1) * TilemapHandle->TileSize.x, (tile.Position.y + 1) * TilemapHandle->TileSize.y),
+				TilemapHandle->TileSize
+				});
 		}
+		
 		
 		// then optimize out as many of those quads as possible
 		bool optimal = false;
@@ -44,6 +47,8 @@ namespace SFMLEngine {
 				// look to see if there are any other quads at the same y level
 				for (auto& secondQuad : m_CollisionGeometry)
 				{
+					if (std::find(indicesToDelete.begin(), indicesToDelete.end(), jIndex) != indicesToDelete.end()) continue;
+
 					if (secondQuad.top == quad.top && secondQuad != quad)
 					{
 						// check to see if they are adjacent

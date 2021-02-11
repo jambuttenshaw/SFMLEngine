@@ -22,6 +22,8 @@
 #include "Systems/CollisionSystem.h"
 #include "Systems/PhysicsSystem.h"
 
+#include "Systems/TilemapSystem.h"
+
 
 #include "LayerStack.h"
 #include "Scene.h"
@@ -73,6 +75,8 @@ namespace SFMLEngine {
 
 		std::shared_ptr<CollisionSystem> m_CollisionSystem;
 		std::shared_ptr<PhysicsSystem> m_PhysicsSystem;
+
+		std::shared_ptr<TilemapSystem> m_TilemapSystem;
 
 
 		// Debug mode stuff

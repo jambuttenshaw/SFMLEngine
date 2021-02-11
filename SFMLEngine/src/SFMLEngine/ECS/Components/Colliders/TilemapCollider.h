@@ -22,8 +22,14 @@ namespace SFMLEngine {
 
 		TilemapCollider()
 		{}
-		TilemapCollider(Tilemap* tilemapHandle)
-			: TilemapHandle(tilemapHandle)
+
+		void Setup(Tilemap* tilemapHandle)
+		{
+			TilemapHandle = tilemapHandle;
+			UpdateGeometry();
+		}
+
+		void UpdateGeometry()
 		{
 			BuildCollisionGeometry();
 			FindBoundary();

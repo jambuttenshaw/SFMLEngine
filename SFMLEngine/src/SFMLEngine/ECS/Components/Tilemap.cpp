@@ -46,6 +46,10 @@ namespace SFMLEngine {
 
 		// create new vertices for this tile
 		AddTileToGeometry(tile);
+
+
+		// flag this component as modified
+		m_Modified = true;
 	}
 
 	void Tilemap::RemoveTile(const sf::Vector2i& location)
@@ -92,6 +96,10 @@ namespace SFMLEngine {
 
 		// finally resize the geometry vertex array
 		Geometry.resize(6 * Tiles.size());
+
+
+		// flag this component as modified
+		m_Modified = true;
 	}
 
 

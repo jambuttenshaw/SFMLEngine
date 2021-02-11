@@ -17,7 +17,7 @@ public:
 	void Update(Timestep ts) override
 	{
 		// do something every frame
-		bool mouseDown = Input::IsMouseButtonDown(sf::Mouse::Left);
+		bool mouseDown = Input::IsMouseButtonDown(sf::Mouse::Right);
 		if (mouseDown && !m_Click)
 		{
 			m_Click = true;

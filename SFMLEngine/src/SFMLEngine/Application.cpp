@@ -188,6 +188,17 @@ namespace SFMLEngine
                 signature.set(m_Coordinator->GetComponentType<Rigidbody>());
                 m_Coordinator->SetSystemSignature<PhysicsSystem>(signature);
             }
+
+
+            // Tilemap system
+            m_TilemapSystem = m_Coordinator->RegisterSystem<TilemapSystem>();
+            m_TilemapSystem->Init(m_Coordinator);
+            {
+                Signature signature;
+                signature.set(m_Coordinator->GetComponentType<TilemapCollider>());
+                signature.set(m_Coordinator->GetComponentType<TilemapCollider>());
+                m_Coordinator->SetSystemSignature<TilemapSystem>(signature);
+            }
         }
         /*
         ----------
@@ -310,6 +321,7 @@ namespace SFMLEngine
                 m_PhysicsSystem->Update(ts);
 
                 // apply any changes made to components
+                m_TilemapSystem->Update();
                 m_SpriteRenderSystem->Update();
                 m_TilemapRenderSystem->Update();
                 m_GUISystem->Update();
