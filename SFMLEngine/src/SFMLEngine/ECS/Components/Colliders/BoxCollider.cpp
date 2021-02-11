@@ -4,6 +4,7 @@
 #include "TilemapCollider.h"
 
 #include "../../../Log.h"
+#include "../../../Math.h"
 
 namespace SFMLEngine {
 
@@ -23,7 +24,14 @@ namespace SFMLEngine {
 
 	CollisionData BoxCollider::Colliding(CircleCollider& other, const sf::Vector2f& otherPos)
 	{
-		return CollisionData{ false, sf::FloatRect() };
+		sf::Vector2f circleCentre = other.Offset + otherPos + sf::Vector2f{other.Radius, other.Radius};
+
+		sf::Vector2f half_extents{ Size * 0.5f };
+		sf::Vector2f centre{ Offset + half_extents };
+
+		sf::Vector2f diff = centre - circleCentre + Clamp(circleCentre - centre, -half_extents, half_extents);
+
+		return CollisionData{ SquareMagnitude(diff) <= other.Radius * other.Radius, sf::FloatRect() };
 	}
 
 	CollisionData BoxCollider::Colliding(TilemapCollider& other, const sf::Vector2f& otherPos)
