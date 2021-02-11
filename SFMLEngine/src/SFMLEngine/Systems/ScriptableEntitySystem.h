@@ -69,9 +69,6 @@ namespace SFMLEngine {
 			scriptableEntity->SetSceneHandle(scene);
 			scriptableEntity->SetEntityHandle(entity);
 
-			// call awake on the ScriptableEntity
-			scriptableEntity->Awake();
-
 			// check if the entity has a native scripts component
 			if (!m_Coordinator->HasComponent<NativeScripts>(entity))
 				m_Coordinator->AddComponent(entity, NativeScripts{});

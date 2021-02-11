@@ -15,7 +15,6 @@ namespace SFMLEngine {
 	public:
 		virtual ~ScriptableEntity() {};
 
-		virtual void Awake() {}
 		virtual void Start() {}
 
 		virtual void Update(Timestep ts) {}
