@@ -26,7 +26,10 @@ public:
 			m_Rigidbody->Position += ts * m_MoveSpeed * sf::Vector2f(-1, 0);
 
 		if (Input::IsKeyDown(sf::Keyboard::Up))
-			m_Rigidbody->Force += ts * m_JumpPower *sf::Vector2f(0, -1);
+		{
+			if (fabsf(m_Rigidbody->Velocity.y) < 0.1f)
+				m_Rigidbody->Velocity += ts * m_JumpPower * sf::Vector2f(0, -1);
+		}
 
 	}
 
@@ -35,5 +38,5 @@ private:
 	Rigidbody* m_Rigidbody = nullptr;
 
 	float m_MoveSpeed = 250.0f;
-	float m_JumpPower = 10000.0f;
+	float m_JumpPower = 50000.0f;
 };
