@@ -2,6 +2,7 @@
 
 #include "../Constants.h"
 #include "../Timestep.h"
+#include "../Systems/CollisionSystem.h"
 
 #include <SFML/System.hpp>
 
