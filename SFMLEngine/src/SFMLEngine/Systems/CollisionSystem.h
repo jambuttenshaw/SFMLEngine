@@ -33,7 +33,7 @@ namespace SFMLEngine {
 
 	private:
 		template<typename T>
-		const Collision DoCollisionTest(const T& collider, const sf::Vector2f& position, Entity& thisEntity)
+		const Collision DoCollisionTest(T& collider, const sf::Vector2f& position, Entity& thisEntity)
 		{
 			ZoneScoped;
 			for (auto& entity : m_Entities)
@@ -53,6 +53,7 @@ namespace SFMLEngine {
 				case ColliderType::Invalid:	SFMLE_CORE_ASSERT(0, "Invalid collider type!"); break;
 				case ColliderType::Box:		collision =  m_Coordinator->GetComponent<BoxCollider>(entity).Colliding(collider, diff); break;
 				case ColliderType::Circle:	collision = m_Coordinator->GetComponent<CircleCollider>(entity).Colliding(collider, diff); break;
+				case ColliderType::Tilemap: collision = m_Coordinator->GetComponent<TilemapCollider>(entity).Colliding(collider, diff); break;
 				default:					SFMLE_CORE_ASSERT(0, "Unknown collider type!"); break;
 				}
 

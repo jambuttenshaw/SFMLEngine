@@ -89,6 +89,7 @@ namespace SFMLEngine
             m_Coordinator->RegisterComponent<Collider>();
             m_Coordinator->RegisterComponent<BoxCollider>();
             m_Coordinator->RegisterComponent<CircleCollider>();
+            m_Coordinator->RegisterComponent<TilemapCollider>();
         }
 
         {

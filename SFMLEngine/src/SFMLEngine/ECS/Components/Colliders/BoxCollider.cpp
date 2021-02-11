@@ -1,12 +1,13 @@
 #include "BoxCollider.h"
 
 #include "CircleCollider.h"
+#include "TilemapCollider.h"
 
 #include "../../../Log.h"
 
 namespace SFMLEngine {
 
-	CollisionData BoxCollider::Colliding(const BoxCollider& other, const sf::Vector2f& otherPos)
+	CollisionData BoxCollider::Colliding(BoxCollider& other, const sf::Vector2f& otherPos)
 	{
 		ZoneScoped;
 
@@ -20,9 +21,17 @@ namespace SFMLEngine {
 		return CollisionData{ overlapX && overlapY, Size };
 	}
 
-	CollisionData BoxCollider::Colliding(const CircleCollider& other, const sf::Vector2f& otherPos)
+	CollisionData BoxCollider::Colliding(CircleCollider& other, const sf::Vector2f& otherPos)
 	{
 		return CollisionData{ false, sf::Vector2f() };
+	}
+
+	CollisionData BoxCollider::Colliding(TilemapCollider& other, const sf::Vector2f& otherPos)
+	{
+		// tilemap vs box collider collision
+		ZoneScoped;
+
+		return other.Colliding(*this, otherPos);
 	}
 
 }

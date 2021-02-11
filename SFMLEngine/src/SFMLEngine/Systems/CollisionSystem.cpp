@@ -3,6 +3,7 @@
 #include "../ECS/Components/Transform.h"
 #include "../ECS/Components/Colliders/BoxCollider.h"
 #include "../ECS/Components/Colliders/CircleCollider.h"
+#include "../ECS/Components/Colliders/TilemapCollider.h"
 
 
 namespace SFMLEngine {
@@ -34,6 +35,7 @@ namespace SFMLEngine {
 		case ColliderType::Invalid:	SFMLE_CORE_ASSERT(0, "Invalid collider type!"); break;
 		case ColliderType::Box:		return DoCollisionTest(m_Coordinator->GetComponent<BoxCollider>(entity), transform.Position, entity); break;
 		case ColliderType::Circle:	return DoCollisionTest(m_Coordinator->GetComponent<CircleCollider>(entity), transform.Position, entity); break;
+		case ColliderType::Tilemap: return DoCollisionTest(m_Coordinator->GetComponent<TilemapCollider>(entity), transform.Position, entity); break;
 		default:					SFMLE_CORE_ASSERT(0, "Unknown collider type!"); break;
 		}
 

@@ -53,6 +53,9 @@ public:
 					tilemapComponent.PlaceTile(sf::Vector2i(x - numTiles / 2, y), cobblestone);
 				}
 			}
+			tilemapComponent.PlaceTile(sf::Vector2i(5, -1), mossyCobblestone);
+			tilemapComponent.PlaceTile(sf::Vector2i(4, -1), mossyCobblestone);
+			tilemapComponent.PlaceTile(sf::Vector2i(4, -2), mossyCobblestone);
 
 			m_Scene->AddComponent(m_Tilemap, tilemapComponent);
 
@@ -62,8 +65,9 @@ public:
 
 			// this object should be solid
 			// add a collider
-			m_Scene->AddComponent(m_Tilemap, Collider{ ColliderType::Box });
-			m_Scene->AddComponent(m_Tilemap, BoxCollider{ sf::Vector2f(1024, 128), sf::Vector2f(-544, -32) });
+			m_Scene->AddComponent(m_Tilemap, Collider{ ColliderType::Tilemap });
+			//m_Scene->AddComponent(m_Tilemap, BoxCollider{ sf::Vector2f(1024, 128), sf::Vector2f(-544, -32) });
+			m_Scene->AddComponent(m_Tilemap, TilemapCollider { &tilemapComponent });
 
 			m_Scene->AddNativeScript<ClickToDestroyTile>(m_Tilemap);
 		}
@@ -92,10 +96,8 @@ public:
 		{
 			m_Light = m_Scene->CreateEntity();
 
-			m_Scene->AddComponent(m_Light, Transform{});
+			m_Scene->AddComponent(m_Light, Transform{ { 260, 300 } });
 			m_Scene->AddComponent(m_Light, PointLight{ 3.0f, 0.007f, sf::Color{220, 130, 160, 255} });
-
-			m_Scene->AddNativeScript<GoToMouse>(m_Light);
 		}
 		
 		{

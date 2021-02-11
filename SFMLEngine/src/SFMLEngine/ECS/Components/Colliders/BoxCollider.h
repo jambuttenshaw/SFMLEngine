@@ -9,6 +9,7 @@
 namespace SFMLEngine {
 
 	struct CircleCollider;
+	struct TilemapCollider;
 
 	struct BoxCollider
 	{
@@ -25,8 +26,9 @@ namespace SFMLEngine {
 		{}
 
 
-		CollisionData Colliding(const BoxCollider& other, const sf::Vector2f& otherPos);
-		CollisionData Colliding(const CircleCollider& other, const sf::Vector2f& otherPos);
+		CollisionData Colliding(BoxCollider& other, const sf::Vector2f& otherPos);
+		CollisionData Colliding(CircleCollider& other, const sf::Vector2f& otherPos);
+		CollisionData Colliding(TilemapCollider& other, const sf::Vector2f& otherPos);
 
 		const sf::Vector2f& GetBounds() const { return Size; }
 

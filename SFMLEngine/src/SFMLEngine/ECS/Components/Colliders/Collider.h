@@ -8,7 +8,7 @@ namespace SFMLEngine {
 	
 	enum class ColliderType
 	{
-		Invalid = 0, Box, Circle
+		Invalid = 0, Box, Circle, Tilemap
 	};
 
 	struct Collider

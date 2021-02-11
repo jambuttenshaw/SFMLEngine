@@ -21,3 +21,4 @@
 #include "Components/Colliders/Collider.h"
 #include "Components/Colliders/BoxCollider.h"
 #include "Components/Colliders/CircleCollider.h"
+#include "Components/Colliders/TilemapCollider.h"

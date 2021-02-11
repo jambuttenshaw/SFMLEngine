@@ -67,10 +67,14 @@ namespace SFMLEngine {
 				// if there was a collision we should move the object back and zero its velocity
 				if (collisionTest.Collided)
 				{
+					/*
 					if (movement.y > 0)
 						transform.Position.y = collisionTest.OtherBounds.top - collisionTest.Bounds.height;
 					else
 						transform.Position.y = collisionTest.OtherBounds.top + collisionTest.OtherBounds.height;
+						*/
+					transform.Position.y -= movement.y;
+
 					rigidbody.Velocity.y = 0;
 				}
 			}
