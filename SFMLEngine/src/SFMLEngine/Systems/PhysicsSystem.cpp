@@ -32,7 +32,18 @@ namespace SFMLEngine {
 			auto& rigidbody = m_Coordinator->GetComponent<Rigidbody>(entity);
 			auto& transform = m_Coordinator->GetComponent<Transform>(entity);
 
-			rigidbody.Velocity += m_Gravity * (float)ts;
+			// add the entities weight onto the resultant force
+			rigidbody.Force += rigidbody.Mass * m_Gravity;
+			rigidbody.Acceleration = rigidbody.Force / rigidbody.Mass;
+
+			rigidbody.Velocity += rigidbody.Acceleration * (float)ts;
+			
+
+			// once the final movement has been calculated, reset the force to 0
+			// each force only lasts for one frame, to apply a bigger impulse the force should be reapplied for many frames
+			rigidbody.Force *= 0.0f;
+
+			// the final amount the entity will move this frame
 			sf::Vector2f movement = rigidbody.Velocity * (float)ts;
 
 			// deal with movement component-wise so we can detect collisions on each axis seperately
@@ -67,12 +78,12 @@ namespace SFMLEngine {
 				// if there was a collision we should move the object back and zero its velocity
 				if (collisionTest.Collided)
 				{
-					/*
+					
 					if (movement.y > 0)
 						transform.Position.y = collisionTest.OtherBounds.top - collisionTest.Bounds.height;
 					else
 						transform.Position.y = collisionTest.OtherBounds.top + collisionTest.OtherBounds.height;
-						*/
+						
 					transform.Position.y -= movement.y;
 
 					rigidbody.Velocity.y = 0;

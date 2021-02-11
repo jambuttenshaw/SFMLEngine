@@ -8,6 +8,7 @@
 #include "Scripts/MoveByWASD.h"
 #include "Scripts/ClickToDestroyTile.h"
 #include "Scripts/ClickToPlace.h"
+#include "Scripts/PlayerController.h"
 
 
 using namespace SFMLEngine;
@@ -91,6 +92,7 @@ public:
 				Texture::Create("assets/textures/cobblestoneNormal.png") });
 
 			m_Scene->AddNativeScript<ClickToPlace>(m_PhysicsEntity);
+			m_Scene->AddNativeScript<PlayerController>(m_PhysicsEntity);
 		}
 
 		{
