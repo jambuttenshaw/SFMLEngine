@@ -15,10 +15,12 @@ namespace SFMLEngine {
 	public:
 		virtual ~ScriptableEntity() {};
 
-		virtual void Awake() {};
-		virtual void Start() {};
+		virtual void Awake() {}
+		virtual void Start() {}
 
-		virtual void Update(Timestep ts) {};
+		virtual void Update(Timestep ts) {}
+
+		virtual void OnCollision(Collision collisionData) {}
 
 		// components
 		template<typename T>

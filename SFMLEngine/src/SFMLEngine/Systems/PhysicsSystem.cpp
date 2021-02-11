@@ -1,5 +1,7 @@
 #include "PhysicsSystem.h"
 
+#include "../ECS/Components/NativeScripts.h"
+
 
 namespace SFMLEngine {
 
@@ -92,6 +94,18 @@ namespace SFMLEngine {
 						
 					rigidbody.Velocity.y = 0;
 				}
+			}
+		}
+	}
+
+	void PhysicsSystem::CollisionCallback(Entity entity, Collision collisionData)
+	{
+		if (m_Coordinator->HasComponent<NativeScripts>(entity))
+		{
+			auto& scriptsComponent = m_Coordinator->GetComponent<NativeScripts>(entity);
+			for (auto& script : scriptsComponent.Scripts)
+			{
+				script.second->OnCollision(collisionData);
 			}
 		}
 	}
