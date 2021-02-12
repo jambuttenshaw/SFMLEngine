@@ -41,5 +41,4 @@ namespace SFMLEngine {
 
 		return Collision{ false, INVALID_ENTITY_ID };
 	}
-
 }

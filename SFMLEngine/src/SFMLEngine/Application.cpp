@@ -50,6 +50,10 @@ namespace SFMLEngine
         // load up the font library
         FontLibrary::Init();
 
+
+        // init debug tools
+        Renderer::InitDebug(m_Window);
+
         
         /*
         ----------
@@ -367,6 +371,12 @@ namespace SFMLEngine
                 // I dont need to care about the order in which I draw them
                 m_SpriteRenderSystem->Render();
                 m_TilemapRenderSystem->Render();
+            }
+
+            if (m_DisplayDebug)
+            {
+                // display debug game objects
+                Renderer::DrawDebug();
             }
 
 

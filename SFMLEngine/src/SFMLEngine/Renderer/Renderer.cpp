@@ -10,6 +10,7 @@
 namespace SFMLEngine {
 
 	sf::ContextSettings* Renderer::s_ContextSettings = nullptr;
+	DebugTools* Renderer::s_DebugTools = nullptr;
 
 	const sf::ContextSettings& Renderer::Init()
 	{
@@ -47,6 +48,12 @@ namespace SFMLEngine {
 	void Renderer::Shutdown()
 	{
 		delete s_ContextSettings;
+		delete s_DebugTools;
+	}
+
+	void Renderer::InitDebug(sf::RenderWindow* handle)
+	{
+		s_DebugTools = new DebugTools(handle);
 	}
 
 	void Renderer::Clear()
@@ -77,4 +84,16 @@ namespace SFMLEngine {
 		}
 	}
 
+
+	void Renderer::DrawDebugRect(const sf::Vector2f& pos, const sf::Vector2f& size, const sf::Color& color)
+	{
+		ZoneScoped;
+		s_DebugTools->DrawRect(pos, size, color);
+	}
+
+	void Renderer::DrawDebug()
+	{
+		ZoneScoped;
+		s_DebugTools->DrawAll();
+	}
 }

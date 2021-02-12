@@ -31,6 +31,7 @@ namespace SFMLEngine {
 			LoadNewShader("TextureMask", "assets/shaders/Basic.vert", "assets/shaders/TextureMask.frag");
 			LoadNewShader("Lit", "assets/shaders/Lit.vert", "assets/shaders/Lit.frag", true);
 			LoadNewShader("LitTilemap", "assets/shaders/LitTilemap.vert", "assets/shaders/Lit.frag", true);
+			LoadNewShader("Debug", "assets/shaders/Debug.vert", "assets/shaders/Debug.frag");
 		}
 
 		static void Shutdown()
