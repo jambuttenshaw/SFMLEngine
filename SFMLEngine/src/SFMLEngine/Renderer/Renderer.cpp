@@ -84,6 +84,11 @@ namespace SFMLEngine {
 		}
 	}
 
+	void Renderer::Flush()
+	{
+		s_DebugTools->Clear();
+	}
+
 
 	void Renderer::DrawDebugRect(const sf::Vector2f& pos, const sf::Vector2f& size, const sf::Color& color)
 	{

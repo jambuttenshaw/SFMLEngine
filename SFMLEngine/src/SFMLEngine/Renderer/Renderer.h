@@ -22,6 +22,8 @@ namespace SFMLEngine {
 
 		static void SetUniforms();
 
+		static void Flush();
+
 
 		static void DrawDebugRect(const sf::Vector2f& pos, const sf::Vector2f& size, const sf::Color& color);
 		static void DrawDebug();

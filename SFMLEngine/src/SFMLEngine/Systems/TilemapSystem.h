@@ -23,7 +23,7 @@ namespace SFMLEngine {
 		void Update();
 
 	private:
-		Coordinator* m_Coordinator;
+		Coordinator* m_Coordinator = nullptr;
 
 		std::unordered_map<Entity, Tilemap*> m_TilemapCache;
 		std::unordered_map<Entity, TilemapCollider*> m_ColliderCache;

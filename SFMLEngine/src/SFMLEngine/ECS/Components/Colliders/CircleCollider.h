@@ -33,6 +33,8 @@ namespace SFMLEngine {
 
 		const sf::Vector2f GetBounds() const { return 2.0f * sf::Vector2f(Radius, Radius); }
 
+		void DrawDebug() {} // cant draw cirlces atm
+
 	private:
 		bool m_Modified = false;
 	};

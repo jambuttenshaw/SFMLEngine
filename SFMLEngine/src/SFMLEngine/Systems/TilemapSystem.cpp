@@ -33,6 +33,7 @@ namespace SFMLEngine {
 	{
 		for (auto& entity : m_Entities)
 		{
+			m_ColliderCache[entity]->DrawDebug();
 			if (ComponentModified(m_TilemapCache[entity]))
 			{
 				m_ColliderCache[entity]->UpdateGeometry();

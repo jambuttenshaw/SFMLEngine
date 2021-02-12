@@ -20,6 +20,12 @@ namespace SFMLEngine {
 		ResourceManager::DeleteResource<sf::Texture>(m_DebugRectTexture);
 	}
 
+	void DebugTools::Clear()
+	{
+		m_Geometry.clear();
+		m_TriangleIndex = 0;
+	}
+
 	void DebugTools::DrawRect(const sf::Vector2f& pos, const sf::Vector2f& size, const sf::Color& color)
 	{
 		ZoneScoped;
@@ -51,9 +57,8 @@ namespace SFMLEngine {
 		renderState.texture = texture;
 
 		m_WindowHandle->draw(m_Geometry, renderState);
-
-		m_Geometry.clear();
-		m_TriangleIndex = 0;
+		
+		Clear();
 	}
 
 }

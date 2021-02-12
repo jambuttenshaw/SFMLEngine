@@ -378,6 +378,7 @@ namespace SFMLEngine
                 // display debug game objects
                 Renderer::DrawDebug();
             }
+            else Renderer::Flush();
 
 
             {

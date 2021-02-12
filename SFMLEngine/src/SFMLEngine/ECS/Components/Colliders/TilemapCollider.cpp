@@ -5,6 +5,8 @@
 
 #include "../../../Math.h"
 
+#include "../../../Renderer/Renderer.h"
+
 #include <algorithm>
 
 namespace SFMLEngine {
@@ -134,6 +136,14 @@ namespace SFMLEngine {
 	{
 		// tilemap vs circle collider collision
 		return CollisionData{ false, sf::FloatRect() };
+	}
+
+	void TilemapCollider::DrawDebug()
+	{
+		for (auto const& rect : m_CollisionGeometry)
+		{
+			Renderer::DrawDebugRect(sf::Vector2f(rect.left, rect.top), sf::Vector2f(rect.width, rect.height), sf::Color::Green);
+		}
 	}
 
 }

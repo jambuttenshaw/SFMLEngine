@@ -6,6 +6,9 @@
 #include "../../../Log.h"
 #include "../../../Math.h"
 
+#include "../../../Renderer/Renderer.h"
+
+
 namespace SFMLEngine {
 
 	CollisionData BoxCollider::Colliding(BoxCollider& other, const sf::Vector2f& otherPos)
@@ -40,6 +43,11 @@ namespace SFMLEngine {
 		ZoneScoped;
 
 		return other.Colliding(*this, otherPos);
+	}
+
+	void BoxCollider::DrawDebug()
+	{
+		Renderer::DrawDebugRect(Offset, Size, sf::Color::Green);
 	}
 
 }

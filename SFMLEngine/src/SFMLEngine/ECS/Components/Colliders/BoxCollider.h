@@ -32,6 +32,8 @@ namespace SFMLEngine {
 
 		const sf::Vector2f& GetBounds() const { return Size; }
 
+		void DrawDebug();
+
 	private:
 		bool m_Modified = false;
 	};
