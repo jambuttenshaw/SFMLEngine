@@ -3,10 +3,9 @@
 #include "CircleCollider.h"
 #include "TilemapCollider.h"
 
-#include "../../../Log.h"
-#include "../../../Math.h"
-
-#include "../../../Renderer/Renderer.h"
+#include "SFMLEngine/Log.h"
+#include "SFMLEngine/Math.h"
+#include "SFMLEngine/Renderer/Renderer.h"
 
 
 namespace SFMLEngine {

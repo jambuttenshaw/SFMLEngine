@@ -1,9 +1,9 @@
 #include "TilemapSystem.h"
 
 
-#include "../../ECS/Components/Transform.h"
-#include "../../ECS/Components/Tilemap.h"
-#include "../../ECS/Components/Colliders/TilemapCollider.h"
+#include "SFMLEngine/ECS/Components/Transform.h"
+#include "SFMLEngine/ECS/Components/Tilemap.h"
+#include "SFMLEngine/ECS/Components/Colliders/TilemapCollider.h"
 
 
 namespace SFMLEngine {

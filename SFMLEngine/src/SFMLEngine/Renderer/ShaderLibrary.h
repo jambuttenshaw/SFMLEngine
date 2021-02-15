@@ -3,9 +3,9 @@
 #include <GL/glew.h>
 #include <SFML/Graphics.hpp>
 
-#include "../Constants.h"
-#include "../Log.h"
-#include "../ResourceManagement/ResourceManager.h"
+#include "SFMLEngine/Constants.h"
+#include "SFMLEngine/Log.h"
+#include "SFMLEngine/ResourceManagement/ResourceManager.h"
 
 #include <unordered_map>
 

@@ -2,7 +2,7 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "../ECS/Coordinator.h"
+#include "SFMLEngine/ECS/Coordinator.h"
 
 
 namespace SFMLEngine {

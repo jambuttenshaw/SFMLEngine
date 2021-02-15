@@ -2,11 +2,11 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "../ECS/Coordinator.h"
-#include "../ECS/Components/Transform.h"
-#include "../ECS/Components/SpriteRenderer.h"
+#include "SFMLEngine/ECS/Coordinator.h"
+#include "SFMLEngine/ECS/Components/Transform.h"
+#include "SFMLEngine/ECS/Components/SpriteRenderer.h"
+#include "SFMLEngine/Renderer/Material.h"
 
-#include "../Renderer/Material.h"
 
 namespace SFMLEngine {
 

@@ -46,7 +46,8 @@ project "SFMLEngine"
 
 	includedirs
 	{
-		"src",
+		"%{wks.location}/SFMLEngine/src",
+		"%{wks.location}/SFMLEngine/assets/scripts",
 		"%{IncludeDir.SFML}",
 		"%{IncludeDir.spdlog}",
 		"%{IncludeDir.glew}",

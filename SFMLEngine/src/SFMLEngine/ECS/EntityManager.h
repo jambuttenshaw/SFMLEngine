@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Constants.h"
+#include "SFMLEngine/Constants.h"
 
 #include <array>
 #include <queue>

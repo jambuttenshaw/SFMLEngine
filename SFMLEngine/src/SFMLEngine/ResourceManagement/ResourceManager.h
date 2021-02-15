@@ -2,8 +2,8 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "../Constants.h"
-#include "../Core.h"
+#include "SFMLEngine/Constants.h"
+#include "SFMLEngine/Core.h"
 
 #include <queue>
 #include <unordered_map>

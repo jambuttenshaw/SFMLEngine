@@ -4,11 +4,11 @@
 #include <SFML/Graphics.hpp>
 
 // scripts
-#include "Scripts/GoToMouse.h"
-#include "Scripts/MoveByWASD.h"
-#include "Scripts/ClickToDestroyTile.h"
-#include "Scripts/ClickToPlace.h"
-#include "Scripts/PlayerController.h"
+#include "GoToMouse.h"
+#include "MoveByWASD.h"
+#include "ClickToDestroyTile.h"
+#include "ClickToPlace.h"
+#include "PlayerController.h"
 
 
 #include <cstdlib>

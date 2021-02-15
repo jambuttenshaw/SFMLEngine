@@ -3,7 +3,7 @@
 #include "BoxCollider.h"
 #include "TilemapCollider.h"
 
-#include "../../../Math.h"
+#include "SFMLEngine/Math.h"
 
 namespace SFMLEngine {
 

@@ -1,5 +1,5 @@
 #include "ScriptableEntity.h"
-#include "../Scene.h"
+#include "SFMLEngine/Scene.h"
 
 namespace SFMLEngine {
 

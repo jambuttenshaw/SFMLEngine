@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../System.h"
-#include "../ScriptableEntity.h"
+#include "SFMLEngine/ECS/System.h"
+#include "SFMLEngine/ECS/ScriptableEntity.h"
 
 #include <unordered_map>
 

@@ -1,6 +1,6 @@
 #include "PhysicsSystem.h"
 
-#include "../../ECS/Components/NativeScripts.h"
+#include "SFMLEngine/ECS/Components/NativeScripts.h"
 
 
 namespace SFMLEngine {

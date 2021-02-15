@@ -2,9 +2,9 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "../System.h"
-#include "../../ResourceManagement/ResourceManager.h"
-#include "../../Renderer/Material.h"
+#include "SFMLEngine/ECS/System.h"
+#include "SFMLEngine/ResourceManagement/ResourceManager.h"
+#include "SFMLEngine/Renderer/Material.h"
 
 
 namespace SFMLEngine {

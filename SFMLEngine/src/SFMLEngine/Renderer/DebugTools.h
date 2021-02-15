@@ -2,7 +2,7 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "../ResourceManagement/ResourceManager.h"
+#include "SFMLEngine/ResourceManagement/ResourceManager.h"
 
 
 namespace SFMLEngine {

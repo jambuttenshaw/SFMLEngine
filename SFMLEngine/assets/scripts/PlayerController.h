@@ -1,8 +1,6 @@
 #pragma once
 
-#pragma once
-
-#include "../SFMLEngine.h"
+#include <SFMLEngine.h>
 
 using namespace SFMLEngine;
 

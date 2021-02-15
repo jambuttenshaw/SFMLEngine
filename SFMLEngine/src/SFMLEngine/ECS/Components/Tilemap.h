@@ -2,8 +2,8 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "../../Constants.h"
-#include "../../Renderer/TilePalette.h"
+#include "SFMLEngine/Constants.h"
+#include "SFMLEngine/Renderer/TilePalette.h"
 
 
 namespace SFMLEngine {

@@ -2,7 +2,7 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "../System.h"
+#include "SFMLEngine/ECS/System.h"
 
 
 namespace SFMLEngine {

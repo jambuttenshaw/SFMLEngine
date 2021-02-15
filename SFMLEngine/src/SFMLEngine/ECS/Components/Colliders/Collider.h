@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include "../../System.h"
+#include "SFMLEngine/ECS/System.h"
 
 
 namespace SFMLEngine {

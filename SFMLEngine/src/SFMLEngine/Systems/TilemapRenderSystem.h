@@ -2,12 +2,12 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "../ECS/Coordinator.h"
-#include "../ECS/Components/Transform.h"
-#include "../ECS/Components/Tilemap.h"
-#include "../ECS/Components/TilemapRenderer.h"
+#include "SFMLEngine/ECS/Coordinator.h"
+#include "SFMLEngine/ECS/Components/Transform.h"
+#include "SFMLEngine/ECS/Components/Tilemap.h"
+#include "SFMLEngine/ECS/Components/TilemapRenderer.h"
+#include "SFMLEngine/Renderer/Material.h"
 
-#include "../Renderer/Material.h"
 
 
 namespace SFMLEngine {

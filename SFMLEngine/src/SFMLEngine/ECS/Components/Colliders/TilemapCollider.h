@@ -2,8 +2,8 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "../../System.h"
-#include "../Tilemap.h"
+#include "SFMLEngine/ECS/System.h"
+#include "SFMLEngine/ECS/Components/Tilemap.h"
 #include "CollisionData.h"
 
 

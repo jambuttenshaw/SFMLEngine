@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../Constants.h"
+#include "SFMLEngine/Constants.h"
 #include "ComponentArray.h"
-#include "../Core.h"
+#include "SFMLEngine/Core.h"
 
 #include <unordered_map>
 #include <memory>

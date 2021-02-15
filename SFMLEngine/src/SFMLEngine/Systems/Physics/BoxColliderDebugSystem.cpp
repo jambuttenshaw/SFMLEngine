@@ -1,8 +1,8 @@
 #include "BoxColliderDebugSystem.h"
 
 
-#include "../../ECS/Components/Transform.h"
-#include "../../ECS/Components/Colliders/BoxCollider.h"
+#include "SFMLEngine/ECS/Components/Transform.h"
+#include "SFMLEngine/ECS/Components/Colliders/BoxCollider.h"
 
 
 namespace SFMLEngine {

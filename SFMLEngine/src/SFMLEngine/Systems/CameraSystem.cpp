@@ -1,7 +1,7 @@
 #include "CameraSystem.h"
 
-#include "../ECS/Components/Transform.h"
-#include "../ECS/Components/Camera.h"
+#include "SFMLEngine/ECS/Components/Transform.h"
+#include "SFMLEngine/ECS/Components/Camera.h"
 
 namespace SFMLEngine {
 

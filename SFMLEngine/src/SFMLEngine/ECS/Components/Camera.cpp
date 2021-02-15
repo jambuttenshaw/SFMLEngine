@@ -1,6 +1,6 @@
 #include "Camera.h"
 
-#include "../../Application.h"
+#include "SFMLEngine/Application.h"
 
 // had to create a cpp file for camera since application was needed,
 // and including application in the header will lead to circular includes

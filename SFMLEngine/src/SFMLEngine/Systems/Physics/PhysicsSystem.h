@@ -1,13 +1,13 @@
 #pragma once
 
 
-#include "../../ECS/Coordinator.h"
-#include "../../ECS/Components/Rigidbody.h"
-#include "../../ECS/Components/Transform.h"
+#include "SFMLEngine/ECS/Coordinator.h"
+#include "SFMLEngine/ECS/Components/Rigidbody.h"
+#include "SFMLEngine/ECS/Components/Transform.h"
+#include "SFMLEngine/Timestep.h"
 
 #include "CollisionSystem.h"
 
-#include "../../Timestep.h"
 
 
 namespace SFMLEngine {

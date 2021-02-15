@@ -3,9 +3,8 @@
 #include "BoxCollider.h"
 #include "CircleCollider.h"
 
-#include "../../../Math.h"
-
-#include "../../../Renderer/Renderer.h"
+#include "SFMLEngine/Math.h"
+#include "SFMLEngine/Renderer/Renderer.h"
 
 #include <algorithm>
 

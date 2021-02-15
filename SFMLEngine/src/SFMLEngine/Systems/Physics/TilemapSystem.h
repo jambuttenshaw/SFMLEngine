@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include "../../ECS/Coordinator.h"
+#include "SFMLEngine/ECS/Coordinator.h"
 
 
 namespace SFMLEngine {

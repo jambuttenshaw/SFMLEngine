@@ -1,7 +1,7 @@
 #include "DirectionalLightSystem.h"
 
-#include "../../ECS/Components/DirectionalLight.h"
-#include "../../Renderer/Material.h"
+#include "SFMLEngine/ECS/Components/DirectionalLight.h"
+#include "SFMLEngine/Renderer/Material.h"
 
 #include <Tracy.hpp>
 

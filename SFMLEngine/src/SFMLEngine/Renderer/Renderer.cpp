@@ -3,7 +3,7 @@
 #include <GL/glew.h>
 #include <SFML/OpenGL.hpp>
 
-#include "../Core.h"
+#include "SFMLEngine/Core.h"
 
 #include "Material.h"
 

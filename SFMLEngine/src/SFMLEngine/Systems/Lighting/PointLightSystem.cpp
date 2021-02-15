@@ -1,8 +1,8 @@
 #include "PointLightSystem.h"
 
-#include "../../ECS/Components/PointLight.h"
-#include "../../ECS/Components/Transform.h"
-#include "../../Renderer/Material.h"
+#include "SFMLEngine/ECS/Components/PointLight.h"
+#include "SFMLEngine/ECS/Components/Transform.h"
+#include "SFMLEngine/Renderer/Material.h"
 
 #include <Tracy.hpp>
 

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../Constants.h"
-#include "../Timestep.h"
-#include "../Systems/Physics/CollisionSystem.h"
+#include "SFMLEngine/Constants.h"
+#include "SFMLEngine/Timestep.h"
+#include "SFMLEngine/Systems/Physics/CollisionSystem.h"
 
 #include <SFML/System.hpp>
 

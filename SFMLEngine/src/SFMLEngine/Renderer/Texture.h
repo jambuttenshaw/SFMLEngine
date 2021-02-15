@@ -2,8 +2,8 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "../Constants.h"
-#include "../ResourceManagement/ResourceManager.h"
+#include "SFMLEngine/Constants.h"
+#include "SFMLEngine/ResourceManagement/ResourceManager.h"
 
 namespace SFMLEngine {
 

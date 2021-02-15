@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../Constants.h"
-#include "../Core.h"
+#include "SFMLEngine/Constants.h"
+#include "SFMLEngine/Core.h"
 
 #include <unordered_map>
 

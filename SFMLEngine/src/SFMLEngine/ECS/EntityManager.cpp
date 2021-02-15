@@ -1,6 +1,6 @@
 #include "EntityManager.h"
 
-#include "../Core.h"
+#include "SFMLEngine/Core.h"
 
 namespace SFMLEngine {
 

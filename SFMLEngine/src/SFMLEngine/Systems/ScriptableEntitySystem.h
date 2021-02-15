@@ -1,10 +1,10 @@
 #pragma once
 
-#include "../ECS/Coordinator.h"
-#include "../ECS/Components/NativeScripts.h"
-#include "../ECS/System.h"
+#include "SFMLEngine/ECS/Coordinator.h"
+#include "SFMLEngine/ECS/Components/NativeScripts.h"
+#include "SFMLEngine/ECS/System.h"
+#include "SFMLEngine/Timestep.h"
 
-#include "../Timestep.h"
 
 namespace SFMLEngine {
 
