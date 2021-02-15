@@ -41,7 +41,7 @@ public:
 
 			m_Tilemap = m_Scene->CreateEntity();
 
-			m_Scene->AddComponent(m_Tilemap, Transform{ sf::Vector2f(0, 0) });
+			m_Scene->AddComponent(m_Tilemap, Transform{ sf::Vector2f(0, 300) });
 			
 			ResourceID tilePaletteID = TilePalette::Create(sf::Vector2u(64, 64));
 			TilePalette* tilePalette = ResourceManager::GetResourceHandle<TilePalette>(tilePaletteID);
@@ -52,7 +52,7 @@ public:
 			Tilemap tilemapComponent{ tilePaletteID };
 
 			// place tiles into the tilemap
-			int numTiles = 32;
+			int numTiles = 64;
 			for (int x = 0; x < numTiles; x++)
 			{
 				int yOff = rand() % 3;
