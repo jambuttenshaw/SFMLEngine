@@ -18,7 +18,7 @@ namespace SFMLEngine {
 		// start with fresh geometry
 		m_CollisionGeometry.clear();
 
-		
+
 		// create a quad for each tile in the tilemap
 		for (auto& tile : TilemapHandle->Tiles)
 		{
@@ -30,63 +30,126 @@ namespace SFMLEngine {
 				TilemapHandle->TileSize
 				});
 		}
-		
-		// then optimize out as many of those quads as possible
-		bool optimal = false;
-		std::vector<size_t> indicesToDelete;
 
-		while (!optimal) {
-			optimal = true;
+		{
+			// then optimize out as many of those quads as possible
+			bool optimal = false;
+			std::vector<size_t> indicesToDelete;
 
-			// we want to combine as many horizontally adjacent quads as we can
-			size_t index = 0;
-			for (auto& quad : m_CollisionGeometry)
-			{
-				// we dont want to try to optimize quads that are to be removed this pass
-				if (std::find(indicesToDelete.begin(), indicesToDelete.end(), index) != indicesToDelete.end()) continue;
+			while (!optimal) {
+				optimal = true;
 
-				size_t jIndex = 0;
-				// look to see if there are any other quads at the same y level
-				for (auto& secondQuad : m_CollisionGeometry)
+				// we want to combine as many horizontally adjacent quads as we can
+				size_t index = 0;
+				for (auto& quad : m_CollisionGeometry)
 				{
-					if (std::find(indicesToDelete.begin(), indicesToDelete.end(), jIndex) != indicesToDelete.end()) continue;
+					// we dont want to try to optimize quads that are to be removed this pass
+					if (std::find(indicesToDelete.begin(), indicesToDelete.end(), index) != indicesToDelete.end()) continue;
 
-					if (secondQuad.top == quad.top && secondQuad != quad)
+					size_t jIndex = 0;
+					// look to see if there are any other quads at the same y level
+					for (auto& secondQuad : m_CollisionGeometry)
 					{
-						// check to see if they are adjacent
-						bool firstQuadLeftmost = quad.left < secondQuad.left;
-						if (fabsf(quad.left - secondQuad.left) == (firstQuadLeftmost ? quad.width : secondQuad.width))
+						if (std::find(indicesToDelete.begin(), indicesToDelete.end(), jIndex) != indicesToDelete.end()) continue;
+
+						if (secondQuad.top == quad.top && secondQuad != quad)
 						{
-							// they are adjacent!
-							optimal = false;
-
-							quad.width += secondQuad.width;
-							if (!firstQuadLeftmost)
+							// check to see if they are adjacent
+							bool firstQuadLeftmost = quad.left < secondQuad.left;
+							if (fabsf(quad.left - secondQuad.left) == (firstQuadLeftmost ? quad.width : secondQuad.width))
 							{
-								// second quad is to the left of the first quad
-								// we also need to move the quad to the left by the width of the second quad
-								quad.left -= secondQuad.width;
+								// they are adjacent!
+								optimal = false;
+
+								quad.width += secondQuad.width;
+								if (!firstQuadLeftmost)
+								{
+									// second quad is to the left of the first quad
+									// we also need to move the quad to the left by the width of the second quad
+									quad.left -= secondQuad.width;
+								}
+
+								// set the second quad to be removed
+								// add the index of the second quad to the set
+								indicesToDelete.push_back(jIndex);
 							}
-
-							// set the second quad to be removed
-							// add the index of the second quad to the set
-							indicesToDelete.push_back(jIndex);
 						}
+						jIndex++;
 					}
-					jIndex++;
+					index++;
 				}
-				index++;
-			}
 
-			// delete any quads that were optimized out
-			std::sort(indicesToDelete.begin(), indicesToDelete.end(), std::greater<size_t>());
-			for (auto& i : indicesToDelete)
-			{
-				m_CollisionGeometry.erase(m_CollisionGeometry.begin() + i);
+				// delete any quads that were optimized out
+				std::sort(indicesToDelete.begin(), indicesToDelete.end(), std::greater<size_t>());
+				for (auto& i : indicesToDelete)
+				{
+					m_CollisionGeometry.erase(m_CollisionGeometry.begin() + i);
+				}
+				indicesToDelete.clear();
 			}
-			indicesToDelete.clear();
 		}
-		
+
+		{
+			// a second round of optimization
+			bool optimal = false;
+			std::vector<size_t> indicesToDelete;
+
+			while (!optimal) {
+				optimal = true;
+
+				// we want to combine as many vertically adjacent quads of identical width as we can
+				size_t index = 0;
+				for (auto& quad : m_CollisionGeometry)
+				{
+					// we dont want to try to optimize quads that are to be removed this pass
+					if (std::find(indicesToDelete.begin(), indicesToDelete.end(), index) != indicesToDelete.end()) continue;
+
+					size_t jIndex = 0;
+					// look to see if there are any other quads of the same width and horizontally aligned
+					for (auto& secondQuad : m_CollisionGeometry)
+					{
+						if (std::find(indicesToDelete.begin(), indicesToDelete.end(), jIndex) != indicesToDelete.end()) continue;
+
+						// quads must have the same x coordinate
+						// they must be the same width
+						// and they must not be the same quad
+						if ((secondQuad.left == quad.left) && (secondQuad.width == quad.width) && (secondQuad != quad))
+						{
+							// check to see if they are adjacent
+							bool firstQuadAbove = quad.top < secondQuad.top;
+							if (fabsf(quad.top - secondQuad.top) == (firstQuadAbove ? quad.height : secondQuad.height))
+							{
+								// they are adjacent!
+								optimal = false;
+
+								quad.height += secondQuad.height;
+								if (!firstQuadAbove)
+								{
+									// second quad is to the left of the first quad
+									// we also need to move the quad to the left by the width of the second quad
+									quad.top -= secondQuad.height;
+								}
+
+								// set the second quad to be removed
+								// add the index of the second quad to the set
+								indicesToDelete.push_back(jIndex);
+							}
+						}
+						jIndex++;
+					}
+					index++;
+				}
+
+				// delete any quads that were optimized out
+				std::sort(indicesToDelete.begin(), indicesToDelete.end(), std::greater<size_t>());
+				for (auto& i : indicesToDelete)
+				{
+					m_CollisionGeometry.erase(m_CollisionGeometry.begin() + i);
+				}
+				indicesToDelete.clear();
+			}
+		}
+		// we have a fully optimized tilemap collider  B-)
 	}
 
 	void TilemapCollider::FindBoundary()
@@ -115,8 +178,6 @@ namespace SFMLEngine {
 		sf::Vector2f otherOffsetPos = other.Offset + otherPos;
 		sf::FloatRect otherBoundingBox{ otherOffsetPos, other.Size };
 
-		Renderer::DrawDebugRect(otherOffsetPos, other.Size, sf::Color::Red);
-
 		bool collides = false;
 		sf::FloatRect collidedQuad;
 		for (auto const& quad : m_CollisionGeometry)
@@ -129,14 +190,14 @@ namespace SFMLEngine {
 			}
 		}
 
-		return CollisionData{ collides, collidedQuad };
+		return CollisionData{ collides, collidedQuad, sf::Vector2f() };
 
 	}
 
 	CollisionData TilemapCollider::Colliding(CircleCollider& other, const sf::Vector2f& otherPos)
 	{
 		// tilemap vs circle collider collision
-		return CollisionData{ false, sf::FloatRect() };
+		return CollisionData{ false, sf::FloatRect(), sf::Vector2f() };
 	}
 
 	void TilemapCollider::DrawDebug(const sf::Transform& transform)

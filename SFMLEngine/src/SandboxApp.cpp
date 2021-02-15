@@ -117,7 +117,7 @@ public:
 			// add a rigidbody so this entity is affected by physics
 			m_Scene->AddComponent(m_PhysicsEntity, Rigidbody{ 0.1f });
 			m_Scene->AddComponent(m_PhysicsEntity, Collider{ ColliderType::Box });
-			m_Scene->AddComponent(m_PhysicsEntity, BoxCollider{ sf::Vector2f(64, 128), sf::Vector2f(0, 0) });
+			m_Scene->AddComponent(m_PhysicsEntity, BoxCollider{ sf::Vector2f(34, 96), sf::Vector2f(16, 32) });
 
 			// add the sprite renderer component
 			m_Scene->AddComponent(m_PhysicsEntity, SpriteRenderer{

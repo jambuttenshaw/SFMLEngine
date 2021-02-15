@@ -10,6 +10,7 @@ namespace SFMLEngine {
 	{
 		bool Collided;
 		sf::FloatRect Hitbox;
+		sf::Vector2f Offset;
 	};
 
 }

@@ -22,7 +22,7 @@ namespace SFMLEngine {
 		bool overlapX = Offset.x + Size.x >= otherOffsetPos.x && otherOffsetPos.x + other.Size.x >= Offset.x;
 		bool overlapY = Offset.y + Size.y >= otherOffsetPos.y && otherOffsetPos.y + other.Size.y >= Offset.y;
 
-		return CollisionData{ overlapX && overlapY, sf::FloatRect{ Offset, Size } };
+		return CollisionData{ overlapX && overlapY, sf::FloatRect{ Offset, Size }, Offset };
 	}
 
 	CollisionData BoxCollider::Colliding(CircleCollider& other, const sf::Vector2f& otherPos)
@@ -34,7 +34,7 @@ namespace SFMLEngine {
 
 		sf::Vector2f diff = centre - circleCentre + Clamp(circleCentre - centre, -half_extents, half_extents);
 
-		return CollisionData{ SquareMagnitude(diff) <= other.Radius * other.Radius, sf::FloatRect() };
+		return CollisionData{ SquareMagnitude(diff) <= other.Radius * other.Radius, sf::FloatRect{ Offset, Size }, Offset };
 	}
 
 	CollisionData BoxCollider::Colliding(TilemapCollider& other, const sf::Vector2f& otherPos)

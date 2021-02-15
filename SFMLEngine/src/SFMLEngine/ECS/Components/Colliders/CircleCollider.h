@@ -32,6 +32,7 @@ namespace SFMLEngine {
 		CollisionData Colliding(TilemapCollider& other, const sf::Vector2f& otherPos);
 
 		const sf::Vector2f GetBounds() const { return 2.0f * sf::Vector2f(Radius, Radius); }
+		const sf::Vector2f GetOffset() const { return Offset; }
 
 		void DrawDebug() {} // cant draw cirlces atm
 

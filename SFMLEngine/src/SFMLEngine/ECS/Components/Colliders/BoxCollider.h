@@ -31,6 +31,7 @@ namespace SFMLEngine {
 		CollisionData Colliding(TilemapCollider& other, const sf::Vector2f& otherPos);
 
 		const sf::Vector2f& GetBounds() const { return Size; }
+		const sf::Vector2f& GetOffset() const { return Offset; }
 
 		void DrawDebug(const sf::Transform& transform);
 

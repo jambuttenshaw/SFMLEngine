@@ -14,6 +14,8 @@ namespace SFMLEngine {
 		Entity Other;
 		sf::FloatRect Bounds; // the boundaries of this objects collider
 		sf::FloatRect OtherBounds; // the boundaries of the object the collision occurred with
+		sf::Vector2f ColliderOffset; // the offset property of this objects collider
+		sf::Vector2f OtherColliderOffset; // the offset property of the other objects collider
 	};
 
 	class CollisionSystem : public System
@@ -59,9 +61,11 @@ namespace SFMLEngine {
 				if (collision.Collided)
 				{
 					return Collision{ true, entity,
-						sf::FloatRect{position, collider.GetBounds()},
+						sf::FloatRect{ position, collider.GetBounds() },
 						sf::FloatRect{ collision.Hitbox.left + otherTransform.Position.x, collision.Hitbox.top + otherTransform.Position.y,
-									   collision.Hitbox.width, collision.Hitbox.height } };
+									   collision.Hitbox.width, collision.Hitbox.height },
+						collider.GetOffset(),
+						collision.Offset };
 				}
 			}
 			return Collision{ false, INVALID_ENTITY_ID, sf::FloatRect(), sf::FloatRect() };

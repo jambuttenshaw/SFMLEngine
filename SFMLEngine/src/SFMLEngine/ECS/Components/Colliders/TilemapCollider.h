@@ -40,6 +40,8 @@ namespace SFMLEngine {
 		CollisionData Colliding(CircleCollider& other, const sf::Vector2f& otherPos);
 
 		const sf::Vector2f& GetBounds() const { return Size; }
+		const sf::Vector2f& GetOffset() const { return sf::Vector2f(0, 0); }
+
 		const std::vector<sf::FloatRect>& GetCollisionGeometry() { return m_CollisionGeometry; }
 
 		void DrawDebug(const sf::Transform& transform);

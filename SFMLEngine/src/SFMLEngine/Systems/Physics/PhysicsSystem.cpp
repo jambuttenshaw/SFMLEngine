@@ -69,9 +69,9 @@ namespace SFMLEngine {
 				if (collisionTest.Collided)
 				{
 					if (movement.x > 0)
-						transform.Position.x = collisionTest.OtherBounds.left - collisionTest.Bounds.width;
+						transform.Position.x = collisionTest.OtherBounds.left - collisionTest.Bounds.width - collisionTest.ColliderOffset.x;
 					else
-						transform.Position.x = collisionTest.OtherBounds.left + collisionTest.OtherBounds.width;
+						transform.Position.x = collisionTest.OtherBounds.left + collisionTest.OtherBounds.width - collisionTest.OtherColliderOffset.x - collisionTest.ColliderOffset.x;
 					rigidbody.Velocity.x = 0;
 				}
 			}
@@ -88,9 +88,9 @@ namespace SFMLEngine {
 				if (collisionTest.Collided)
 				{
 					if (movement.y > 0)
-						transform.Position.y = collisionTest.OtherBounds.top - collisionTest.Bounds.height;
+						transform.Position.y = collisionTest.OtherBounds.top - collisionTest.Bounds.height - collisionTest.ColliderOffset.y;
 					else
-						transform.Position.y = collisionTest.OtherBounds.top + collisionTest.OtherBounds.height;
+						transform.Position.y = collisionTest.OtherBounds.top + collisionTest.OtherBounds.height - collisionTest.OtherColliderOffset.y - collisionTest.ColliderOffset.y;
 						
 					rigidbody.Velocity.y = 0;
 				}

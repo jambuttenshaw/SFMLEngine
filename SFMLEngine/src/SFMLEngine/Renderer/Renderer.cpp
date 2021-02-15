@@ -43,6 +43,7 @@ namespace SFMLEngine {
 
 		// set up the opengl states we want
 		glDepthFunc(GL_LEQUAL);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	}
 
 	void Renderer::Shutdown()
@@ -71,6 +72,7 @@ namespace SFMLEngine {
 		ZoneScoped;
 		ZoneName("SetOpenGL", 9);
 		glEnable(GL_DEPTH_TEST);
+		glEnable(GL_BLEND);
 	}
 
 	void Renderer::SetUniforms()

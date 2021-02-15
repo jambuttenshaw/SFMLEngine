@@ -356,7 +356,7 @@ namespace SFMLEngine
                 {
                     ZoneScoped;
                     ZoneName("WindowClear", 11);
-                    m_Window->clear();
+                    m_Window->clear(sf::Color(0, 0, 0, 255));
                 }
                 Renderer::Clear();
 
@@ -382,8 +382,8 @@ namespace SFMLEngine
 
                 // since I have used the opengl depth buffer for ordering every drawable,
                 // I dont need to care about the order in which I draw them
-                m_SpriteRenderSystem->Render();
                 m_TilemapRenderSystem->Render();
+                m_SpriteRenderSystem->Render();
             }
 
             if (m_DisplayDebug)
