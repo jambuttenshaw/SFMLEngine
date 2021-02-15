@@ -291,6 +291,16 @@ namespace SFMLEngine
                         continue;
                     }
 
+                    if (event.type == sf::Event::GainedFocus)
+                    {
+                        Input::SetFocused(true);
+                    }
+
+                    if (event.type == sf::Event::LostFocus)
+                    {
+                        Input::SetFocused(false);
+                    }
+
                     if (event.type == sf::Event::MouseMoved)
                         Input::SetMouseDelta(sf::Vector2f((float)event.mouseMove.x, (float)event.mouseMove.y));
 

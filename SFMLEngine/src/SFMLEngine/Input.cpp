@@ -11,6 +11,8 @@ namespace SFMLEngine {
 	sf::Vector2f Input::s_OldMousePos;
 	float Input::s_WheelDelta = 0.0f;
 
+	bool Input::s_WindowFocused = true;
+
 	void Input::Init(sf::RenderWindow* window, std::shared_ptr<CameraSystem> cameraSystem)
 	{
 		ZoneScoped;
@@ -21,12 +23,12 @@ namespace SFMLEngine {
 
 	bool Input::IsKeyDown(sf::Keyboard::Key key)
 	{
-		return sf::Keyboard::isKeyPressed(key);
+		return sf::Keyboard::isKeyPressed(key) && s_WindowFocused;
 	}
 
 	bool Input::IsMouseButtonDown(sf::Mouse::Button button)
 	{
-		return sf::Mouse::isButtonPressed(button);
+		return sf::Mouse::isButtonPressed(button) && s_WindowFocused;
 	}
 
 	sf::Vector2i Input::GetMouseScreenPos()

@@ -20,8 +20,10 @@ namespace SFMLEngine {
 		static sf::Vector2i GetMouseScreenPos();
 		static sf::Vector2f GetMouseWorldPos();
 
-		static const sf::Vector2f& GetMouseDelta() { return s_MouseDelta; }
-		static float GetMouseWheelDelta() { return s_WheelDelta; }
+		static const sf::Vector2f& GetMouseDelta() { return s_WindowFocused ? s_MouseDelta : sf::Vector2f(); }
+		static float GetMouseWheelDelta() { return s_WindowFocused ? s_WheelDelta : 0; }
+
+		static void SetFocused(bool focused) { s_WindowFocused = focused; }
 
 	private:
 
@@ -36,6 +38,8 @@ namespace SFMLEngine {
 		static sf::Vector2f s_MouseDelta;
 		static sf::Vector2f s_OldMousePos;
 		static float s_WheelDelta;
+
+		static bool s_WindowFocused;
 
 	};
 
