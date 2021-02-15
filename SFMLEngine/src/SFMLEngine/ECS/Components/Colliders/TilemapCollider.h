@@ -42,7 +42,7 @@ namespace SFMLEngine {
 		const sf::Vector2f& GetBounds() const { return Size; }
 		const std::vector<sf::FloatRect>& GetCollisionGeometry() { return m_CollisionGeometry; }
 
-		void DrawDebug();
+		void DrawDebug(const sf::Transform& transform);
 
 	private:
 		void BuildCollisionGeometry();

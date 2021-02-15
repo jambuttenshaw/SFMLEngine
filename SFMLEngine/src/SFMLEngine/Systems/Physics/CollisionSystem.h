@@ -2,8 +2,8 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "../ECS/Coordinator.h"
-#include "../ECS/Components/Colliders/Collider.h"
+#include "../../ECS/Coordinator.h"
+#include "../../ECS/Components/Colliders/Collider.h"
 
 
 namespace SFMLEngine {

@@ -19,10 +19,11 @@
 
 #include "Systems/CameraSystem.h"
 
-#include "Systems/CollisionSystem.h"
-#include "Systems/PhysicsSystem.h"
+#include "Systems/Physics/CollisionSystem.h"
+#include "Systems/Physics/PhysicsSystem.h"
 
-#include "Systems/TilemapSystem.h"
+#include "Systems/Physics/TilemapSystem.h"
+#include "Systems/Physics/BoxColliderDebugSystem.h"
 
 
 #include "LayerStack.h"
@@ -77,6 +78,7 @@ namespace SFMLEngine {
 		std::shared_ptr<PhysicsSystem> m_PhysicsSystem;
 
 		std::shared_ptr<TilemapSystem> m_TilemapSystem;
+		std::shared_ptr<BoxColliderDebugSystem> m_BoxColliderDebugSystem;
 
 
 		// Debug mode stuff

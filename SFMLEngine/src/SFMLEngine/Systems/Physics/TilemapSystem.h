@@ -1,11 +1,12 @@
 #pragma once
 
 
-#include "../ECS/Coordinator.h"
+#include "../../ECS/Coordinator.h"
 
 
 namespace SFMLEngine {
 
+	struct Transform;
 	struct Tilemap;
 	struct TilemapCollider;
 
@@ -25,6 +26,7 @@ namespace SFMLEngine {
 	private:
 		Coordinator* m_Coordinator = nullptr;
 
+		std::unordered_map<Entity, Transform*> m_TransformCache;
 		std::unordered_map<Entity, Tilemap*> m_TilemapCache;
 		std::unordered_map<Entity, TilemapCollider*> m_ColliderCache;
 	};

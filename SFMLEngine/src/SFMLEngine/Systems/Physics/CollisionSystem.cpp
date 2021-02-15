@@ -1,9 +1,9 @@
 #include "CollisionSystem.h"
 
-#include "../ECS/Components/Transform.h"
-#include "../ECS/Components/Colliders/BoxCollider.h"
-#include "../ECS/Components/Colliders/CircleCollider.h"
-#include "../ECS/Components/Colliders/TilemapCollider.h"
+#include "../../ECS/Components/Transform.h"
+#include "../../ECS/Components/Colliders/BoxCollider.h"
+#include "../../ECS/Components/Colliders/CircleCollider.h"
+#include "../../ECS/Components/Colliders/TilemapCollider.h"
 
 
 namespace SFMLEngine {

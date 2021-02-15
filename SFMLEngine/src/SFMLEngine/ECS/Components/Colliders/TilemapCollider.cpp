@@ -26,11 +26,10 @@ namespace SFMLEngine {
 			// we want to deal with coordinates in tilemap space
 			// at the moment, to make the logic as simple as possible
 			m_CollisionGeometry.push_back(sf::FloatRect{
-				sf::Vector2f((tile.Position.x + 1) * TilemapHandle->TileSize.x, (tile.Position.y + 1) * TilemapHandle->TileSize.y),
+				sf::Vector2f(tile.Position.x * TilemapHandle->TileSize.x, tile.Position.y * TilemapHandle->TileSize.y),
 				TilemapHandle->TileSize
 				});
 		}
-		
 		
 		// then optimize out as many of those quads as possible
 		bool optimal = false;
@@ -55,17 +54,17 @@ namespace SFMLEngine {
 					if (secondQuad.top == quad.top && secondQuad != quad)
 					{
 						// check to see if they are adjacent
-						int diff = static_cast<int>(secondQuad.left - quad.left);
-						if (abs(diff) == quad.width)
+						bool firstQuadLeftmost = quad.left < secondQuad.left;
+						if (fabsf(quad.left - secondQuad.left) == (firstQuadLeftmost ? quad.width : secondQuad.width))
 						{
 							// they are adjacent!
 							optimal = false;
 
 							quad.width += secondQuad.width;
-							if (diff < 0)
+							if (!firstQuadLeftmost)
 							{
 								// second quad is to the left of the first quad
-								// we also need to move the quad to the left by 1 space
+								// we also need to move the quad to the left by the width of the second quad
 								quad.left -= secondQuad.width;
 							}
 
@@ -113,8 +112,10 @@ namespace SFMLEngine {
 		// tilemap vs box collider collision
 		ZoneScoped;
 
-		sf::Vector2f otherOffsetPos = other.Size + otherPos;
+		sf::Vector2f otherOffsetPos = other.Offset + otherPos;
 		sf::FloatRect otherBoundingBox{ otherOffsetPos, other.Size };
+
+		Renderer::DrawDebugRect(otherOffsetPos, other.Size, sf::Color::Red);
 
 		bool collides = false;
 		sf::FloatRect collidedQuad;
@@ -123,7 +124,7 @@ namespace SFMLEngine {
 			if (quad.intersects(otherBoundingBox))
 			{
 				collides = true;
-				collidedQuad = sf::FloatRect{ quad.left - TilemapHandle->TileSize.x, quad.top - TilemapHandle->TileSize.y, quad.width, quad.height };
+				collidedQuad = quad;
 				break;
 			}
 		}
@@ -138,11 +139,12 @@ namespace SFMLEngine {
 		return CollisionData{ false, sf::FloatRect() };
 	}
 
-	void TilemapCollider::DrawDebug()
+	void TilemapCollider::DrawDebug(const sf::Transform& transform)
 	{
 		for (auto const& rect : m_CollisionGeometry)
 		{
-			Renderer::DrawDebugRect(sf::Vector2f(rect.left, rect.top), sf::Vector2f(rect.width, rect.height), sf::Color::Green);
+			auto& transformed = transform.transformRect(rect);
+			Renderer::DrawDebugRect(sf::Vector2f(transformed.left, transformed.top), sf::Vector2f(transformed.width, transformed.height), sf::Color::Green);
 		}
 	}
 

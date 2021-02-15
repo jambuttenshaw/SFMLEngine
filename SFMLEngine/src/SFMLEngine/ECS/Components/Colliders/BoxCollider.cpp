@@ -45,9 +45,10 @@ namespace SFMLEngine {
 		return other.Colliding(*this, otherPos);
 	}
 
-	void BoxCollider::DrawDebug()
+	void BoxCollider::DrawDebug(const sf::Transform& transform)
 	{
-		Renderer::DrawDebugRect(Offset, Size, sf::Color::Green);
+		auto& transformed = transform.transformRect(sf::FloatRect(Offset.x, Offset.y, Size.x, Size.y));
+		Renderer::DrawDebugRect(sf::Vector2f(transformed.left, transformed.top), sf::Vector2f(transformed.width, transformed.height), sf::Color::Green);
 	}
 
 }

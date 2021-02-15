@@ -199,9 +199,20 @@ namespace SFMLEngine
             m_TilemapSystem->Init(m_Coordinator);
             {
                 Signature signature;
-                signature.set(m_Coordinator->GetComponentType<TilemapCollider>());
+                signature.set(m_Coordinator->GetComponentType<Transform>());
+                signature.set(m_Coordinator->GetComponentType<Tilemap>());
                 signature.set(m_Coordinator->GetComponentType<TilemapCollider>());
                 m_Coordinator->SetSystemSignature<TilemapSystem>(signature);
+            }
+
+            // Box collider debugging system
+            m_BoxColliderDebugSystem = m_Coordinator->RegisterSystem<BoxColliderDebugSystem>();
+            m_BoxColliderDebugSystem->Init(m_Coordinator);
+            {
+                Signature signature;
+                signature.set(m_Coordinator->GetComponentType<Transform>());
+                signature.set(m_Coordinator->GetComponentType<BoxCollider>());
+                m_Coordinator->SetSystemSignature<BoxColliderDebugSystem>(signature);
             }
         }
         /*
@@ -326,6 +337,8 @@ namespace SFMLEngine
 
                 // apply any changes made to components
                 m_TilemapSystem->Update();
+                if (m_DisplayDebug) m_BoxColliderDebugSystem->Update();
+
                 m_SpriteRenderSystem->Update();
                 m_TilemapRenderSystem->Update();
                 m_GUISystem->Update();

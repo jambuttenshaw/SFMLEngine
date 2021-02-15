@@ -1,7 +1,7 @@
 
 void main()
 {
-	vec4 vertex = gl_Vertex + vec4(0, 0, 1, 0);
+	vec4 vertex = gl_Vertex + vec4(0, 0, -1, 0);
 
 	gl_Position = gl_ModelViewProjectionMatrix * vertex;
 
