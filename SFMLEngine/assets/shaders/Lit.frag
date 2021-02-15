@@ -13,7 +13,7 @@ struct PointLightData
 	float Range;
 	vec4 Color;
 };
-uniform PointLightData u_PointLights[8];
+uniform PointLightData u_PointLights[4];
 uniform int u_NumPointLights;
 
 // --------------------

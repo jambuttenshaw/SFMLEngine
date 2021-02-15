@@ -62,7 +62,7 @@ namespace SFMLEngine {
 	// Lighting
 	// --------
 
-	const int MAX_POINT_LIGHTS = 8;
+	const int MAX_POINT_LIGHTS = 4;
 	const int MAX_DIRECTIONAL_LIGHTS = 2;
 
 
