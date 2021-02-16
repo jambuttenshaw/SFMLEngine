@@ -14,6 +14,7 @@ namespace SFMLEngine {
 		static void Init(sf::RenderWindow* window, std::shared_ptr<CameraSystem> cameraSystem);
 
 		static bool IsKeyDown(sf::Keyboard::Key key);
+		static bool IsKeyPressed(sf::Keyboard::Key key);
 
 		static bool IsMouseButtonDown(sf::Mouse::Button);
 
@@ -27,9 +28,10 @@ namespace SFMLEngine {
 
 	private:
 
-		static void ResetDeltas() { ZoneScoped; s_MouseDelta = sf::Vector2f(0, 0); s_WheelDelta = 0; }
+		static void Reset();
 		static void SetMouseDelta(const sf::Vector2f& newPos) { s_MouseDelta = s_OldMousePos - newPos; s_OldMousePos = newPos; }
 		static void SetWheelDelta(float delta) { s_WheelDelta = delta; }
+		static void SetPressed(sf::Keyboard::Key key) { s_KeysPressed.insert(static_cast<int>(key)); }
 
 	private:
 		static sf::RenderWindow* s_Window;
@@ -40,6 +42,9 @@ namespace SFMLEngine {
 		static float s_WheelDelta;
 
 		static bool s_WindowFocused;
+
+		// all of the keys pressed this frame
+		static std::set<int> s_KeysPressed;
 
 	};
 

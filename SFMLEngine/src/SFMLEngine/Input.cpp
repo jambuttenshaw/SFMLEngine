@@ -13,6 +13,8 @@ namespace SFMLEngine {
 
 	bool Input::s_WindowFocused = true;
 
+	std::set<int> Input::s_KeysPressed;
+
 	void Input::Init(sf::RenderWindow* window, std::shared_ptr<CameraSystem> cameraSystem)
 	{
 		ZoneScoped;
@@ -24,6 +26,12 @@ namespace SFMLEngine {
 	bool Input::IsKeyDown(sf::Keyboard::Key key)
 	{
 		return sf::Keyboard::isKeyPressed(key) && s_WindowFocused;
+	}
+
+	bool Input::IsKeyPressed(sf::Keyboard::Key key)
+	{
+		// if key is inside the set then it has been pressed this frame
+		return s_KeysPressed.find(static_cast<int>(key)) != s_KeysPressed.end();
 	}
 
 	bool Input::IsMouseButtonDown(sf::Mouse::Button button)
@@ -41,5 +49,11 @@ namespace SFMLEngine {
 		return s_Window->mapPixelToCoords(GetMouseScreenPos(), s_CameraSystem->GetMainCameraView());
 	}
 
+	void Input::Reset()
+	{ 
+		s_MouseDelta = sf::Vector2f(0, 0);
+		s_WheelDelta = 0; 
+		s_KeysPressed.clear();
+	}
 }
 

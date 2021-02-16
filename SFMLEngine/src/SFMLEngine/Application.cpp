@@ -282,7 +282,7 @@ namespace SFMLEngine
                 ZoneScoped;
                 ZoneName("HandleInput", 11);
 
-                Input::ResetDeltas();
+                Input::Reset();
 
                 // Process events
                 sf::Event event;
@@ -324,12 +324,9 @@ namespace SFMLEngine
                             m_DisplayDebug = !m_DisplayDebug;
                             continue;
                         }
-                    }
-
-                    // send event callback through to the layer stack
-                    for (Layer* layer : m_LayerStack)
-                    {
-                        layer->OnEvent(event);
+                        
+                        // send the key to input module to be registered as pressed this frame
+                        Input::SetPressed(event.key.code);
                     }
                 }
             }
@@ -347,18 +344,17 @@ namespace SFMLEngine
 
                 // Update the systems
 
-                // upadte all native scripts
-
-
+                // update all native scripts
                 m_ScriptableEntitySystem->Update(ts);
+
 
                 // update all physics
                 m_PhysicsSystem->Update(ts);
 
+
                 // apply any changes made to components
                 m_TilemapSystem->Update();
                 if (m_DisplayDebug) m_BoxColliderDebugSystem->Update();
-
                 m_SpriteRenderSystem->Update();
                 m_TilemapRenderSystem->Update();
                 m_GUISystem->Update();
