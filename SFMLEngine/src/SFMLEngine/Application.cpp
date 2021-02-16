@@ -3,6 +3,8 @@
 #include "ECS/Components.h"
 #include "Timestep.h"
 
+#include "Math.h"
+
 #include "Input.h"
 
 #include "Renderer/Renderer.h"
@@ -12,7 +14,6 @@
 
 #include "FontLibrary.h"
 
-#include <Tracy.hpp>
 
 namespace SFMLEngine
 {
@@ -23,6 +24,13 @@ namespace SFMLEngine
     {
         if (!s_Instance)
             s_Instance = this;
+
+
+        // ---------
+        // INIT MATH
+        // ---------
+
+        Math::Init();
 
         /*
         --------------------------
@@ -467,6 +475,8 @@ namespace SFMLEngine
         FontLibrary::Shutdown();
         ShaderLibrary::Shutdown();
         ResourceManager::Shutdown();
+
+        Math::Shutdown();
     }
 
 

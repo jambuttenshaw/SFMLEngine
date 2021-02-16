@@ -31,9 +31,9 @@ namespace SFMLEngine {
 		sf::Vector2f half_extents{ Size * 0.5f };
 		sf::Vector2f centre{ Offset + half_extents };
 
-		sf::Vector2f diff = centre - circleCentre + Clamp(circleCentre - centre, -half_extents, half_extents);
+		sf::Vector2f diff = centre - circleCentre + Math::Clamp(circleCentre - centre, -half_extents, half_extents);
 
-		return CollisionData{ SquareMagnitude(diff) <= other.Radius * other.Radius, sf::FloatRect{ Offset, Size }, Offset };
+		return CollisionData{ Math::SquareMagnitude(diff) <= other.Radius * other.Radius, sf::FloatRect{ Offset, Size }, Offset };
 	}
 
 	CollisionData BoxCollider::Colliding(TilemapCollider& other, const sf::Vector2f& otherPos)

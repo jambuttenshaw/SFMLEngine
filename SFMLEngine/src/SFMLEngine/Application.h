@@ -7,8 +7,8 @@
 
 // systems
 
-#include "Systems/SpriteRenderSystem.h"
-#include "Systems/TilemapRenderSystem.h"
+#include "Systems/Render/SpriteRenderSystem.h"
+#include "Systems/Render/TilemapRenderSystem.h"
 
 #include "Systems/ScriptableEntitySystem.h"
 
@@ -28,6 +28,7 @@
 
 #include "LayerStack.h"
 #include "Scene.h"
+
 
 namespace SFMLEngine {
 

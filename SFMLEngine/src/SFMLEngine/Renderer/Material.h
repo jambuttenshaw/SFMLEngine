@@ -33,8 +33,10 @@ namespace SFMLEngine {
 
 	class Material
 	{
-	public:
+	private:
 		Material(const std::string& shaderName);
+
+	public:
 		~Material();
 
 		sf::Shader* SetUniforms();

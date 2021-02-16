@@ -4,6 +4,8 @@
 #include "SFMLEngine/Core.h"
 #include "SFMLEngine/Log.h"
 
+#include "SFMLEngine/Math.h"
+
 #include "SFMLEngine/Application.h"
 #include "SFMLEngine/Layer.h"
 #include "SFMLEngine/Input.h"

@@ -1,6 +1,7 @@
 #include "DebugTools.h"
 
 #include "Material.h"
+#include "Texture.h"
 
 
 namespace SFMLEngine {
@@ -11,13 +12,13 @@ namespace SFMLEngine {
 	{
 		m_WindowHandle = window;
 
-		m_DebugRectTexture = ResourceManager::LoadFromFile<sf::Texture>("assets/textures/debugBox.png");
+		m_DebugRectTexture = Texture::Create("assets/textures/debugBox.png");
 		m_DebugMaterial = Material::Create("Debug");
 	}
 
 	DebugTools::~DebugTools()
 	{
-		ResourceManager::DeleteResource<sf::Texture>(m_DebugRectTexture);
+		Texture::Destroy(m_DebugRectTexture);
 	}
 
 	void DebugTools::Clear()

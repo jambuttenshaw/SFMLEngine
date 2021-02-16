@@ -5,14 +5,6 @@
 
 namespace SFMLEngine {
 
-	// -----
-	// MATHS
-	// -----
-
-	const float RAD_TO_DEG = 57.2958f;
-	const float DEG_TO_RAD = 0.0174533f;
-
-
 	// ---------
 	// ECS types
 	// ---------

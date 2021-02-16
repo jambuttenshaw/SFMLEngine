@@ -156,8 +156,8 @@ namespace SFMLEngine {
 		sf::Vector2f topLeft, bottomRight;
 		for (auto const& quad : m_CollisionGeometry)
 		{
-			topLeft = Max(topLeft, sf::Vector2f(quad.left, quad.top));
-			bottomRight = Max(bottomRight, sf::Vector2f(quad.left + quad.width, quad.top + quad.height));
+			topLeft = Math::Max(topLeft, sf::Vector2f(quad.left, quad.top));
+			bottomRight = Math::Max(bottomRight, sf::Vector2f(quad.left + quad.width, quad.top + quad.height));
 		}
 
 		Size = bottomRight - topLeft;

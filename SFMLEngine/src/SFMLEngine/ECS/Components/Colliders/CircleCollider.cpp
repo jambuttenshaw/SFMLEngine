@@ -17,7 +17,7 @@ namespace SFMLEngine {
 
 		sf::Vector2f d = otherCentre - thisCentre;
 
-		bool collision = Dot(d, d) <= Radius * Radius + other.Radius * other.Radius;
+		bool collision = Math::Dot(d, d) <= Radius * Radius + other.Radius * other.Radius;
 
 		return CollisionData{ collision, sf::FloatRect{ Offset, sf::Vector2f(Radius, Radius) } };
 	}

@@ -11,10 +11,6 @@
 #include "PlayerController.h"
 
 
-#include <cstdlib>
-#include <ctime>
-
-
 using namespace SFMLEngine;
 
 class GameLayer : public Layer
