@@ -55,21 +55,21 @@ namespace SFMLEngine {
 	int Math::RandomInt(int min, int max)
 	{
 		std::uniform_int_distribution<int> dist(min, max);
-		return dist(s_RandomNumberGenerator);
+		return dist(*s_RandomNumberGenerator);
 	}
 
-	float Math::RandomFloat(int max)
+	float Math::RandomFloat(float max)
 	{
 		return RandomFloat(0, max);
 	}
-	float Math::RandomFloat(int min, int max)
+	float Math::RandomFloat(float min, float max)
 	{
 		std::uniform_real_distribution<float> dist(min, max);
-		return dist(s_RandomNumberGenerator);
+		return dist(*s_RandomNumberGenerator);
 	}
 	float Math::RandomNormalizedFloat()
 	{
-		return s_NormamlizedFloatDistribution(s_RandomNumberGenerator);
+		return s_NormamlizedFloatDistribution(*s_RandomNumberGenerator);
 	}
 
 

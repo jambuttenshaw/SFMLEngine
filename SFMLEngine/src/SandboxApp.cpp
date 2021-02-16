@@ -19,8 +19,6 @@ public:
 	GameLayer()
 		: Layer()
 	{
-		srand(time(0));
-
 		// create a new scene
 		m_Scene = Application::GetApplicationHandle()->CreateScene();
 
@@ -39,13 +37,9 @@ public:
 
 			m_Scene->AddComponent(m_Tilemap, Transform{ sf::Vector2f(0, 300) });
 			
-			ResourceID tilePaletteID = TilePalette::LoadFromFile("assets/textures/terrain.png", "assets/textures/terrainNormals.png", sf::Vector2u(64, 64));
+			ResourceID tilePaletteID = TilePalette::LoadFromFile("assets/textures/terrain.png", "assets/textures/terrainNormals.png", sf::Vector2u(32, 32));
 			TilePalette* tilePalette = ResourceManager::GetResourceHandle<TilePalette>(tilePaletteID);
 
-			/*
-			TileID ground = tilePalette->CreateTile("ground", Texture::Create("assets/textures/ground.png"), Texture::Create("assets/textures/groundNormals.png"));
-			TileID rocks = tilePalette->CreateTile("rocks", Texture::Create("assets/textures/rocks.png"), Texture::Create("assets/textures/rockNormals.png"));
-			*/
 
 			TileID rocks = tilePalette->GetTileByName("Tile0");
 			TileID ground = tilePalette->GetTileByName("Tile1");
@@ -81,6 +75,7 @@ public:
 			m_Scene->AddNativeScript<ClickToDestroyTile>(m_Tilemap);
 		}
 
+
 		{
 			m_Background = m_Scene->CreateEntity();
 
@@ -110,6 +105,7 @@ public:
 			m_Scene->AddComponent(m_Background, tilemapRendererComponent);
 		}
 
+
 		{
 			// creating a second entity
 			m_PhysicsEntity = m_Scene->CreateEntity();
@@ -119,7 +115,7 @@ public:
 			// add a rigidbody so this entity is affected by physics
 			m_Scene->AddComponent(m_PhysicsEntity, Rigidbody{ 0.1f });
 			m_Scene->AddComponent(m_PhysicsEntity, Collider{ ColliderType::Box });
-			m_Scene->AddComponent(m_PhysicsEntity, BoxCollider{ sf::Vector2f(34, 96), sf::Vector2f(16, 32) });
+			m_Scene->AddComponent(m_PhysicsEntity, BoxCollider{ sf::Vector2f(17, 48), sf::Vector2f(8, 16) });
 
 			// add the sprite renderer component
 			m_Scene->AddComponent(m_PhysicsEntity, SpriteRenderer{
@@ -136,7 +132,7 @@ public:
 			m_Light = m_Scene->CreateEntity();
 
 			m_Scene->AddComponent(m_Light, Transform{ { 260, 300 } });
-			m_Scene->AddComponent(m_Light, PointLight{ 3.0f, 0.007f, sf::Color{220, 130, 160, 255} });
+			m_Scene->AddComponent(m_Light, PointLight{ 1.5f, 0.007f, sf::Color{220, 130, 160, 255} });
 
 			m_Scene->AddNativeScript<GoToMouse>(m_Light);
 		}
@@ -144,7 +140,7 @@ public:
 		{
 			m_Light2 = m_Scene->CreateEntity();
 
-			m_Scene->AddComponent(m_Light2, DirectionalLight{ sf::Vector3f(1, 0, 0), 1.3f, sf::Color{94, 154, 220, 255}, true });
+			m_Scene->AddComponent(m_Light2, DirectionalLight{ sf::Vector3f(1, 0, 0), 0.7f, sf::Color{94, 154, 220, 255}, true });
 		}
 	}
 

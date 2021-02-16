@@ -4,7 +4,7 @@
 #include "CircleCollider.h"
 
 #include "SFMLEngine/Math.h"
-#include "SFMLEngine/Renderer/Renderer.h"
+#include "SFMLEngine/DebugTools.h"
 
 #include <algorithm>
 
@@ -204,7 +204,7 @@ namespace SFMLEngine {
 		for (auto const& rect : m_CollisionGeometry)
 		{
 			auto& transformed = transform.transformRect(rect);
-			Renderer::DrawDebugRect(sf::Vector2f(transformed.left, transformed.top), sf::Vector2f(transformed.width, transformed.height), sf::Color::Green);
+			DebugTools::DrawRect(sf::Vector2f(transformed.left, transformed.top), sf::Vector2f(transformed.width, transformed.height), sf::Color::Green);
 		}
 	}
 

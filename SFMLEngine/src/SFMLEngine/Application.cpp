@@ -14,6 +14,8 @@
 
 #include "FontLibrary.h"
 
+#include "DebugTools.h"
+
 
 namespace SFMLEngine
 {
@@ -60,7 +62,7 @@ namespace SFMLEngine
 
 
         // init debug tools
-        Renderer::InitDebug(m_Window);
+        DebugTools::Init(m_Window);
 
         
         /*
@@ -407,9 +409,9 @@ namespace SFMLEngine
             if (m_DisplayDebug)
             {
                 // display debug game objects
-                Renderer::DrawDebug();
+                DebugTools::DrawAll();
             }
-            else Renderer::Flush();
+            else DebugTools::Clear();
 
 
             {
@@ -468,12 +470,15 @@ namespace SFMLEngine
         // shutdown the renderer
         Renderer::Shutdown();
 
+        DebugTools::Shutdown();
+
         TilePalette::DestroyAllCached();
         Material::DestroyAllCached();
         Texture::DestroyAllCached();
 
         FontLibrary::Shutdown();
         ShaderLibrary::Shutdown();
+
         ResourceManager::Shutdown();
 
         Math::Shutdown();

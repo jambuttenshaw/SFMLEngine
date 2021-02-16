@@ -40,8 +40,8 @@ private:
 	Transform* m_Transform = nullptr;
 	Rigidbody* m_Rigidbody = nullptr;
 
-	float m_MoveSpeed = 400.0f;
-	float m_JumpPower = 75000.0f;
+	float m_MoveSpeed = 250.0f;
+	float m_JumpPower = 70000.0f;
 
 	float m_FallMultiplier = 1.5;
 };

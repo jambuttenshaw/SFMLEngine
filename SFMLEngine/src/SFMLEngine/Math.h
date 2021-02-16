@@ -19,8 +19,8 @@ namespace SFMLEngine {
 		CONSTANTS
 		*/
 
-		const float RAD_TO_DEG = 57.2958f;
-		const float DEG_TO_RAD = 0.0174533f;
+		static inline const float RAD_TO_DEG = 57.2958f;
+		static inline const float DEG_TO_RAD = 0.0174533f;
 
 
 		/*
@@ -44,8 +44,8 @@ namespace SFMLEngine {
 		static int RandomInt(int max);
 		static int RandomInt(int min, int max);
 
-		static float RandomFloat(int max);
-		static float RandomFloat(int min, int max);
+		static float RandomFloat(float max);
+		static float RandomFloat(float min, float max);
 		static float RandomNormalizedFloat();
 
 	private:

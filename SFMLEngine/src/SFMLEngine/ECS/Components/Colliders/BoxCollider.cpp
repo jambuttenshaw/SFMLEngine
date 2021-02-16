@@ -5,7 +5,7 @@
 
 #include "SFMLEngine/Log.h"
 #include "SFMLEngine/Math.h"
-#include "SFMLEngine/Renderer/Renderer.h"
+#include "SFMLEngine/DebugTools.h"
 
 
 namespace SFMLEngine {
@@ -47,7 +47,7 @@ namespace SFMLEngine {
 	void BoxCollider::DrawDebug(const sf::Transform& transform)
 	{
 		auto& transformed = transform.transformRect(sf::FloatRect(Offset.x, Offset.y, Size.x, Size.y));
-		Renderer::DrawDebugRect(sf::Vector2f(transformed.left, transformed.top), sf::Vector2f(transformed.width, transformed.height), sf::Color::Green);
+		DebugTools::DrawRect(sf::Vector2f(transformed.left, transformed.top), sf::Vector2f(transformed.width, transformed.height), sf::Color::Green);
 	}
 
 }
