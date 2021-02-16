@@ -21,6 +21,44 @@ namespace SFMLEngine {
 		}
 	}
 
+	TilePalette::TilePalette(const std::string& texturePath, const std::string& normalMapPath, const sf::Vector2u& tileSize)
+		: m_TileSize(tileSize), m_TileAtlas()
+	{
+		// load the textures from their files
+		m_PaletteTextureID = Texture::Create(texturePath);
+		m_NormalMapTextureID = Texture::Create(normalMapPath);
+
+		// create the queue for tile IDs
+		for (TileID i = 0; i < MAX_TILES; i++)
+		{
+			m_AvailableTileIDs.push(i);
+		}
+
+
+		// we need to add all of the tiles currently existing in the texture to the tile atlas
+		auto texPtr = ResourceManager::GetResourceHandle<sf::Texture>(m_PaletteTextureID);
+		auto const& dims = texPtr->getSize();
+
+		// get the number of tiles currently in the spritesheet
+		unsigned int numTilesX = dims.x / m_TileSize.x;
+		unsigned int numTilesY = dims.y / m_TileSize.y;
+
+		SFMLE_CORE_ASSERT(numTilesX > 0 && numTilesY > 0, "Invalid tile palette texture!");
+
+		for (unsigned int x = 0; x < numTilesX; x++)
+		{
+			for (unsigned int y = 0; y < numTilesY; y++)
+			{
+				// place the tile data into the tile atlas
+				TileID newID = GetNextTileID();
+				m_TileAtlas.insert(std::make_pair(newID, TileData{ "Tile" + std::to_string(y * numTilesX + x), sf::Vector2u(x * m_TileSize.x, y * m_TileSize.y) }));
+			}
+		}
+		// assign the place to put more tiles in case more are added by scripts later
+		m_PlaceX = (numTilesX + 1) * m_TileSize.x;
+		m_PlaceY = 0;
+	}
+
 	TilePalette::~TilePalette()
 	{
 		// destroy the textures
@@ -139,6 +177,15 @@ namespace SFMLEngine {
 	ResourceID TilePalette::Create(const sf::Vector2u& tileSize)
 	{
 		TilePalette* newPalette = new TilePalette(tileSize);
+		ResourceID newID = ResourceManager::ManageResource(newPalette);
+
+		s_PaletteCache.push_back(newID);
+		return newID;
+	}
+
+	ResourceID TilePalette::LoadFromFile(const std::string& texturePath, const std::string& normalsPath, const sf::Vector2u& tileSize)
+	{
+		TilePalette* newPalette = new TilePalette(texturePath, normalsPath, tileSize);
 		ResourceID newID = ResourceManager::ManageResource(newPalette);
 
 		s_PaletteCache.push_back(newID);

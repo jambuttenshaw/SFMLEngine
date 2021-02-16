@@ -43,11 +43,17 @@ public:
 
 			m_Scene->AddComponent(m_Tilemap, Transform{ sf::Vector2f(0, 300) });
 			
-			ResourceID tilePaletteID = TilePalette::Create(sf::Vector2u(64, 64));
+			ResourceID tilePaletteID = TilePalette::LoadFromFile("assets/textures/terrain.png", "assets/textures/terrainNormals.png", sf::Vector2u(64, 64));
 			TilePalette* tilePalette = ResourceManager::GetResourceHandle<TilePalette>(tilePaletteID);
 
+			/*
 			TileID ground = tilePalette->CreateTile("ground", Texture::Create("assets/textures/ground.png"), Texture::Create("assets/textures/groundNormals.png"));
 			TileID rocks = tilePalette->CreateTile("rocks", Texture::Create("assets/textures/rocks.png"), Texture::Create("assets/textures/rockNormals.png"));
+			*/
+
+			TileID rocks = tilePalette->GetTileByName("Tile0");
+			TileID ground = tilePalette->GetTileByName("Tile1");
+
 
 			Tilemap tilemapComponent{ tilePaletteID };
 

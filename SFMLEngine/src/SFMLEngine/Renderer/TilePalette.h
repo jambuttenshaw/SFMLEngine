@@ -17,8 +17,13 @@ namespace SFMLEngine {
 
 	class TilePalette
 	{
-	public:
+	private:
+		// private constructors
+		// use the ::Create or ::LoadFromFile methods to create tile palettes
 		TilePalette(const sf::Vector2u& tileSize);
+		TilePalette(const std::string& texturePath, const std::string& normalMapPath, const sf::Vector2u& tileSize);
+
+	public:
 		~TilePalette();
 
 		TileID CreateTile(const std::string& name, ResourceID tileTextureID, ResourceID tileNormalsID);
@@ -30,14 +35,15 @@ namespace SFMLEngine {
 		ResourceID GetTexture() { return m_PaletteTextureID; }
 		ResourceID GetNormalMap() { return m_NormalMapTextureID; }
 
+		TileID GetTileByName(const std::string& name);
+
 	private:
 		TileID GetNextTileID();
-
-		TileID GetTileByName(const std::string& name);
 
 	public:
 		// static methods
 		static ResourceID Create(const sf::Vector2u& tileSize);
+		static ResourceID LoadFromFile(const std::string& texturePath, const std::string& normalMapPath, const sf::Vector2u& tileSize);
 
 		static void Destroy(ResourceID palette);
 		static void DestroyAllCached();
