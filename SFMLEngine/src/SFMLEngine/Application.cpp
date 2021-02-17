@@ -293,11 +293,13 @@ namespace SFMLEngine
                     if (event.type == sf::Event::GainedFocus)
                     {
                         Input::SetFocused(true);
+                        continue;
                     }
 
                     if (event.type == sf::Event::LostFocus)
                     {
                         Input::SetFocused(false);
+                        continue;
                     }
 
                     if (event.type == sf::Event::MouseMoved)
@@ -305,6 +307,9 @@ namespace SFMLEngine
 
                     if (event.type == sf::Event::MouseWheelMoved)
                         Input::SetWheelDelta((float)event.mouseWheel.delta);
+
+                    if (event.type == sf::Event::MouseButtonPressed)
+                        Input::SetMousePressed(event.mouseButton.button);
 
                     if (event.type == sf::Event::KeyPressed)
                     {
@@ -315,7 +320,7 @@ namespace SFMLEngine
                         }
                         
                         // send the key to input module to be registered as pressed this frame
-                        Input::SetPressed(event.key.code);
+                        Input::SetKeyPressed(event.key.code);
                     }
                 }
             }
