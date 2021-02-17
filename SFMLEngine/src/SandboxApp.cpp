@@ -120,6 +120,10 @@ public:
 				-2, 0,
 				Texture::Create("assets/textures/characterNormals.png") });
 
+
+			AddComponent(m_PhysicsEntity, PointLight{ 1.5f, 0.007f, sf::Color::White });
+
+
 			AddNativeScript<ClickToPlace>(m_PhysicsEntity);
 			AddNativeScript<PlayerController>(m_PhysicsEntity);
 		}

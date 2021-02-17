@@ -43,6 +43,7 @@ namespace SFMLEngine {
 		ZoneScoped;
 		if (m_LightCount + m_StaticLightCount < MAX_DIRECTIONAL_LIGHTS)
 		{
+			int lightIndex = m_StaticLightCount;
 			for (auto const& entity : m_Entities)
 			{
 				DirectionalLight& light = m_Coordinator->GetComponent<DirectionalLight>(entity);
@@ -53,17 +54,15 @@ namespace SFMLEngine {
 					if (!matData.Lit) continue;
 
 					Material* mat = ResourceManager::GetResourceHandle<Material>(matData.MaterialID);
-					for (int i = m_StaticLightCount; i < m_LightCount + m_StaticLightCount; i++)
-					{
-						std::string lightIndex("u_DirectionalLights[" + std::to_string(i) + "]");
-						mat->SetProperty(lightIndex + ".Direction", light.Direction);
-						mat->SetProperty(lightIndex + ".Intensity", light.Intensity);
-						mat->SetProperty(lightIndex + ".Color", light.Color);
-					}
+
+					std::string lightIndex("u_DirectionalLights[" + std::to_string(i) + "]");
+					mat->SetProperty(lightIndex + ".Direction", light.Direction);
+					mat->SetProperty(lightIndex + ".Intensity", light.Intensity);
+					mat->SetProperty(lightIndex + ".Color", light.Color);
 				}
 
 				ResetModified(light);
-
+				lightIndex++;
 			}
 		}
 		else

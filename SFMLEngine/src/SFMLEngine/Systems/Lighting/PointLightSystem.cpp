@@ -47,6 +47,7 @@ namespace SFMLEngine {
 		{
 
 			// loop for each entity
+			int lightIndex = m_StaticLightCount;
 			for (auto const& entity : m_Entities)
 			{
 				// get a reference to the light component on this entity
@@ -70,28 +71,23 @@ namespace SFMLEngine {
 					Material* mat = ResourceManager::GetResourceHandle<Material>(matData.MaterialID);
 
 
-					// loop for each light
-					// we skip past the static lights as we dont want to change their data
-					for (int i = m_StaticLightCount; i < m_StaticLightCount + m_LightCount; i++)
-					{
-						// get a string to access the point light data uniform array
-						std::string lightIndex("u_PointLights[" + std::to_string(i) + "]");
-						
-						// upload the position of the light
-						mat->SetProperty(lightIndex + ".Position", sf::Vector3f(transform.Position.x, transform.Position.y, 5));
+					// get a string to access the point light data uniform array
+					std::string lightIndex("u_PointLights[" + std::to_string(lightIndex) + "]");
 
-						// if the light has been modified then we want to upload the new data
-						if (modified)
-						{
-							mat->SetProperty(lightIndex + ".Intensity", light.Intensity);
-							mat->SetProperty(lightIndex + ".Range", light.Range);
-							mat->SetProperty(lightIndex + ".Color", light.Color);
-						}
+					// upload the position of the light
+					mat->SetProperty(lightIndex + ".Position", sf::Vector3f(transform.Position.x, transform.Position.y, 5));
+
+					// if the light has been modified then we want to upload the new data
+					if (modified)
+					{
+						mat->SetProperty(lightIndex + ".Intensity", light.Intensity);
+						mat->SetProperty(lightIndex + ".Range", light.Range);
+						mat->SetProperty(lightIndex + ".Color", light.Color);
 					}
 				}
 				// if the light was flagged as modified we want to reset this now that the lighting is uploaded
 				if (modified) ResetModified(light);
-
+				lightIndex++;
 			}
 		}
 		else
