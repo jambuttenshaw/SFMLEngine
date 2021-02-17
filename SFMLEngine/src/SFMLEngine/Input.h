@@ -16,7 +16,8 @@ namespace SFMLEngine {
 		static bool IsKeyDown(sf::Keyboard::Key key);
 		static bool IsKeyPressed(sf::Keyboard::Key key);
 
-		static bool IsMouseButtonDown(sf::Mouse::Button);
+		static bool IsMouseButtonDown(sf::Mouse::Button button);
+		static bool IsMouseButtonPressed(sf::Mouse::Button button);
 
 		static sf::Vector2i GetMouseScreenPos();
 		static sf::Vector2f GetMouseWorldPos();
@@ -31,7 +32,8 @@ namespace SFMLEngine {
 		static void Reset();
 		static void SetMouseDelta(const sf::Vector2f& newPos) { s_MouseDelta = s_OldMousePos - newPos; s_OldMousePos = newPos; }
 		static void SetWheelDelta(float delta) { s_WheelDelta = delta; }
-		static void SetPressed(sf::Keyboard::Key key) { s_KeysPressed.insert(static_cast<int>(key)); }
+		static void SetKeyPressed(sf::Keyboard::Key key) { s_KeysPressed.insert(static_cast<int>(key)); }
+		static void SetMousePressed(sf::Mouse::Button button) { s_MouseButtonsPressed.insert(static_cast<int>(button)); }
 
 	private:
 		static sf::RenderWindow* s_Window;
@@ -45,6 +47,7 @@ namespace SFMLEngine {
 
 		// all of the keys pressed this frame
 		static std::set<int> s_KeysPressed;
+		static std::set<int> s_MouseButtonsPressed;
 
 	};
 

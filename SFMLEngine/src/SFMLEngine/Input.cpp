@@ -14,6 +14,7 @@ namespace SFMLEngine {
 	bool Input::s_WindowFocused = true;
 
 	std::set<int> Input::s_KeysPressed;
+	std::set<int> Input::s_MouseButtonsPressed;
 
 	void Input::Init(sf::RenderWindow* window, std::shared_ptr<CameraSystem> cameraSystem)
 	{
@@ -39,6 +40,11 @@ namespace SFMLEngine {
 		return sf::Mouse::isButtonPressed(button) && s_WindowFocused;
 	}
 
+	bool Input::IsMouseButtonPressed(sf::Mouse::Button button)
+	{
+		return s_MouseButtonsPressed.find(static_cast<int>(button)) != s_MouseButtonsPressed.end();
+	}
+
 	sf::Vector2i Input::GetMouseScreenPos()
 	{
 		return sf::Mouse::getPosition(*s_Window);
@@ -53,7 +59,9 @@ namespace SFMLEngine {
 	{ 
 		s_MouseDelta = sf::Vector2f(0, 0);
 		s_WheelDelta = 0; 
+
 		s_KeysPressed.clear();
+		s_MouseButtonsPressed.clear();
 	}
 }
 
