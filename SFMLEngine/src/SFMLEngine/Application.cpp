@@ -22,6 +22,7 @@ namespace SFMLEngine
 
     Application* Application::s_Instance = nullptr;
 
+
     Application::Application(const std::string& name, const sf::Vector2i& windowDimensions)
     {
         if (!s_Instance)
@@ -246,18 +247,6 @@ namespace SFMLEngine
         delete m_Coordinator;
     }
 
-    void Application::PushLayer(Layer* layer)
-    {
-        m_LayerStack.PushLayer(layer);
-        layer->OnAttach();
-    }
-
-    void Application::PushOverlay(Layer* overlay)
-    {
-        m_LayerStack.PushOverlay(overlay);
-        overlay->OnAttach();
-    }
-
     void Application::Run()
     {
 
@@ -334,13 +323,6 @@ namespace SFMLEngine
             {
                 ZoneScoped;
                 ZoneName("Update", 6);
-
-
-                // update the layers
-                for (Layer* layer : m_LayerStack)
-                {
-                    layer->Update(ts);
-                }
 
                 // Update the systems
 
@@ -456,11 +438,11 @@ namespace SFMLEngine
 
     void Application::Shutdown()
     {
-        size_t numLayers = m_LayerStack.GetNumLayers();
-        for (size_t i = 0; i < numLayers; i++)
+        // delete the currently open scene
+        if (m_CurrentScene)
         {
-            Layer* currentLayer = m_LayerStack.GetLayer(0);
-            m_LayerStack.PopLayer(currentLayer);
+            m_CurrentScene->Destroy();
+            delete m_CurrentScene;
         }
 
         // shutdown the renderer

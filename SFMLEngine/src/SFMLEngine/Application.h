@@ -2,8 +2,10 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "ECS/Coordinator.h"
+#include <type_traits>
 
+
+#include "ECS/Coordinator.h"
 
 // systems
 
@@ -26,7 +28,6 @@
 #include "Systems/Physics/BoxColliderDebugSystem.h"
 
 
-#include "LayerStack.h"
 #include "Scene.h"
 
 
@@ -42,12 +43,33 @@ namespace SFMLEngine {
 
 		void Shutdown();
 
-		void PushLayer(Layer* layer);
-		void PushOverlay(Layer* overlay);
-
+		
 		sf::RenderWindow* GetWindowHandle() { return m_Window; }
 
-		std::shared_ptr<Scene> CreateScene() { return std::make_shared<Scene>(m_Coordinator, m_ScriptableEntitySystem); }
+
+		template <typename T>
+		void LoadScene()
+		{
+			// T MUST inherit from Scene
+			static_assert(std::is_base_of<Scene, T>::value, "T should inherit from Scene.");
+
+			// check if theres a scene already loaded
+			if (m_CurrentScene)
+			{
+				// clear out all of the existing entities
+				m_CurrentScene->Destroy();
+				delete m_CurrentScene;
+			}
+
+			T* newScene = new T;
+			// implicit conversion to Scene* since T inherits from Scene
+			m_CurrentScene = newScene;
+
+			newScene->Init(m_Coordinator, m_ScriptableEntitySystem);
+
+			// pure virtual function that will create a scene T
+			newScene->Create();
+		}
 
 	private:
 		sf::Vector2u GetWindowDimensions() { return m_Window->getSize(); }
@@ -57,7 +79,7 @@ namespace SFMLEngine {
 
 		sf::Clock m_Clock;
 
-		LayerStack m_LayerStack;
+		Scene* m_CurrentScene = nullptr;
 
 		// ECS
 		Coordinator* m_Coordinator;

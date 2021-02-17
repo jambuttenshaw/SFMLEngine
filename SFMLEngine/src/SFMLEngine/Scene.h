@@ -8,12 +8,21 @@ namespace SFMLEngine {
 	class Scene
 	{
 	public:
-		Scene(Coordinator* coordinator, std::shared_ptr<ScriptableEntitySystem> scriptableEntitySystem)
-			: m_Coordinator(coordinator), m_ScriptableEntitySystem(scriptableEntitySystem) {}
+		Scene();
+		~Scene();
+
+		// Scene creation
+		void Init(Coordinator* coordinator, std::shared_ptr<ScriptableEntitySystem> scriptableEntitySystem);
+		void Destroy();
+
+		// pure virtual function to be overridden in the derived class
+		// that creates the entities and their components
+		virtual void Create() = 0;
+
 
 		// ENTITY MANAGEMENT
-		Entity CreateEntity() { return m_Coordinator->CreateEntity(); }
-		void DestroyEntity(Entity entity) { m_Coordinator->DestroyEntity(entity); }
+		Entity CreateEntity();
+		void DestroyEntity(Entity entity);
 
 		// COMPONENT MANAGEMENT
 		template<typename T>
@@ -33,8 +42,11 @@ namespace SFMLEngine {
 		T& GetNativeScript(Entity entity) { return m_ScriptableEntitySystem->GetNativeScript<T>(entity); }
 
 	private:
-		Coordinator* m_Coordinator;
-		std::shared_ptr<ScriptableEntitySystem> m_ScriptableEntitySystem;
+		Coordinator* m_Coordinator = nullptr;
+		std::shared_ptr<ScriptableEntitySystem> m_ScriptableEntitySystem = nullptr;
+
+		// keeps track of all entities registered in this scene
+		std::set<Entity>* m_EntityRegistry;
 	};
 
 }

@@ -13,29 +13,25 @@
 
 using namespace SFMLEngine;
 
-class GameLayer : public Layer
+class MainScene : public Scene
 {
 public:
-	GameLayer()
-		: Layer()
+	void Create() override
 	{
-		// create a new scene
-		m_Scene = Application::GetApplicationHandle()->CreateScene();
-
 		{
-			m_Camera = m_Scene->CreateEntity();
+			m_Camera = CreateEntity();
 
-			m_Scene->AddComponent(m_Camera, Transform{ sf::Vector2f(0, 0) });
-			m_Scene->AddComponent(m_Camera, Camera{ });
+			AddComponent(m_Camera, Transform{ });
+			AddComponent(m_Camera, Camera{ });
 
-			m_Scene->AddNativeScript<MoveByWASD>(m_Camera);
+			AddNativeScript<MoveByWASD>(m_Camera);
 		}
 
 		{
 
-			m_Tilemap = m_Scene->CreateEntity();
+			m_Tilemap = CreateEntity();
 
-			m_Scene->AddComponent(m_Tilemap, Transform{ sf::Vector2f(0, 300) });
+			AddComponent(m_Tilemap, Transform{ sf::Vector2f(0, 300) });
 			
 			ResourceID tilePaletteID = TilePalette::LoadFromFile("assets/textures/terrain.png", "assets/textures/terrainNormals.png", sf::Vector2u(32, 32));
 			TilePalette* tilePalette = ResourceManager::GetResourceHandle<TilePalette>(tilePaletteID);
@@ -61,25 +57,25 @@ public:
 				
 			}
 
-			m_Scene->AddComponent(m_Tilemap, tilemapComponent);
+			AddComponent(m_Tilemap, tilemapComponent);
 
 			TilemapRenderer tilemapRendererComponent{ Material::Create("LitTilemap"), -1, 0 };
-			m_Scene->AddComponent(m_Tilemap, tilemapRendererComponent);
+			AddComponent(m_Tilemap, tilemapRendererComponent);
 
 
 			// this object should be solid
 			// add a collider
-			m_Scene->AddComponent(m_Tilemap, Collider{ ColliderType::Tilemap });
-			m_Scene->AddComponent(m_Tilemap, TilemapCollider { });
+			AddComponent(m_Tilemap, Collider{ ColliderType::Tilemap });
+			AddComponent(m_Tilemap, TilemapCollider { });
 
-			m_Scene->AddNativeScript<ClickToDestroyTile>(m_Tilemap);
+			AddNativeScript<ClickToDestroyTile>(m_Tilemap);
 		}
 
 
 		{
-			m_Background = m_Scene->CreateEntity();
+			m_Background = CreateEntity();
 
-			m_Scene->AddComponent(m_Background, Transform{ sf::Vector2f(0, -400) });
+			AddComponent(m_Background, Transform{ sf::Vector2f(0, -400) });
 
 			ResourceID tilePaletteID = TilePalette::Create(sf::Vector2u(256, 256));
 			TilePalette* tilePalette = ResourceManager::GetResourceHandle<TilePalette>(tilePaletteID);
@@ -99,92 +95,61 @@ public:
 				}
 			}
 
-			m_Scene->AddComponent(m_Background, tilemapComponent);
+			AddComponent(m_Background, tilemapComponent);
 
 			TilemapRenderer tilemapRendererComponent{ Material::Create("LitTilemap"), 0, 0 };
-			m_Scene->AddComponent(m_Background, tilemapRendererComponent);
+			AddComponent(m_Background, tilemapRendererComponent);
 		}
 
 
 		{
 			// creating a second entity
-			m_PhysicsEntity = m_Scene->CreateEntity();
+			m_PhysicsEntity = CreateEntity();
 
 			// give the entity a transform
-			m_Scene->AddComponent(m_PhysicsEntity, Transform{ });
+			AddComponent(m_PhysicsEntity, Transform{ });
 			// add a rigidbody so this entity is affected by physics
-			m_Scene->AddComponent(m_PhysicsEntity, Rigidbody{ 0.1f });
-			m_Scene->AddComponent(m_PhysicsEntity, Collider{ ColliderType::Box });
-			m_Scene->AddComponent(m_PhysicsEntity, BoxCollider{ sf::Vector2f(17, 48), sf::Vector2f(8, 16) });
+			AddComponent(m_PhysicsEntity, Rigidbody{ 0.1f });
+			AddComponent(m_PhysicsEntity, Collider{ ColliderType::Box });
+			AddComponent(m_PhysicsEntity, BoxCollider{ sf::Vector2f(17, 48), sf::Vector2f(8, 16) });
 
 			// add the sprite renderer component
-			m_Scene->AddComponent(m_PhysicsEntity, SpriteRenderer{
+			AddComponent(m_PhysicsEntity, SpriteRenderer{
 				Texture::Create("assets/textures/character.png"),
 				Material::Create("Lit"),
 				-2, 0,
 				Texture::Create("assets/textures/characterNormals.png") });
 
-			m_Scene->AddNativeScript<ClickToPlace>(m_PhysicsEntity);
-			m_Scene->AddNativeScript<PlayerController>(m_PhysicsEntity);
+			AddNativeScript<ClickToPlace>(m_PhysicsEntity);
+			AddNativeScript<PlayerController>(m_PhysicsEntity);
 		}
 
 		{
-			m_Light = m_Scene->CreateEntity();
+			m_Light = CreateEntity();
 
-			m_Scene->AddComponent(m_Light, Transform{ { 260, 300 } });
-			m_Scene->AddComponent(m_Light, PointLight{ 1.5f, 0.007f, sf::Color{220, 130, 160, 255} });
+			AddComponent(m_Light, Transform{ { 260, 300 } });
+			AddComponent(m_Light, PointLight{ 1.5f, 0.007f, sf::Color{220, 130, 160, 255} });
 
-			m_Scene->AddNativeScript<GoToMouse>(m_Light);
+			AddNativeScript<GoToMouse>(m_Light);
 		}
 		
 		{
-			m_Light2 = m_Scene->CreateEntity();
+			m_Light2 = CreateEntity();
 
-			m_Scene->AddComponent(m_Light2, DirectionalLight{ sf::Vector3f(1, 0, 0), 0.7f, sf::Color{94, 154, 220, 255}, true });
+			AddComponent(m_Light2, DirectionalLight{ sf::Vector3f(1, 0, 0), 0.7f, sf::Color{94, 154, 220, 255}, true });
 		}
-	}
-
-	~GameLayer()
-	{
-	}
-
-	void GameLayer::OnAttach()
-	{
-		
-	}
-
-	void GameLayer::OnDetach()
-	{
-		m_Scene->DestroyEntity(m_Tilemap);
-		m_Scene->DestroyEntity(m_Camera);
-
-		m_Scene->DestroyEntity(m_Background);
-
-		// m_Scene->DestroyEntity(m_PhysicsEntity);
-
-		m_Scene->DestroyEntity(m_Light);
-		m_Scene->DestroyEntity(m_Light2);
-	}
-
-	void GameLayer::OnEvent(sf::Event) {}
-
-	void GameLayer::Update(Timestep ts)
-	{
-
 	}
 
 private:
-	std::shared_ptr<Scene> m_Scene;
-	
-	Entity m_Tilemap;
-	Entity m_Background;
+	Entity m_Tilemap = INVALID_ENTITY_ID;
+	Entity m_Background = INVALID_ENTITY_ID;
 
-	Entity m_Camera;
+	Entity m_Camera = INVALID_ENTITY_ID;
 
-	Entity m_PhysicsEntity;
+	Entity m_PhysicsEntity = INVALID_ENTITY_ID;
 
-	Entity m_Light;
-	Entity m_Light2;
+	Entity m_Light = INVALID_ENTITY_ID;
+	Entity m_Light2 = INVALID_ENTITY_ID;
 };
 
 
@@ -195,7 +160,7 @@ public:
 	SandboxApp()
 		: Application("Sandbox", sf::Vector2i(1200, 675))
 	{
-		PushLayer(new GameLayer());
+		LoadScene<MainScene>();
 	}
 };
 
