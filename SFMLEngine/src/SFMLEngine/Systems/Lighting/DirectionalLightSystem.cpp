@@ -43,7 +43,7 @@ namespace SFMLEngine {
 		ZoneScoped;
 		if (m_LightCount + m_StaticLightCount < MAX_DIRECTIONAL_LIGHTS)
 		{
-			int lightIndex = m_StaticLightCount;
+			int i = m_StaticLightCount;
 			for (auto const& entity : m_Entities)
 			{
 				DirectionalLight& light = m_Coordinator->GetComponent<DirectionalLight>(entity);
@@ -62,7 +62,7 @@ namespace SFMLEngine {
 				}
 
 				ResetModified(light);
-				lightIndex++;
+				i++;
 			}
 		}
 		else

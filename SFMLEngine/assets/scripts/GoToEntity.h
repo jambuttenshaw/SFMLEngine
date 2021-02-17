@@ -4,7 +4,7 @@
 
 using namespace SFMLEngine;
 
-class GoToMouse : public ScriptableEntity
+class GoToEntity : public ScriptableEntity
 {
 public:
 	void Start() override
@@ -16,9 +16,14 @@ public:
 	void Update(Timestep ts) override
 	{
 		// do something every frame
-		m_Transform->Position = Input::GetMouseWorldPos();
+		m_Transform->Position = m_Target->Position + m_Offset;
 	}
 
+	void SetTarget(Transform* t) { m_Target = t; }
+
 private:
+	const sf::Vector2f m_Offset = {16, 32};
+
 	Transform* m_Transform = nullptr;
+	Transform* m_Target = nullptr;
 };

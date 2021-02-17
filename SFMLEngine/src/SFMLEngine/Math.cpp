@@ -35,7 +35,7 @@ namespace SFMLEngine {
 	{
 		return a.x * b.x + a.y * b.y;
 	}
-	const sf::Vector2f Math::Clamp(const sf::Vector2f& value, const sf::Vector2f& min, const sf::Vector2f& max)
+	sf::Vector2f Math::Clamp(const sf::Vector2f& value, const sf::Vector2f& min, const sf::Vector2f& max)
 	{
 		return Max(Min(value, max), min);
 	}
@@ -47,6 +47,16 @@ namespace SFMLEngine {
 	{
 		return sqrtf(SquareMagnitude(a));
 	}
+
+	sf::Vector2f Math::Lerp(const sf::Vector2f& a, const sf::Vector2f& b, float t)
+	{
+		return (1 - t) * a + t * b;
+	}
+
+
+
+
+
 
 	int Math::RandomInt(int max)
 	{

@@ -32,10 +32,12 @@ namespace SFMLEngine {
 
 		static float Dot(const sf::Vector2f& a, const sf::Vector2f& b);
 
-		static const sf::Vector2f Clamp(const sf::Vector2f& value, const sf::Vector2f& min, const sf::Vector2f& max);
+		static sf::Vector2f Clamp(const sf::Vector2f& value, const sf::Vector2f& min, const sf::Vector2f& max);
 
 		static float SquareMagnitude(const sf::Vector2f& a);
 		static float Magnitude(const sf::Vector2f& a);
+
+		static sf::Vector2f Lerp(const sf::Vector2f& a, const sf::Vector2f& b, float t);
 
 
 		/*

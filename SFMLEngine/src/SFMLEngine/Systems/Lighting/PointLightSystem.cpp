@@ -47,7 +47,7 @@ namespace SFMLEngine {
 		{
 
 			// loop for each entity
-			int lightIndex = m_StaticLightCount;
+			int i = m_StaticLightCount;
 			for (auto const& entity : m_Entities)
 			{
 				// get a reference to the light component on this entity
@@ -72,7 +72,7 @@ namespace SFMLEngine {
 
 
 					// get a string to access the point light data uniform array
-					std::string lightIndex("u_PointLights[" + std::to_string(lightIndex) + "]");
+					std::string lightIndex("u_PointLights[" + std::to_string(i) + "]");
 
 					// upload the position of the light
 					mat->SetProperty(lightIndex + ".Position", sf::Vector3f(transform.Position.x, transform.Position.y, 5));
@@ -87,7 +87,7 @@ namespace SFMLEngine {
 				}
 				// if the light was flagged as modified we want to reset this now that the lighting is uploaded
 				if (modified) ResetModified(light);
-				lightIndex++;
+				i++;
 			}
 		}
 		else

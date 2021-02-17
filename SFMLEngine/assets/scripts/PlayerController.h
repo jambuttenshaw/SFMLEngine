@@ -18,12 +18,18 @@ public:
 	{
 		// do something every frame
 
-		if (Input::IsKeyDown(sf::Keyboard::Right))
+		if (Input::IsKeyDown(sf::Keyboard::D))
+		{
 			m_Rigidbody->Position += ts * m_MoveSpeed * sf::Vector2f(1, 0);
-		if (Input::IsKeyDown(sf::Keyboard::Left))
+			m_FacingRight = true;
+		}
+		if (Input::IsKeyDown(sf::Keyboard::A))
+		{
 			m_Rigidbody->Position += ts * m_MoveSpeed * sf::Vector2f(-1, 0);
+			m_FacingRight = false;
+		}	
 
-		if (Input::IsKeyDown(sf::Keyboard::Up))
+		if (Input::IsKeyDown(sf::Keyboard::W))
 		{
 			if (fabsf(m_Rigidbody->Velocity.y) < 0.1f)
 				m_Rigidbody->Velocity += ts * m_JumpPower * sf::Vector2f(0, -1);
@@ -33,7 +39,6 @@ public:
 		{
 			m_Rigidbody->Velocity.y += 750 * (m_FallMultiplier - 1) * ts;
 		}
-
 	}
 
 private:
@@ -44,4 +49,6 @@ private:
 	float m_JumpPower = 70000.0f;
 
 	float m_FallMultiplier = 1.5;
+
+	bool m_FacingRight = true;
 };

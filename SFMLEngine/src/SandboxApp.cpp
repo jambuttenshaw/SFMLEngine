@@ -4,11 +4,12 @@
 #include <SFML/Graphics.hpp>
 
 // scripts
-#include "GoToMouse.h"
+#include "GoToEntity.h"
 #include "MoveByWASD.h"
 #include "ClickToDestroyTile.h"
 #include "ClickToPlace.h"
 #include "PlayerController.h"
+#include "SmoothFollowPlayer.h"
 
 
 using namespace SFMLEngine;
@@ -18,15 +19,6 @@ class MainScene : public Scene
 public:
 	void Create() override
 	{
-		{
-			m_Camera = CreateEntity();
-
-			AddComponent(m_Camera, Transform{ });
-			AddComponent(m_Camera, Camera{ });
-
-			AddNativeScript<MoveByWASD>(m_Camera);
-		}
-
 		{
 
 			m_Tilemap = CreateEntity();
@@ -107,7 +99,7 @@ public:
 			m_PhysicsEntity = CreateEntity();
 
 			// give the entity a transform
-			AddComponent(m_PhysicsEntity, Transform{ });
+			AddComponent(m_PhysicsEntity, Transform{ sf::Vector2f(0, -500) });
 			// add a rigidbody so this entity is affected by physics
 			AddComponent(m_PhysicsEntity, Rigidbody{ 0.1f });
 			AddComponent(m_PhysicsEntity, Collider{ ColliderType::Box });
@@ -120,10 +112,6 @@ public:
 				-2, 0,
 				Texture::Create("assets/textures/characterNormals.png") });
 
-
-			AddComponent(m_PhysicsEntity, PointLight{ 1.5f, 0.007f, sf::Color::White });
-
-
 			AddNativeScript<ClickToPlace>(m_PhysicsEntity);
 			AddNativeScript<PlayerController>(m_PhysicsEntity);
 		}
@@ -131,16 +119,30 @@ public:
 		{
 			m_Light = CreateEntity();
 
-			AddComponent(m_Light, Transform{ { 260, 300 } });
-			AddComponent(m_Light, PointLight{ 1.5f, 0.007f, sf::Color{220, 130, 160, 255} });
+			AddComponent(m_Light, Transform{ });
+			AddComponent(m_Light, PointLight{ 1, 0.003f, sf::Color::White });
 
-			AddNativeScript<GoToMouse>(m_Light);
+			auto& script = AddNativeScript<GoToEntity>(m_Light);
+			script.SetTarget(&GetComponent<Transform>(m_PhysicsEntity));
+		}
+
+		{
+			m_Camera = CreateEntity();
+
+			AddComponent(m_Camera, Transform{ });
+
+			Camera cam{ };
+			cam.Zoom = 0.5f;
+			AddComponent(m_Camera, cam);
+
+			auto& script = AddNativeScript<SmoothFollowPlayer>(m_Camera);
+			script.SetPlayerTransform(&GetComponent<Transform>(m_PhysicsEntity));
 		}
 		
 		{
 			m_Light2 = CreateEntity();
 
-			AddComponent(m_Light2, DirectionalLight{ sf::Vector3f(1, 0, 0), 0.7f, sf::Color{94, 154, 220, 255}, true });
+			AddComponent(m_Light2, DirectionalLight{ sf::Vector3f(1, 0, 0), 0.7f, sf::Color{94, 62, 180, 255}, true });
 		}
 	}
 
