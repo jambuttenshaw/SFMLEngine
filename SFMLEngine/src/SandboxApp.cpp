@@ -96,7 +96,7 @@ public:
 
 		{
 			// creating a second entity
-			m_PhysicsEntity = CreateEntity();
+			m_PhysicsEntity = CreateEntity("Player", "Player", "Player");
 
 			// give the entity a transform
 			AddComponent(m_PhysicsEntity, Transform{ sf::Vector2f(0, -500) });

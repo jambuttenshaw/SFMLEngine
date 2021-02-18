@@ -13,6 +13,8 @@
 
 #include "SFMLEngine/Scene.h"
 
+#include "SFMLEngine/LayerManager.h"
+
 // Resource Management
 #include "SFMLEngine/ResourceManagement/ResourceManager.h"
 

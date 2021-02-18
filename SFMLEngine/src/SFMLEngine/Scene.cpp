@@ -1,6 +1,7 @@
 #include "Scene.h"
 
 #include "SFMLEngine/ECS/Components/Identity.h"
+#include "LayerManager.h"
 
 
 namespace SFMLEngine {
@@ -45,13 +46,13 @@ namespace SFMLEngine {
 		return newEntity;
 	}
 
-	Entity Scene::CreateEntity(const std::string& name, const std::string& tag, Layer layer)
+	Entity Scene::CreateEntity(const std::string& name, const std::string& tag, const std::string& layerName)
 	{
 		auto newEntity = m_Coordinator->CreateEntity();
 		m_EntityRegistry->insert(newEntity);
 
 		// add an identity component
-		Identity id{ name, tag, layer };
+		Identity id{ name, tag, LayerManager::CreateLayer(layerName) };
 		AddComponent(newEntity, id);
 
 		return newEntity;
