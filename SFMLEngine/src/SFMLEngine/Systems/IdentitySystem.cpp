@@ -29,7 +29,7 @@ namespace SFMLEngine {
 			index++;
 		}
 
-		entities.erase(entities.begin() + index);
+		if (index < entities.size()) entities.erase(entities.begin() + index);
 	}
 
 	const std::vector<Entity>& IdentitySystem::GetEntitiesWithTag(const std::string& tag)
