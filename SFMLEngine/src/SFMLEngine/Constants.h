@@ -31,6 +31,12 @@ namespace SFMLEngine {
 	using Signature = std::bitset<MAX_COMPONENTS>;
 
 
+	// ---------------------
+	// Entity Identification
+	// ---------------------
+	const uint8_t MAX_LAYERS = 8;
+	using Layer = std::bitset<MAX_LAYERS>;
+
 
 	// -------------------------
 	// Resource Management Types

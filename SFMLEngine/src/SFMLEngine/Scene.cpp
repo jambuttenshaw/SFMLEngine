@@ -1,5 +1,7 @@
 #include "Scene.h"
 
+#include "SFMLEngine/ECS/Components/Identity.h"
+
 
 namespace SFMLEngine {
 
@@ -33,6 +35,22 @@ namespace SFMLEngine {
 	{
 		auto newEntity = m_Coordinator->CreateEntity();
 		m_EntityRegistry->insert(newEntity);
+
+		// add an identity component
+		Identity id{ "Entity " + std::to_string(newEntity) };
+		AddComponent(newEntity, id);
+
+		return newEntity;
+	}
+
+	Entity Scene::CreateEntity(const std::string& name, const std::string& tag, Layer layer)
+	{
+		auto newEntity = m_Coordinator->CreateEntity();
+		m_EntityRegistry->insert(newEntity);
+
+		// add an identity component
+		Identity id{ name, tag, layer };
+		AddComponent(newEntity, id);
 
 		return newEntity;
 	}

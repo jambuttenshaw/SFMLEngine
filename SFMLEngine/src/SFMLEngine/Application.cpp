@@ -83,6 +83,8 @@ namespace SFMLEngine
         {
             ZoneScoped;
             ZoneName("InitComponents", 14);
+
+            m_Coordinator->RegisterComponent<Identity>();
             m_Coordinator->RegisterComponent<Transform>();
 
             m_Coordinator->RegisterComponent<SpriteRenderer>();
@@ -111,6 +113,16 @@ namespace SFMLEngine
             ZoneScoped;
             ZoneName("InitSystems", 11);
             // register systems
+
+            // identity system
+            m_IdentitySystem = m_Coordinator->RegisterSystem<IdentitySystem>();
+            m_IdentitySystem->Init(m_Coordinator);
+            {
+                Signature signature;
+                signature.set(m_Coordinator->GetComponentType<Identity>());
+                m_Coordinator->SetSystemSignature<IdentitySystem>(signature);
+            }
+
 
             // sprite render system
             m_SpriteRenderSystem = m_Coordinator->RegisterSystem<SpriteRenderSystem>();
@@ -340,6 +352,7 @@ namespace SFMLEngine
 
 
                 // apply any changes made to components
+                m_IdentitySystem->Update();
                 m_TilemapSystem->Update();
                 if (m_DisplayDebug) m_BoxColliderDebugSystem->Update();
                 m_SpriteRenderSystem->Update();

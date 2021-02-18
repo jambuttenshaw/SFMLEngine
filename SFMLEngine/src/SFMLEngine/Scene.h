@@ -22,6 +22,7 @@ namespace SFMLEngine {
 
 		// ENTITY MANAGEMENT
 		Entity CreateEntity();
+		Entity CreateEntity(const std::string& name, const std::string& tag, Layer layer);
 		void DestroyEntity(Entity entity);
 
 		// COMPONENT MANAGEMENT

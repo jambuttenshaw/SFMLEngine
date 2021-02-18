@@ -9,6 +9,8 @@
 
 // systems
 
+#include "Systems/IdentitySystem.h"
+
 #include "Systems/Render/SpriteRenderSystem.h"
 #include "Systems/Render/TilemapRenderSystem.h"
 
@@ -85,6 +87,8 @@ namespace SFMLEngine {
 		Coordinator* m_Coordinator;
 
 		// ECS systems
+		std::shared_ptr<IdentitySystem> m_IdentitySystem;
+
 		std::shared_ptr<SpriteRenderSystem> m_SpriteRenderSystem;
 		std::shared_ptr<TilemapRenderSystem> m_TilemapRenderSystem;
 
