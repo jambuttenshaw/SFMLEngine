@@ -24,3 +24,5 @@
 #include "SFMLEngine/Renderer/Texture.h"
 #include "SFMLEngine/FontLibrary.h"
 
+// Physics
+#include "SFMLEngine/Systems/Physics/Physics.h"

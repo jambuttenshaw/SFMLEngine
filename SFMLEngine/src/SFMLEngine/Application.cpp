@@ -7,6 +7,8 @@
 
 #include "Input.h"
 
+#include "Systems/Physics/Physics.h"
+
 #include "Renderer/Renderer.h"
 #include "Renderer/Material.h"
 #include "Renderer/Texture.h"
@@ -245,6 +247,14 @@ namespace SFMLEngine
         */
 
         Input::Init(m_Window, m_CameraSystem);
+
+        /*
+        ------------
+        INIT PHYSICS
+        ------------
+        */
+
+        Physics::Init(m_CollisionSystem);
 
 
         // debug info

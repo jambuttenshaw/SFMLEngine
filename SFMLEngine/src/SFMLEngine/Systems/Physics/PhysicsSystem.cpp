@@ -40,7 +40,7 @@ namespace SFMLEngine {
 			auto& transform = m_Coordinator->GetComponent<Transform>(entity);
 
 			// add the entities weight onto the resultant force
-			rigidbody.Force += rigidbody.Mass * m_Gravity;
+			rigidbody.Force += rigidbody.Mass * Physics::Gravity;
 			rigidbody.Acceleration = rigidbody.Force / rigidbody.Mass;
 
 			rigidbody.Velocity += rigidbody.Acceleration * (float)ts;

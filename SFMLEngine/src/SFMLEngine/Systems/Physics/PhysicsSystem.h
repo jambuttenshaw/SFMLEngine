@@ -7,6 +7,7 @@
 #include "SFMLEngine/Timestep.h"
 
 #include "CollisionSystem.h"
+#include "Physics.h"
 
 
 
@@ -15,7 +16,7 @@ namespace SFMLEngine {
 	class PhysicsSystem : public System
 	{
 	public:
-		PhysicsSystem() : m_Gravity(0, 750) {}
+		PhysicsSystem() {}
 		~PhysicsSystem() = default;
 
 		void Init(Coordinator* coordinator, std::shared_ptr<CollisionSystem> collisionSystem);
@@ -30,8 +31,6 @@ namespace SFMLEngine {
 	private:
 		Coordinator* m_Coordinator = nullptr;
 		std::shared_ptr<CollisionSystem> m_CollisionSystem;
-
-		sf::Vector2f m_Gravity;
 	};
 
 }

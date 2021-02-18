@@ -40,7 +40,7 @@ public:
 
 		if (m_Rigidbody->Velocity.y < 0)
 		{
-			m_Rigidbody->Velocity.y += 750 * (m_FallMultiplier - 1) * ts;
+			m_Rigidbody->Velocity += Physics::Gravity * (m_FallMultiplier - 1) * (float)ts;
 		}
 	}
 
