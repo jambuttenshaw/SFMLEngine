@@ -13,6 +13,9 @@ namespace SFMLEngine {
 		std::string Tag;
 		Layer EntityLayer;
 
+		Identity()
+			: Name(), Tag("NULL"), EntityLayer()
+		{}
 		Identity(const std::string& name)
 			: Name(name), Tag("NULL"), EntityLayer()
 		{}

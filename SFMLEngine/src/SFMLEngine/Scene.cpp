@@ -15,10 +15,11 @@ namespace SFMLEngine {
 		delete m_EntityRegistry;
 	}
 
-	void Scene::Init(Coordinator* coordinator, std::shared_ptr<ScriptableEntitySystem> scriptableEntitySystem)
+	void Scene::Init(Coordinator* coordinator, std::shared_ptr<ScriptableEntitySystem> scriptableEntitySystem, std::shared_ptr<IdentitySystem> identitySystem)
 	{
 		m_Coordinator = coordinator;
 		m_ScriptableEntitySystem = scriptableEntitySystem;
+		m_IdentitySystem = identitySystem;
 	}
 
 	void Scene::Destroy()
@@ -37,7 +38,8 @@ namespace SFMLEngine {
 		m_EntityRegistry->insert(newEntity);
 
 		// add an identity component
-		Identity id{ "Entity " + std::to_string(newEntity) };
+		std::string name = "Entity " + std::to_string(newEntity);
+		Identity id{ name };
 		AddComponent(newEntity, id);
 
 		return newEntity;

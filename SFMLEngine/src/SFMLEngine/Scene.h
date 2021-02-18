@@ -2,6 +2,7 @@
 
 #include "ECS/Coordinator.h"
 #include "Systems/ScriptableEntitySystem.h"
+#include "Systems/IdentitySystem.h"
 
 namespace SFMLEngine {
 
@@ -12,7 +13,7 @@ namespace SFMLEngine {
 		~Scene();
 
 		// Scene creation
-		void Init(Coordinator* coordinator, std::shared_ptr<ScriptableEntitySystem> scriptableEntitySystem);
+		void Init(Coordinator* coordinator, std::shared_ptr<ScriptableEntitySystem> scriptableEntitySystem, std::shared_ptr<IdentitySystem> identitySystem);
 		void Destroy();
 
 		// pure virtual function to be overridden in the derived class
@@ -42,9 +43,15 @@ namespace SFMLEngine {
 		template<typename T>
 		T& GetNativeScript(Entity entity) { return m_ScriptableEntitySystem->GetNativeScript<T>(entity); }
 
+
+		// ENTITY RETRIEVAL
+		const std::vector<Entity>& GetEntitiesWithTag(const std::string& tag) { return m_IdentitySystem->GetEntitiesWithTag(tag); }
+
+
 	private:
 		Coordinator* m_Coordinator = nullptr;
 		std::shared_ptr<ScriptableEntitySystem> m_ScriptableEntitySystem = nullptr;
+		std::shared_ptr<IdentitySystem> m_IdentitySystem = nullptr;
 
 		// keeps track of all entities registered in this scene
 		std::set<Entity>* m_EntityRegistry;

@@ -67,7 +67,7 @@ namespace SFMLEngine {
 			// implicit conversion to Scene* since T inherits from Scene
 			m_CurrentScene = newScene;
 
-			newScene->Init(m_Coordinator, m_ScriptableEntitySystem);
+			newScene->Init(m_Coordinator, m_ScriptableEntitySystem, m_IdentitySystem);
 
 			// pure virtual function that will create a scene T
 			newScene->Create();
