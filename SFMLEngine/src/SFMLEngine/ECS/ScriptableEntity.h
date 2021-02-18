@@ -30,6 +30,10 @@ namespace SFMLEngine {
 		template<typename T>
 		T& GetComponent() { return m_SceneHandle->GetComponent<T>(m_EntityHandle); }
 
+		// components on different entities
+		template<typename T>
+		T& GetComponent(Entity entity) { return m_SceneHandle->GetComponent<T>(entity); }
+
 		// native scripting
 		template<typename T>
 		T& AddNativeScript() { return m_SceneHandle->AddNativeScript<T>(m_EntityHandle); }

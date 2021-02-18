@@ -134,8 +134,7 @@ public:
 			cam.Zoom = 0.5f;
 			AddComponent(m_Camera, cam);
 
-			auto& script = AddNativeScript<SmoothFollowPlayer>(m_Camera);
-			script.SetPlayerTransform(&GetComponent<Transform>(m_PhysicsEntity));
+			AddNativeScript<SmoothFollowPlayer>(m_Camera);
 		}
 		
 		{

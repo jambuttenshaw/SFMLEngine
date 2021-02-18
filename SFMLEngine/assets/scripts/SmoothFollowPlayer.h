@@ -11,6 +11,8 @@ public:
 	{
 		// do something when the game starts
 		m_Transform = &GetComponent<Transform>();
+
+		m_PlayerTransform = &GetComponent<Transform>(GetEntitiesWithTag("Player")[0]);
 	}
 
 	void Update(Timestep ts) override
