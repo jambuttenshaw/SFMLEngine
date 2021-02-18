@@ -18,16 +18,19 @@ public:
 	{
 		// do something every frame
 
+		m_Move = Math::Lerp(m_Move, 0, m_Friction * ts);
 		if (Input::IsKeyDown(sf::Keyboard::D))
 		{
-			m_Rigidbody->Position += ts * m_MoveSpeed * sf::Vector2f(1, 0);
+			m_Move = m_MoveSpeed;
 			m_FacingRight = true;
 		}
 		if (Input::IsKeyDown(sf::Keyboard::A))
 		{
-			m_Rigidbody->Position += ts * m_MoveSpeed * sf::Vector2f(-1, 0);
+			m_Move = -m_MoveSpeed;
 			m_FacingRight = false;
 		}	
+		m_Rigidbody->Position.x += ts * m_Move;
+
 
 		if (Input::IsKeyDown(sf::Keyboard::W))
 		{
@@ -44,6 +47,9 @@ public:
 private:
 	Transform* m_Transform = nullptr;
 	Rigidbody* m_Rigidbody = nullptr;
+
+	float m_Move = 0;
+	float m_Friction = 14.0f;
 
 	float m_MoveSpeed = 250.0f;
 	float m_JumpPower = 70000.0f;

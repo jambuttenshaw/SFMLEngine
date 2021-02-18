@@ -119,11 +119,11 @@ public:
 		{
 			m_Light = CreateEntity();
 
-			AddComponent(m_Light, Transform{ });
-			AddComponent(m_Light, PointLight{ 1, 0.003f, sf::Color::White });
+			AddComponent(m_Light, Transform{ sf::Vector2f(16, 32), &GetComponent<Transform>(m_PhysicsEntity) });
+			AddComponent(m_Light, PointLight{ 1.3f, 0.007f, sf::Color(219, 113, 114, 255) });
 
-			auto& script = AddNativeScript<GoToEntity>(m_Light);
-			script.SetTarget(&GetComponent<Transform>(m_PhysicsEntity));
+			//auto& script = AddNativeScript<GoToEntity>(m_Light);
+			//script.SetTarget(&GetComponent<Transform>(m_PhysicsEntity));
 		}
 
 		{
@@ -142,7 +142,7 @@ public:
 		{
 			m_Light2 = CreateEntity();
 
-			AddComponent(m_Light2, DirectionalLight{ sf::Vector3f(1, 0, 0), 0.7f, sf::Color{94, 62, 180, 255}, true });
+			AddComponent(m_Light2, DirectionalLight{ sf::Vector3f(1, 0, 0), 0.6f, sf::Color{94, 62, 180, 255}, true });
 		}
 	}
 

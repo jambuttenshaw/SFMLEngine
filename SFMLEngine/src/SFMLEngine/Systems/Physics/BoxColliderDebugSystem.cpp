@@ -31,7 +31,7 @@ namespace SFMLEngine {
 	{
 		for (auto& entity : m_Entities)
 		{
-			m_ColliderCache[entity]->DrawDebug(m_TransformCache[entity]->GetTransformMatrix());
+			m_ColliderCache[entity]->DrawDebug(m_TransformCache[entity]->GetWorldTransformMatrix());
 		}
 	}
 

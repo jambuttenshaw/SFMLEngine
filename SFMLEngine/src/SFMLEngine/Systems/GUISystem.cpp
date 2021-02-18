@@ -54,7 +54,7 @@ namespace SFMLEngine {
 			Text& text = m_Coordinator->GetComponent<Text>(e);
 			Transform& transform = m_Coordinator->GetComponent<Transform>(e);
 
-			renderState.transform = transform.GetTransformMatrix();
+			renderState.transform = transform.GetWorldTransformMatrix();
 
 			m_RenderWindow->draw(text.TextObject, renderState);
 		}

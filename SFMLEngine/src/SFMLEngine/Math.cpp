@@ -48,7 +48,12 @@ namespace SFMLEngine {
 		return sqrtf(SquareMagnitude(a));
 	}
 
+
 	sf::Vector2f Math::Lerp(const sf::Vector2f& a, const sf::Vector2f& b, float t)
+	{
+		return (1 - t) * a + t * b;
+	}
+	float Math::Lerp(float a, float b, float t)
 	{
 		return (1 - t) * a + t * b;
 	}

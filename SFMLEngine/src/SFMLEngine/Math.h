@@ -37,6 +37,7 @@ namespace SFMLEngine {
 		static float SquareMagnitude(const sf::Vector2f& a);
 		static float Magnitude(const sf::Vector2f& a);
 
+		static float Lerp(float a, float b, float t);
 		static sf::Vector2f Lerp(const sf::Vector2f& a, const sf::Vector2f& b, float t);
 
 
