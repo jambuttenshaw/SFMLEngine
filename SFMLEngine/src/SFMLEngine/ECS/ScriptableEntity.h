@@ -45,7 +45,7 @@ namespace SFMLEngine {
 
 	private:
 		Scene* m_SceneHandle = nullptr;
-		Entity m_EntityHandle;
+		Entity m_EntityHandle = INVALID_ENTITY_ID;
 	};
 
 }

@@ -28,7 +28,7 @@ namespace SFMLEngine {
 
 		// COMPONENT MANAGEMENT
 		template<typename T>
-		T& AddComponent(Entity entity, T component) { return m_Coordinator->AddComponent(entity, component); }
+		void AddComponent(Entity entity, T component) { m_Coordinator->AddComponent(entity, component); }
 		template<typename T>
 		void RemoveComponent(Entity entity) { m_Coordinator->RemoveComponent<T>(entity); }
 		template<typename T>
