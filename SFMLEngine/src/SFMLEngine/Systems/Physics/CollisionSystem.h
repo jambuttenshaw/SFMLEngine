@@ -5,6 +5,10 @@
 #include "SFMLEngine/ECS/Coordinator.h"
 #include "SFMLEngine/ECS/Components/Colliders/Collider.h"
 
+#include "SFMLEngine/ECS/Components/Colliders/BoxCollider.h"
+#include "SFMLEngine/ECS/Components/Colliders/CircleCollider.h"
+#include "SFMLEngine/ECS/Components/Colliders/TilemapCollider.h"
+
 
 namespace SFMLEngine {
 
@@ -19,6 +23,8 @@ namespace SFMLEngine {
 	class CollisionSystem : public System
 	{
 	public:
+		friend class Physics;
+
 		CollisionSystem() = default;
 		~CollisionSystem() = default;
 
@@ -32,7 +38,7 @@ namespace SFMLEngine {
 
 	private:
 		template<typename T>
-		const Collision DoCollisionTest(T& collider, Entity& thisEntity)
+		const Collision DoCollisionTest(T& collider, Entity thisEntity = INVALID_ENTITY_ID)
 		{
 			ZoneScoped;
 			for (auto& entity : m_Entities)

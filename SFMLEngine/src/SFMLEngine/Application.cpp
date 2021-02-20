@@ -353,12 +353,12 @@ namespace SFMLEngine
 
                 // Update the systems
 
-                // update all native scripts
-                m_ScriptableEntitySystem->Update(ts);
-
-
                 // update all physics
                 m_PhysicsSystem->Update(ts);
+
+
+                // update all native scripts
+                m_ScriptableEntitySystem->Update(ts);
 
 
                 // apply any changes made to components

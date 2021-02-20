@@ -53,7 +53,6 @@ namespace SFMLEngine {
 
 			// the final amount the entity will move this frame
 			sf::Vector2f movement = rigidbody.Position - rigidbody.OldPosition;
-			rigidbody.OldPosition = rigidbody.Position;
 
 			// deal with movement component-wise so we can detect collisions on each axis seperately
 			if (fabsf(movement.x) > 0.1f) {
@@ -108,6 +107,10 @@ namespace SFMLEngine {
 					rigidbody.Velocity.y = 0;
 				}
 			}
+
+			// apply any collision detection changes to the rigidbody
+			rigidbody.Position = transform.Position;
+			rigidbody.OldPosition = rigidbody.Position;
 		}
 	}
 
