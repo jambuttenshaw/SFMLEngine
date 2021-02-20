@@ -3,18 +3,15 @@
 #include <SFML/Graphics.hpp>
 
 #include "SFMLEngine/ECS/System.h"
-#include "CollisionData.h"
-
+#include "Collider.h"
 
 namespace SFMLEngine {
 
 	struct BoxCollider;
 	struct TilemapCollider;
 
-	struct CircleCollider
+	struct CircleCollider : public Collider
 	{
-		friend class System;
-
 		float Radius;
 		sf::Vector2f Offset;
 
@@ -27,17 +24,13 @@ namespace SFMLEngine {
 		{}
 
 
-		CollisionData Colliding(CircleCollider& other, const sf::Vector2f& otherPos);
-		CollisionData Colliding(BoxCollider& other, const sf::Vector2f& otherPos);
-		CollisionData Colliding(TilemapCollider& other, const sf::Vector2f& otherPos);
+		std::pair<bool, sf::FloatRect> Colliding(CircleCollider& other);
+		std::pair<bool, sf::FloatRect> Colliding(BoxCollider& other);
+		std::pair<bool, sf::FloatRect> Colliding(TilemapCollider& other);
 
-		const sf::Vector2f GetBounds() const { return 2.0f * sf::Vector2f(Radius, Radius); }
-		const sf::Vector2f GetOffset() const { return Offset; }
+		sf::FloatRect GetLocalBounds() const override { return sf::FloatRect{ Offset, 2.0f * sf::Vector2f(Radius, Radius) }; }
 
 		void DrawDebug() {} // cant draw cirlces atm
-
-	private:
-		bool m_Modified = false;
 	};
 
 }

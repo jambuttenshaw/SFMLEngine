@@ -105,7 +105,7 @@ namespace SFMLEngine
 
             m_Coordinator->RegisterComponent<Rigidbody>();
 
-            m_Coordinator->RegisterComponent<Collider>();
+            m_Coordinator->RegisterComponent<ColliderInfo>();
             m_Coordinator->RegisterComponent<BoxCollider>();
             m_Coordinator->RegisterComponent<CircleCollider>();
             m_Coordinator->RegisterComponent<TilemapCollider>();
@@ -203,7 +203,7 @@ namespace SFMLEngine
             {
                 Signature signature;
                 signature.set(m_Coordinator->GetComponentType<Transform>());
-                signature.set(m_Coordinator->GetComponentType<Collider>());
+                signature.set(m_Coordinator->GetComponentType<ColliderInfo>());
                 m_Coordinator->SetSystemSignature<CollisionSystem>(signature);
             }
 

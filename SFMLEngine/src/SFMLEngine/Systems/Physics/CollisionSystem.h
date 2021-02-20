@@ -12,10 +12,8 @@ namespace SFMLEngine {
 	{
 		bool Collided;
 		Entity Other;
-		sf::FloatRect Bounds; // the boundaries of this objects collider
-		sf::FloatRect OtherBounds; // the boundaries of the object the collision occurred with
-		sf::Vector2f ColliderOffset; // the offset property of this objects collider
-		sf::Vector2f OtherColliderOffset; // the offset property of the other objects collider
+		sf::FloatRect GlobalBounds; // the boundaries of this objects collider
+		sf::FloatRect OtherGlobalBounds; // the boundaries of the object the collision occurred with
 	};
 
 	class CollisionSystem : public System
@@ -34,7 +32,7 @@ namespace SFMLEngine {
 
 	private:
 		template<typename T>
-		const Collision DoCollisionTest(T& collider, const sf::Vector2f& position, Entity& thisEntity)
+		const Collision DoCollisionTest(T& collider, Entity& thisEntity)
 		{
 			ZoneScoped;
 			for (auto& entity : m_Entities)
@@ -42,30 +40,34 @@ namespace SFMLEngine {
 				ZoneScoped;
 				ZoneName("ProcessEntity", 13);
 
+				// dont test collision against its own collider
 				if (entity == thisEntity) continue;
 
-				Collider& other = m_Coordinator->GetComponent<Collider>(entity);
-				Transform& otherTransform = m_Coordinator->GetComponent<Transform>(entity);
-				sf::Vector2f diff = position - otherTransform.Position;
+
+				// find out what type of collider this object has
+				ColliderInfo& other = m_Coordinator->GetComponent<ColliderInfo>(entity);
 				
-				CollisionData collision;
+				// the data returned from the collision test include a bool saying if it was successful
+				// and a floatrect which is the global bounds of the object collided with
+				std::pair<bool, sf::FloatRect> collisionData;
 				switch (other.Type)
 				{
 				case ColliderType::Invalid:	SFMLE_CORE_ASSERT(0, "Invalid collider type!"); break;
-				case ColliderType::Box:		collision =  m_Coordinator->GetComponent<BoxCollider>(entity).Colliding(collider, diff); break;
-				case ColliderType::Circle:	collision = m_Coordinator->GetComponent<CircleCollider>(entity).Colliding(collider, diff); break;
-				case ColliderType::Tilemap: collision = m_Coordinator->GetComponent<TilemapCollider>(entity).Colliding(collider, diff); break;
+				case ColliderType::Box:		collisionData =  m_Coordinator->GetComponent<BoxCollider>(entity).Colliding(collider);
+					break;
+				case ColliderType::Circle:	collisionData = m_Coordinator->GetComponent<CircleCollider>(entity).Colliding(collider);
+					break;									   
+				case ColliderType::Tilemap: collisionData = m_Coordinator->GetComponent<TilemapCollider>(entity).Colliding(collider);
+					break;
 				default:					SFMLE_CORE_ASSERT(0, "Unknown collider type!"); break;
 				}
 
-				if (collision.Collided)
+				if (collisionData.first)
 				{
 					return Collision{ true, entity,
-						sf::FloatRect{ position, collider.GetBounds() },
-						sf::FloatRect{ collision.Hitbox.left + otherTransform.Position.x, collision.Hitbox.top + otherTransform.Position.y,
-									   collision.Hitbox.width, collision.Hitbox.height },
-						collider.GetOffset(),
-						collision.Offset };
+						collider.GetGlobalBounds(),
+						collisionData.second
+					};
 				}
 			}
 			return Collision{ false, INVALID_ENTITY_ID, sf::FloatRect(), sf::FloatRect() };

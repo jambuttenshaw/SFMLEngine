@@ -68,10 +68,17 @@ namespace SFMLEngine {
 				// if there was a collision we should move the object back and zero its velocity
 				if (collisionTest.Collided)
 				{
+					float offset = transform.Position.x - collisionTest.GlobalBounds.left;
 					if (movement.x > 0)
-						transform.Position.x = collisionTest.OtherBounds.left - collisionTest.Bounds.width - collisionTest.ColliderOffset.x;
+					{
+						// moving right: set the right of the collider to the left of the other collider
+						transform.Position.x = collisionTest.OtherGlobalBounds.left - collisionTest.GlobalBounds.width + offset;
+					}
 					else
-						transform.Position.x = collisionTest.OtherBounds.left + collisionTest.OtherBounds.width - collisionTest.OtherColliderOffset.x - collisionTest.ColliderOffset.x;
+					{
+						// moving left: set the left of the collider to the right of the other collider
+						transform.Position.x = collisionTest.OtherGlobalBounds.left + collisionTest.OtherGlobalBounds.width + offset;
+					}
 					rigidbody.Velocity.x = 0;
 				}
 			}
@@ -87,11 +94,17 @@ namespace SFMLEngine {
 				// if there was a collision we should move the object back and zero its velocity
 				if (collisionTest.Collided)
 				{
+					float offset = transform.Position.y - collisionTest.GlobalBounds.top;
 					if (movement.y > 0)
-						transform.Position.y = collisionTest.OtherBounds.top - collisionTest.Bounds.height - collisionTest.ColliderOffset.y;
+					{
+						// moving down: set the bottom of the collider to the top of the other collider
+						transform.Position.y = collisionTest.OtherGlobalBounds.top - collisionTest.GlobalBounds.height + offset;
+					}
 					else
-						transform.Position.y = collisionTest.OtherBounds.top + collisionTest.OtherBounds.height - collisionTest.OtherColliderOffset.y - collisionTest.ColliderOffset.y;
-						
+					{
+						// moving up: set the top of the collider to the bottom of the other collider
+						transform.Position.y = collisionTest.OtherGlobalBounds.top + collisionTest.OtherGlobalBounds.height + offset;
+					}
 					rigidbody.Velocity.y = 0;
 				}
 			}

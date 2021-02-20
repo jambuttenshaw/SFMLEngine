@@ -2,8 +2,9 @@
 
 #include <SFML/Graphics.hpp>
 
+#include "Collider.h"
+
 #include "SFMLEngine/ECS/System.h"
-#include "CollisionData.h"
 
 
 namespace SFMLEngine {
@@ -11,10 +12,8 @@ namespace SFMLEngine {
 	struct CircleCollider;
 	struct TilemapCollider;
 
-	struct BoxCollider
+	struct BoxCollider : public Collider
 	{
-		friend class System;
-
 		sf::Vector2f Size;
 		sf::Vector2f Offset;
 
@@ -26,17 +25,13 @@ namespace SFMLEngine {
 		{}
 
 
-		CollisionData Colliding(BoxCollider& other, const sf::Vector2f& otherPos);
-		CollisionData Colliding(CircleCollider& other, const sf::Vector2f& otherPos);
-		CollisionData Colliding(TilemapCollider& other, const sf::Vector2f& otherPos);
+		std::pair<bool, sf::FloatRect> Colliding(BoxCollider& other);
+		std::pair<bool, sf::FloatRect> Colliding(CircleCollider& other);
+		std::pair<bool, sf::FloatRect> Colliding(TilemapCollider& other);
 
-		const sf::Vector2f& GetBounds() const { return Size; }
-		const sf::Vector2f& GetOffset() const { return Offset; }
+		sf::FloatRect GetLocalBounds() const override { return sf::FloatRect(Offset, Size); }
 
 		void DrawDebug(const sf::Transform& transform);
-
-	private:
-		bool m_Modified = false;
 	};
 
 }

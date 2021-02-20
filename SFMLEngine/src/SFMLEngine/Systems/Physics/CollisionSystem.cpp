@@ -15,7 +15,19 @@ namespace SFMLEngine {
 
 	void CollisionSystem::EntityAddedToSystem(Entity entity)
 	{
+		ZoneScoped;
 
+		Transform* transform = &m_Coordinator->GetComponent<Transform>(entity);
+		auto const& collider = m_Coordinator->GetComponent<ColliderInfo>(entity);
+
+		switch (collider.Type)
+		{
+		case ColliderType::Invalid:	SFMLE_CORE_ASSERT(0, "Invalid collider type!"); break;
+		case ColliderType::Box:		m_Coordinator->GetComponent<BoxCollider>(entity).SetTransform(transform); break;
+		case ColliderType::Circle:	m_Coordinator->GetComponent<CircleCollider>(entity).SetTransform(transform); break;
+		case ColliderType::Tilemap: m_Coordinator->GetComponent<TilemapCollider>(entity).SetTransform(transform); break;
+		default:					SFMLE_CORE_ASSERT(0, "Unknown collider type!"); break;
+		}
 	}
 
 	void CollisionSystem::EntityRemovedFromSystem(Entity entity)
@@ -27,15 +39,14 @@ namespace SFMLEngine {
 	{
 		ZoneScoped;
 
-		auto const& collider = m_Coordinator->GetComponent<Collider>(entity);
-		auto const& transform = m_Coordinator->GetComponent<Transform>(entity);
+		auto const& collider = m_Coordinator->GetComponent<ColliderInfo>(entity);
 
 		switch (collider.Type)
 		{
 		case ColliderType::Invalid:	SFMLE_CORE_ASSERT(0, "Invalid collider type!"); break;
-		case ColliderType::Box:		return DoCollisionTest(m_Coordinator->GetComponent<BoxCollider>(entity), transform.Position, entity); break;
-		case ColliderType::Circle:	return DoCollisionTest(m_Coordinator->GetComponent<CircleCollider>(entity), transform.Position, entity); break;
-		case ColliderType::Tilemap: return DoCollisionTest(m_Coordinator->GetComponent<TilemapCollider>(entity), transform.Position, entity); break;
+		case ColliderType::Box:		return DoCollisionTest(m_Coordinator->GetComponent<BoxCollider>(entity), entity); break;
+		case ColliderType::Circle:	return DoCollisionTest(m_Coordinator->GetComponent<CircleCollider>(entity), entity); break;
+		case ColliderType::Tilemap: return DoCollisionTest(m_Coordinator->GetComponent<TilemapCollider>(entity), entity); break;
 		default:					SFMLE_CORE_ASSERT(0, "Unknown collider type!"); break;
 		}
 

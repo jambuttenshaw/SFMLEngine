@@ -57,8 +57,8 @@ public:
 
 			// this object should be solid
 			// add a collider
-			AddComponent(m_Tilemap, Collider{ ColliderType::Tilemap });
 			AddComponent(m_Tilemap, TilemapCollider { });
+			AddComponent(m_Tilemap, ColliderInfo{ ColliderType::Tilemap });
 
 			AddNativeScript<ClickToDestroyTile>(m_Tilemap);
 		}
@@ -102,8 +102,8 @@ public:
 			AddComponent(m_PhysicsEntity, Transform{ sf::Vector2f(0, -500) });
 			// add a rigidbody so this entity is affected by physics
 			AddComponent(m_PhysicsEntity, Rigidbody{ 0.1f });
-			AddComponent(m_PhysicsEntity, Collider{ ColliderType::Box });
 			AddComponent(m_PhysicsEntity, BoxCollider{ sf::Vector2f(17, 48), sf::Vector2f(8, 16) });
+			AddComponent(m_PhysicsEntity, ColliderInfo{ ColliderType::Box });
 
 			// add the sprite renderer component
 			AddComponent(m_PhysicsEntity, SpriteRenderer{

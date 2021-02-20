@@ -4,7 +4,7 @@
 
 #include "SFMLEngine/ECS/System.h"
 #include "SFMLEngine/ECS/Components/Tilemap.h"
-#include "CollisionData.h"
+#include "Collider.h"
 
 
 namespace SFMLEngine {
@@ -12,10 +12,8 @@ namespace SFMLEngine {
 	struct BoxCollider;
 	struct CircleCollider;
 
-	struct TilemapCollider
+	struct TilemapCollider : public Collider
 	{
-		friend class System;
-
 		Tilemap* TilemapHandle = nullptr;
 
 		sf::Vector2f Size;
@@ -35,12 +33,11 @@ namespace SFMLEngine {
 			FindBoundary();
 		}
 		
-		CollisionData Colliding(TilemapCollider& other, const sf::Vector2f& otherPos);
-		CollisionData Colliding(BoxCollider& other, const sf::Vector2f& otherPos);
-		CollisionData Colliding(CircleCollider& other, const sf::Vector2f& otherPos);
+		std::pair<bool, sf::FloatRect> Colliding(TilemapCollider& other);
+		std::pair<bool, sf::FloatRect> Colliding(BoxCollider& other);
+		std::pair<bool, sf::FloatRect> Colliding(CircleCollider& other);
 
-		const sf::Vector2f& GetBounds() const { return Size; }
-		sf::Vector2f GetOffset() const { return sf::Vector2f(); }
+		sf::FloatRect GetLocalBounds() const override { return sf::FloatRect(Size, sf::Vector2f{}); }
 
 		const std::vector<sf::FloatRect>& GetCollisionGeometry() { return m_CollisionGeometry; }
 
@@ -51,8 +48,6 @@ namespace SFMLEngine {
 		void FindBoundary();
 
 	private:
-		bool m_Modified = false;
-
 		std::vector<sf::FloatRect> m_CollisionGeometry;
 	};
 

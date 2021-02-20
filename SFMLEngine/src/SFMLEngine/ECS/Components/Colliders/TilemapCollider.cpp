@@ -163,40 +163,39 @@ namespace SFMLEngine {
 		Size = bottomRight - topLeft;
 	}
 
-	CollisionData TilemapCollider::Colliding(TilemapCollider& other, const sf::Vector2f& otherPos)
+	std::pair<bool, sf::FloatRect> TilemapCollider::Colliding(TilemapCollider& other)
 	{
 		// tilemap vs tilemap collision
-		return CollisionData{ false, sf::FloatRect() };
+		return std::make_pair(false, GetGlobalBounds());
 	}
 
-	CollisionData TilemapCollider::Colliding(BoxCollider& other, const sf::Vector2f& otherPos)
+	std::pair<bool, sf::FloatRect> TilemapCollider::Colliding(BoxCollider& other)
 	{
 		// tilemap vs box collider collision
 		ZoneScoped;
 
-		sf::Vector2f otherOffsetPos = other.Offset + otherPos;
-		sf::FloatRect otherBoundingBox{ otherOffsetPos, other.Size };
+		sf::FloatRect otherGlobalBounds = other.GetGlobalBounds();
 
 		bool collides = false;
-		sf::FloatRect collidedQuad;
+		sf::FloatRect globalQuad;
 		for (auto const& quad : m_CollisionGeometry)
 		{
-			if (quad.intersects(otherBoundingBox))
+			globalQuad = m_Transform->GetWorldTransformMatrix().transformRect(quad);
+			if (globalQuad.intersects(otherGlobalBounds))
 			{
 				collides = true;
-				collidedQuad = quad;
 				break;
 			}
 		}
 
-		return CollisionData{ collides, collidedQuad, sf::Vector2f() };
+		return std::make_pair(collides, globalQuad);
 
 	}
 
-	CollisionData TilemapCollider::Colliding(CircleCollider& other, const sf::Vector2f& otherPos)
+	std::pair<bool, sf::FloatRect> TilemapCollider::Colliding(CircleCollider& other)
 	{
 		// tilemap vs circle collider collision
-		return CollisionData{ false, sf::FloatRect(), sf::Vector2f() };
+		return std::make_pair(false, GetGlobalBounds());
 	}
 
 	void TilemapCollider::DrawDebug(const sf::Transform& transform)

@@ -10,22 +10,22 @@
 
 namespace SFMLEngine {
 
-	CollisionData BoxCollider::Colliding(BoxCollider& other, const sf::Vector2f& otherPos)
+	std::pair<bool, sf::FloatRect> BoxCollider::Colliding(BoxCollider& other)
 	{
 		ZoneScoped;
 
-		// offset is the pos of this collider
-		// otherPos + other.Offset is the pos of the second collider
-		sf::Vector2f otherOffsetPos = other.Offset + otherPos;
+		sf::FloatRect& thisWorldPos = GetGlobalBounds();
+		sf::FloatRect& otherWorldPos = other.GetGlobalBounds();
 
-		bool overlapX = Offset.x + Size.x >= otherOffsetPos.x && otherOffsetPos.x + other.Size.x >= Offset.x;
-		bool overlapY = Offset.y + Size.y >= otherOffsetPos.y && otherOffsetPos.y + other.Size.y >= Offset.y;
+		bool overlapX = (thisWorldPos.left + thisWorldPos.width >= otherWorldPos.left) && (otherWorldPos.left + otherWorldPos.width >= thisWorldPos.left);
+		bool overlapY = (thisWorldPos.top + thisWorldPos.height >= otherWorldPos.top) && (otherWorldPos.top + otherWorldPos.height >= thisWorldPos.top);
 
-		return CollisionData{ overlapX && overlapY, sf::FloatRect{ Offset, Size }, Offset };
+		return std::make_pair(overlapX && overlapY, thisWorldPos);
 	}
 
-	CollisionData BoxCollider::Colliding(CircleCollider& other, const sf::Vector2f& otherPos)
+	std::pair<bool, sf::FloatRect> BoxCollider::Colliding(CircleCollider& other)
 	{
+		/*
 		sf::Vector2f circleCentre = other.Offset + otherPos + sf::Vector2f{other.Radius, other.Radius};
 
 		sf::Vector2f half_extents{ Size * 0.5f };
@@ -34,14 +34,20 @@ namespace SFMLEngine {
 		sf::Vector2f diff = centre - circleCentre + Math::Clamp(circleCentre - centre, -half_extents, half_extents);
 
 		return CollisionData{ Math::SquareMagnitude(diff) <= other.Radius * other.Radius, sf::FloatRect{ Offset, Size }, Offset };
+		*/
+		return std::make_pair(false, GetGlobalBounds());
 	}
 
-	CollisionData BoxCollider::Colliding(TilemapCollider& other, const sf::Vector2f& otherPos)
+	std::pair<bool, sf::FloatRect> BoxCollider::Colliding(TilemapCollider& other)
 	{
+		/*
 		// tilemap vs box collider collision
 		ZoneScoped;
-
-		return other.Colliding(*this, otherPos);
+		auto& collision = other.Colliding(*this, otherPos);
+		return CollisionData{ collision.Collided, sf::FloatRect{ Offset, Size }, Offset };
+		*/
+			
+		return std::make_pair(false, GetGlobalBounds());
 	}
 
 	void BoxCollider::DrawDebug(const sf::Transform& transform)

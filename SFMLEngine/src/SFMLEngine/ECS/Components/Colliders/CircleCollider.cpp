@@ -7,8 +7,9 @@
 
 namespace SFMLEngine {
 
-	CollisionData CircleCollider::Colliding(CircleCollider& other, const sf::Vector2f& otherPos)
+	std::pair<bool, sf::FloatRect> CircleCollider::Colliding(CircleCollider& other)
 	{
+		/*
 		// circle vs circle collision
 		// this is simple
 		// check if the distance between the centres is less than the sum of the radii
@@ -20,16 +21,22 @@ namespace SFMLEngine {
 		bool collision = Math::Dot(d, d) <= Radius * Radius + other.Radius * other.Radius;
 
 		return CollisionData{ collision, sf::FloatRect{ Offset, sf::Vector2f(Radius, Radius) } };
+		*/
+		return std::make_pair(false, GetGlobalBounds());
 	}
 
-	CollisionData CircleCollider::Colliding(BoxCollider& other, const sf::Vector2f& otherPos)
+	std::pair<bool, sf::FloatRect> CircleCollider::Colliding(BoxCollider& other)
 	{
-		return other.Colliding(*this, otherPos);
+		/*
+		sf::Vector2f semiSize{ Radius, Radius };
+		return CollisionData{ other.Colliding(*this, otherPos).Collided, sf::FloatRect{ Offset, 2.0f * semiSize }, 2.0f * semiSize };
+		*/
+		return std::make_pair(false, GetGlobalBounds());
 	}
 
-	CollisionData CircleCollider::Colliding(TilemapCollider& other, const sf::Vector2f& otherPos)
+	std::pair<bool, sf::FloatRect> CircleCollider::Colliding(TilemapCollider& other)
 	{
-		return CollisionData{ false, sf::FloatRect() };
+		return std::make_pair(false, GetGlobalBounds());
 	}
 
 }
