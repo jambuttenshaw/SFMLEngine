@@ -46,6 +46,15 @@ namespace SFMLEngine {
 		return layer.second;
 	}
 
+	std::vector<Layer> LayerManager::GetAllLayers()
+	{
+		std::vector<Layer> layers;
+		for (auto& layer : s_Layers)
+		{
+			layers.push_back(layer.second);
+		}
+		return layers;
+	}
 
 
 	Layer LayerManager::CreateLayerMaskAdditive(const std::vector<Layer>& layers)

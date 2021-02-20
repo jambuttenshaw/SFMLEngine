@@ -14,6 +14,7 @@ namespace SFMLEngine {
 		// layers
 		static Layer CreateLayer(const std::string& layerName);
 		static Layer GetLayer(const std::string& layerName);
+		static std::vector<Layer> GetAllLayers();
 
 		// layer masks
 		// a layer mask is effectively a bitset containing the signatures of many layers

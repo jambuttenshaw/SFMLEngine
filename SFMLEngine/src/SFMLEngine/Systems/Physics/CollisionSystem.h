@@ -3,6 +3,9 @@
 #include <SFML/Graphics.hpp>
 
 #include "SFMLEngine/ECS/Coordinator.h"
+
+#include "SFMLEngine/ECS/Components/Identity.h"
+
 #include "SFMLEngine/ECS/Components/Colliders/Collider.h"
 
 #include "SFMLEngine/ECS/Components/Colliders/BoxCollider.h"
@@ -38,7 +41,7 @@ namespace SFMLEngine {
 
 	private:
 		template<typename T>
-		const Collision DoCollisionTest(T& collider, Entity thisEntity = INVALID_ENTITY_ID)
+		const Collision DoCollisionTest(T& collider, Layer layerMask, Entity thisEntity = INVALID_ENTITY_ID)
 		{
 			ZoneScoped;
 			for (auto& entity : m_Entities)
@@ -49,6 +52,10 @@ namespace SFMLEngine {
 				// dont test collision against its own collider
 				if (entity == thisEntity) continue;
 
+				// make sure this entity applies to the layer mask
+				auto& id = m_Coordinator->GetComponent<Identity>(entity);
+				// if the set bit in the entity layer is not in the mask then skip this entity
+				if (id.EntityLayer & layerMask != id.EntityLayer) continue;
 
 				// find out what type of collider this object has
 				ColliderInfo& other = m_Coordinator->GetComponent<ColliderInfo>(entity);
