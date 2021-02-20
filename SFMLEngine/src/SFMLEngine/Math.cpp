@@ -35,6 +35,10 @@ namespace SFMLEngine {
 	{
 		return a.x * b.x + a.y * b.y;
 	}
+	sf::Vector2f Math::Normalize(const sf::Vector2f& a)
+	{
+		return a / Magnitude(a);
+	}
 	sf::Vector2f Math::Clamp(const sf::Vector2f& value, const sf::Vector2f& min, const sf::Vector2f& max)
 	{
 		return Max(Min(value, max), min);

@@ -32,6 +32,8 @@ namespace SFMLEngine {
 
 		static float Dot(const sf::Vector2f& a, const sf::Vector2f& b);
 
+		static sf::Vector2f Normalize(const sf::Vector2f& a);
+
 		static sf::Vector2f Clamp(const sf::Vector2f& value, const sf::Vector2f& min, const sf::Vector2f& max);
 
 		static float SquareMagnitude(const sf::Vector2f& a);

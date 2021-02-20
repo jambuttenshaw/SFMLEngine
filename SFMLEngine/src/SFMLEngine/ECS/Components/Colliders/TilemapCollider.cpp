@@ -189,13 +189,28 @@ namespace SFMLEngine {
 		}
 
 		return std::make_pair(collides, globalQuad);
-
 	}
 
 	std::pair<bool, sf::FloatRect> TilemapCollider::Colliding(CircleCollider& other)
 	{
 		// tilemap vs circle collider collision
-		return std::make_pair(false, GetGlobalBounds());
+		ZoneScoped;
+
+		sf::FloatRect otherGlobalBounds = other.GetGlobalBounds();
+
+		bool collides = false;
+		sf::FloatRect globalQuad;
+		for (auto const& quad : m_CollisionGeometry)
+		{
+			globalQuad = m_Transform->GetWorldTransformMatrix().transformRect(quad);
+			if (globalQuad.intersects(otherGlobalBounds))
+			{
+				collides = true;
+				break;
+			}
+		}
+
+		return std::make_pair(collides, globalQuad);
 	}
 
 	void TilemapCollider::DrawDebug(const sf::Transform& transform)
