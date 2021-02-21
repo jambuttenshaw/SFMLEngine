@@ -53,7 +53,7 @@ namespace SFMLEngine {
 	void BoxCollider::DrawDebug(const sf::Transform& transform)
 	{
 		auto& transformed = transform.transformRect(sf::FloatRect(Offset.x, Offset.y, Size.x, Size.y));
-		DebugTools::DrawRect(sf::Vector2f(transformed.left, transformed.top), sf::Vector2f(transformed.width, transformed.height), sf::Color::Green);
+		DEBUG_DRAW_RECT(sf::Vector2f(transformed.left, transformed.top), sf::Vector2f(transformed.width, transformed.height), sf::Color::Green);
 	}
 
 }

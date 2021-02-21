@@ -40,7 +40,7 @@ namespace SFMLEngine {
 		Transform t{};
 		collider.SetTransform(&t);
 
-		DebugTools::DrawRect(point - sf::Vector2f{ radius, radius }, 2.0f * sf::Vector2f{ radius, radius }, sf::Color::Red);
+		DEBUG_DRAW_RECT(point - sf::Vector2f{ radius, radius }, 2.0f * sf::Vector2f{ radius, radius }, sf::Color::Red);
 
 		return s_CollisionSystem->DoCollisionTest(collider, layerMask);
 	}

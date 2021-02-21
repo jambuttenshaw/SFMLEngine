@@ -16,7 +16,9 @@
 
 #include "FontLibrary.h"
 
-#include "DebugTools.h"
+#ifdef SFMLENGINE_DEBUG
+    #include "DebugTools.h"
+#endif
 
 
 namespace SFMLEngine
@@ -63,10 +65,10 @@ namespace SFMLEngine
         // load up the font library
         FontLibrary::Init();
 
-
+#ifdef SFMLENGINE_DEBUG
         // init debug tools
         DebugTools::Init(m_Window);
-
+#endif
         
         /*
         ----------
@@ -272,17 +274,16 @@ namespace SFMLEngine
         */
         m_ScriptableEntitySystem->Start();
 
-        int fps = 0;
-
         while (m_Window->isOpen())
         {
             Timestep ts(m_Clock.restart().asSeconds());
 
+#ifdef SFMLENGINE_DEBUG
             if (m_DisplayDebug)
             {
-                fps = (int)round(1 / ts);
-                DebugTools::DisplayText("FPS: " + std::to_string(fps));
+                DEBUG_CORE_DISPLAY("FPS", 1 / ts);
             }
+#endif
 
             {
                 ZoneScoped;
@@ -330,14 +331,16 @@ namespace SFMLEngine
 
                     if (event.type == sf::Event::KeyPressed)
                     {
+                        // send the key to input module to be registered as pressed this frame
+                        Input::SetKeyPressed(event.key.code);
+
+#ifdef SFMLENGINE_DEBUG
                         if (event.key.code == sf::Keyboard::F3)
                         {
                             m_DisplayDebug = !m_DisplayDebug;
                             continue;
                         }
-                        
-                        // send the key to input module to be registered as pressed this frame
-                        Input::SetKeyPressed(event.key.code);
+#endif
                     }
                 }
             }
@@ -407,6 +410,7 @@ namespace SFMLEngine
                 m_SpriteRenderSystem->Render();
             }
 
+#ifdef SFMLENGINE_DEBUG
             if (m_DisplayDebug)
             {
                 ZoneScoped;
@@ -416,6 +420,7 @@ namespace SFMLEngine
                 DebugTools::DrawAllGameView();
             }
             else DebugTools::ClearGameView();
+#endif
 
 
             {
@@ -429,6 +434,7 @@ namespace SFMLEngine
             }
 
 
+#ifdef SFMLENGINE_DEBUG
             if (m_DisplayDebug) 
             {
                 ZoneScoped;
@@ -438,6 +444,8 @@ namespace SFMLEngine
                 DebugTools::DrawAllHUDView();
             }
             else DebugTools::ClearHUDView();
+#endif
+
 
             // Update the window
             {
@@ -465,7 +473,9 @@ namespace SFMLEngine
         // shutdown the renderer
         Renderer::Shutdown();
 
+#ifdef SFMLENGINE_DEBUG
         DebugTools::Shutdown();
+#endif
 
         TilePalette::DestroyAllCached();
         Material::DestroyAllCached();

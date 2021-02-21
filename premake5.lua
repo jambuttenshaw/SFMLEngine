@@ -66,7 +66,11 @@ project "SFMLEngine"
 	filter "configurations:Debug"
 		runtime "Debug"
 		symbols "on"
-		defines "SFMLENGINE_ENABLE_ASSERTS"
+		defines 
+		{
+			"SFMLENGINE_ENABLE_ASSERTS",
+			"SFMLENGINE_DEBUG"
+		}
 		
 		links
 		{

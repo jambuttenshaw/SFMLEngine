@@ -218,7 +218,7 @@ namespace SFMLEngine {
 		for (auto const& rect : m_CollisionGeometry)
 		{
 			auto& transformed = transform.transformRect(rect);
-			DebugTools::DrawRect(sf::Vector2f(transformed.left, transformed.top), sf::Vector2f(transformed.width, transformed.height), sf::Color::Green);
+			DEBUG_DRAW_RECT(sf::Vector2f(transformed.left, transformed.top), sf::Vector2f(transformed.width, transformed.height), sf::Color::Green);
 		}
 	}
 

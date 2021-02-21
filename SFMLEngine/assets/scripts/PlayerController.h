@@ -34,7 +34,7 @@ public:
 
 		if (Input::IsKeyDown(sf::Keyboard::W))
 		{
-			if (fabsf(m_Rigidbody->Velocity.y) < 0.1f)
+			if (fabsf(m_Rigidbody->Velocity.y) < 0.01f)
 			{
 				m_Rigidbody->Velocity.y -= ts * m_JumpPower;
 			}
@@ -45,16 +45,19 @@ public:
 			m_Rigidbody->Velocity += Physics::Gravity * (m_FallMultiplier - 1) * (float)ts;
 		}
 
-		DebugTools::DisplayVec2("Player position", m_Rigidbody->Position);
-		DebugTools::DisplayVec2("Player velocity", m_Rigidbody->Velocity);
+		DEBUG_DISPLAY("Player position", m_Rigidbody->Position);
+		DEBUG_DISPLAY("Player velocity", m_Rigidbody->Velocity);
+		DEBUG_DISPLAY("Player on ground", m_OnGround);
 	}
 
 	void OnCollisionEnter(Collision collision) override
 	{
+		m_OnGround = true;
 	}
 
 	void OnCollisionExit(Entity other) override
 	{
+		m_OnGround = false;
 	}
 
 private:

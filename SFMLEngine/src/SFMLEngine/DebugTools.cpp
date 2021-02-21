@@ -16,8 +16,11 @@ namespace SFMLEngine {
 	sf::VertexArray DebugTools::s_Geometry(sf::Triangles);
 	size_t DebugTools::s_TriangleIndex = 0;
 
-	std::vector<std::string> DebugTools::s_DebugInfo;
-	sf::Text DebugTools::s_DebugText;
+	std::vector<std::string> DebugTools::s_CoreDebugInfo;
+	sf::Text DebugTools::s_CoreDebugText;
+	
+	std::vector<std::string> DebugTools::s_AppDebugInfo;
+	sf::Text DebugTools::s_AppDebugText;
 
 	void DebugTools::Init(sf::RenderWindow* window)
 	{
@@ -27,10 +30,13 @@ namespace SFMLEngine {
 		s_DebugMaterial = Material::Create("Debug");
 
 
-		// debug info
-		s_DebugText.setFillColor(sf::Color::White);
-		s_DebugText.setFont(*ResourceManager::GetResourceHandle<sf::Font>(FontLibrary::GetFont("arial")));
-		s_DebugText.setCharacterSize(16);
+		s_CoreDebugText.setFillColor(CORE_COLOR);
+		s_CoreDebugText.setFont(*ResourceManager::GetResourceHandle<sf::Font>(FontLibrary::GetFont("arial")));
+		s_CoreDebugText.setCharacterSize(CHARACTER_SIZE);
+
+		s_AppDebugText.setFillColor(APP_COLOR);
+		s_AppDebugText.setFont(*ResourceManager::GetResourceHandle<sf::Font>(FontLibrary::GetFont("arial")));
+		s_AppDebugText.setCharacterSize(CHARACTER_SIZE);
 	}
 
 	void DebugTools::Shutdown()
@@ -79,34 +85,84 @@ namespace SFMLEngine {
 		ClearGameView();
 	}
 
-	void DebugTools::DisplayText(const std::string& text)
+
+
+	void DebugTools::CoreDisplay(const std::string& text)
 	{
-		s_DebugInfo.push_back(text);
+		s_CoreDebugInfo.push_back(text);
+	}
+	void DebugTools::CoreDisplay(const std::string& label, float value)
+	{
+		s_CoreDebugInfo.push_back(label + ": " + std::to_string((int)round(value)));
+	}
+	void DebugTools::CoreDisplay(const std::string& label, int value)
+	{
+		s_CoreDebugInfo.push_back(label + ": " + std::to_string(value));
+	}
+	void DebugTools::CoreDisplay(const std::string& label, bool value)
+	{
+		s_CoreDebugInfo.push_back(label + ": " + std::to_string(value));
+	}
+	void DebugTools::CoreDisplay(const std::string& label, const sf::Vector2f& vec)
+	{
+		s_CoreDebugInfo.push_back(label + "  x: " + std::to_string((int)round(vec.x)) + " y: " + std::to_string((int)round(vec.y)));
 	}
 
-	void DebugTools::DisplayVec2(const std::string& label, const sf::Vector2f& vec)
+
+	void DebugTools::AppDisplay(const std::string& text)
 	{
-		s_DebugInfo.push_back(label + "  x: " + std::to_string((int)round(vec.x)) + " y: " + std::to_string((int)round(vec.y)));
+		s_AppDebugInfo.push_back(text);
 	}
+	void DebugTools::AppDisplay(const std::string& label, float value)
+	{
+		s_AppDebugInfo.push_back(label + ": " + std::to_string((int)round(value)));
+	}
+	void DebugTools::AppDisplay(const std::string& label, int value)
+	{
+		s_AppDebugInfo.push_back(label + ": " + std::to_string(value));
+	}
+	void DebugTools::AppDisplay(const std::string& label, bool value)
+	{
+		s_AppDebugInfo.push_back(label + ": " + std::to_string(value));
+	}
+	void DebugTools::AppDisplay(const std::string& label, const sf::Vector2f& vec)
+	{
+		s_AppDebugInfo.push_back(label + "  x: " + std::to_string((int)round(vec.x)) + " y: " + std::to_string((int)round(vec.y)));
+	}
+
+
 
 	void DebugTools::ClearHUDView()
 	{
-		s_DebugInfo.clear();
+		s_CoreDebugInfo.clear();
+		s_AppDebugInfo.clear();
 	}
 
 	void DebugTools::DrawAllHUDView()
 	{
 		float y = 0;
-		for (auto const& s : s_DebugInfo)
+		for (auto const& s : s_CoreDebugInfo)
 		{
 			// display debug info
-			s_DebugText.setPosition(0, y);
-			s_DebugText.setString(s);
-			s_WindowHandle->draw(s_DebugText);
+			s_CoreDebugText.setString(s);
+			s_CoreDebugText.setPosition(s_WindowHandle->getSize().x - s_CoreDebugText.getLocalBounds().width - PADDING, y);
+			s_WindowHandle->draw(s_CoreDebugText);
 
-			y += 16;
+			y += CHARACTER_SIZE;
 		}
-		s_DebugInfo.clear();
+
+		y = 0;
+		for (auto const& s : s_AppDebugInfo)
+		{
+			// display debug info
+			s_AppDebugText.setString(s);
+			s_AppDebugText.setPosition(PADDING, y);
+			s_WindowHandle->draw(s_AppDebugText);
+
+			y += CHARACTER_SIZE;
+		}
+
+		ClearHUDView();
 	}
 
 }
