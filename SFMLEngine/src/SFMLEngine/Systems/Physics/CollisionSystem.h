@@ -55,7 +55,7 @@ namespace SFMLEngine {
 				// make sure this entity applies to the layer mask
 				auto& id = m_Coordinator->GetComponent<Identity>(entity);
 				// if the set bit in the entity layer is not in the mask then skip this entity
-				if (id.EntityLayer & layerMask != id.EntityLayer) continue;
+				if ((id.EntityLayer & layerMask) != id.EntityLayer) continue;
 
 				// find out what type of collider this object has
 				ColliderInfo& other = m_Coordinator->GetComponent<ColliderInfo>(entity);

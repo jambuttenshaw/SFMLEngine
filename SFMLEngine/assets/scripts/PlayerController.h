@@ -46,6 +46,14 @@ public:
 		}
 	}
 
+	void OnCollisionEnter(Collision collision) override
+	{
+	}
+
+	void OnCollisionExit(Entity other) override
+	{
+	}
+
 private:
 	Transform* m_Transform = nullptr;
 	Rigidbody* m_Rigidbody = nullptr;

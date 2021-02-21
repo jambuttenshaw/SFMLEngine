@@ -20,6 +20,10 @@ namespace SFMLEngine {
 		// set up the rigidbody
 		rigidbody.Position = transform.Position;
 		rigidbody.OldPosition = transform.Position;
+
+		// create an entry in the collisions map
+		// just now it maps to an empty set
+		m_Collisions.insert(std::make_pair(entity, std::set<Entity>{}));
 	}
 
 	void PhysicsSystem::EntityRemovedFromSystem(Entity entity)
@@ -54,13 +58,18 @@ namespace SFMLEngine {
 			// the final amount the entity will move this frame
 			sf::Vector2f movement = rigidbody.Position - rigidbody.OldPosition;
 
+			
+			// detect if collisions occured on any axis
+			bool anyCollisions = false;
+
 			// deal with movement component-wise so we can detect collisions on each axis seperately
-			if (fabsf(movement.x) > 0.1f) {
+
+			{
 				// x axis
 				// apply the movement to the transform
 				transform.Position.x += movement.x;
-			
-			
+
+
 				// run collision test
 				auto const& collisionTest = m_CollisionSystem->TestCollision(entity);
 
@@ -79,10 +88,13 @@ namespace SFMLEngine {
 						transform.Position.x = collisionTest.OtherGlobalBounds.left + collisionTest.OtherGlobalBounds.width + offset;
 					}
 					rigidbody.Velocity.x = 0;
+
+					CollisionEnterCallback(entity, collisionTest);
+					anyCollisions = true;
 				}
 			}
 
-			if (fabsf(movement.y) > 0.1f) {
+			{
 				// y axis
 				// apply the movement to the transform
 				transform.Position.y += movement.y;
@@ -105,7 +117,17 @@ namespace SFMLEngine {
 						transform.Position.y = collisionTest.OtherGlobalBounds.top + collisionTest.OtherGlobalBounds.height + offset;
 					}
 					rigidbody.Velocity.y = 0;
+
+					CollisionEnterCallback(entity, collisionTest);
+					anyCollisions = true;
 				}
+			}
+
+			if (!anyCollisions)
+			{
+				// no collisions happened with this entity this frame
+				// collision exit callback
+				CollisionExitCallback(entity);
 			}
 
 			// apply any collision detection changes to the rigidbody
@@ -114,15 +136,46 @@ namespace SFMLEngine {
 		}
 	}
 
-	void PhysicsSystem::CollisionCallback(Entity entity, Collision collisionData)
+	void PhysicsSystem::CollisionEnterCallback(Entity entity, Collision collisionData)
 	{
-		if (m_Coordinator->HasComponent<NativeScripts>(entity))
+		// all entities registered in the physics system have entries in the collisions map
+		// check that this entity has not already registered a collision with this other entity
+		auto& entry = m_Collisions[entity];
+		if (entry.find(collisionData.Other) == entry.end())
 		{
-			auto& scriptsComponent = m_Coordinator->GetComponent<NativeScripts>(entity);
-			for (auto& script : scriptsComponent.Scripts)
+			// insert this collision into the set
+			entry.insert(collisionData.Other);
+
+			// run collision callback
+			if (m_Coordinator->HasComponent<NativeScripts>(entity))
 			{
-				script.second->OnCollision(collisionData);
+				auto& scriptsComponent = m_Coordinator->GetComponent<NativeScripts>(entity);
+				for (auto& script : scriptsComponent.Scripts)
+				{
+					script.second->OnCollisionEnter(collisionData);
+				}
 			}
+		}
+	}
+
+	void PhysicsSystem::CollisionExitCallback(Entity entity)
+	{
+		// send a collision exit callback for every registered collision
+		auto& entry = m_Collisions[entity];
+		if (entry.size() > 0)
+		{
+			// run collision callback
+			if (m_Coordinator->HasComponent<NativeScripts>(entity))
+			{
+				auto& scriptsComponent = m_Coordinator->GetComponent<NativeScripts>(entity);
+				for (auto& script : scriptsComponent.Scripts)
+				{
+					for (Entity other : entry)
+						script.second->OnCollisionExit(other);
+				}
+			}
+
+			entry.clear();
 		}
 	}
 
