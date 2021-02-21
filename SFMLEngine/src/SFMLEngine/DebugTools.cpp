@@ -3,6 +3,8 @@
 #include "Renderer/Material.h"
 #include "Renderer/Texture.h"
 
+#include "FontLibrary.h"
+
 
 namespace SFMLEngine {
 
@@ -14,12 +16,21 @@ namespace SFMLEngine {
 	sf::VertexArray DebugTools::s_Geometry(sf::Triangles);
 	size_t DebugTools::s_TriangleIndex = 0;
 
+	std::vector<std::string> DebugTools::s_DebugInfo;
+	sf::Text DebugTools::s_DebugText;
+
 	void DebugTools::Init(sf::RenderWindow* window)
 	{
 		s_WindowHandle = window;
 
 		s_DebugRectTexture = Texture::Create("assets/textures/debugBox.png");
 		s_DebugMaterial = Material::Create("Debug");
+
+
+		// debug info
+		s_DebugText.setFillColor(sf::Color::White);
+		s_DebugText.setFont(*ResourceManager::GetResourceHandle<sf::Font>(FontLibrary::GetFont("arial")));
+		s_DebugText.setCharacterSize(16);
 	}
 
 	void DebugTools::Shutdown()
@@ -27,7 +38,7 @@ namespace SFMLEngine {
 		Texture::Destroy(s_DebugRectTexture);
 	}
 
-	void DebugTools::Clear()
+	void DebugTools::ClearGameView()
 	{
 		s_Geometry.clear();
 		s_TriangleIndex = 0;
@@ -51,7 +62,7 @@ namespace SFMLEngine {
 		s_TriangleIndex += 6;
 	}
 
-	void DebugTools::DrawAll()
+	void DebugTools::DrawAllGameView()
 	{
 		ZoneScoped;
 		// draw the debug geometry using the debug material
@@ -65,7 +76,37 @@ namespace SFMLEngine {
 
 		s_WindowHandle->draw(s_Geometry, renderState);
 		
-		Clear();
+		ClearGameView();
+	}
+
+	void DebugTools::DisplayText(const std::string& text)
+	{
+		s_DebugInfo.push_back(text);
+	}
+
+	void DebugTools::DisplayVec2(const std::string& label, const sf::Vector2f& vec)
+	{
+		s_DebugInfo.push_back(label + "  x: " + std::to_string((int)round(vec.x)) + " y: " + std::to_string((int)round(vec.y)));
+	}
+
+	void DebugTools::ClearHUDView()
+	{
+		s_DebugInfo.clear();
+	}
+
+	void DebugTools::DrawAllHUDView()
+	{
+		float y = 0;
+		for (auto const& s : s_DebugInfo)
+		{
+			// display debug info
+			s_DebugText.setPosition(0, y);
+			s_DebugText.setString(s);
+			s_WindowHandle->draw(s_DebugText);
+
+			y += 16;
+		}
+		s_DebugInfo.clear();
 	}
 
 }

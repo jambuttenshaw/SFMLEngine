@@ -15,6 +15,8 @@
 
 #include "SFMLEngine/LayerManager.h"
 
+#include "SFMLEngine/DebugTools.h"
+
 // Resource Management
 #include "SFMLEngine/ResourceManagement/ResourceManager.h"
 

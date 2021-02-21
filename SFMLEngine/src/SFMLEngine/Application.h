@@ -108,10 +108,7 @@ namespace SFMLEngine {
 		std::shared_ptr<BoxColliderDebugSystem> m_BoxColliderDebugSystem;
 
 
-		// Debug mode stuff
 		bool m_DisplayDebug = false;
-		sf::Text m_DebugText;
-		std::vector<std::string> m_DebugInfo;
 
 	public:
 		static Application* GetApplicationHandle() { return s_Instance; }

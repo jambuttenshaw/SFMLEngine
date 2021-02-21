@@ -44,6 +44,9 @@ public:
 		{
 			m_Rigidbody->Velocity += Physics::Gravity * (m_FallMultiplier - 1) * (float)ts;
 		}
+
+		DebugTools::DisplayVec2("Player position", m_Rigidbody->Position);
+		DebugTools::DisplayVec2("Player velocity", m_Rigidbody->Velocity);
 	}
 
 	void OnCollisionEnter(Collision collision) override

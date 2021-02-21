@@ -256,11 +256,6 @@ namespace SFMLEngine
 
         Physics::Init(m_CollisionSystem);
 
-
-        // debug info
-        m_DebugText.setFillColor(sf::Color::White);
-        m_DebugText.setFont(*ResourceManager::GetResourceHandle<sf::Font>(FontLibrary::GetFont("arial")));
-        m_DebugText.setCharacterSize(16);
     }
 
     Application::~Application()
@@ -286,7 +281,7 @@ namespace SFMLEngine
             if (m_DisplayDebug)
             {
                 fps = (int)round(1 / ts);
-                m_DebugInfo.push_back("FPS: " + std::to_string(fps));
+                DebugTools::DisplayText("FPS: " + std::to_string(fps));
             }
 
             {
@@ -414,10 +409,13 @@ namespace SFMLEngine
 
             if (m_DisplayDebug)
             {
+                ZoneScoped;
+                ZoneName("RenderDebugGame", 15);
+
                 // display debug game objects
-                DebugTools::DrawAll();
+                DebugTools::DrawAllGameView();
             }
-            else DebugTools::Clear();
+            else DebugTools::ClearGameView();
 
 
             {
@@ -434,21 +432,12 @@ namespace SFMLEngine
             if (m_DisplayDebug) 
             {
                 ZoneScoped;
-                ZoneName("RenderDebug", 11);
-                // collect debug info
+                ZoneName("RenderDebugHUD", 14);
 
-                float y = 0;
-                for (auto const& s : m_DebugInfo)
-                {
-                    // display debug info
-                    m_DebugText.setPosition(0, y);
-                    m_DebugText.setString(s);
-                    m_Window->draw(m_DebugText);
-
-                    y += 10;
-                }
-                m_DebugInfo.clear();
+                // display debug info on the hud
+                DebugTools::DrawAllHUDView();
             }
+            else DebugTools::ClearHUDView();
 
             // Update the window
             {
