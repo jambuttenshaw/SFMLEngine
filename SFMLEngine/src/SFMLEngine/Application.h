@@ -33,6 +33,17 @@
 #include "Scene.h"
 
 
+/*
+An SFMLEngine Application is the main game run by the engine
+
+The Application class should be extended by the user to add their content to the game
+Then the user should define CreateApplication that instantiates their application
+
+Interaction with the SFML window and Scene manager is conducted through the application class
+Only 1 instance of Application will ever exist; it is a singleton. This is asserted upon instantiation.
+*/
+
+
 namespace SFMLEngine {
 
 	class Application
@@ -129,5 +140,6 @@ namespace SFMLEngine {
 		static Application* s_Instance;
 	};
 
+	// to be defined by the user
 	Application* CreateApplication();
 }

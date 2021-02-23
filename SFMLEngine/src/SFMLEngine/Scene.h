@@ -4,6 +4,22 @@
 #include "Systems/ScriptableEntitySystem.h"
 #include "Systems/IdentitySystem.h"
 
+
+/*
+A scene contains the actual content of the game
+and is the users interface to the ECS.
+
+The scene will manage its own entities, and pass the relevent information onto the ECS coordinator
+to make sure each entity is registered with its relevant systems.
+
+
+The user should extend this scene class when they want to create their own scene.
+
+Then, in their definition of the virtual Create function,
+they can create their entities and attatch their components.
+*/
+
+
 namespace SFMLEngine {
 
 	class Scene

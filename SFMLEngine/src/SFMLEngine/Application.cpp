@@ -29,8 +29,8 @@ namespace SFMLEngine
 
     Application::Application(const std::string& name, const sf::Vector2i& windowDimensions)
     {
-        if (!s_Instance)
-            s_Instance = this;
+        SFMLE_CORE_ASSERT(!s_Instance, "Application already exists!");
+        s_Instance = this;
 
 
         // ---------

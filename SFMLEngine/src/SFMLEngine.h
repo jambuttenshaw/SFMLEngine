@@ -30,3 +30,10 @@
 
 // Physics
 #include "SFMLEngine/Systems/Physics/Physics.h"
+
+
+
+
+
+// INCLUDE ENTRY POINT LAST
+#include "SFMLEngine/EntryPoint.h"

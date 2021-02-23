@@ -1,5 +1,4 @@
 #include "SFMLEngine.h"
-#include "SFMLEngine/EntryPoint.h"
 
 #include <SFML/Graphics.hpp>
 
