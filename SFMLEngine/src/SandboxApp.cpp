@@ -51,7 +51,7 @@ public:
 
 			AddComponent(m_Tilemap, tilemapComponent);
 
-			TilemapRenderer tilemapRendererComponent{ Material::Create("LitTilemap"), -1, 0 };
+			TilemapRenderer tilemapRendererComponent{ Material::Create("LitTilemap"), 1, 0 };
 			AddComponent(m_Tilemap, tilemapRendererComponent);
 
 
@@ -109,7 +109,7 @@ public:
 			AddComponent(m_PhysicsEntity, SpriteRenderer{
 				Texture::Create("assets/textures/character.png"),
 				Material::Create("Lit"),
-				-2, 0,
+				2, 0,
 				Texture::Create("assets/textures/characterNormals.png") });
 
 			AddNativeScript<ClickToPlace>(m_PhysicsEntity);

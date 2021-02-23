@@ -89,7 +89,7 @@ namespace SFMLEngine {
 				ZoneName("SetDepth", 8);
 				// set shader uniforms
 				float depth = (sR->RenderLayer + (sR->OrderInLayer * m_OrderInLayerNormalizeFactor)) * m_RenderLayerNormaizeFactor;
-				shader->setUniform("u_DepthValue", depth);
+				shader->setUniform("u_DepthValue", -depth);
 			}
 			
 			if (sR->MaterialPtr->IsLit())

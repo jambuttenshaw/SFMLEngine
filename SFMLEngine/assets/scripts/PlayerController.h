@@ -73,7 +73,7 @@ private:
 	float m_MoveSpeed = 250.0f;
 	float m_JumpPower = 450.0f;
 
-	float m_FallMultiplier = 0.4;
+	float m_FallMultiplier = 0.4f;
 
 	bool m_FacingRight = true;
 };

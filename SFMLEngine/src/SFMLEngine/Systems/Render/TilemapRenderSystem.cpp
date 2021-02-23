@@ -82,7 +82,7 @@ namespace SFMLEngine {
 
 			// set shader uniforms
 			float depth = (tilemapRenderer->RenderLayer + (tilemapRenderer->OrderInLayer * m_OrderInLayerNormalizeFactor)) * m_RenderLayerNormaizeFactor;
-			shader->setUniform("u_DepthValue", depth);
+			shader->setUniform("u_DepthValue", -depth);
 			
 			// if its a lit material set the normal map and rotation to be applied to normals
 			if (tilemapRenderer->MaterialPtr->IsLit())
