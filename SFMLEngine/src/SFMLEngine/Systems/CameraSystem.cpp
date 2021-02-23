@@ -36,6 +36,7 @@ namespace SFMLEngine {
 
 	void CameraSystem::WindowResized(const sf::Vector2f& newSize)
 	{
+		ZoneScoped;
 		for (auto const& e : m_Entities)
 		{
 			auto& cam = m_Coordinator->GetComponent<Camera>(e);

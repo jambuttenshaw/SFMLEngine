@@ -40,6 +40,8 @@ namespace SFMLEngine {
 
 	void IdentitySystem::Update()
 	{
+		ZoneScoped;
+
 		for (auto const& entity : m_Entities)
 		{
 			auto& id = m_Coordinator->GetComponent<Identity>(entity);

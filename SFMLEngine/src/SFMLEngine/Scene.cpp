@@ -3,6 +3,8 @@
 #include "SFMLEngine/ECS/Components/Identity.h"
 #include "LayerManager.h"
 
+#include "SFMLEngine/DebugTools.h"
+
 
 namespace SFMLEngine {
 
@@ -62,6 +64,12 @@ namespace SFMLEngine {
 	{ 
 		m_EntityRegistry->erase(entity);
 		m_Coordinator->DestroyEntity(entity); 
+	}
+
+
+	void Scene::DisplayDebug()
+	{
+		DEBUG_CORE_DISPLAY("Living entities", (int)m_EntityRegistry->size());
 	}
 
 }

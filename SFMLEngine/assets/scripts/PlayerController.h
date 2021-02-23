@@ -17,7 +17,6 @@ public:
 	void Update(Timestep ts) override
 	{
 		// do something every frame
-		m_OnGround = Physics::CollisionAtPoint(m_Rigidbody->Position + sf::Vector2f(16, 64), 3.0f).Collided;
 
 		m_Move = Math::Lerp(m_Move, 0, m_Friction * ts);
 		if (Input::IsKeyDown(sf::Keyboard::D))
@@ -36,14 +35,16 @@ public:
 		{
 			if (fabsf(m_Rigidbody->Velocity.y) < 0.01f)
 			{
-				m_Rigidbody->Velocity.y -= ts * m_JumpPower;
+				m_Rigidbody->Velocity.y -= m_JumpPower;
 			}
 		}
 		
-		if (m_Rigidbody->Velocity.y < 0)
+
+		if (m_Rigidbody->Velocity.y > 0)
 		{
-			m_Rigidbody->Velocity += Physics::Gravity * (m_FallMultiplier - 1) * (float)ts;
+			m_Rigidbody->Velocity += Physics::Gravity * m_FallMultiplier *(float)ts;
 		}
+
 
 		DEBUG_DISPLAY("Player position", m_Rigidbody->Position);
 		DEBUG_DISPLAY("Player velocity", m_Rigidbody->Velocity);
@@ -70,9 +71,9 @@ private:
 	float m_Friction = 14.0f;
 
 	float m_MoveSpeed = 250.0f;
-	float m_JumpPower = 70000.0f;
+	float m_JumpPower = 450.0f;
 
-	float m_FallMultiplier = 1.5;
+	float m_FallMultiplier = 0.4;
 
 	bool m_FacingRight = true;
 };

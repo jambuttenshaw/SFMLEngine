@@ -87,6 +87,9 @@ namespace SFMLEngine {
 			// if its a lit material set the normal map and rotation to be applied to normals
 			if (tilemapRenderer->MaterialPtr->IsLit())
 			{
+				ZoneScoped;
+				ZoneName("SetLighting", 11);
+
 				// set the normal map to the normal map texture in the tile palette object
 				shader->setUniform("u_NormalMap", *ResourceManager::GetResourceHandle<sf::Texture>(tilemap->PalettePtr->GetNormalMap()));
 

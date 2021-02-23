@@ -127,6 +127,8 @@ namespace SFMLEngine {
 		}
 
 
+		static void DisplayDebug();
+
 	private:
 		static ResourceID GetNextID();
 

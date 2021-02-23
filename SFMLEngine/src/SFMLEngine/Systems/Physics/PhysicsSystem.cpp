@@ -138,6 +138,8 @@ namespace SFMLEngine {
 
 	void PhysicsSystem::CollisionEnterCallback(Entity entity, Collision collisionData)
 	{
+		ZoneScoped;
+
 		// all entities registered in the physics system have entries in the collisions map
 		// check that this entity has not already registered a collision with this other entity
 		auto& entry = m_Collisions[entity];
@@ -160,6 +162,8 @@ namespace SFMLEngine {
 
 	void PhysicsSystem::CollisionExitCallback(Entity entity)
 	{
+		ZoneScoped;
+
 		// send a collision exit callback for every registered collision
 		auto& entry = m_Collisions[entity];
 		if (entry.size() > 0)

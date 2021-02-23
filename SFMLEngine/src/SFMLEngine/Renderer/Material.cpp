@@ -136,7 +136,8 @@ namespace SFMLEngine {
 
 		for (Uniform& uniform : m_Uniforms)
 		{
-			
+			ZoneScoped;
+			ZoneName("ProcessUniform", 14);
 			// to retrieve the data from the uniform we have to do some casting magic
 			// we know the data type of the uniform: we have it stored as a GLenum
 			// so we switch on the type to find out which type it is

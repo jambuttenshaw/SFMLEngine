@@ -29,6 +29,8 @@ namespace SFMLEngine {
 
 	void BoxColliderDebugSystem::Update()
 	{
+		ZoneScoped;
+
 		for (auto& entity : m_Entities)
 		{
 			m_ColliderCache[entity]->DrawDebug(m_TransformCache[entity]->GetWorldTransformMatrix());

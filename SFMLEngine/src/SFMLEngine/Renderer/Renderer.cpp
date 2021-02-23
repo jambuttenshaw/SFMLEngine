@@ -58,14 +58,7 @@ namespace SFMLEngine {
 		// SFML only clears the colour buffer,
 		// but since were also using the depth buffer we need to clear that too
 		glClear(GL_DEPTH_BUFFER_BIT);
-	}
-
-	void Renderer::SetOpenGLStates()
-	{
-		ZoneScoped;
-		ZoneName("SetOpenGL", 9);
 		glEnable(GL_DEPTH_TEST);
-		glEnable(GL_BLEND);
 	}
 
 	void Renderer::SetUniforms()

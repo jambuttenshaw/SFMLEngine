@@ -295,6 +295,8 @@ namespace SFMLEngine
                 sf::Event event;
                 while (m_Window->pollEvent(event))
                 {
+                    ZoneScoped;
+                    ZoneName("HandleEvent", 11);
                     // window events should be handled by the application
                     if (event.type == sf::Event::Closed)
                     {
@@ -362,11 +364,23 @@ namespace SFMLEngine
                 // apply any changes made to components
                 m_IdentitySystem->Update();
                 m_TilemapSystem->Update();
-                if (m_DisplayDebug) m_BoxColliderDebugSystem->Update();
                 m_SpriteRenderSystem->Update();
                 m_TilemapRenderSystem->Update();
                 m_GUISystem->Update();
                 m_CameraSystem->Update();
+
+#ifdef SFMLENGINE_DEBUG
+                if (m_DisplayDebug)
+                {
+                    ZoneScoped;
+                    ZoneName("GetDebugInfo", 12);
+
+                    m_BoxColliderDebugSystem->Update();
+                    
+                    ResourceManager::DisplayDebug();
+                    m_CurrentScene->DisplayDebug();
+                }
+#endif
             }
 
             // ---------
@@ -379,13 +393,10 @@ namespace SFMLEngine
                 // Clear screen
                 {
                     ZoneScoped;
-                    ZoneName("WindowClear", 11);
+                    ZoneName("Clear", 5);
                     m_Window->clear(sf::Color(0, 0, 0, 255));
+                    Renderer::Clear();
                 }
-                Renderer::Clear();
-
-                // set up the renderer for drawing
-                Renderer::SetOpenGLStates();
             }
 
             {

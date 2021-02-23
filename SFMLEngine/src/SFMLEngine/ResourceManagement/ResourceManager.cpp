@@ -1,5 +1,7 @@
 #include "ResourceManager.h"
 
+#include "SFMLEngine/DebugTools.h"
+
 
 namespace SFMLEngine {
 
@@ -43,4 +45,10 @@ namespace SFMLEngine {
 		return nextID;
 	}
 
+
+	void ResourceManager::DisplayDebug()
+	{
+		ZoneScoped;
+		DEBUG_CORE_DISPLAY("Allocated Resources", (int)s_LivingResourceCount);
+	}
 }

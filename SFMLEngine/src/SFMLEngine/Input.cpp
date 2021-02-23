@@ -57,6 +57,8 @@ namespace SFMLEngine {
 
 	void Input::Reset()
 	{ 
+		ZoneScoped;
+
 		s_MouseDelta = sf::Vector2f(0, 0);
 		s_WheelDelta = 0; 
 

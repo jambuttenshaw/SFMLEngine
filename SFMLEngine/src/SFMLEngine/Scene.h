@@ -48,6 +48,8 @@ namespace SFMLEngine {
 		const std::vector<Entity>& GetEntitiesWithTag(const std::string& tag) { return m_IdentitySystem->GetEntitiesWithTag(tag); }
 
 
+		void DisplayDebug();
+
 	private:
 		Coordinator* m_Coordinator = nullptr;
 		std::shared_ptr<ScriptableEntitySystem> m_ScriptableEntitySystem = nullptr;

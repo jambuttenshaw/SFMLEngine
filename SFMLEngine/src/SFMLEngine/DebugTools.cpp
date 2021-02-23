@@ -46,6 +46,7 @@ namespace SFMLEngine {
 
 	void DebugTools::ClearGameView()
 	{
+		ZoneScoped;
 		s_Geometry.clear();
 		s_TriangleIndex = 0;
 	}
@@ -134,12 +135,16 @@ namespace SFMLEngine {
 
 	void DebugTools::ClearHUDView()
 	{
+		ZoneScoped;
+
 		s_CoreDebugInfo.clear();
 		s_AppDebugInfo.clear();
 	}
 
 	void DebugTools::DrawAllHUDView()
 	{
+		ZoneScoped;
+
 		float y = 0;
 		for (auto const& s : s_CoreDebugInfo)
 		{
