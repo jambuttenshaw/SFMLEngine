@@ -1,7 +1,5 @@
 #pragma once
 
-extern SFMLEngine::Application* SFMLEngine::CreateApplication();
-
 int main(int argc, char** argv)
 {
 
