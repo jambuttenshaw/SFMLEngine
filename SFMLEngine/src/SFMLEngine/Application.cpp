@@ -56,7 +56,9 @@ namespace SFMLEngine
         auto const& contextSettings = Renderer::Init();
 
         m_Window = new sf::RenderWindow(sf::VideoMode(windowDimensions.x, windowDimensions.y), name, sf::Style::Default, contextSettings);
-        m_Window->setVerticalSyncEnabled(true);
+        
+        m_Window->setFramerateLimit(m_FPSLimit);
+        m_Window->setVerticalSyncEnabled(m_VSync);
 
         Renderer::InitGLEW();
 
@@ -264,6 +266,21 @@ namespace SFMLEngine
     {
         delete m_Window;
         delete m_Coordinator;
+    }
+
+
+    void Application::SetVSync(bool state)
+    {
+        m_VSync = state;
+        m_Window->setVerticalSyncEnabled(state);
+    }
+
+    void Application::SetFPSLimit(unsigned int limit)
+    {
+        SFMLE_CORE_ASSERT(limit >= 0, "Invalid value for FPS limit.");
+
+        m_FPSLimit = limit;
+        m_Window->setFramerateLimit(limit);
     }
 
     void Application::Run()

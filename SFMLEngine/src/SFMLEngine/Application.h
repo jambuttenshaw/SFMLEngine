@@ -49,6 +49,13 @@ namespace SFMLEngine {
 		sf::RenderWindow* GetWindowHandle() { return m_Window; }
 
 
+		void SetVSync(bool state);
+		inline bool IsVSync() { return m_VSync; }
+
+		void SetFPSLimit(unsigned int limit);
+		unsigned int GetFPSLimit() { return m_FPSLimit; }
+
+
 		template <typename T>
 		void LoadScene()
 		{
@@ -82,6 +89,10 @@ namespace SFMLEngine {
 		sf::Clock m_Clock;
 
 		Scene* m_CurrentScene = nullptr;
+
+		// VSync enabled by default
+		bool m_VSync = true;
+		unsigned int m_FPSLimit = 0;
 
 		// ECS
 		Coordinator* m_Coordinator;
