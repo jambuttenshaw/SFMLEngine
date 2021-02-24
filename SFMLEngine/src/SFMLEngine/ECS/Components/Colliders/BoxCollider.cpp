@@ -3,7 +3,7 @@
 #include "CircleCollider.h"
 #include "TilemapCollider.h"
 
-#include "SFMLEngine/Log.h"
+#include "SFMLEngine/Core.h"
 #include "SFMLEngine/Math.h"
 #include "SFMLEngine/DebugTools.h"
 

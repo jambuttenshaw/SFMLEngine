@@ -2,7 +2,7 @@
 
 // Core
 #include "SFMLEngine/Core.h"
-#include "SFMLEngine/Log.h"
+#include "SFMLEngine/Core.h"
 
 #include "SFMLEngine/Math.h"
 

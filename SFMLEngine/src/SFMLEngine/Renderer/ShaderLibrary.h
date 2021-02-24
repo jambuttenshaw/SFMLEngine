@@ -4,7 +4,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "SFMLEngine/Constants.h"
-#include "SFMLEngine/Log.h"
+#include "SFMLEngine/Core.h"
 #include "SFMLEngine/ResourceManagement/ResourceManager.h"
 
 #include <unordered_map>
