@@ -113,7 +113,7 @@ public:
 
 			
 			// create the animations and animator component
-			Animation* idle = new Animation{ {
+			Animation idle{ "idle", {
 				{0,   0, 32, 64},
 				{34,  0, 32, 64},
 				{66,  0, 32, 64},
@@ -123,7 +123,7 @@ public:
 				0.1f
 			};
 			Animator animator;
-			animator.AddAnimation("idle", idle);
+			animator.AddAnimation(idle);
 			animator.SetCurrentAnimation("idle");
 			AddComponent(m_PhysicsEntity, animator);
 			

@@ -14,6 +14,8 @@ namespace SFMLEngine {
 
 	struct Animation
 	{
+		std::string Name;
+
 		sf::IntRect* CurrentFrame = nullptr;
 		size_t FrameIndex = 0;
 		std::vector<sf::IntRect> Frames;
@@ -27,12 +29,26 @@ namespace SFMLEngine {
 
 		Animation()
 		{}
-		Animation(std::initializer_list<sf::IntRect> frames)
-			: Frames(frames)
+		Animation(const std::string& name, std::initializer_list<sf::IntRect> frames)
+			: Name(name), Frames(frames)
 		{}
-		Animation(std::initializer_list<sf::IntRect> frames, float speed)
-			: Frames(frames), AnimationSpeed(speed)
+		Animation(const std::string& name, std::initializer_list<sf::IntRect> frames, float speed)
+			: Name(name), Frames(frames), AnimationSpeed(speed)
 		{}
+		Animation(const Animation& other)
+		{
+			Name = other.Name;
+			CurrentFrame = other.CurrentFrame;
+			FrameIndex = other.FrameIndex;
+			Frames = move(other.Frames);
+
+			Flipped = other.Flipped;
+			Looping = other.Looping;
+			Playing = other.Playing;
+
+			AnimationSpeed = other.AnimationSpeed;
+			ElapsedTime = other.ElapsedTime;
+		}
 
 		void AddFrame(sf::IntRect frame)
 		{
@@ -82,40 +98,43 @@ namespace SFMLEngine {
 	{
 		friend class System;
 
-		std::unordered_map<std::string, Animation*> Animations;
-		Animation* CurrentAnimation = nullptr;
+		std::unordered_map<std::string, Animation> Animations;
+		std::string CurrentAnimation;
 		
 		bool Flip = false;
 
 		Animator()
 			: Animations()
 		{}
-		Animator(std::unordered_map<std::string, Animation*> anims)
+		Animator(std::unordered_map<std::string, Animation> anims)
 			: Animations{ anims }
 		{}
+		Animator(const Animator& other)
+		{
+			Animations = move(other.Animations);
+			Flip = other.Flip;
 
-		void AddAnimation(std::pair<std::string, Animation*> anim)
-		{
-			Animations.insert(anim);
+			SetCurrentAnimation(other.CurrentAnimation);
 		}
-		void AddAnimation(const std::string& name, Animation* anim)
+
+		void AddAnimation(Animation anim)
 		{
-			Animations.insert(std::make_pair(name, anim));
+			Animations.insert(std::make_pair(anim.Name, anim));
 		}
 
 
 		void SetCurrentAnimation(const std::string& name)
 		{
 			SFMLE_CORE_ASSERT(Animations.find(name) != Animations.end(), "Animation doesn't exist!");
-			CurrentAnimation = Animations[name];
+			CurrentAnimation = name;
 		}
 		Animation& GetCurrentAnimation()
 		{
-			return *CurrentAnimation;
+			return Animations[CurrentAnimation];
 		}
 		const sf::IntRect& GetCurrentFrame()
 		{
-			return *CurrentAnimation->CurrentFrame;
+			return *Animations[CurrentAnimation].CurrentFrame;
 		}
 
 	private:

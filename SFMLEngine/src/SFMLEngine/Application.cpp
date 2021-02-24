@@ -303,6 +303,8 @@ namespace SFMLEngine
         */
         m_ScriptableEntitySystem->Start();
 
+        m_Clock.restart();
+
         while (m_Window->isOpen())
         {
             Timestep ts(m_Clock.restart().asSeconds());

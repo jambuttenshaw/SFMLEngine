@@ -40,7 +40,7 @@ namespace SFMLEngine {
 		}
 
 		template<typename T>
-		void AddComponent(Entity entity, T component)
+		void AddComponent(Entity entity, const T& component)
 		{
 			m_ComponentManager->AddComponent<T>(entity, component);
 
