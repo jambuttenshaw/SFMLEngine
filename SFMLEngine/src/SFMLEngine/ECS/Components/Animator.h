@@ -56,15 +56,13 @@ namespace SFMLEngine {
 		}
 
 
-		bool Animate(Timestep ts)
+		void Animate(Timestep ts)
 		{
-			bool changeFrame = false;
 			if (Playing)
 			{
 				ElapsedTime += ts;
 				if (ElapsedTime >= AnimationSpeed)
 				{
-					changeFrame = true;
 					FrameIndex++;
 					if (FrameIndex >= Frames.size())
 					{
@@ -82,13 +80,13 @@ namespace SFMLEngine {
 					ElapsedTime = 0;
 				}
 			}
-			return changeFrame;
 		}
 
 		void Reset()
 		{
 			ElapsedTime = 0;
 			FrameIndex = 0;
+			CurrentFrame = &Frames[FrameIndex];
 		}
 
 	};

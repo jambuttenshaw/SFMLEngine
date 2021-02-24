@@ -14,7 +14,14 @@ namespace SFMLEngine {
 
 	void AnimationSystem::EntityAddedToSystem(Entity entity)
 	{
+		auto& animator = m_Coordinator->GetComponent<Animator>(entity);
+		auto& spriteRenderer = m_Coordinator->GetComponent<SpriteRenderer>(entity);
+		auto& currentAnimation = animator.GetCurrentAnimation();
 
+		currentAnimation.Reset();
+
+		auto rect{ currentAnimation.Flipped != animator.Flip ? FlipRect(*currentAnimation.CurrentFrame) : *currentAnimation.CurrentFrame };
+		spriteRenderer.Sprite.setTextureRect(rect);
 	}
 
 	void AnimationSystem::EntityRemovedFromSystem(Entity entity)
@@ -32,17 +39,13 @@ namespace SFMLEngine {
 			auto& currentAnimation = animator.GetCurrentAnimation();
 
 			
-			if (currentAnimation.Animate(ts))
-			{
-				// animation has changed frame we need to update the sprite renderer
+			currentAnimation.Animate(ts);
 
-				// flip the sprite if only 1 of the animation flip or animator flip is set
-				// if both are set, its the same as flipping it twice or not at all
-				auto rect{ currentAnimation.Flipped != animator.Flip ? FlipRect(*currentAnimation.CurrentFrame) : *currentAnimation.CurrentFrame };
-				// set the rect
-				spriteRenderer.Sprite.setTextureRect(rect);
-			}
-
+			// flip the sprite if only 1 of the animation flip or animator flip is set
+			// if both are set, its the same as flipping it twice or not at all
+			auto rect{ currentAnimation.Flipped != animator.Flip ? FlipRect(*currentAnimation.CurrentFrame) : *currentAnimation.CurrentFrame };
+			// set the rect
+			spriteRenderer.Sprite.setTextureRect(rect);
 		}
 	}
 

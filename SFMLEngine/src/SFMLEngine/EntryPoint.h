@@ -11,7 +11,6 @@ they should only be defining their application; not how it should be run.
 
 int main()
 {
-	int* i = new int;
 	SFMLEngine::Log::Init();
 	SFMLEngine::Application* app = SFMLEngine::CreateApplication();
 

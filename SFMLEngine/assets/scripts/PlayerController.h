@@ -12,6 +12,7 @@ public:
 		// do something when the game starts
 		m_Transform = &GetComponent<Transform>();
 		m_Rigidbody = &GetComponent<Rigidbody>();
+		m_Animator = &GetComponent<Animator>();
 	}
 
 	void Update(Timestep ts) override
@@ -45,6 +46,7 @@ public:
 			m_Rigidbody->Velocity += Physics::Gravity * m_FallMultiplier *(float)ts;
 		}
 
+		m_Animator->Flip = !m_FacingRight;
 
 		DEBUG_DISPLAY("Player position", m_Rigidbody->Position);
 		DEBUG_DISPLAY("Player velocity", m_Rigidbody->Velocity);
@@ -64,6 +66,7 @@ public:
 private:
 	Transform* m_Transform = nullptr;
 	Rigidbody* m_Rigidbody = nullptr;
+	Animator* m_Animator = nullptr;
 
 	bool m_OnGround = false;
 
