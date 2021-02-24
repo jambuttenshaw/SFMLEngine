@@ -113,6 +113,8 @@ namespace SFMLEngine
             m_Coordinator->RegisterComponent<BoxCollider>();
             m_Coordinator->RegisterComponent<CircleCollider>();
             m_Coordinator->RegisterComponent<TilemapCollider>();
+
+            m_Coordinator->RegisterComponent<Animator>();
         }
 
         {
@@ -242,6 +244,16 @@ namespace SFMLEngine
                 signature.set(m_Coordinator->GetComponentType<Transform>());
                 signature.set(m_Coordinator->GetComponentType<BoxCollider>());
                 m_Coordinator->SetSystemSignature<BoxColliderDebugSystem>(signature);
+            }
+
+
+            m_AnimationSystem = m_Coordinator->RegisterSystem<AnimationSystem>();
+            m_AnimationSystem->Init(m_Coordinator);
+            {
+                Signature signature;
+                signature.set(m_Coordinator->GetComponentType<Animator>());
+                signature.set(m_Coordinator->GetComponentType<SpriteRenderer>());
+                m_Coordinator->SetSystemSignature<AnimationSystem>(signature);
             }
         }
         /*
@@ -377,6 +389,8 @@ namespace SFMLEngine
                 // update all native scripts
                 m_ScriptableEntitySystem->Update(ts);
 
+                // animate sprites
+                m_AnimationSystem->Update(ts);
 
                 // apply any changes made to components
                 m_IdentitySystem->Update();

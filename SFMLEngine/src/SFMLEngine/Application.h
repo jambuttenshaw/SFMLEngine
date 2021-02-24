@@ -29,6 +29,8 @@
 #include "Systems/Physics/TilemapSystem.h"
 #include "Systems/Physics/BoxColliderDebugSystem.h"
 
+#include "Systems/AnimationSystem.h"
+
 
 #include "Scene.h"
 
@@ -128,6 +130,8 @@ namespace SFMLEngine {
 
 		std::shared_ptr<TilemapSystem> m_TilemapSystem;
 		std::shared_ptr<BoxColliderDebugSystem> m_BoxColliderDebugSystem;
+
+		std::shared_ptr<AnimationSystem> m_AnimationSystem;
 
 
 		bool m_DisplayDebug = false;
