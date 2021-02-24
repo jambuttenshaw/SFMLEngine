@@ -87,6 +87,7 @@ namespace SFMLEngine {
 			ElapsedTime = 0;
 			FrameIndex = 0;
 			CurrentFrame = &Frames[FrameIndex];
+			Playing = true;
 		}
 
 	};
@@ -124,7 +125,11 @@ namespace SFMLEngine {
 		void SetCurrentAnimation(const std::string& name)
 		{
 			SFMLE_CORE_ASSERT(Animations.find(name) != Animations.end(), "Animation doesn't exist!");
-			CurrentAnimation = name;
+			if (CurrentAnimation != name)
+			{
+				CurrentAnimation = name;
+				Animations[CurrentAnimation].Reset();
+			}
 		}
 		Animation& GetCurrentAnimation()
 		{
@@ -133,6 +138,12 @@ namespace SFMLEngine {
 		const sf::IntRect& GetCurrentFrame()
 		{
 			return *Animations[CurrentAnimation].CurrentFrame;
+		}
+
+
+		void Reset()
+		{
+			for (auto& anim : Animations) anim.second.Reset();
 		}
 
 	private:

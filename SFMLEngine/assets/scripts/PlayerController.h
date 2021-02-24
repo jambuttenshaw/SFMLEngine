@@ -47,6 +47,19 @@ public:
 		}
 
 		m_Animator->Flip = !m_FacingRight;
+		if (m_OnGround)
+		{
+			if (fabsf(m_Move) > 100.0f)
+			{
+				m_Animator->SetCurrentAnimation("run");
+			}
+			else
+				m_Animator->SetCurrentAnimation("idle");
+		}
+		else 
+		{
+			m_Animator->SetCurrentAnimation("jump");
+		}
 
 		DEBUG_DISPLAY("Player position", m_Rigidbody->Position);
 		DEBUG_DISPLAY("Player velocity", m_Rigidbody->Velocity);

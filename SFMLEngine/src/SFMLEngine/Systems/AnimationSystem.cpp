@@ -15,10 +15,11 @@ namespace SFMLEngine {
 	void AnimationSystem::EntityAddedToSystem(Entity entity)
 	{
 		auto& animator = m_Coordinator->GetComponent<Animator>(entity);
+		
+		animator.Reset();
+		
 		auto& spriteRenderer = m_Coordinator->GetComponent<SpriteRenderer>(entity);
 		auto& currentAnimation = animator.GetCurrentAnimation();
-
-		currentAnimation.Reset();
 
 		auto rect{ currentAnimation.Flipped != animator.Flip ? FlipRect(*currentAnimation.CurrentFrame) : *currentAnimation.CurrentFrame };
 		spriteRenderer.Sprite.setTextureRect(rect);

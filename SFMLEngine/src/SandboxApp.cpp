@@ -38,12 +38,11 @@ public:
 			int numTiles = 64;
 			for (int x = 0; x < numTiles; x++)
 			{
-				int yOff = rand() % 3;
-				tilemapComponent.PlaceTile(sf::Vector2i(x - numTiles / 2, yOff), ground);
+				tilemapComponent.PlaceTile(sf::Vector2i(x - numTiles / 2, 0), ground);
 				
-				for (int y = 1; y < 10 - yOff; y++)
+				for (int y = 1; y < 10; y++)
 				{
-					tilemapComponent.PlaceTile(sf::Vector2i(x - numTiles / 2, yOff + y), rocks);
+					tilemapComponent.PlaceTile(sf::Vector2i(x - numTiles / 2, y), rocks);
 				}
 				
 			}
@@ -111,7 +110,7 @@ public:
 				2, 0,
 				Texture::Create("assets/textures/characterSheetNormals.png") });
 
-			
+
 			// create the animations and animator component
 			Animation idle{ "idle", {
 				{0,   0, 32, 64},
@@ -122,8 +121,27 @@ public:
 				{161, 0, 32, 64} },
 				0.1f
 			};
+			Animation run{ "run", {
+				{1,   128, 32, 64},
+				{33,  128, 32, 64},
+				{64,  128, 32, 64},
+				{96,  128, 32, 64},
+				{128, 128, 32, 64},
+				{160, 128, 32, 64} },
+				0.1f
+			};
+			Animation jump{ "jump", {
+				{0,  320, 32, 64},
+				{32, 320, 32, 64},
+				{64, 320, 32, 64} },
+				0.1f
+			}; jump.Looping = false;
+
 			Animator animator;
 			animator.AddAnimation(idle);
+			animator.AddAnimation(run);
+			animator.AddAnimation(jump);
+
 			animator.SetCurrentAnimation("idle");
 			AddComponent(m_PhysicsEntity, animator);
 			
