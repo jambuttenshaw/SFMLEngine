@@ -4,8 +4,6 @@
 #include "EntityManager.h"
 #include "SystemManager.h"
 
-#include <Tracy.hpp>
-
 namespace SFMLEngine {
 
 	class Coordinator

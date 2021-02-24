@@ -69,7 +69,8 @@ project "SFMLEngine"
 		defines 
 		{
 			"SFMLENGINE_ENABLE_ASSERTS",
-			"SFMLENGINE_DEBUG"
+			"SFMLENGINE_DEBUG",
+			"_CRTDBG_MAP_ALLOC"
 		}
 		
 		links

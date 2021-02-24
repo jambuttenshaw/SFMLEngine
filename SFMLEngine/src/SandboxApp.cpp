@@ -106,10 +106,27 @@ public:
 
 			// add the sprite renderer component
 			AddComponent(m_PhysicsEntity, SpriteRenderer{
-				Texture::Create("assets/textures/character.png"),
+				Texture::Create("assets/textures/characterSheet.png"),
 				Material::Create("Lit"),
 				2, 0,
-				Texture::Create("assets/textures/characterNormals.png") });
+				Texture::Create("assets/textures/characterSheetNormals.png") });
+
+			
+			// create the animations and animator component
+			Animation* idle = new Animation{ {
+				{0,   0, 32, 64},
+				{34,  0, 32, 64},
+				{66,  0, 32, 64},
+				{96,  0, 32, 64},
+				{129, 0, 32, 64},
+				{161, 0, 32, 64} },
+				0.1f
+			};
+			Animator animator;
+			animator.AddAnimation("idle", idle);
+			animator.SetCurrentAnimation("idle");
+			AddComponent(m_PhysicsEntity, animator);
+			
 
 			AddNativeScript<ClickToPlace>(m_PhysicsEntity);
 			AddNativeScript<PlayerController>(m_PhysicsEntity);

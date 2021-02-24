@@ -82,7 +82,7 @@ namespace SFMLEngine {
 	{
 		friend class System;
 
-		std::unordered_map<std::string, Animation> Animations;
+		std::unordered_map<std::string, Animation*> Animations;
 		Animation* CurrentAnimation = nullptr;
 		
 		bool Flip = false;
@@ -90,15 +90,15 @@ namespace SFMLEngine {
 		Animator()
 			: Animations()
 		{}
-		Animator(std::unordered_map<std::string, Animation> anims)
+		Animator(std::unordered_map<std::string, Animation*> anims)
 			: Animations{ anims }
 		{}
 
-		void AddAnimation(std::pair<std::string, Animation> anim)
+		void AddAnimation(std::pair<std::string, Animation*> anim)
 		{
 			Animations.insert(anim);
 		}
-		void AddAnimation(const std::string& name, Animation anim)
+		void AddAnimation(const std::string& name, Animation* anim)
 		{
 			Animations.insert(std::make_pair(name, anim));
 		}
@@ -107,7 +107,7 @@ namespace SFMLEngine {
 		void SetCurrentAnimation(const std::string& name)
 		{
 			SFMLE_CORE_ASSERT(Animations.find(name) != Animations.end(), "Animation doesn't exist!");
-			CurrentAnimation = &Animations[name];
+			CurrentAnimation = Animations[name];
 		}
 		Animation& GetCurrentAnimation()
 		{

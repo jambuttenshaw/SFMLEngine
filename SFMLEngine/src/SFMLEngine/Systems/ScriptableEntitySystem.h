@@ -64,7 +64,7 @@ namespace SFMLEngine {
 		T& AddNativeScript(Entity entity, void* scene)
 		{
 			static_assert(std::is_base_of<ScriptableEntity, T>::value, "Native scripts must inherit from Scriptable entity!");
-
+			
 			const char* typeName = typeid(T).name();
 
 			T* newScript = new T;

@@ -401,6 +401,7 @@ namespace SFMLEngine
                 m_CameraSystem->Update();
 
 #ifdef SFMLENGINE_DEBUG
+                
                 if (m_DisplayDebug)
                 {
                     ZoneScoped;
@@ -453,6 +454,7 @@ namespace SFMLEngine
             }
 
 #ifdef SFMLENGINE_DEBUG
+            
             if (m_DisplayDebug)
             {
                 ZoneScoped;

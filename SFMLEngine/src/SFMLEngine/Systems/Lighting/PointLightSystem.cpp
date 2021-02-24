@@ -4,7 +4,6 @@
 #include "SFMLEngine/ECS/Components/Transform.h"
 #include "SFMLEngine/Renderer/Material.h"
 
-#include <Tracy.hpp>
 
 namespace SFMLEngine {
 

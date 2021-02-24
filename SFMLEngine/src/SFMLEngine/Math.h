@@ -1,7 +1,7 @@
 #pragma once
 
 #include <SFML/System.hpp>
-
+#include "SFMLEngine/Log.h"
 #include <random>
 
 namespace SFMLEngine {

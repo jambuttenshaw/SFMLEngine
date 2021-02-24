@@ -1,8 +1,6 @@
 #include "Material.h"
 
 
-#include <Tracy.hpp>
-
 namespace SFMLEngine {
 
 	std::vector<MaterialData> Material::s_MaterialCache;

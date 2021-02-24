@@ -100,6 +100,10 @@ namespace SFMLEngine {
 
 			// assign data into uniforms vector
 			auto& uniform = GetUniform(uniformName);
+
+			// delete the data previously held in the uniform to not cause a memory leak
+			delete static_cast<UniformData<T>*>(uniform.Data);
+
 			// cast to a void* since we dont know the data type at compile time
 			uniform.Data = (void*)(data);
 		}

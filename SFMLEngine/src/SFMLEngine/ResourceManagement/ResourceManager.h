@@ -8,7 +8,6 @@
 #include <queue>
 #include <unordered_map>
 
-#include <Tracy.hpp>
 
 namespace SFMLEngine {
 
