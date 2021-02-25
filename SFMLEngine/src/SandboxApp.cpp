@@ -146,7 +146,6 @@ public:
 			AddComponent(m_PhysicsEntity, animator);
 			
 
-			AddNativeScript<ClickToPlace>(m_PhysicsEntity);
 			AddNativeScript<PlayerController>(m_PhysicsEntity);
 		}
 

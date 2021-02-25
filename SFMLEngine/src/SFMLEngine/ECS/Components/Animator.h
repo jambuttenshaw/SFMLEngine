@@ -40,7 +40,7 @@ namespace SFMLEngine {
 			Name = other.Name;
 			CurrentFrame = other.CurrentFrame;
 			FrameIndex = other.FrameIndex;
-			Frames = move(other.Frames);
+			Frames = other.Frames;
 
 			Flipped = other.Flipped;
 			Looping = other.Looping;
@@ -98,7 +98,7 @@ namespace SFMLEngine {
 		friend class System;
 
 		std::unordered_map<std::string, Animation> Animations;
-		std::string CurrentAnimation;
+		std::string CurrentAnimation = "null";
 		
 		bool Flip = false;
 
@@ -110,7 +110,7 @@ namespace SFMLEngine {
 		{}
 		Animator(const Animator& other)
 		{
-			Animations = move(other.Animations);
+			Animations = other.Animations;
 			Flip = other.Flip;
 
 			SetCurrentAnimation(other.CurrentAnimation);
@@ -118,6 +118,8 @@ namespace SFMLEngine {
 
 		void AddAnimation(Animation anim)
 		{
+			SFMLE_CORE_ASSERT(Animations.find(anim.Name) == Animations.end(), "Animation with that name already exists!");
+			SFMLE_CORE_ASSERT(anim.Name != "null", "Cannot create animation with that name!");
 			Animations.insert(std::make_pair(anim.Name, anim));
 		}
 
@@ -131,6 +133,20 @@ namespace SFMLEngine {
 				Animations[CurrentAnimation].Reset();
 			}
 		}
+
+		void Stop()
+		{
+			CurrentAnimation = "null";
+		}
+		void Pause()
+		{
+			Animations[CurrentAnimation].Playing = false;
+		}
+		void Resume()
+		{
+			Animations[CurrentAnimation].Playing = true;
+		}
+
 		Animation& GetCurrentAnimation()
 		{
 			return Animations[CurrentAnimation];

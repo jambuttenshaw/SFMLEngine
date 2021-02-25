@@ -17,7 +17,8 @@ namespace SFMLEngine {
 		auto& animator = m_Coordinator->GetComponent<Animator>(entity);
 		
 		animator.Reset();
-		
+		if (animator.CurrentAnimation == "null") return;
+
 		auto& spriteRenderer = m_Coordinator->GetComponent<SpriteRenderer>(entity);
 		auto& currentAnimation = animator.GetCurrentAnimation();
 
@@ -35,11 +36,11 @@ namespace SFMLEngine {
 		for (auto entity : m_Entities)
 		{
 			auto& animator = m_Coordinator->GetComponent<Animator>(entity);
+			if (animator.CurrentAnimation == "null") continue;
+
 			auto& spriteRenderer = m_Coordinator->GetComponent<SpriteRenderer>(entity);
 			
 			auto& currentAnimation = animator.GetCurrentAnimation();
-
-			
 			currentAnimation.Animate(ts);
 
 			// flip the sprite if only 1 of the animation flip or animator flip is set
