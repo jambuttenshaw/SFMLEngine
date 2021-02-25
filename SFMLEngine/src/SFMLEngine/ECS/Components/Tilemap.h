@@ -5,6 +5,8 @@
 #include "SFMLEngine/Constants.h"
 #include "SFMLEngine/Renderer/TilePalette.h"
 
+#include "Transform.h"
+
 
 namespace SFMLEngine {
 
@@ -38,10 +40,12 @@ namespace SFMLEngine {
 		Tilemap(ResourceID tilePalette);
 		Tilemap(ResourceID tilePalette, std::initializer_list<Tile> tiles);
 
-		void PlaceTile(const sf::Vector2i& location, TileID tileType);
+		void PlaceTile(const sf::Vector2i& location, TileID tileType, bool overwrite = false);
 		void RemoveTile(const sf::Vector2i& location);
 
 		sf::Vector2i WorldToTileCoordinates(const sf::Vector2f& worldCoords);
+
+		void SetTransform(Transform* transform) { m_Transform = transform; }
 
 	private:
 		
@@ -54,6 +58,7 @@ namespace SFMLEngine {
 		bool m_Modified = false;
 
 		size_t m_TriangleIndex = 0;
+		Transform* m_Transform = nullptr;
 	};
 
 }

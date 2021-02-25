@@ -180,7 +180,7 @@ namespace SFMLEngine {
 		sf::FloatRect globalQuad;
 		for (auto const& quad : m_CollisionGeometry)
 		{
-			globalQuad = m_Transform->GetWorldTransformMatrix().transformRect(quad);
+			globalQuad = m_Transform->GetLocalToWorldTransformMatrix().transformRect(quad);
 			if (globalQuad.intersects(otherGlobalBounds))
 			{
 				collides = true;
@@ -202,7 +202,7 @@ namespace SFMLEngine {
 		sf::FloatRect globalQuad;
 		for (auto const& quad : m_CollisionGeometry)
 		{
-			globalQuad = m_Transform->GetWorldTransformMatrix().transformRect(quad);
+			globalQuad = m_Transform->GetLocalToWorldTransformMatrix().transformRect(quad);
 			if (globalQuad.intersects(otherGlobalBounds))
 			{
 				collides = true;

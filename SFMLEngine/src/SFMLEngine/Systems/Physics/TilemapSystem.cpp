@@ -16,7 +16,10 @@ namespace SFMLEngine {
 	void TilemapSystem::EntityAddedToSystem(Entity entity)
 	{
 		Transform* transform = &m_Coordinator->GetComponent<Transform>(entity);
+		
 		Tilemap* tilemap = &m_Coordinator->GetComponent<Tilemap>(entity);
+		tilemap->SetTransform(transform);
+
 		TilemapCollider* collider = &m_Coordinator->GetComponent<TilemapCollider>(entity);
 
 		collider->Setup(tilemap);
@@ -28,6 +31,8 @@ namespace SFMLEngine {
 	
 	void TilemapSystem::EntityRemovedFromSystem(Entity entity)
 	{
+		m_TilemapCache[entity]->SetTransform(nullptr);
+
 		m_TransformCache.erase(entity);
 		m_TilemapCache.erase(entity);
 		m_ColliderCache.erase(entity);
@@ -39,7 +44,7 @@ namespace SFMLEngine {
 
 		for (auto& entity : m_Entities)
 		{
-			m_ColliderCache[entity]->DrawDebug(m_TransformCache[entity]->GetWorldTransformMatrix());
+			m_ColliderCache[entity]->DrawDebug(m_TransformCache[entity]->GetLocalToWorldTransformMatrix());
 			if (ComponentModified(m_TilemapCache[entity]))
 			{
 				m_ColliderCache[entity]->UpdateGeometry();

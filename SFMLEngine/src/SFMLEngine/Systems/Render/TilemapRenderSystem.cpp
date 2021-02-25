@@ -104,7 +104,7 @@ namespace SFMLEngine {
 			// set up the render state
 			// use the texture from the tile palette object
 			m_RenderState.texture = ResourceManager::GetResourceHandle<sf::Texture>(tilemap->PalettePtr->GetTexture());
-			m_RenderState.transform = transform->GetWorldTransformMatrix();
+			m_RenderState.transform = transform->GetLocalToWorldTransformMatrix();
 			m_RenderState.shader = shader;
 
 			{

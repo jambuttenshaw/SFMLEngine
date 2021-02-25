@@ -44,16 +44,21 @@ namespace SFMLEngine {
 			return t;
 		}
 
-		sf::Transform GetWorldTransformMatrix() const
+		sf::Transform GetLocalToWorldTransformMatrix() const
 		{
 			if (Parent)
 			{
-				return GetLocalTransformMatrix().combine(Parent->GetWorldTransformMatrix());
+				return GetLocalTransformMatrix().combine(Parent->GetLocalToWorldTransformMatrix());
 			}
 			else
 			{
 				return GetLocalTransformMatrix();
 			}
+		}
+
+		sf::Transform GetWorldToLocalTransformMatrix() const
+		{
+			return GetLocalToWorldTransformMatrix().getInverse();
 		}
 
 		sf::Vector2f GetWorldPosition() const

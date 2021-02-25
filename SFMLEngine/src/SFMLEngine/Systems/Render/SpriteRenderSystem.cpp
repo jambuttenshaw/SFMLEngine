@@ -106,7 +106,7 @@ namespace SFMLEngine {
 			}
 				
 			// create a transform
-			m_RenderState.transform = t->GetWorldTransformMatrix();
+			m_RenderState.transform = t->GetLocalToWorldTransformMatrix();
 			m_RenderState.shader = shader;
 				
 			{

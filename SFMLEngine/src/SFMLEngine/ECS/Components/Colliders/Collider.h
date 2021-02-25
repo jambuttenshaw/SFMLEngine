@@ -42,7 +42,7 @@ namespace SFMLEngine {
 		void SetTransform(Transform* transform) { m_Transform = transform; }
 
 		virtual sf::FloatRect GetLocalBounds() const = 0;
-		sf::FloatRect GetGlobalBounds() { return m_Transform->GetWorldTransformMatrix().transformRect(GetLocalBounds()); }
+		sf::FloatRect GetGlobalBounds() { return m_Transform->GetLocalToWorldTransformMatrix().transformRect(GetLocalBounds()); }
 
 		/*
 		virtual sf::Vector2f GetLocalOffset() const = 0;

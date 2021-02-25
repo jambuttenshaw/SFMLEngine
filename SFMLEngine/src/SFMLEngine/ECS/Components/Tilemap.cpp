@@ -32,10 +32,14 @@ namespace SFMLEngine {
 		}
 	}
 
-	void Tilemap::PlaceTile(const sf::Vector2i& location, TileID tileType)
+	void Tilemap::PlaceTile(const sf::Vector2i& location, TileID tileType, bool overwrite)
 	{
 		// do a check to make sure there isnt already a tile at that location
-		if (TileAtLocation(location)) return;
+		if (TileAtLocation(location) && !overwrite)
+		{
+			LOG_CORE_INFO("Couldn't place tile: Tile at already at {0}, {1} and overwrite is false.", location.x, location.y);
+			return;
+		}
 
 		// add 6 more vertices into the geometry
 		Geometry.resize(Geometry.getVertexCount() + 6);
@@ -105,8 +109,17 @@ namespace SFMLEngine {
 
 	sf::Vector2i Tilemap::WorldToTileCoordinates(const sf::Vector2f& worldCoords)
 	{
-		return sf::Vector2i((int)floorf(worldCoords.x / (float)TileSize.x),
-							(int)floorf(worldCoords.y / (float)TileSize.y));
+		if (m_Transform)
+		{
+			auto pos = m_Transform->GetWorldToLocalTransformMatrix().transformPoint(worldCoords);
+			return sf::Vector2i((int)floorf(pos.x / (float)TileSize.x),
+								(int)floorf(pos.y / (float)TileSize.y));
+		}
+		else
+		{
+			return sf::Vector2i((int)floorf(worldCoords.x / (float)TileSize.x),
+								(int)floorf(worldCoords.y / (float)TileSize.y));
+		}
 	}
 
 

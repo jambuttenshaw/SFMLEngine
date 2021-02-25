@@ -21,7 +21,7 @@ public:
 		if (mouseDown && !m_Click)
 		{
 			m_Click = true;
-			m_Tilemap->RemoveTile(m_Tilemap->WorldToTileCoordinates(Input::GetMouseWorldPos() - m_Transform->Position));
+			m_Tilemap->RemoveTile(m_Tilemap->WorldToTileCoordinates(Input::GetMouseWorldPos()));
 		}
 		else if (!mouseDown && m_Click)
 		{

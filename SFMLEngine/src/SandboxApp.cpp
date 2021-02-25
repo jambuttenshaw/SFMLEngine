@@ -9,6 +9,7 @@
 #include "ClickToPlace.h"
 #include "PlayerController.h"
 #include "SmoothFollowPlayer.h"
+#include "ScrollToControlLight.h"
 
 
 using namespace SFMLEngine;
@@ -154,8 +155,9 @@ public:
 
 			// light is a child transform of physics entity
 			AddComponent(m_Light, Transform{ sf::Vector2f(16, 32), &GetComponent<Transform>(m_PhysicsEntity) });
-			AddComponent(m_Light, PointLight{ 1.3f, 0.007f, sf::Color(219, 113, 114, 255) });
+			AddComponent(m_Light, PointLight{ 1.3f, 15.0f, sf::Color(219, 113, 114, 255) });
 
+			AddNativeScript<ScrollToControlLight>(m_Light);
 		}
 
 		{
