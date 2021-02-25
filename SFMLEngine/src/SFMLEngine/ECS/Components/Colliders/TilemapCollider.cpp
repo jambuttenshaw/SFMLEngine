@@ -30,6 +30,7 @@ namespace SFMLEngine {
 				});
 		}
 
+		if (Optimization > OptimizationLevel::None) 
 		{
 			// then optimize out as many of those quads as possible
 			bool optimal = false;
@@ -88,6 +89,7 @@ namespace SFMLEngine {
 			}
 		}
 
+		if (Optimization > OptimizationLevel::Standard)
 		{
 			// a second round of optimization
 			bool optimal = false;

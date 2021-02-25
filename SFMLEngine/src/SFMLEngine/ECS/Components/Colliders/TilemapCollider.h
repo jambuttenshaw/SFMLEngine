@@ -14,11 +14,21 @@ namespace SFMLEngine {
 
 	struct TilemapCollider : public Collider
 	{
-		Tilemap* TilemapHandle = nullptr;
+		enum class OptimizationLevel 
+		{
+			None = 0, Standard = 1, High = 2
+		};
 
+
+		Tilemap* TilemapHandle = nullptr;
+		OptimizationLevel Optimization;
 		sf::Vector2f Size;
 
 		TilemapCollider()
+			: Optimization(OptimizationLevel::None)
+		{}
+		TilemapCollider(OptimizationLevel optimize)
+			: Optimization(optimize)
 		{}
 
 		void Setup(Tilemap* tilemapHandle)
