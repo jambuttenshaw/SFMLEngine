@@ -20,8 +20,8 @@ namespace SFMLEngine {
 
 
 	public:
-		static float CalculateOrderInLayerFactor(float max);
-		static float CalculateRenderLayerFactor(float max);
+		static float CalculateOrderInLayerFactor(int max);
+		static float CalculateRenderLayerFactor(int max);
 
 	private:
 		static sf::ContextSettings* s_ContextSettings;

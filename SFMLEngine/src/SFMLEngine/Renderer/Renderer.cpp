@@ -73,11 +73,11 @@ namespace SFMLEngine {
 	}
 
 
-	float Renderer::CalculateOrderInLayerFactor(float max)
+	float Renderer::CalculateOrderInLayerFactor(int max)
 	{
 		return max == 0 ? 0 : 1.0f / (float)(max + 1.0f);
 	}
-	float Renderer::CalculateRenderLayerFactor(float max)
+	float Renderer::CalculateRenderLayerFactor(int max)
 	{
 		return max == 0 ? 1.0f : 1.0f / (float)(max);
 	}
