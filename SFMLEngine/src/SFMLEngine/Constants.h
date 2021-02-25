@@ -63,7 +63,7 @@ namespace SFMLEngine {
 	const int MAX_POINT_LIGHTS = 4;
 	const int MAX_DIRECTIONAL_LIGHTS = 2;
 
-
+	const int LIGHT_Z_VALUE = 5;
 
 	// --------
 	// TILEMAPS

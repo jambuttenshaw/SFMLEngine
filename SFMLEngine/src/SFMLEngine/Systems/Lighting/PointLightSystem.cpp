@@ -75,7 +75,7 @@ namespace SFMLEngine {
 
 					// upload the position of the light
 					auto& pos = transform.GetWorldPosition();
-					mat->SetProperty(lightIndex + ".Position", sf::Vector3f(pos.x, pos.y, 5));
+					mat->SetProperty(lightIndex + ".Position", sf::Vector3f(pos.x, pos.y, LIGHT_Z_VALUE));
 
 					// if the light has been modified then we want to upload the new data
 					if (modified)
@@ -134,7 +134,7 @@ namespace SFMLEngine {
 			
 			std::string lightIndex("u_PointLights[" + std::to_string(index) + "]");
 			auto& pos = transform.GetWorldPosition();
-			mat->SetProperty(lightIndex + ".Position", sf::Vector3f(pos.x, pos.y, 5));
+			mat->SetProperty(lightIndex + ".Position", sf::Vector3f(pos.x, pos.y, LIGHT_Z_VALUE));
 			mat->SetProperty(lightIndex + ".Intensity", light.Intensity);
 			mat->SetProperty(lightIndex + ".Range", light.Range);
 			mat->SetProperty(lightIndex + ".Color", light.Color);
