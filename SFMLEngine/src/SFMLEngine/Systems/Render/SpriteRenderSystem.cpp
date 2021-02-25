@@ -1,6 +1,7 @@
 #include "SpriteRenderSystem.h"
 
 #include "SFMLEngine/Math.h"
+#include "SFMLEngine/Renderer/Renderer.h"
 
 
 namespace SFMLEngine {
@@ -29,8 +30,8 @@ namespace SFMLEngine {
 
 		m_MaxOrderInLayer = std::max(m_MaxOrderInLayer, abs(sRenderer->OrderInLayer));
 		m_MaxRenderLayer = std::max(m_MaxRenderLayer, abs(sRenderer->RenderLayer));
-		m_OrderInLayerNormalizeFactor = m_MaxOrderInLayer == 0 ? 0 : 1.0f / (float)(m_MaxOrderInLayer + 1.0f);
-		m_RenderLayerNormaizeFactor = m_MaxRenderLayer == 0 ? 1.0f : 1.0f / (float)(m_MaxRenderLayer);
+		m_OrderInLayerNormalizeFactor = Renderer::CalculateOrderInLayerFactor(m_MaxOrderInLayer);
+		m_RenderLayerNormaizeFactor = Renderer::CalculateRenderLayerFactor(m_MaxRenderLayer);
 
 		m_SpriteRenderers.insert(std::make_pair(entity, sRenderer));
 		m_Transforms.insert(std::make_pair(entity, transform));
@@ -63,8 +64,8 @@ namespace SFMLEngine {
 
 		if (anyChanged)
 		{
-			m_OrderInLayerNormalizeFactor = m_MaxOrderInLayer == 0 ? 0 : 1.0f / (float)(m_MaxOrderInLayer + 1.0f);
-			m_RenderLayerNormaizeFactor = m_MaxRenderLayer == 0 ? 1.0f : 1.0f / (float)(m_MaxRenderLayer);
+			m_OrderInLayerNormalizeFactor = Renderer::CalculateOrderInLayerFactor(m_MaxOrderInLayer);
+			m_RenderLayerNormaizeFactor = Renderer::CalculateRenderLayerFactor(m_MaxRenderLayer);
 		}
 	}
 

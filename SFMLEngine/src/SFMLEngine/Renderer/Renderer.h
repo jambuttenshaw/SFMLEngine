@@ -18,6 +18,11 @@ namespace SFMLEngine {
 
 		static void SetUniforms();
 
+
+	public:
+		static float CalculateOrderInLayerFactor(float max);
+		static float CalculateRenderLayerFactor(float max);
+
 	private:
 		static sf::ContextSettings* s_ContextSettings;
 	};

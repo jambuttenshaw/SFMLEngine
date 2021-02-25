@@ -71,4 +71,14 @@ namespace SFMLEngine {
 			materialData.MaterialPtr->SetUniforms();
 		}
 	}
+
+
+	float Renderer::CalculateOrderInLayerFactor(float max)
+	{
+		return max == 0 ? 0 : 1.0f / (float)(max + 1.0f);
+	}
+	float Renderer::CalculateRenderLayerFactor(float max)
+	{
+		return max == 0 ? 1.0f : 1.0f / (float)(max);
+	}
 }
