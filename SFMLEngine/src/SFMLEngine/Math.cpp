@@ -22,7 +22,7 @@ namespace SFMLEngine {
 	}
 
 
-
+	// VECTOR 2
 	sf::Vector2f Math::Max(const sf::Vector2f& a, const sf::Vector2f& b)
 	{
 		return sf::Vector2f(std::max(a.x, b.x), std::max(a.y, b.y));
@@ -51,18 +51,36 @@ namespace SFMLEngine {
 	{
 		return sqrtf(SquareMagnitude(a));
 	}
-
-
-	sf::Vector2f Math::Lerp(const sf::Vector2f& a, const sf::Vector2f& b, float t)
+	
+	// VECTOR3
+	sf::Vector3f Math::Max(const sf::Vector3f& a, const sf::Vector3f& b)
 	{
-		return (1 - t) * a + t * b;
+		return sf::Vector3f(std::max(a.x, b.x), std::max(a.y, b.y), std::max(a.z, b.z));
 	}
-	float Math::Lerp(float a, float b, float t)
+	sf::Vector3f Math::Min(const sf::Vector3f& a, const sf::Vector3f& b)
 	{
-		return (1 - t) * a + t * b;
+		return sf::Vector3f(std::min(a.x, b.x), std::min(a.y, b.y), std::min(a.z, b.z));
 	}
-
-
+	float Math::Dot(const sf::Vector3f& a, const sf::Vector3f& b)
+	{
+		return a.x * b.x + a.y * b.y;
+	}
+	sf::Vector3f Math::Normalize(const sf::Vector3f& a)
+	{
+		return a / Magnitude(a);
+	}
+	sf::Vector3f Math::Clamp(const sf::Vector3f& value, const sf::Vector3f& min, const sf::Vector3f& max)
+	{
+		return Max(Min(value, max), min);
+	}
+	float Math::SquareMagnitude(const sf::Vector3f& a)
+	{
+		return Dot(a, a);
+	}
+	float Math::Magnitude(const sf::Vector3f& a)
+	{
+		return sqrtf(SquareMagnitude(a));
+	}
 
 
 

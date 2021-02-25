@@ -173,7 +173,7 @@ public:
 		{
 			m_Light2 = CreateEntity();
 
-			AddComponent(m_Light2, DirectionalLight{ sf::Vector3f(1, 0, 0), 0.6f, sf::Color{94, 62, 180, 255}, true });
+			AddComponent(m_Light2, DirectionalLight{ 0, 0, 0.6f, sf::Color{94, 62, 180, 255}, true });
 		}
 	}
 

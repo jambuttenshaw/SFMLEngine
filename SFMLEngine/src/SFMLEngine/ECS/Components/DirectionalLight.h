@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "SFMLEngine/ECS/System.h"
+#include "SFMLEngine/Math.h"
 
 
 namespace SFMLEngine {
@@ -22,6 +23,16 @@ namespace SFMLEngine {
 		DirectionalLight(const sf::Vector3f& direction, float intensity, const sf::Color& color, bool staticLight = false)
 			: Direction(direction), Intensity(intensity), Color(color), Static(staticLight)
 		{}
+		DirectionalLight(float xAngle, float yAngle, float intensity, const sf::Color& color, bool staticLight = false)
+			: Intensity(intensity), Color(color), Static(staticLight)
+		{
+			Direction = { sinf(xAngle), sinf(yAngle), cosf(xAngle) * cosf(yAngle) };
+		}
+
+		void SetDirection(float xAngle, float yAngle)
+		{
+			Direction = Math::Normalize({ sinf(xAngle), sinf(yAngle), cosf(xAngle) * cosf(yAngle) });
+		}
 
 	private:
 		bool m_Modified = true;

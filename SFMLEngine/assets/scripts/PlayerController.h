@@ -19,7 +19,7 @@ public:
 	{
 		// do something every frame
 
-		m_Move = Math::Lerp(m_Move, 0, m_Friction * ts);
+		m_Move = Math::Lerp(m_Move, 0.0f, m_Friction * ts);
 		if (Input::IsKeyDown(sf::Keyboard::D))
 		{
 			m_Move = m_MoveSpeed;
