@@ -1,9 +1,12 @@
 #pragma once
 
-#include <Tracy.hpp>
-// #define ZoneScoped
-// #define ZoneName(...)
-// #define FrameMark
+#ifdef ENABLE_PROFILER
+	#include <Tracy.hpp>
+#else
+	#define ZoneScoped
+	#define ZoneName(...)
+	#define FrameMark
+#endif
 
 
 #include <stdlib.h>
