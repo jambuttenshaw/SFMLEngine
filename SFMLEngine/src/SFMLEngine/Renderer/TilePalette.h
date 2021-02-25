@@ -7,6 +7,15 @@
 
 namespace SFMLEngine {
 
+
+	struct TilePaletteCacheEntry
+	{
+		ResourceID PaletteID;
+		std::string Filepath;
+		bool Shared;
+	};
+
+
 	struct TileData
 	{
 		std::string Name;
@@ -43,10 +52,14 @@ namespace SFMLEngine {
 	public:
 		// static methods
 		static ResourceID Create(const sf::Vector2u& tileSize);
-		static ResourceID LoadFromFile(const std::string& texturePath, const std::string& normalMapPath, const sf::Vector2u& tileSize);
+		static ResourceID LoadFromFile(const std::string& texturePath, const std::string& normalMapPath, const sf::Vector2u& tileSize, bool shared = true);
 
 		static void Destroy(ResourceID palette);
 		static void DestroyAllCached();
+
+	private:
+
+		static ResourceID PaletteCached(const std::string& path);
 
 	private:
 		sf::Vector2u m_TileSize;
@@ -66,7 +79,7 @@ namespace SFMLEngine {
 		size_t m_TileCount = 0;
 
 	private:
-		static std::vector<ResourceID> s_PaletteCache;
+		static std::vector<TilePaletteCacheEntry> s_PaletteCache;
 	};
 
 }

@@ -4,7 +4,7 @@
 
 namespace SFMLEngine {
 
-	std::vector<ResourceID> TilePalette::s_PaletteCache;
+	std::vector<TilePaletteCacheEntry> TilePalette::s_PaletteCache;
 
 	TilePalette::TilePalette(const sf::Vector2u& tileSize)
 		: m_TileSize(tileSize), m_TileAtlas()
@@ -179,16 +179,21 @@ namespace SFMLEngine {
 		TilePalette* newPalette = new TilePalette(tileSize);
 		ResourceID newID = ResourceManager::ManageResource(newPalette);
 
-		s_PaletteCache.push_back(newID);
+		s_PaletteCache.push_back(TilePaletteCacheEntry{ newID, "", false });
 		return newID;
 	}
 
-	ResourceID TilePalette::LoadFromFile(const std::string& texturePath, const std::string& normalsPath, const sf::Vector2u& tileSize)
+	ResourceID TilePalette::LoadFromFile(const std::string& texturePath, const std::string& normalsPath, const sf::Vector2u& tileSize, bool shared)
 	{
+
+		ResourceID cached = PaletteCached(texturePath);
+		if (cached != NULL_RESOURCE_ID) return cached;
+
+
 		TilePalette* newPalette = new TilePalette(texturePath, normalsPath, tileSize);
 		ResourceID newID = ResourceManager::ManageResource(newPalette);
 
-		s_PaletteCache.push_back(newID);
+		s_PaletteCache.push_back(TilePaletteCacheEntry{ newID, texturePath, shared });
 		return newID;
 	}
 
@@ -197,7 +202,7 @@ namespace SFMLEngine {
 		int index = 0;
 		for (auto& p : s_PaletteCache)
 		{
-			if (p == palette)
+			if (p.PaletteID == palette)
 			{
 				ResourceManager::DeleteResource<TilePalette>(palette);
 				s_PaletteCache.erase(s_PaletteCache.begin() + index);
@@ -213,9 +218,19 @@ namespace SFMLEngine {
 	{
 		for (auto& p : s_PaletteCache)
 		{
-			ResourceManager::DeleteResource<TilePalette>(p);
+			ResourceManager::DeleteResource<TilePalette>(p.PaletteID);
 		}
 		s_PaletteCache.clear();
+	}
+
+	ResourceID TilePalette::PaletteCached(const std::string& path)
+	{
+		for (auto const& palette : s_PaletteCache)
+		{
+			if (palette.Filepath == path && palette.Shared)
+				return palette.PaletteID;
+		}
+		return NULL_RESOURCE_ID;
 	}
 
 }
