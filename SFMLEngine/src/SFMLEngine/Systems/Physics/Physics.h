@@ -16,7 +16,7 @@ namespace SFMLEngine {
 		static Collision CollisionAtPoint(const sf::Vector2f& point, float radius, Layer layerMask = Layer{});
 
 	public:
-		static inline const sf::Vector2f Gravity = {0, 750};
+		static sf::Vector2f Gravity;
 
 	private:
 		static std::shared_ptr<CollisionSystem> s_CollisionSystem;

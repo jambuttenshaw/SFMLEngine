@@ -9,7 +9,6 @@ class SmoothFollowPlayer : public ScriptableEntity
 public:
 	void Start() override
 	{
-		// do something when the game starts
 		m_Transform = &GetComponent<Transform>();
 
 		m_PlayerTransform = &GetComponent<Transform>(GetEntitiesWithTag("Player")[0]);
@@ -17,8 +16,19 @@ public:
 
 	void Update(Timestep ts) override
 	{
-		// do something every frame
-		m_Transform->Position = Math::Lerp(m_Transform->Position, m_PlayerTransform->Position, m_SmoothSpeed * ts);
+		
+		if (m_Following)
+		{
+			m_Transform->Position = Math::Lerp(m_Transform->Position, m_PlayerTransform->Position, m_SmoothSpeed * ts);
+			if (Math::SquareMagnitude(m_Transform->Position - m_PlayerTransform->Position) < 10)
+			{
+				m_Following = false;
+			}
+		}
+		else if (Math::SquareMagnitude(m_Transform->Position - m_PlayerTransform->Position) > m_FollowRadius)
+		{
+			m_Following = true;
+		}
 	}
 
 	void SetPlayerTransform(Transform* playerTransform) { m_PlayerTransform = playerTransform; }
@@ -28,5 +38,8 @@ private:
 
 	Transform* m_PlayerTransform = nullptr;
 
-	float m_SmoothSpeed = 5;
+	bool m_Following = false;
+
+	float m_SmoothSpeed = 3;
+	float m_FollowRadius = 7500.0f;
 };

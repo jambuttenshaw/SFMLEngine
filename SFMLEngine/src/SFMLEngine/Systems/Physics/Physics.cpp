@@ -13,6 +13,8 @@ namespace SFMLEngine {
 	std::shared_ptr<CollisionSystem> Physics::s_CollisionSystem = nullptr;
 	std::unordered_map<Layer, Layer> Physics::s_LayerMasks;
 
+	sf::Vector2f Physics::Gravity = { 0, 750 };
+
 	void Physics::Init(std::shared_ptr<CollisionSystem> collisionSystem)
 	{
 		s_CollisionSystem = collisionSystem;

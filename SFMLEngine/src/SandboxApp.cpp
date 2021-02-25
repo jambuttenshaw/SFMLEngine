@@ -97,9 +97,9 @@ public:
 			m_PhysicsEntity = CreateEntity("Player", "Player", "Player");
 
 			// give the entity a transform
-			AddComponent(m_PhysicsEntity, Transform{ sf::Vector2f(0, -700) });
+			AddComponent(m_PhysicsEntity, Transform{ sf::Vector2f(0, 200) });
 			// add a rigidbody so this entity is affected by physics
-			AddComponent(m_PhysicsEntity, Rigidbody{ 0.1f });
+			AddComponent(m_PhysicsEntity, Rigidbody{ });
 			AddComponent(m_PhysicsEntity, BoxCollider{ sf::Vector2f(17, 48), sf::Vector2f(8, 16) });
 			AddComponent(m_PhysicsEntity, ColliderInfo{ ColliderType::Box });
 
