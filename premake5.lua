@@ -23,13 +23,13 @@ LibraryDir["SFML"] = "%{wks.location}/SFMLEngine/vendor/SFML/lib"
 LibraryDir["glew"] = "%{wks.location}/SFMLEngine/vendor/glew/lib/Release/x64"
 
 project "SFMLEngine"
-    kind "StaticLib"
-    language "C++"
-    cppdialect "C++17"
-		
-		location("%{wks.location}/SFMLEngine")
+	kind "StaticLib"
+	language "C++"
+	cppdialect "C++17"
+	
+	location("%{wks.location}/SFMLEngine")
 
-    targetdir ("%{wks.location}/bin/" .. outputdir .. "/%{prj.name}")
+	targetdir ("%{wks.location}/bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("%{wks.location}/bin-int/" .. outputdir .. "/%{prj.name}")
 
 	files
@@ -113,6 +113,9 @@ project "Sandbox"
 	
 	location("%{wks.location}/Sandbox")
 	
+	targetdir ("%{wks.location}/bin/" .. outputdir .. "/%{prj.name}")
+	objdir ("%{wks.location}/bin-int/" .. outputdir .. "/%{prj.name}")
+	
 	files
 	{
 		"Sandbox/src/**.h",
@@ -122,7 +125,7 @@ project "Sandbox"
 	includedirs
 	{
 		"%{wks.location}/SFMLEngine/src",
-		"%{wks.location}/SFMLEngine/assets/scripts",
+		"%{wks.location}/Sandbox/assets/scripts",
 		"%{IncludeDir.SFML}",
 		"%{IncludeDir.spdlog}",
 		"%{IncludeDir.glew}",
@@ -143,9 +146,7 @@ project "Sandbox"
 	
 	defines
 	{
-		"SFML_STATIC",
-		"GLEW_STATIC",
-		"TRACY_ENABLE"
+		"SFML_STATIC"
 	}
 
 	filter "system:windows"
