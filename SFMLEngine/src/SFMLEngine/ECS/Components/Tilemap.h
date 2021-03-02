@@ -39,6 +39,7 @@ namespace SFMLEngine {
 		Tilemap();
 		Tilemap(ResourceID tilePalette);
 		Tilemap(ResourceID tilePalette, std::initializer_list<Tile> tiles);
+		Tilemap(ResourceID tilePalette, const std::string& dataFile);
 
 		void PlaceTile(const sf::Vector2i& location, TileID tileType, bool overwrite = false);
 		void RemoveTile(const sf::Vector2i& location);
@@ -46,6 +47,8 @@ namespace SFMLEngine {
 		sf::Vector2i WorldToTileCoordinates(const sf::Vector2f& worldCoords);
 
 		void SetTransform(Transform* transform) { m_Transform = transform; }
+
+		bool Export(const std::string& exportPath);
 
 	private:
 		

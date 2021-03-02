@@ -14,6 +14,7 @@ IncludeDir["SFML"] = "%{wks.location}/SFMLEngine/vendor/SFML/include"
 IncludeDir["spdlog"] = "%{wks.location}/SFMLEngine/vendor/spdlog/include"
 IncludeDir["glew"] = "%{wks.location}/SFMLEngine/vendor/glew/include"
 IncludeDir["tracy"] = "%{wks.location}/SFMLEngine/vendor/tracy"
+IncludeDir["json"] = "%{wks.location}/SFMLEngine/vendor/json/single_include"
 
 
 LibraryDir = {}
@@ -51,7 +52,8 @@ project "SFMLEngine"
 		"%{IncludeDir.SFML}",
 		"%{IncludeDir.spdlog}",
 		"%{IncludeDir.glew}",
-		"%{IncludeDir.tracy}"
+		"%{IncludeDir.tracy}",
+		"%{IncludeDir.json}"
 	}
 	
 	libdirs

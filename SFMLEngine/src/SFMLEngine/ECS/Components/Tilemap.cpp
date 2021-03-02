@@ -1,5 +1,9 @@
 #include "Tilemap.h"
 
+#include <nlohmann/json.hpp>
+#include <fstream>
+#include <iomanip>
+
 
 namespace SFMLEngine {
 
@@ -31,6 +35,37 @@ namespace SFMLEngine {
 			AddTileToGeometry(tile);
 		}
 	}
+
+
+	Tilemap::Tilemap(ResourceID tilePalette, const std::string& dataPath)
+		: PaletteHandle(tilePalette), Tiles(), Geometry(sf::Triangles)
+	{
+		PalettePtr = ResourceManager::GetResourceHandle<TilePalette>(PaletteHandle);
+		TileSize = (sf::Vector2f)PalettePtr->GetTileSize();
+
+		// set up the geometry
+		Geometry.clear();
+
+
+		// load tilemap data from the file
+		std::ifstream infile(dataPath);
+		if (!infile.good())
+		{
+			LOG_CORE_ERROR("Failed to open file '{0}'", dataPath);
+			SFMLE_CORE_ASSERT(0, "Error opening file");
+		}
+
+		nlohmann::json tilemapJson;
+		infile >> tilemapJson;
+
+		for (auto& element : tilemapJson)
+		{
+			PlaceTile({ element["x"], element["y"] }, element["type"]);
+		}
+
+		infile.close();
+	}
+
 
 	void Tilemap::PlaceTile(const sf::Vector2i& location, TileID tileType, bool overwrite)
 	{
@@ -120,6 +155,33 @@ namespace SFMLEngine {
 			return sf::Vector2i((int)floorf(worldCoords.x / (float)TileSize.x),
 								(int)floorf(worldCoords.y / (float)TileSize.y));
 		}
+	}
+
+
+	bool Tilemap::Export(const std::string& exportPath)
+	{
+		// write all of the data in the tilemap into a file in json format
+
+		// create an empty json structure
+		nlohmann::json tilemapJson;
+
+		
+		for (auto const& tile : Tiles)
+		{
+			nlohmann::json tileJson;
+			tileJson["type"] = tile.TileType;
+			tileJson["x"] = tile.Position.x;
+			tileJson["y"] = tile.Position.y;
+
+			tilemapJson.push_back(tileJson);
+		}
+
+		std::string serialized = tilemapJson.dump();
+		std::ofstream outfile(exportPath);
+		outfile << tilemapJson << std::endl;
+		outfile.close();
+
+		return false;
 	}
 
 

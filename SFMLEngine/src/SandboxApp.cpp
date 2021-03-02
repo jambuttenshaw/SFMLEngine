@@ -33,20 +33,23 @@ public:
 			TileID ground = tilePalette->GetTileByName("Tile1");
 
 
-			Tilemap tilemapComponent{ tilePaletteID };
+			// Tilemap tilemapComponent{ tilePaletteID };
+			Tilemap tilemapComponent{ tilePaletteID, "assets/tilemap.json" };
 
 			// place tiles into the tilemap
-			int numTiles = 64;
-			for (int x = 0; x < numTiles; x++)
-			{
-				tilemapComponent.PlaceTile(sf::Vector2i(x - numTiles / 2, 0), ground);
-				
-				for (int y = 1; y < 10; y++)
-				{
-					tilemapComponent.PlaceTile(sf::Vector2i(x - numTiles / 2, y), rocks);
-				}
-				
-			}
+			
+			// int numTiles = 64;
+			// for (int x = 0; x < numTiles; x++)
+			// {
+			// 	tilemapComponent.PlaceTile(sf::Vector2i(x - numTiles / 2, 0), ground);
+			// 
+			// 	for (int y = 1; y < 2; y++)
+			// 	{
+			// 		tilemapComponent.PlaceTile(sf::Vector2i(x - numTiles / 2, y), rocks);
+			// 	}
+			// 
+			// }
+			// tilemapComponent.Export("assets/tilemap.json");
 
 			AddComponent(m_Tilemap, tilemapComponent);
 
