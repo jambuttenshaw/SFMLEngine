@@ -28,12 +28,8 @@ public:
 			ResourceID tilePaletteID = TilePalette::LoadFromFile("assets/textures/terrain.png", "assets/textures/terrainNormals.png", sf::Vector2u(32, 32));
 			TilePalette* tilePalette = ResourceManager::GetResourceHandle<TilePalette>(tilePaletteID);
 
-
-			TileID rocks = tilePalette->GetTileByName("Tile0");
-			TileID ground = tilePalette->GetTileByName("Tile1");
-
 			// load a tilemap from a file
-			Tilemap tilemapComponent{ tilePaletteID, "assets/tilemap.json" };
+			Tilemap tilemapComponent{ tilePaletteID, "assets/tilemaps/terrain.json" };
 
 			AddComponent(m_Tilemap, tilemapComponent);
 

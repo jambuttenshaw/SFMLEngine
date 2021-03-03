@@ -171,6 +171,17 @@ namespace SFMLEngine {
 		return NULL_TILE_ID;
 	}
 
+	std::vector<TileID> TilePalette::GetAllTiles()
+	{
+		std::vector<TileID> tiles;
+		tiles.reserve(m_TileAtlas.size());
+		for (auto const& tile : m_TileAtlas)
+		{
+			tiles.push_back(tile.first);
+		}
+		return tiles;
+	}
+
 
 
 

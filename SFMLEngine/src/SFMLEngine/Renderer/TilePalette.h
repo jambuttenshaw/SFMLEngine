@@ -44,7 +44,9 @@ namespace SFMLEngine {
 		ResourceID GetTexture() { return m_PaletteTextureID; }
 		ResourceID GetNormalMap() { return m_NormalMapTextureID; }
 
+		size_t GetTileCount() { return m_TileCount; }
 		TileID GetTileByName(const std::string& name);
+		std::vector<TileID> GetAllTiles();
 
 	private:
 		TileID GetNextTileID();
