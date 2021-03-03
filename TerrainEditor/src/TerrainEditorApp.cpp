@@ -3,6 +3,7 @@
 
 #include "TilemapEditor.h"
 #include "FollowMouse.h"
+#include "CameraController.h"
 
 using namespace SFMLEngine;
 
@@ -15,34 +16,6 @@ public:
 		TilePalette* tilePalette = ResourceManager::GetResourceHandle<TilePalette>(tilePaletteID);
 
 		
-
-		{
-			m_Terrain = CreateEntity();
-			AddComponent(m_Terrain, Transform{ });
-
-			// create an empty tilemap
-			Tilemap tilemap{ tilePaletteID };
-
-			TileID tile0 = tilePalette->GetTileByName("Tile0");
-			tilemap.PlaceTile({ 0, 0 }, tile0);
-
-			AddComponent(m_Terrain, tilemap);
-
-			// add a tilemap renderer
-			AddComponent(m_Terrain, TilemapRenderer{ Material::Create("Basic"), 0, 0 });
-
-			// add a script to control editing the terrain
-			AddNativeScript<TilemapEditor>(m_Terrain);
-		}
-		
-
-		{
-			// add a camera to the scene
-			m_Camera = CreateEntity();
-			AddComponent(m_Camera, Transform{ });
-			AddComponent(m_Camera, Camera{ });
-		}
-
 
 		{
 			m_TilePreview = CreateEntity();
@@ -66,6 +39,36 @@ public:
 			AddComponent(m_TilePreview, TilemapRenderer{ mat, 0, 0 });
 
 			AddNativeScript<FollowMouse>(m_TilePreview);
+		}
+
+		{
+			m_Terrain = CreateEntity();
+			AddComponent(m_Terrain, Transform{ });
+
+			// create an empty tilemap
+			Tilemap tilemap{ tilePaletteID };
+
+			TileID tile0 = tilePalette->GetTileByName("Tile0");
+			tilemap.PlaceTile({ 0, 0 }, tile0);
+
+			AddComponent(m_Terrain, tilemap);
+
+			// add a tilemap renderer
+			AddComponent(m_Terrain, TilemapRenderer{ Material::Create("Basic"), 0, 0 });
+
+			// add a script to control editing the terrain
+			auto& script = AddNativeScript<TilemapEditor>(m_Terrain);
+			script.SetTilePreviewEntity(m_TilePreview);
+		}
+		
+
+		{
+			// add a camera to the scene
+			m_Camera = CreateEntity();
+			AddComponent(m_Camera, Transform{ });
+			AddComponent(m_Camera, Camera{ });
+
+			AddNativeScript<CameraController>(m_Camera);
 		}
 	}
 

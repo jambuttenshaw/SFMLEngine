@@ -15,9 +15,11 @@ public:
 
 	void Update(Timestep ts) override
 	{
-		m_Transform->Position = Input::GetMouseWorldPos();
+		m_Transform->Position = Input::GetMouseWorldPos() + m_Offset;
 	}
 
 private:
 	Transform* m_Transform = nullptr;
+
+	sf::Vector2f m_Offset = { -8, -8 };
 };

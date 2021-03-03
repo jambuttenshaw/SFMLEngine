@@ -16,43 +16,41 @@ public:
 
 	void Update(Timestep ts) override
 	{
-		bool mouseDown = Input::IsMouseButtonDown(sf::Mouse::Left);
-		if (mouseDown && !m_LeftClick)
+		if (Input::IsMouseButtonDown(sf::Mouse::Left))
 		{
-			m_LeftClick = true;
 			m_Tilemap->PlaceTile(m_Tilemap->WorldToTileCoordinates(Input::GetMouseWorldPos()), m_Palette->GetAllTiles()[m_CurrentTile], true);
-
-		}
-		else if (!mouseDown && m_LeftClick)
-		{
-			m_LeftClick = false;
 		}
 
 
-
-		mouseDown = Input::IsMouseButtonDown(sf::Mouse::Right);
-		if (mouseDown && !m_RightClick)
+		if (Input::IsMouseButtonDown(sf::Mouse::Right))
 		{
-			m_RightClick = true;
 			m_Tilemap->RemoveTile(m_Tilemap->WorldToTileCoordinates(Input::GetMouseWorldPos()));
-
 		}
-		else if (!mouseDown && m_RightClick)
+
+
+		if (!Input::IsKeyDown(sf::Keyboard::LControl))
 		{
-			m_RightClick = false;
+			auto wheelDelta = Input::GetMouseWheelDelta();
+			if (abs(wheelDelta) > 0)
+			{
+				m_CurrentTile = (m_CurrentTile + static_cast<size_t>(wheelDelta)) % m_Palette->GetTileCount();
+				m_TilePreview->PlaceTile({ 0, 0 }, m_Palette->GetAllTiles()[m_CurrentTile], true);
+			}
 		}
-
-
-
-		m_CurrentTile = (m_CurrentTile + static_cast<size_t>(Input::GetMouseWheelDelta())) % m_Palette->GetTileCount();
 	}
+
+
+	void SetTilePreviewEntity(Entity entity)
+	{
+		m_TilePreview = &GetComponent<Tilemap>(entity);
+	}
+
 
 private:
 	Tilemap* m_Tilemap = nullptr;
 	TilePalette* m_Palette = nullptr;
 
-	bool m_LeftClick = false;
-	bool m_RightClick = false;
+	Tilemap* m_TilePreview = nullptr;
 
 	size_t m_CurrentTile = 0;
 
