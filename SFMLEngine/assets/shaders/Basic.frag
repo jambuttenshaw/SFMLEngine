@@ -8,5 +8,5 @@ void main()
     vec4 pixel = texture2D(texture, gl_TexCoord[0].xy);
 
     // multiply it by the color
-    gl_FragColor = u_Color * pixel;
+    gl_FragColor = pixel * u_Color;
 }

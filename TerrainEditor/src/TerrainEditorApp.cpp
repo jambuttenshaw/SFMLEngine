@@ -36,7 +36,7 @@ public:
 			Material* matPtr = ResourceManager::GetResourceHandle<Material>(mat);
 			matPtr->SetProperty("u_Color", sf::Color(255, 255, 255, 127));
 
-			AddComponent(m_TilePreview, TilemapRenderer{ mat, 0, 0 });
+			AddComponent(m_TilePreview, TilemapRenderer{ mat, 1, 0 });
 
 			AddNativeScript<FollowMouse>(m_TilePreview);
 		}
@@ -46,15 +46,14 @@ public:
 			AddComponent(m_Terrain, Transform{ });
 
 			// create an empty tilemap
-			Tilemap tilemap{ tilePaletteID };
-
-			TileID tile0 = tilePalette->GetTileByName("Tile0");
-			tilemap.PlaceTile({ 0, 0 }, tile0);
-
-			AddComponent(m_Terrain, tilemap);
+			AddComponent(m_Terrain, Tilemap{ tilePaletteID });
 
 			// add a tilemap renderer
-			AddComponent(m_Terrain, TilemapRenderer{ Material::Create("Basic"), 0, 0 });
+			ResourceID mat = Material::CreateInstance("Basic");
+			Material* matPtr = ResourceManager::GetResourceHandle<Material>(mat);
+			matPtr->SetProperty("u_Color", sf::Color(255, 255, 255, 255));
+
+			AddComponent(m_Terrain, TilemapRenderer{ mat, 0, 0 });
 
 			// add a script to control editing the terrain
 			auto& script = AddNativeScript<TilemapEditor>(m_Terrain);
@@ -70,12 +69,26 @@ public:
 
 			AddNativeScript<CameraController>(m_Camera);
 		}
+
+
+		{
+			m_CentreMarker = CreateEntity();
+			AddComponent(m_CentreMarker, Transform{ {-32, -32} });
+
+			AddComponent(m_CentreMarker, SpriteRenderer{
+				Texture::Create("assets/textures/centreMarker.png"),
+				Material::Create("Basic"),
+				2, 0 });
+		}
 	}
 
 private:
 	Entity m_Terrain;
 	Entity m_TilePreview;
+
 	Entity m_Camera;
+
+	Entity m_CentreMarker;
 };
 
 
