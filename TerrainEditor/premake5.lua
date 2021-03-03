@@ -1,41 +1,39 @@
-project "SFMLEngine"
-	kind "StaticLib"
+project "TerrainEditor"
+	kind "ConsoleApp"
 	language "C++"
 	cppdialect "C++17"
 
 	files
 	{
 		"src/**.h",
-		"src/**.cpp",
-		"vendor/tracy/TracyClient.cpp"
-	}
-
-	defines
-	{
-		"SFML_STATIC",
-		"GLEW_STATIC",
-		"TRACY_ENABLE"
+		"src/**.cpp"
 	}
 
 	includedirs
 	{
 		"%{wks.location}/SFMLEngine/src",
+		"assets/scripts",
 		"%{IncludeDir.SFML}",
 		"%{IncludeDir.spdlog}",
 		"%{IncludeDir.glew}",
 		"%{IncludeDir.tracy}",
 		"%{IncludeDir.json}"
 	}
-	
+
+	links
+	{
+		"SFMLEngine"
+	}
+
 	libdirs
 	{
 		"%{LibraryDir.SFML}",
 		"%{LibraryDir.glew}"
 	}
-
-	prebuildcommands
+	
+	defines
 	{
-		"rmdir \"$(TargetDir)\" /s /q"
+		"SFML_STATIC"
 	}
 
 	filter "system:windows"
