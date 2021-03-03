@@ -68,6 +68,9 @@ namespace SFMLEngine {
 		void SetFPSLimit(unsigned int limit);
 		unsigned int GetFPSLimit() { return m_FPSLimit; }
 
+		void SetClearColor(const sf::Color& color) { m_ClearColor = color; }
+		const sf::Color& GetClearColor() { return m_ClearColor; }
+
 
 		template <typename T>
 		void LoadScene()
@@ -106,6 +109,8 @@ namespace SFMLEngine {
 		// VSync enabled by default
 		bool m_VSync = true;
 		unsigned int m_FPSLimit = 0;
+
+		sf::Color m_ClearColor{ sf::Color::Black };
 
 		// ECS
 		Coordinator* m_Coordinator;

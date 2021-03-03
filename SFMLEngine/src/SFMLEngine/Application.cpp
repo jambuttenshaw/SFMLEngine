@@ -428,7 +428,7 @@ namespace SFMLEngine
                 {
                     ZoneScoped;
                     ZoneName("Clear", 5);
-                    m_Window->clear(sf::Color(0, 0, 0, 255));
+                    m_Window->clear(m_ClearColor);
                     Renderer::Clear();
                 }
             }
