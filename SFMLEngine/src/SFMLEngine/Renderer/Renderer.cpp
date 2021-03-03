@@ -7,9 +7,14 @@
 
 #include "Material.h"
 
+#include "SFMLEngine/Systems/Render/SpriteRenderSystem.h"
+#include "SFMLEngine/Systems/Render/TilemapRenderSystem.h"
+
 namespace SFMLEngine {
 
 	sf::ContextSettings* Renderer::s_ContextSettings = nullptr;
+	std::shared_ptr<SpriteRenderSystem> Renderer::s_SpriteRenderSystem = nullptr;
+	std::shared_ptr<TilemapRenderSystem> Renderer::s_TilemapRenderSystem = nullptr;
 
 	const sf::ContextSettings& Renderer::Init()
 	{
@@ -32,7 +37,6 @@ namespace SFMLEngine {
 	void Renderer::InitGLEW()
 	{
 		ZoneScoped;
-		ZoneName("InitGLEW", 8);
 
 		// initialise glew
 		// this must be after a valid openGL context is created
@@ -43,6 +47,12 @@ namespace SFMLEngine {
 		// set up the opengl states we want
 		glDepthFunc(GL_LEQUAL);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	}
+
+	void Renderer::SetRenderSystems(std::shared_ptr<SpriteRenderSystem> sRS, std::shared_ptr<TilemapRenderSystem> tRS)
+	{
+		s_SpriteRenderSystem = sRS;
+		s_TilemapRenderSystem = tRS;
 	}
 
 	void Renderer::Shutdown()
@@ -61,7 +71,7 @@ namespace SFMLEngine {
 		glEnable(GL_DEPTH_TEST);
 	}
 
-	void Renderer::SetUniforms()
+	void Renderer::Render()
 	{
 		ZoneScoped;
 
@@ -69,6 +79,9 @@ namespace SFMLEngine {
 		{
 			// set the shader uniforms (with the exception of the depth value) once per material, rather than once per sprite
 			materialData.MaterialPtr->SetUniforms();
+
+			s_SpriteRenderSystem->Render(materialData.MaterialID);
+			s_TilemapRenderSystem->Render(materialData.MaterialID);
 		}
 	}
 

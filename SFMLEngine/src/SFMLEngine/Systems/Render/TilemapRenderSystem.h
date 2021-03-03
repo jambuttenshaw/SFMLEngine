@@ -25,13 +25,14 @@ namespace SFMLEngine {
 		void EntityRemovedFromSystem(Entity entity) override;
 
 		void Update();
-		void Render();
+		void Render(ResourceID material);
 
 
 	private:
 		Coordinator* m_Coordinator = nullptr;
 		sf::RenderWindow* m_RenderWindow = nullptr;
 
+		std::unordered_map<ResourceID, std::set<Entity>> m_MaterialsMap;
 		std::unordered_map<Entity, TilemapRenderer*> m_TilemapRenderers;
 		std::unordered_map<Entity, Tilemap*> m_Tilemaps;
 		std::unordered_map<Entity, Transform*> m_Transforms;

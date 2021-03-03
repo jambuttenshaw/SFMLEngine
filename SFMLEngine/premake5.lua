@@ -33,11 +33,6 @@ project "SFMLEngine"
 		"%{LibraryDir.glew}"
 	}
 
-	prebuildcommands
-	{
-		"rmdir \"$(TargetDir)\" /s /q"
-	}
-
 	filter "system:windows"
 		systemversion "latest"
 

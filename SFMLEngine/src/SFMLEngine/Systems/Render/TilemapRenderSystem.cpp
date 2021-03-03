@@ -26,10 +26,25 @@ namespace SFMLEngine {
 		m_TilemapRenderers.insert(std::make_pair(entity, tRenderer));
 		m_Tilemaps.insert(std::make_pair(entity, tilemap));
 		m_Transforms.insert(std::make_pair(entity, transform));
+
+		// insert into materials map
+		if (m_MaterialsMap.find(tRenderer->MaterialHandle) == m_MaterialsMap.end())
+		{
+			m_MaterialsMap.insert(std::make_pair(tRenderer->MaterialHandle, std::set<Entity>{ entity }));
+		}
+		else
+		{
+			m_MaterialsMap[tRenderer->MaterialHandle].insert(entity);
+		}
 	}
 
 	void TilemapRenderSystem::EntityRemovedFromSystem(Entity entity)
 	{
+		auto mat = m_TilemapRenderers[entity]->MaterialHandle;
+		m_MaterialsMap[mat].erase(entity);
+		if (m_MaterialsMap[mat].empty())
+			m_MaterialsMap.erase(mat);
+
 		m_TilemapRenderers.erase(entity);
 		m_Tilemaps.erase(entity);
 		m_Transforms.erase(entity);
@@ -61,13 +76,13 @@ namespace SFMLEngine {
 		}
 	}
 
-	void TilemapRenderSystem::Render()
+	void TilemapRenderSystem::Render(ResourceID material)
 	{
 		ZoneScoped;
 
-		if (!m_Entities.size()) return;
+		if (m_MaterialsMap[material].empty()) return;
 
-		for (const auto& entity : m_Entities)
+		for (const auto& entity : m_MaterialsMap[material])
 		{
 			ZoneScoped;
 			ZoneName("DrawTilemap", 11);

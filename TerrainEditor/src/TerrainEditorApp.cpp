@@ -14,6 +14,8 @@ public:
 		ResourceID tilePaletteID = TilePalette::LoadFromFile("assets/textures/terrain.png", "assets/textures/terrainNormals.png", sf::Vector2u(32, 32));
 		TilePalette* tilePalette = ResourceManager::GetResourceHandle<TilePalette>(tilePaletteID);
 
+		
+
 		{
 			m_Terrain = CreateEntity();
 			AddComponent(m_Terrain, Transform{ });

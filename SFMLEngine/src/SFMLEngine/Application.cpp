@@ -256,6 +256,11 @@ namespace SFMLEngine
                 m_Coordinator->SetSystemSignature<AnimationSystem>(signature);
             }
         }
+
+
+        Renderer::SetRenderSystems(m_SpriteRenderSystem, m_TilemapRenderSystem);
+
+
         /*
         ----------
         INIT INPUT
@@ -444,15 +449,8 @@ namespace SFMLEngine
                 // set the windows view for the game world using the main camera
                 m_Window->setView(m_CameraSystem->GetMainCameraView());
 
-                // set the material uniforms
-                Renderer::SetUniforms();
-
                 // draw to the screen
-
-                // since I have used the opengl depth buffer for ordering every drawable,
-                // I dont need to care about the order in which I draw them
-                m_TilemapRenderSystem->Render();
-                m_SpriteRenderSystem->Render();
+                Renderer::Render();
             }
 
 #ifdef SFMLENGINE_DEBUG

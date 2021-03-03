@@ -35,10 +35,25 @@ namespace SFMLEngine {
 
 		m_SpriteRenderers.insert(std::make_pair(entity, sRenderer));
 		m_Transforms.insert(std::make_pair(entity, transform));
+
+		// insert into materials map
+		if (m_MaterialsMap.find(sRenderer->MaterialHandle) == m_MaterialsMap.end())
+		{
+			m_MaterialsMap.insert(std::make_pair(sRenderer->MaterialHandle, std::set<Entity>{ entity }));
+		}
+		else
+		{
+			m_MaterialsMap[sRenderer->MaterialHandle].insert(entity);
+		}
 	}
 
 	void SpriteRenderSystem::EntityRemovedFromSystem(Entity entity)
 	{
+		auto mat = m_SpriteRenderers[entity]->MaterialHandle;
+		m_MaterialsMap[mat].erase(entity);
+		if (m_MaterialsMap[mat].empty())
+			m_MaterialsMap.erase(mat);
+
 		m_SpriteRenderers.erase(entity);
 		m_Transforms.erase(entity);
 	}
@@ -69,13 +84,13 @@ namespace SFMLEngine {
 		}
 	}
 
-	void SpriteRenderSystem::Render()
+	void SpriteRenderSystem::Render(ResourceID material)
 	{
 		ZoneScoped;
 
-		if (!m_Entities.size()) return;
+		if (m_MaterialsMap[material].empty()) return;
 
-		for (const auto& entity : m_Entities)
+		for (const auto& entity : m_MaterialsMap[material])
 		{
 			ZoneScoped;
 			ZoneName("DrawSprite", 10);
