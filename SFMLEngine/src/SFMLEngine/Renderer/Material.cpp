@@ -236,9 +236,12 @@ namespace SFMLEngine {
 		// this gives us the resource ID of the material
 		ResourceID newID = ResourceManager::ManageResource(newMat);
 
+		// for quick access to the shader during rendering we want to store a pointer to the shader in the material data
+		sf::Shader* shaderPtr = ResourceManager::GetResourceHandle<sf::Shader>(ShaderLibrary::GetShaderResourceID(shader));
+
 		// register this material in the material cache
 		// but then state that it is not to be shared with other sprites
-		s_MaterialCache.push_back(MaterialData{ shader, newID, false, ShaderLibrary::IsLitShader(shader) });
+		s_MaterialCache.push_back(MaterialData{ shader, newID, false, ShaderLibrary::IsLitShader(shader), newMat, shaderPtr });
 
 		return newID;
 	}
