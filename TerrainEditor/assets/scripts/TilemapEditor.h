@@ -16,18 +16,33 @@ public:
 
 	void Update(Timestep ts) override
 	{
-		// do something every frame
 		bool mouseDown = Input::IsMouseButtonDown(sf::Mouse::Left);
-		if (mouseDown && !m_Click)
+		if (mouseDown && !m_LeftClick)
 		{
-			m_Click = true;
-			m_Tilemap->PlaceTile(m_Tilemap->WorldToTileCoordinates(Input::GetMouseWorldPos()), m_Palette->GetAllTiles()[m_CurrentTile]);
+			m_LeftClick = true;
+			m_Tilemap->PlaceTile(m_Tilemap->WorldToTileCoordinates(Input::GetMouseWorldPos()), m_Palette->GetAllTiles()[m_CurrentTile], true);
 
 		}
-		else if (!mouseDown && m_Click)
+		else if (!mouseDown && m_LeftClick)
 		{
-			m_Click = false;
+			m_LeftClick = false;
 		}
+
+
+
+		mouseDown = Input::IsMouseButtonDown(sf::Mouse::Right);
+		if (mouseDown && !m_RightClick)
+		{
+			m_RightClick = true;
+			m_Tilemap->RemoveTile(m_Tilemap->WorldToTileCoordinates(Input::GetMouseWorldPos()));
+
+		}
+		else if (!mouseDown && m_RightClick)
+		{
+			m_RightClick = false;
+		}
+
+
 
 		m_CurrentTile = (m_CurrentTile + static_cast<size_t>(Input::GetMouseWheelDelta())) % m_Palette->GetTileCount();
 	}
@@ -36,7 +51,8 @@ private:
 	Tilemap* m_Tilemap = nullptr;
 	TilePalette* m_Palette = nullptr;
 
-	bool m_Click = false;
+	bool m_LeftClick = false;
+	bool m_RightClick = false;
 
 	size_t m_CurrentTile = 0;
 

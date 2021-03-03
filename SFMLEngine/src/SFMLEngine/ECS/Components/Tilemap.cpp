@@ -70,22 +70,46 @@ namespace SFMLEngine {
 	void Tilemap::PlaceTile(const sf::Vector2i& location, TileID tileType, bool overwrite)
 	{
 		// do a check to make sure there isnt already a tile at that location
-		if (TileAtLocation(location) && !overwrite)
+		if (TileAtLocation(location))
 		{
-			LOG_CORE_INFO("Couldn't place tile: Tile at already at {0}, {1} and overwrite is false.", location.x, location.y);
-			return;
+			if (overwrite)
+			{
+				// we want to find the tile at that location and replace the data with the data of the new tile
+				size_t index = GetTileIndex(location);
+
+				// set the new tile type
+				Tiles[index].TileType = tileType;
+
+				// update the texture coordinates in the geometry
+				size_t geomIndex = Tiles[index].GeometryIndex;
+				sf::Vector2f texCoords = (sf::Vector2f)PalettePtr->GetTexCoords(tileType);
+
+				Geometry[geomIndex].texCoords = texCoords;
+				Geometry[geomIndex + 1].texCoords = texCoords + sf::Vector2f(TileSize.x, 0);
+				Geometry[geomIndex + 2].texCoords = texCoords + TileSize;
+
+				Geometry[geomIndex + 3].texCoords = texCoords;
+				Geometry[geomIndex + 4].texCoords = texCoords + sf::Vector2f(0, TileSize.y);
+				Geometry[geomIndex + 5].texCoords = texCoords + TileSize;
+			}
+			else
+			{
+				LOG_CORE_INFO("Couldn't place tile: Tile at already at {0}, {1} and overwrite is false.", location.x, location.y);
+				return;
+			}
 		}
+		else
+		{
+			// add 6 more vertices into the geometry
+			Geometry.resize(Geometry.getVertexCount() + 6);
 
-		// add 6 more vertices into the geometry
-		Geometry.resize(Geometry.getVertexCount() + 6);
+			// create a tile object and add it into the tile map
+			Tile tile{ tileType, location };
+			Tiles.push_back(tile);
 
-		// create a tile object and add it into the tile map
-		Tile tile{ tileType, location };
-		Tiles.push_back(tile);
-
-		// create new vertices for this tile
-		AddTileToGeometry(tile);
-
+			// create new vertices for this tile
+			AddTileToGeometry(tile);
+		}
 
 		// flag this component as modified
 		m_Modified = true;
@@ -135,7 +159,8 @@ namespace SFMLEngine {
 
 		// finally resize the geometry vertex array
 		Geometry.resize(6 * Tiles.size());
-
+		// decrement the triangle index since the array has been shrunk
+		m_TriangleIndex -= 6;
 
 		// flag this component as modified
 		m_Modified = true;
