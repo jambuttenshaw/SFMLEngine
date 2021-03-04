@@ -33,7 +33,7 @@ public:
 
 			AddComponent(m_Tilemap, tilemapComponent);
 
-			TilemapRenderer tilemapRendererComponent{ Material::Create("LitTilemap"), 1, 0 };
+			TilemapRenderer tilemapRendererComponent{ Material::Create("LitTilemap"), 1 };
 			AddComponent(m_Tilemap, tilemapRendererComponent);
 
 
@@ -71,7 +71,7 @@ public:
 
 			AddComponent(m_Background, tilemapComponent);
 
-			TilemapRenderer tilemapRendererComponent{ Material::Create("LitTilemap"), 0, 0 };
+			TilemapRenderer tilemapRendererComponent{ Material::Create("LitTilemap"), 0 };
 			AddComponent(m_Background, tilemapRendererComponent);
 		}
 		
@@ -91,7 +91,7 @@ public:
 			AddComponent(m_PhysicsEntity, SpriteRenderer{
 				Texture::Create("assets/textures/characterSheet.png"),
 				Material::Create("Lit"),
-				2, 0,
+				1,
 				Texture::Create("assets/textures/characterSheetNormals.png") });
 
 

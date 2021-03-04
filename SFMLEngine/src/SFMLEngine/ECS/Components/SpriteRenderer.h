@@ -16,7 +16,6 @@ namespace SFMLEngine {
 		ResourceID TextureHandle;
 		ResourceID MaterialHandle;
 		int RenderLayer;
-		int OrderInLayer;
 		ResourceID NormalMapHandle;
 		sf::Sprite Sprite;
 
@@ -25,15 +24,15 @@ namespace SFMLEngine {
 		sf::Texture* NormalMapPtr = nullptr;
 
 		SpriteRenderer()
-			: TextureHandle(NULL_RESOURCE_ID), MaterialHandle(NULL_RESOURCE_ID), RenderLayer(0), OrderInLayer(0), NormalMapHandle(NULL_RESOURCE_ID), Sprite()
+			: TextureHandle(NULL_RESOURCE_ID), MaterialHandle(NULL_RESOURCE_ID), RenderLayer(0), NormalMapHandle(NULL_RESOURCE_ID), Sprite()
 		{}
-		SpriteRenderer(ResourceID texHandle, ResourceID material, int renderLayer, int orderInLayer)
-			: TextureHandle(texHandle), MaterialHandle(material), RenderLayer(renderLayer), OrderInLayer(orderInLayer), NormalMapHandle(NULL_RESOURCE_ID), Sprite()
+		SpriteRenderer(ResourceID texHandle, ResourceID material, int renderLayer)
+			: TextureHandle(texHandle), MaterialHandle(material), RenderLayer(renderLayer), NormalMapHandle(NULL_RESOURCE_ID), Sprite()
 		{
 			MaterialPtr = ResourceManager::GetResourceHandle<Material>(MaterialHandle);
 		}
-		SpriteRenderer(ResourceID texHandle, ResourceID material, int renderLayer, int orderInLayer, ResourceID normalMap)
-			: TextureHandle(texHandle), MaterialHandle(material), RenderLayer(renderLayer), OrderInLayer(orderInLayer), NormalMapHandle(normalMap), Sprite()
+		SpriteRenderer(ResourceID texHandle, ResourceID material, int renderLayer, ResourceID normalMap)
+			: TextureHandle(texHandle), MaterialHandle(material), RenderLayer(renderLayer), NormalMapHandle(normalMap), Sprite()
 		{
 			MaterialPtr = ResourceManager::GetResourceHandle<Material>(MaterialHandle);
 			NormalMapPtr = ResourceManager::GetResourceHandle<sf::Texture>(NormalMapHandle);
@@ -55,8 +54,6 @@ namespace SFMLEngine {
 		}
 
 		void SetRenderLayer(int newRenderLayer) { RenderLayer = newRenderLayer; m_Modified = true; }
-
-		void SetOrderInLayer(int newOrderInLayer) { OrderInLayer = newOrderInLayer; m_Modified = true; }
 
 	private:
 		bool m_Modified = true;

@@ -11,25 +11,22 @@ namespace SFMLEngine {
 
 		ResourceID MaterialHandle;
 		int RenderLayer;
-		int OrderInLayer;
 
 		// for speed when rendering
 		Material* MaterialPtr = nullptr;
 
 
 		TilemapRenderer()
-			: MaterialHandle(NULL_RESOURCE_ID), RenderLayer(0), OrderInLayer(0)
+			: MaterialHandle(NULL_RESOURCE_ID), RenderLayer(0)
 		{}
 
-		TilemapRenderer(ResourceID mat, int renderLayer, int orderInLayer)
-			: MaterialHandle(mat), RenderLayer(renderLayer), OrderInLayer(orderInLayer)
+		TilemapRenderer(ResourceID mat, int renderLayer)
+			: MaterialHandle(mat), RenderLayer(renderLayer)
 		{
 			MaterialPtr = ResourceManager::GetResourceHandle<Material>(MaterialHandle);
 		}
 
 		void SetRenderLayer(int newRenderLayer) { RenderLayer = newRenderLayer; m_Modified = true; }
-
-		void SetOrderInLayer(int newOrderInLayer) { OrderInLayer = newOrderInLayer; m_Modified = true; }
 
 	private:
 		bool m_Modified = true;
