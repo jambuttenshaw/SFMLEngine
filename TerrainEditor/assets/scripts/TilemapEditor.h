@@ -40,8 +40,10 @@ public:
 
 		if (Input::IsKeyPressed(sf::Keyboard::Space))
 		{
+			/*
 			m_Tilemap->Export("D:/dev/SFML/SFMLEngine/ExampleProject/assets/tilemaps/terrain.json");
 			LOG_INFO("Terrain exported.");
+			*/
 		}
 	}
 
