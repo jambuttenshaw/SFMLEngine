@@ -37,7 +37,8 @@ namespace SFMLEngine {
 	}
 	sf::Vector2f Math::Normalize(const sf::Vector2f& a)
 	{
-		return a / Magnitude(a);
+		auto mag = Magnitude(a);
+		return mag == 0 ? a : a / mag;
 	}
 	sf::Vector2f Math::Clamp(const sf::Vector2f& value, const sf::Vector2f& min, const sf::Vector2f& max)
 	{
