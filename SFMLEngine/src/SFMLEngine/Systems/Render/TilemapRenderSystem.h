@@ -24,9 +24,9 @@ namespace SFMLEngine {
 		void EntityAddedToSystem(Entity entity) override;
 		void EntityRemovedFromSystem(Entity entity) override;
 
-		void Update();
-		void Render(ResourceID material);
+		void Render(ResourceID material, int renderLayer);
 
+		const std::set<int>& GetRenderLayersUsed() { return m_RenderLayers; }
 
 	private:
 		Coordinator* m_Coordinator = nullptr;
@@ -37,10 +37,7 @@ namespace SFMLEngine {
 		std::unordered_map<Entity, Tilemap*> m_Tilemaps;
 		std::unordered_map<Entity, Transform*> m_Transforms;
 
-		int m_MaxOrderInLayer = 0;
-		int m_MaxRenderLayer = 0;
-		float m_OrderInLayerNormalizeFactor = 0.0f;
-		float m_RenderLayerNormaizeFactor = 1.0f;
+		std::set<int> m_RenderLayers;
 
 		sf::RenderStates m_RenderState;
 	};

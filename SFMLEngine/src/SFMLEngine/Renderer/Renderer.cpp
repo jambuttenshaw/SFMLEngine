@@ -42,11 +42,6 @@ namespace SFMLEngine {
 		// this must be after a valid openGL context is created
 		GLenum err = glewInit();
 		SFMLE_CORE_ASSERT(err == GLEW_OK, "GLEW failed to initialise.");
-
-
-		// set up the opengl states we want
-		glDepthFunc(GL_LEQUAL);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	}
 
 	void Renderer::SetRenderSystems(std::shared_ptr<SpriteRenderSystem> sRS, std::shared_ptr<TilemapRenderSystem> tRS)
@@ -60,38 +55,27 @@ namespace SFMLEngine {
 		delete s_ContextSettings;
 	}
 
-	void Renderer::Clear()
-	{
-		ZoneScoped;
-		ZoneName("ClearDepth", 10);
-
-		// SFML only clears the colour buffer,
-		// but since were also using the depth buffer we need to clear that too
-		glClear(GL_DEPTH_BUFFER_BIT);
-		glEnable(GL_DEPTH_TEST);
-	}
-
 	void Renderer::Render()
 	{
 		ZoneScoped;
+		
+		auto const& layers1 = s_SpriteRenderSystem->GetRenderLayersUsed();
+		auto const& layers2 = s_TilemapRenderSystem->GetRenderLayersUsed();
+		std::vector<int> out(layers1.size() + layers2.size());
 
-		for (const auto& materialData : Material::GetAllMaterialsInUse())
+		auto it = std::set_union(layers1.begin(), layers1.end(), layers2.begin(), layers2.end(), out.begin());
+		out.resize(it - out.begin());
+		
+		for (int layer : out)
 		{
-			// set the shader uniforms (with the exception of the depth value) once per material, rather than once per sprite
-			materialData.MaterialPtr->SetUniforms();
+			for (auto const& materialData : Material::GetAllMaterialsInUse())
+			{
+				// set the shader uniforms (with the exception of the depth value) once per material, rather than once per sprite
+				materialData.MaterialPtr->SetUniforms();
 
-			s_SpriteRenderSystem->Render(materialData.MaterialID);
-			s_TilemapRenderSystem->Render(materialData.MaterialID);
+				s_SpriteRenderSystem->Render(materialData.MaterialID, layer);
+				s_TilemapRenderSystem->Render(materialData.MaterialID, layer);
+			}
 		}
-	}
-
-
-	float Renderer::CalculateOrderInLayerFactor(int max)
-	{
-		return max == 0 ? 0 : 1.0f / (float)(max + 1.0f);
-	}
-	float Renderer::CalculateRenderLayerFactor(int max)
-	{
-		return max == 0 ? 1.0f : 1.0f / (float)(max);
 	}
 }

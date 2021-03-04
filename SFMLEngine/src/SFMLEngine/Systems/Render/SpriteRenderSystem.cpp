@@ -28,13 +28,11 @@ namespace SFMLEngine {
 			LOG_WARN("No texture was supplied for entity ID {0}", entity);
 		}
 
-		m_MaxOrderInLayer = std::max(m_MaxOrderInLayer, abs(sRenderer->OrderInLayer));
-		m_MaxRenderLayer = std::max(m_MaxRenderLayer, abs(sRenderer->RenderLayer));
-		m_OrderInLayerNormalizeFactor = Renderer::CalculateOrderInLayerFactor(m_MaxOrderInLayer);
-		m_RenderLayerNormaizeFactor = Renderer::CalculateRenderLayerFactor(m_MaxRenderLayer);
-
 		m_SpriteRenderers.insert(std::make_pair(entity, sRenderer));
 		m_Transforms.insert(std::make_pair(entity, transform));
+
+		// insert into render layers map
+		m_RenderLayers.insert(sRenderer->RenderLayer);
 
 		// insert into materials map
 		if (m_MaterialsMap.find(sRenderer->MaterialHandle) == m_MaterialsMap.end())
@@ -58,33 +56,7 @@ namespace SFMLEngine {
 		m_Transforms.erase(entity);
 	}
 
-	void SpriteRenderSystem::Update()
-	{
-		ZoneScoped;
-
-		bool anyChanged = false;
-		for (auto& e : m_Entities)
-		{
-			SpriteRenderer* spriteRenderer = m_SpriteRenderers[e];
-			if (ComponentModified(spriteRenderer))
-			{
-				// if a sprite renderer has been modified then we need to update the order in layer factors etc
-				m_MaxOrderInLayer = std::max(m_MaxOrderInLayer, abs(spriteRenderer->OrderInLayer));
-				m_MaxRenderLayer = std::max(m_MaxRenderLayer, abs(spriteRenderer->RenderLayer));
-				anyChanged = true;
-
-				ResetModified(spriteRenderer);
-			}
-		}
-
-		if (anyChanged)
-		{
-			m_OrderInLayerNormalizeFactor = Renderer::CalculateOrderInLayerFactor(m_MaxOrderInLayer);
-			m_RenderLayerNormaizeFactor = Renderer::CalculateRenderLayerFactor(m_MaxRenderLayer);
-		}
-	}
-
-	void SpriteRenderSystem::Render(ResourceID material)
+	void SpriteRenderSystem::Render(ResourceID material, int renderLayer)
 	{
 		ZoneScoped;
 
@@ -95,19 +67,11 @@ namespace SFMLEngine {
 			ZoneScoped;
 			ZoneName("DrawSprite", 10);
 			SpriteRenderer* sR = m_SpriteRenderers[entity];
+			if (sR->RenderLayer != renderLayer) continue;
+
 			Transform* t = m_Transforms[entity];
 			
 			sf::Shader* shader = sR->MaterialPtr->GetShaderPtr();
-			
-
-			{
-				ZoneScoped;
-				ZoneName("SetDepth", 8);
-				// set shader uniforms
-				float depth = (sR->RenderLayer + (sR->OrderInLayer * m_OrderInLayerNormalizeFactor)) * m_RenderLayerNormaizeFactor;
-				shader->setUniform("u_DepthValue", -depth);
-			}
-			
 			if (sR->MaterialPtr->IsLit())
 			{
 				ZoneScoped;

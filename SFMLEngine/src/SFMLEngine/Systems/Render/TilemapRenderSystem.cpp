@@ -17,15 +17,12 @@ namespace SFMLEngine {
 		TilemapRenderer* tRenderer = &m_Coordinator->GetComponent<TilemapRenderer>(entity);
 		Tilemap* tilemap = &m_Coordinator->GetComponent<Tilemap>(entity);
 		Transform* transform = &m_Coordinator->GetComponent<Transform>(entity);
-
-		m_MaxOrderInLayer = std::max(m_MaxOrderInLayer, abs(tRenderer->OrderInLayer));
-		m_MaxRenderLayer = std::max(m_MaxRenderLayer, abs(tRenderer->RenderLayer));
-		m_OrderInLayerNormalizeFactor = Renderer::CalculateOrderInLayerFactor(m_MaxOrderInLayer);
-		m_RenderLayerNormaizeFactor = Renderer::CalculateRenderLayerFactor(m_MaxRenderLayer);
 		
 		m_TilemapRenderers.insert(std::make_pair(entity, tRenderer));
 		m_Tilemaps.insert(std::make_pair(entity, tilemap));
 		m_Transforms.insert(std::make_pair(entity, transform));
+
+		m_RenderLayers.insert(tRenderer->RenderLayer);
 
 		// insert into materials map
 		if (m_MaterialsMap.find(tRenderer->MaterialHandle) == m_MaterialsMap.end())
@@ -50,33 +47,7 @@ namespace SFMLEngine {
 		m_Transforms.erase(entity);
 	}
 
-	void TilemapRenderSystem::Update()
-	{
-		ZoneScoped;
-
-		bool anyChanged = false;
-		for (auto& e : m_Entities)
-		{
-			TilemapRenderer* tilemapRenderer = m_TilemapRenderers[e];
-			if (ComponentModified(tilemapRenderer))
-			{
-				// if a sprite renderer has been modified then we need to update the order in layer factors etc
-				m_MaxOrderInLayer = std::max(m_MaxOrderInLayer, abs(tilemapRenderer->OrderInLayer));
-				m_MaxRenderLayer = std::max(m_MaxRenderLayer, abs(tilemapRenderer->RenderLayer));
-				anyChanged = true;
-
-				ResetModified(tilemapRenderer);
-			}
-		}
-
-		if (anyChanged)
-		{
-			m_OrderInLayerNormalizeFactor = Renderer::CalculateOrderInLayerFactor(m_MaxOrderInLayer);
-			m_RenderLayerNormaizeFactor = Renderer::CalculateRenderLayerFactor(m_MaxRenderLayer);
-		}
-	}
-
-	void TilemapRenderSystem::Render(ResourceID material)
+	void TilemapRenderSystem::Render(ResourceID material, int renderLayer)
 	{
 		ZoneScoped;
 
@@ -88,6 +59,8 @@ namespace SFMLEngine {
 			ZoneName("DrawTilemap", 11);
 
 			TilemapRenderer* tilemapRenderer = m_TilemapRenderers[entity];
+			if (tilemapRenderer->RenderLayer != renderLayer) continue;
+
 			Tilemap* tilemap = m_Tilemaps[entity];
 			Transform* transform = m_Transforms[entity];
 
@@ -96,9 +69,6 @@ namespace SFMLEngine {
 
 
 			// set shader uniforms
-			float depth = (tilemapRenderer->RenderLayer + (tilemapRenderer->OrderInLayer * m_OrderInLayerNormalizeFactor)) * m_RenderLayerNormaizeFactor;
-			shader->setUniform("u_DepthValue", -depth);
-			
 			// if its a lit material set the normal map and rotation to be applied to normals
 			if (tilemapRenderer->MaterialPtr->IsLit())
 			{
