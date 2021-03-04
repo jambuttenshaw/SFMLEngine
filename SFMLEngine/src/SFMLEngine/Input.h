@@ -23,7 +23,7 @@ namespace SFMLEngine {
 		static sf::Vector2f GetMouseWorldPos();
 
 		static const sf::Vector2f& GetMouseDelta() { return s_WindowFocused ? s_MouseDelta : sf::Vector2f(); }
-		static float GetMouseWheelDelta() { return s_WindowFocused ? s_WheelDelta : 0; }
+		static int GetMouseWheelDelta() { return s_WindowFocused ? s_WheelDelta : 0; }
 
 		static void SetFocused(bool focused) { s_WindowFocused = focused; }
 
@@ -31,7 +31,7 @@ namespace SFMLEngine {
 
 		static void Reset();
 		static void SetMouseDelta(const sf::Vector2f& newPos) { s_MouseDelta = s_OldMousePos - newPos; s_OldMousePos = newPos; }
-		static void SetWheelDelta(float delta) { s_WheelDelta = delta; }
+		static void SetWheelDelta(int delta) { s_WheelDelta = delta; }
 		static void SetKeyPressed(sf::Keyboard::Key key) { s_KeysPressed.insert(static_cast<int>(key)); }
 		static void SetMousePressed(sf::Mouse::Button button) { s_MouseButtonsPressed.insert(static_cast<int>(button)); }
 
@@ -41,7 +41,7 @@ namespace SFMLEngine {
 
 		static sf::Vector2f s_MouseDelta;
 		static sf::Vector2f s_OldMousePos;
-		static float s_WheelDelta;
+		static int s_WheelDelta;
 
 		static bool s_WindowFocused;
 

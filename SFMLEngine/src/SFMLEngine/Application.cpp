@@ -365,7 +365,7 @@ namespace SFMLEngine
                         Input::SetMouseDelta(sf::Vector2f((float)event.mouseMove.x, (float)event.mouseMove.y));
 
                     if (event.type == sf::Event::MouseWheelMoved)
-                        Input::SetWheelDelta((float)event.mouseWheel.delta);
+                        Input::SetWheelDelta(event.mouseWheel.delta);
 
                     if (event.type == sf::Event::MouseButtonPressed)
                         Input::SetMousePressed(event.mouseButton.button);

@@ -9,7 +9,7 @@ namespace SFMLEngine {
 
 	sf::Vector2f Input::s_MouseDelta;
 	sf::Vector2f Input::s_OldMousePos;
-	float Input::s_WheelDelta = 0.0f;
+	int Input::s_WheelDelta = 0;
 
 	bool Input::s_WindowFocused = true;
 
