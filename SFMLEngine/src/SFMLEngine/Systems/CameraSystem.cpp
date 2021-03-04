@@ -59,4 +59,9 @@ namespace SFMLEngine {
 		return view;
 	}
 
+	bool CameraSystem::ValidMainCamera()
+	{
+		return m_MainCamera != INVALID_ENTITY_ID;
+	}
+
 }

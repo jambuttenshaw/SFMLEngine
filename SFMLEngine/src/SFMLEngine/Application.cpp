@@ -303,6 +303,9 @@ namespace SFMLEngine
     void Application::Run()
     {
 
+        // make sure the scene has a camera; otherwise rendering will not be possible
+        SFMLE_CORE_ASSERT(m_CameraSystem->ValidMainCamera(), "No valid main camera in existence!");
+
         /*
         start up the scriptable entities
         */

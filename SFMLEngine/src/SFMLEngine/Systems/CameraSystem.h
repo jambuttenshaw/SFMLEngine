@@ -22,11 +22,13 @@ namespace SFMLEngine {
 		void WindowResized(const sf::Vector2f& newSize);
 		sf::View GetMainCameraView();
 
+		bool ValidMainCamera();
+
 	private:
 
 		Coordinator* m_Coordinator = nullptr;
 
-		Entity m_MainCamera;
+		Entity m_MainCamera = INVALID_ENTITY_ID;
 	};
 
 }
