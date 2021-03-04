@@ -12,7 +12,7 @@ class MainScene : public Scene
 public:
 	void Create() override
 	{
-		ResourceID tilePaletteID = TilePalette::LoadFromFile("assets/textures/terrain.png", "assets/textures/terrainNormals.png", sf::Vector2u(32, 32));
+		ResourceID tilePaletteID = TilePalette::LoadFromFile("assets/textures/terrain.png", "assets/textures/terrain_n.png", sf::Vector2u(32, 32));
 		TilePalette* tilePalette = ResourceManager::GetResourceHandle<TilePalette>(tilePaletteID);
 
 		

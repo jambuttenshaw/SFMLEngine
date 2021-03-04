@@ -25,7 +25,7 @@ public:
 
 			AddComponent(m_Tilemap, Transform{ sf::Vector2f(0, 0) });
 			
-			ResourceID tilePaletteID = TilePalette::LoadFromFile("assets/textures/terrain.png", "assets/textures/terrainNormals.png", sf::Vector2u(32, 32));
+			ResourceID tilePaletteID = TilePalette::LoadFromFile("assets/textures/terrain.png", "assets/textures/terrain_n.png", sf::Vector2u(32, 32));
 			TilePalette* tilePalette = ResourceManager::GetResourceHandle<TilePalette>(tilePaletteID);
 
 			// load a tilemap from a file
@@ -49,7 +49,7 @@ public:
 		{
 			m_Background = CreateEntity();
 
-			AddComponent(m_Background, Transform{ sf::Vector2f(0, -400) });
+			AddComponent(m_Background, Transform{ sf::Vector2f(0, 0) });
 
 			ResourceID tilePaletteID = TilePalette::Create(sf::Vector2u(256, 256));
 			TilePalette* tilePalette = ResourceManager::GetResourceHandle<TilePalette>(tilePaletteID);
@@ -65,7 +65,7 @@ public:
 			{
 				for (int y = 0; y < 5; y++)
 				{
-					tilemapComponent.PlaceTile(sf::Vector2i(x - numTiles / 2, y), background);
+					tilemapComponent.PlaceTile(sf::Vector2i(x - numTiles / 2, 1 - y), background);
 				}
 			}
 
@@ -182,6 +182,8 @@ public:
 	SandboxApp()
 		: Application("Sandbox", sf::Vector2i(1200, 675))
 	{
+		SetClearColor(sf::Color::Magenta);
+
 		LoadScene<MainScene>();
 	}
 };
