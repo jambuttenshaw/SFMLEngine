@@ -37,6 +37,12 @@ public:
 				m_TilePreview->PlaceTile({ 0, 0 }, m_Palette->GetAllTiles()[m_CurrentTile], true);
 			}
 		}
+
+		if (Input::IsKeyPressed(sf::Keyboard::Space))
+		{
+			m_Tilemap->Export("D:/dev/SFML/SFMLEngine/ExampleProject/assets/tilemaps/terrain.json");
+			LOG_INFO("Terrain exported.");
+		}
 	}
 
 

@@ -23,7 +23,7 @@ public:
 
 			m_Tilemap = CreateEntity();
 
-			AddComponent(m_Tilemap, Transform{ sf::Vector2f(0, 300) });
+			AddComponent(m_Tilemap, Transform{ sf::Vector2f(0, 0) });
 			
 			ResourceID tilePaletteID = TilePalette::LoadFromFile("assets/textures/terrain.png", "assets/textures/terrainNormals.png", sf::Vector2u(32, 32));
 			TilePalette* tilePalette = ResourceManager::GetResourceHandle<TilePalette>(tilePaletteID);
@@ -74,14 +74,14 @@ public:
 			TilemapRenderer tilemapRendererComponent{ Material::Create("LitTilemap"), 0, 0 };
 			AddComponent(m_Background, tilemapRendererComponent);
 		}
-
+		
 
 		{
 			// creating a second entity
 			m_PhysicsEntity = CreateEntity("Player", "Player", "Player");
 
 			// give the entity a transform
-			AddComponent(m_PhysicsEntity, Transform{ sf::Vector2f(0, 200) });
+			AddComponent(m_PhysicsEntity, Transform{ sf::Vector2f(0, -100) });
 			// add a rigidbody so this entity is affected by physics
 			AddComponent(m_PhysicsEntity, Rigidbody{ });
 			AddComponent(m_PhysicsEntity, BoxCollider{ sf::Vector2f(17, 48), sf::Vector2f(8, 16) });
@@ -138,7 +138,7 @@ public:
 
 			// light is a child transform of physics entity
 			AddComponent(m_Light, Transform{ sf::Vector2f(16, 32), &GetComponent<Transform>(m_PhysicsEntity) });
-			AddComponent(m_Light, PointLight{ 1.3f, 15.0f, sf::Color(219, 113, 114, 255) });
+			AddComponent(m_Light, PointLight{ 1.3f, 100.0f, sf::Color(219, 113, 114, 255) });
 
 			AddNativeScript<ScrollToControlLight>(m_Light);
 		}
