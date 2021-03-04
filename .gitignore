@@ -3,7 +3,6 @@ bin/
 bin-int/
 profiler-traces/
 **.sln
-**.sln
 **.vcxproj
 **.vcxproj.filters
 **.vcxproj.user
