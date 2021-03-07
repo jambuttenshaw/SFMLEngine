@@ -79,7 +79,11 @@ void main()
 	normal = normalize(normal * 2.0 - 1.0);
 
 	// if the sprite is rotated then we want to transform the normal by the rotation
+	float rot = abs(u_Rotation);
 	normal = vec3(normal.x * cos(u_Rotation) - normal.y * sin(u_Rotation), normal.x * sin(u_Rotation) + normal.y * cos(u_Rotation), normal.z);
+	
+	int flip = sign(u_Rotation);
+	normal.x *= flip;
 
 	// the accumulative affect of each light on this pixel
 	vec3 lightColor = vec3(0, 0, 0);

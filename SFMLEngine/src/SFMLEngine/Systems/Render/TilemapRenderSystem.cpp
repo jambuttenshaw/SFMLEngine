@@ -82,7 +82,7 @@ namespace SFMLEngine {
 
 				// rotation value is used to compute transformed normals so lighting is correct for rotated sprites
 				// requires negated because of the y axis being flipped
-				shader->setUniform("u_Rotation", -transform->Rotation * Math::DEG_TO_RAD);
+				shader->setUniform("u_Rotation", fmodf(-transform->Rotation, 360) * Math::DEG_TO_RAD);
 
 			}
 

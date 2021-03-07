@@ -18,6 +18,7 @@ namespace SFMLEngine {
 		int RenderLayer;
 		ResourceID NormalMapHandle;
 		sf::Sprite Sprite;
+		bool FlipNormals = false;
 
 		// for speed when rendering
 		Material* MaterialPtr = nullptr;

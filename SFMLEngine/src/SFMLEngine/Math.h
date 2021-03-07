@@ -26,6 +26,19 @@ namespace SFMLEngine {
 
 
 		/*
+		GENERALLY HELPFUL FUNCTIONS
+		*/
+		// returns 1, 0 or -1 depending on the sign of the number
+		// works on any type that can be constructoed from integer 0
+		// and is orderable
+		template <typename T>
+		static int Sign(T value)
+		{
+			return (T(0) < val) - (val < T(0));
+		}
+
+
+		/*
 		VECTOR MATH
 		*/
 
