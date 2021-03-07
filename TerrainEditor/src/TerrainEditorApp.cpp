@@ -12,7 +12,7 @@ class MainScene : public Scene
 public:
 	void Create() override
 	{
-		ResourceID tilePaletteID = TilePalette::LoadFromFile("assets/textures/terrain.png", "assets/textures/terrain_n.png", sf::Vector2u(32, 32));
+		ResourceID tilePaletteID = TilePalette::LoadFromFile("assets/palettes/terrainPalette.json");
 		TilePalette* tilePalette = ResourceManager::GetResourceHandle<TilePalette>(tilePaletteID);
 
 		
@@ -24,7 +24,7 @@ public:
 			// create an empty tilemap
 			Tilemap tilemap{ tilePaletteID };
 
-			TileID tile0 = tilePalette->GetTileByName("Tile0");
+			TileID tile0 = tilePalette->GetTileByName("ground");
 			tilemap.PlaceTile({ 0, 0 }, tile0);
 
 			AddComponent(m_TilePreview, tilemap);

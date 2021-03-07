@@ -2,6 +2,11 @@
 
 #include "Texture.h"
 
+#include <nlohmann/json.hpp>
+#include <fstream>
+#include <iomanip>
+
+
 namespace SFMLEngine {
 
 	std::vector<TilePaletteCacheEntry> TilePalette::s_PaletteCache;
@@ -58,6 +63,50 @@ namespace SFMLEngine {
 		m_PlaceX = (numTilesX + 1) * m_TileSize.x;
 		m_PlaceY = 0;
 	}
+
+
+	TilePalette::TilePalette(const std::string& jsonPath)
+	{
+		// create the queue for tile IDs
+		for (TileID i = 0; i < MAX_TILES; i++)
+		{
+			m_AvailableTileIDs.push(i);
+		}
+
+
+		// load the json data describing how to construct our tile palette
+		// load tilemap data from the file
+		std::ifstream infile(jsonPath);
+		if (!infile.good())
+		{
+			LOG_CORE_ERROR("Failed to open file '{0}'", jsonPath);
+			SFMLE_CORE_ASSERT(0, "Error opening file");
+		}
+
+		nlohmann::json paletteJson;
+		infile >> paletteJson;
+
+		// now we can start loading up the tilemap
+		m_PaletteTextureID = Texture::Create(paletteJson["texturePath"]);
+		m_NormalMapTextureID = Texture::Create(paletteJson["normalsPath"]);
+
+
+		m_TileSize = sf::Vector2u(paletteJson["tileSizeX"], paletteJson["tileSizeY"]);
+
+		for (auto& element : paletteJson["tiles"])
+		{
+			// place the tile data into the tile atlas
+			TileID newID = GetNextTileID();
+			m_TileAtlas.insert(std::make_pair(newID,
+				TileData{ element["name"], sf::Vector2u(element["x"], element["y"]) }
+			));
+		}
+
+		// set the placing point for any future tiles
+		m_PlaceX = ResourceManager::GetResourceHandle<sf::Texture>(m_PaletteTextureID)->getSize().x;
+		m_PlaceY = 0;
+	}
+
 
 	TilePalette::~TilePalette()
 	{
@@ -205,6 +254,20 @@ namespace SFMLEngine {
 		ResourceID newID = ResourceManager::ManageResource(newPalette);
 
 		s_PaletteCache.push_back(TilePaletteCacheEntry{ newID, texturePath, shared });
+		return newID;
+	}
+
+	ResourceID TilePalette::LoadFromFile(const std::string& jsonPath, bool shared)
+	{
+
+		ResourceID cached = PaletteCached(jsonPath);
+		if (cached != NULL_RESOURCE_ID) return cached;
+
+
+		TilePalette* newPalette = new TilePalette(jsonPath);
+		ResourceID newID = ResourceManager::ManageResource(newPalette);
+
+		s_PaletteCache.push_back(TilePaletteCacheEntry{ newID, jsonPath, shared });
 		return newID;
 	}
 

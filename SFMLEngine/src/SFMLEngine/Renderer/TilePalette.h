@@ -5,6 +5,7 @@
 #include "SFMLEngine/Constants.h"
 #include "SFMLEngine/ResourceManagement/ResourceManager.h"
 
+
 namespace SFMLEngine {
 
 
@@ -31,6 +32,7 @@ namespace SFMLEngine {
 		// use the ::Create or ::LoadFromFile methods to create tile palettes
 		TilePalette(const sf::Vector2u& tileSize);
 		TilePalette(const std::string& texturePath, const std::string& normalMapPath, const sf::Vector2u& tileSize);
+		TilePalette(const std::string& jsonPath);
 
 	public:
 		~TilePalette();
@@ -53,8 +55,11 @@ namespace SFMLEngine {
 
 	public:
 		// static methods
+
 		static ResourceID Create(const sf::Vector2u& tileSize);
 		static ResourceID LoadFromFile(const std::string& texturePath, const std::string& normalMapPath, const sf::Vector2u& tileSize, bool shared = true);
+		// load a tile palette from a json metadata file
+		static ResourceID LoadFromFile(const std::string& metaPath, bool shared = true);
 
 		static void Destroy(ResourceID palette);
 		static void DestroyAllCached();

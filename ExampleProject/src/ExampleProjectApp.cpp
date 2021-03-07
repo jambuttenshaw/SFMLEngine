@@ -26,7 +26,7 @@ public:
 
 			AddComponent(m_Tilemap, Transform{ sf::Vector2f(0, 0) });
 			
-			ResourceID tilePaletteID = TilePalette::LoadFromFile("assets/textures/terrain.png", "assets/textures/terrain_n.png", sf::Vector2u(32, 32));
+			ResourceID tilePaletteID = TilePalette::LoadFromFile("assets/palettes/terrainPalette.json");
 			TilePalette* tilePalette = ResourceManager::GetResourceHandle<TilePalette>(tilePaletteID);
 
 			// load a tilemap from a file
