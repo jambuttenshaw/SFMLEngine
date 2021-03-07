@@ -190,6 +190,7 @@ namespace SFMLEngine {
 		}
 		// this should never be reached provided UniformExists check was carried out first
 		LOG_CORE_ERROR("Uniform {0} doesn't exist: Call Material::UniformExists before attempting to retrieve uniforms.", name);
+		SFMLE_CORE_ASSERT(0, "Failed to retrieve uniform.");
 	}
 
 

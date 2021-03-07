@@ -90,9 +90,12 @@ namespace SFMLEngine {
 		void SetUniform(const std::string& uniformName, T value)
 		{
 			// error checking to make sure uniform exists
-			if (!UniformExists(uniformName) && s_WarnOnUnknownUniform)
+			if (!UniformExists(uniformName))
 			{
-				LOG_CORE_WARN("Uniform {0} does not exist.", uniformName);
+				// warn that the uniform doesnt exist if desired
+				if (s_WarnOnUnknownUniform)
+					LOG_CORE_WARN("Uniform {0} does not exist.", uniformName);
+
 				return;
 			}
 
