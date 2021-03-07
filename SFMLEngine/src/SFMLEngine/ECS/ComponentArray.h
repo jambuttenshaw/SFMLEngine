@@ -17,20 +17,27 @@ namespace SFMLEngine {
 		virtual void EntityDestroyed(Entity entity) = 0;
 	};
 
-
+	// a templated class is required
+	// because we will need a different type of component array for each type of component
 	template<typename T>
 	class ComponentArray : public IComponentArray
 	{
 	public:
 		void InsertData(Entity entity, T component)
 		{
+			// make sure the entity doesn't already have this component
 			SFMLE_CORE_ASSERT(m_EntityToIndexMap.find(entity) == m_EntityToIndexMap.end(), "Component added to same entity more than once.");
 
 			size_t newIndex = m_Size;
 
+			// insert the mapping for this entity
+			// the reason we dont just use the entity ID as the index is to attempt to maximise data locality
+			// and keep all component data adjacent in memory
+			// we have a map to get from index to entity and entity to index
 			m_EntityToIndexMap[entity] = newIndex;
 			m_IndexToEntityMap[newIndex] = entity;
 
+			// add the component to the array
 			m_ComponentArray[newIndex] = component;
 
 			++m_Size;
@@ -38,15 +45,23 @@ namespace SFMLEngine {
 
 		void RemoveData(Entity entity)
 		{
+			// make sure the component exists
 			SFMLE_CORE_ASSERT(m_EntityToIndexMap.find(entity) != m_EntityToIndexMap.end(), "Removing non-existent component.");
 
 			// copy element at end into deleted elements place to maintain tightly packed array
 			size_t indexOfRemovedEntity = m_EntityToIndexMap[entity];
 			size_t indexOfLastElement = m_Size - 1;
 
-			m_ComponentArray[indexOfRemovedEntity] = m_ComponentArray[indexOfLastElement];
+			// preserve data density by moving the entity in the last spot of the array
+			// to the hole left by the new entity
 
-			// update map to point to moved spot
+			// this is done by moving the component data and then updating the index mappings
+			// then removing the last in the mappings
+
+			// use move semantics as we dont need to access the data through its old location anymore
+			m_ComponentArray[indexOfRemovedEntity] = std::move(m_ComponentArray[indexOfLastElement]);
+
+			// update mappings
 			Entity entityOfLastElement = m_IndexToEntityMap[indexOfLastElement];
 			m_EntityToIndexMap[entityOfLastElement] = indexOfLastElement;
 			m_IndexToEntityMap[indexOfRemovedEntity] = entityOfLastElement;
@@ -60,6 +75,7 @@ namespace SFMLEngine {
 
 		T& GetData(Entity entity)
 		{
+			// make sure this component exists
 			SFMLE_CORE_ASSERT(m_EntityToIndexMap.find(entity) != m_EntityToIndexMap.end(), "Retrieving non-existent component.");
 
 			// return a reference to the entity's component

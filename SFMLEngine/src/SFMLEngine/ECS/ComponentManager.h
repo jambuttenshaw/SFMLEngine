@@ -15,6 +15,7 @@ namespace SFMLEngine {
 		template<typename T>
 		void RegisterComponent()
 		{
+			// the type name of the component is used as its unique identifier in all of the mappings
 			const char* typeName = typeid(T).name();
 
 			// make sure the component hasnt been registered already
@@ -33,8 +34,13 @@ namespace SFMLEngine {
 		template<typename T>
 		ComponentType GetComponentType()
 		{
+			// the component type is the index for the bit in the signature that represents this component
+			// ie if an entity has a signature 0100 and this components type is 2, then that entity has this component
+
+			// get the unique identifier for this component
 			const char* typeName = typeid(T).name();
 
+			// make sure that the component exists
 			SFMLE_CORE_ASSERT(m_ComponentTypes.find(typeName) != m_ComponentTypes.end(), "Component not registered before use.");
 
 			// return the components type: used for creating signatures
@@ -44,18 +50,22 @@ namespace SFMLEngine {
 		template<typename T>
 		void AddComponent(Entity entity, const T& component)
 		{
+			// adds component data for this entity
+			// handled by the component array
 			GetComponentArray<T>()->InsertData(entity, component);
 		}
 
 		template<typename T>
 		void RemoveComponent(Entity entity)
 		{
+			// removes the data associated with this entity
 			GetComponentArray<T>()->RemoveData(entity);
 		}
 
 		template<typename T>
 		T& GetComponent(Entity entity)
 		{
+			// returns the data for this component associated with this entity
 			return GetComponentArray<T>()->GetData(entity);
 		}
 
@@ -84,10 +94,13 @@ namespace SFMLEngine {
 		template<typename T>
 		std::shared_ptr<ComponentArray<T>> GetComponentArray()
 		{
+			// get the identifier of this component
 			const char* typeName = typeid(T).name();
 
+			// make sure this component exists
 			assert(m_ComponentTypes.find(typeName) != m_ComponentTypes.end() && "Component not registered before use.");
 
+			// static_pointer_cast is required here as component arrays are captured in shared_ptr's
 			return std::static_pointer_cast<ComponentArray<T>>(m_ComponentArrays[typeName]);
 		}
 

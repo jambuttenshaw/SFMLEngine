@@ -1,5 +1,7 @@
 #pragma once
 
+// a handy header file for when I want to include all of the components in one go,
+// like in Application or in SFMLEngine.h
 
 #include "Components/Identity.h"
 #include "Components/Transform.h"

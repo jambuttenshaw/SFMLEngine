@@ -138,10 +138,9 @@ public:
 			m_Light = CreateEntity();
 
 			// light is a child transform of physics entity
-			AddComponent(m_Light, Transform{ sf::Vector2f(16, 32) });// , & GetComponent<Transform>(m_PhysicsEntity) });
+			AddComponent(m_Light, Transform{ sf::Vector2f(16, 32), & GetComponent<Transform>(m_PhysicsEntity) });
 			AddComponent(m_Light, PointLight{ 1.3f, 100.0f, sf::Color(219, 113, 114, 255) });
 
-			AddNativeScript<GoToMouse>(m_Light);
 			AddNativeScript<ScrollToControlLight>(m_Light);
 		}
 

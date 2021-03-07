@@ -46,7 +46,8 @@ public:
 			AddComponent(m_Terrain, Transform{ });
 
 			// create an empty tilemap
-			AddComponent(m_Terrain, Tilemap{ tilePaletteID });
+			// AddComponent(m_Terrain, Tilemap{ tilePaletteID });
+			AddComponent(m_Terrain, Tilemap{ tilePaletteID, "D:/dev/SFML/SFMLEngine/ExampleProject/assets/tilemaps/terrain.json" });
 
 			// add a tilemap renderer
 			AddComponent(m_Terrain, TilemapRenderer{ Material::Create("Basic"), 0 });

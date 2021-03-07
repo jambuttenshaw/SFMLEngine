@@ -7,6 +7,9 @@
 
 namespace SFMLEngine {
 
+	/*
+	Controls creating and destroying entities, and their signatures
+	*/
 	class EntityManager
 	{
 	public:
