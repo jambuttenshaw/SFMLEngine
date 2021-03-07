@@ -23,6 +23,7 @@ namespace SFMLEngine {
 		// a tile has the same texcoords for both the texture and normal map
 		// just the image data is located in different images
 		sf::Vector2u TexCoords;
+		sf::Vector2u TileSize;
 	};
 
 	class TilePalette
@@ -39,15 +40,17 @@ namespace SFMLEngine {
 
 		TileID CreateTile(const std::string& name, ResourceID tileTextureID, ResourceID tileNormalsID);
 
-		const sf::Vector2u& GetTexCoords(TileID tile);
 
 		const sf::Vector2u& GetTileSize() { return m_TileSize; }
+		const sf::Vector2u& GetTileSize(TileID tile);
+		const sf::Vector2u& GetTexCoords(TileID tile);
 
 		ResourceID GetTexture() { return m_PaletteTextureID; }
 		ResourceID GetNormalMap() { return m_NormalMapTextureID; }
 
 		size_t GetTileCount() { return m_TileCount; }
 		TileID GetTileByName(const std::string& name);
+		bool TileExists(const std::string& name);
 		std::vector<TileID> GetAllTiles();
 
 	private:

@@ -56,7 +56,7 @@ namespace SFMLEngine {
 			{
 				// place the tile data into the tile atlas
 				TileID newID = GetNextTileID();
-				m_TileAtlas.insert(std::make_pair(newID, TileData{ "Tile" + std::to_string(y * numTilesX + x), sf::Vector2u(x * m_TileSize.x, y * m_TileSize.y) }));
+				m_TileAtlas.insert(std::make_pair(newID, TileData{ "Tile" + std::to_string(y * numTilesX + x), sf::Vector2u(x * m_TileSize.x, y * m_TileSize.y), m_TileSize }));
 			}
 		}
 		// assign the place to put more tiles in case more are added by scripts later
@@ -98,7 +98,7 @@ namespace SFMLEngine {
 			// place the tile data into the tile atlas
 			TileID newID = GetNextTileID();
 			m_TileAtlas.insert(std::make_pair(newID,
-				TileData{ element["name"], sf::Vector2u(element["x"], element["y"]) }
+				TileData{ element["name"], sf::Vector2u(element["x"], element["y"]), sf::Vector2u(element["w"], element["h"]) }
 			));
 		}
 
@@ -120,7 +120,7 @@ namespace SFMLEngine {
 	TileID TilePalette::CreateTile(const std::string& name, ResourceID tileTextureID, ResourceID tileNormalsID)
 	{
 		// make sure we dont have a tile with the same name already
-		SFMLE_CORE_ASSERT(GetTileByName(name) == NULL_TILE_ID, "A tile with that name already exists!");
+		SFMLE_CORE_ASSERT(!TileExists(name), "A tile with that name already exists!");
 
 		// get the resource handles for one of the textures so we know the palette size
 		sf::Texture* palette = ResourceManager::GetResourceHandle<sf::Texture>(m_PaletteTextureID);
@@ -162,7 +162,7 @@ namespace SFMLEngine {
 
 		// place the tile data into the tile atlas
 		TileID newID = GetNextTileID();
-		m_TileAtlas.insert(std::make_pair(newID, TileData{name, sf::Vector2u(m_PlaceX, m_PlaceY)} ));
+		m_TileAtlas.insert(std::make_pair(newID, TileData{ name, sf::Vector2u(m_PlaceX, m_PlaceY), m_TileSize }));
 
 
 		m_MaxPlaceX = std::max(m_MaxPlaceX, m_PlaceX);
@@ -194,6 +194,12 @@ namespace SFMLEngine {
 		return newID;
 	}
 
+	const sf::Vector2u& TilePalette::GetTileSize(TileID tile)
+	{
+		SFMLE_CORE_ASSERT(m_TileAtlas.find(tile) != m_TileAtlas.end(), "Tile has not been registered!");
+		return m_TileAtlas[tile].TileSize;
+	}
+
 	const sf::Vector2u& TilePalette::GetTexCoords(TileID tile)
 	{
 		SFMLE_CORE_ASSERT(m_TileAtlas.find(tile) != m_TileAtlas.end(), "Tile has not been registered!");
@@ -217,7 +223,18 @@ namespace SFMLEngine {
 		{
 			if (tile.second.Name == name) return tile.first;
 		}
+		LOG_CORE_ERROR("Tile '{0}' does not exist.", name);
+		SFMLE_CORE_ASSERT(0, "Could not find tile.");
 		return NULL_TILE_ID;
+	}
+
+	bool TilePalette::TileExists(const std::string& name)
+	{
+		for (auto const& tile : m_TileAtlas)
+		{
+			if (tile.second.Name == name) return true;
+		}
+		return false;
 	}
 
 	std::vector<TileID> TilePalette::GetAllTiles()

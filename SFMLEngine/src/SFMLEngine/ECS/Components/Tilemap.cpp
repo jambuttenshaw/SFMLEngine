@@ -77,6 +77,14 @@ namespace SFMLEngine {
 				// we want to find the tile at that location and replace the data with the data of the new tile
 				size_t index = GetTileIndex(location);
 
+				// get the new tile dimensions
+				sf::Vector2f tileDimensions = (sf::Vector2f)PalettePtr->GetTileSize(tileType);
+				// check if the old tile is the same size as this tile
+				bool same_size = tileDimensions == (sf::Vector2f)PalettePtr->GetTileSize(Tiles[index].TileType);
+
+				// get the position of the tile in world space
+				sf::Vector2f pos = sf::Vector2f(Tiles[index].Position.x * TileSize.x, Tiles[index].Position.y * TileSize.y);
+
 				// set the new tile type
 				Tiles[index].TileType = tileType;
 
@@ -84,13 +92,26 @@ namespace SFMLEngine {
 				size_t geomIndex = Tiles[index].GeometryIndex;
 				sf::Vector2f texCoords = (sf::Vector2f)PalettePtr->GetTexCoords(tileType);
 
+				if (!same_size)
+				{
+
+					// vertices need adjusting as the new tile is not the same size as the old one
+					Geometry[m_TriangleIndex].position = pos;
+					Geometry[m_TriangleIndex + 1].position = pos + sf::Vector2f(tileDimensions.x, 0);
+					Geometry[m_TriangleIndex + 2].position = pos + tileDimensions;
+
+					Geometry[m_TriangleIndex + 3].position = pos;
+					Geometry[m_TriangleIndex + 4].position = pos + sf::Vector2f(0, tileDimensions.y);
+					Geometry[m_TriangleIndex + 5].position = pos + tileDimensions;
+				}
+
 				Geometry[geomIndex].texCoords = texCoords;
-				Geometry[geomIndex + 1].texCoords = texCoords + sf::Vector2f(TileSize.x, 0);
-				Geometry[geomIndex + 2].texCoords = texCoords + TileSize;
+				Geometry[geomIndex + 1].texCoords = texCoords + sf::Vector2f(tileDimensions.x, 0);
+				Geometry[geomIndex + 2].texCoords = texCoords + tileDimensions;
 
 				Geometry[geomIndex + 3].texCoords = texCoords;
-				Geometry[geomIndex + 4].texCoords = texCoords + sf::Vector2f(0, TileSize.y);
-				Geometry[geomIndex + 5].texCoords = texCoords + TileSize;
+				Geometry[geomIndex + 4].texCoords = texCoords + sf::Vector2f(0, tileDimensions.y);
+				Geometry[geomIndex + 5].texCoords = texCoords + tileDimensions;
 			}
 			else
 			{
@@ -220,25 +241,30 @@ namespace SFMLEngine {
 
 		sf::Vector2f pos = sf::Vector2f(tile.Position.x * TileSize.x, tile.Position.y * TileSize.y);
 
+		// get the dimensions of the tile
+		// the tile can have different dimensions than the tile size of the tile map
+		// but we still need the original TileSize for the whole tilemap for placing tiles into the grid at the correct location
+		sf::Vector2f tileDimensions = (sf::Vector2f)PalettePtr->GetTileSize(tile.TileType);
+
 		// first set the position of each vertex
 		Geometry[m_TriangleIndex].position = pos;
-		Geometry[m_TriangleIndex + 1].position = pos + sf::Vector2f(TileSize.x, 0);
-		Geometry[m_TriangleIndex + 2].position = pos + TileSize;
+		Geometry[m_TriangleIndex + 1].position = pos + sf::Vector2f(tileDimensions.x, 0);
+		Geometry[m_TriangleIndex + 2].position = pos + tileDimensions;
 
 		Geometry[m_TriangleIndex + 3].position = pos;
-		Geometry[m_TriangleIndex + 4].position = pos + sf::Vector2f(0, TileSize.y);
-		Geometry[m_TriangleIndex + 5].position = pos + TileSize;
+		Geometry[m_TriangleIndex + 4].position = pos + sf::Vector2f(0, tileDimensions.y);
+		Geometry[m_TriangleIndex + 5].position = pos + tileDimensions;
 
 		// then set the texture coordinates
 		// we retrieve the location of the texture coordinates in the texture sheet from the tile palette
 		sf::Vector2f texCoords = (sf::Vector2f)PalettePtr->GetTexCoords(tile.TileType);
 		Geometry[m_TriangleIndex].texCoords = texCoords;
-		Geometry[m_TriangleIndex + 1].texCoords = texCoords + sf::Vector2f(TileSize.x, 0);
-		Geometry[m_TriangleIndex + 2].texCoords = texCoords + TileSize;
+		Geometry[m_TriangleIndex + 1].texCoords = texCoords + sf::Vector2f(tileDimensions.x, 0);
+		Geometry[m_TriangleIndex + 2].texCoords = texCoords + tileDimensions;
 
 		Geometry[m_TriangleIndex + 3].texCoords = texCoords;
-		Geometry[m_TriangleIndex + 4].texCoords = texCoords + sf::Vector2f(0, TileSize.y);
-		Geometry[m_TriangleIndex + 5].texCoords = texCoords + TileSize;
+		Geometry[m_TriangleIndex + 4].texCoords = texCoords + sf::Vector2f(0, tileDimensions.y);
+		Geometry[m_TriangleIndex + 5].texCoords = texCoords + tileDimensions;
 
 		m_TriangleIndex += 6;
 	}
