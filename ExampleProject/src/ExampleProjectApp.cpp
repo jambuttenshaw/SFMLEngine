@@ -1,4 +1,5 @@
-#include "SFMLEngine.h"
+#include <SFMLEngine.h>
+#include <SFMLEngine/EntryPoint.h> // mark this file as the entry point
 
 #include <SFML/Graphics.hpp>
 
@@ -121,11 +122,18 @@ public:
 				{64, 320, 32, 64} },
 				0.1f
 			}; jump.Looping = false;
+			Animation punch{ "punch", {
+				{0, 832, 32, 64},
+				{32, 832, 35, 64},
+				{67, 832, 32, 64} },
+				0.1f
+			}; punch.Looping = false;
 
 			Animator animator;
 			animator.AddAnimation(idle);
 			animator.AddAnimation(run);
 			animator.AddAnimation(jump);
+			animator.AddAnimation(punch);
 
 			animator.SetCurrentAnimation("idle");
 			AddComponent(m_PhysicsEntity, animator);
@@ -150,7 +158,7 @@ public:
 			AddComponent(m_Camera, Transform{ });
 
 			Camera cam{ };
-			cam.Zoom = 0.5f;
+			cam.Zoom = 0.4f;
 			AddComponent(m_Camera, cam);
 
 			AddNativeScript<SmoothFollowPlayer>(m_Camera);

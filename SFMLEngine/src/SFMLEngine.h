@@ -2,7 +2,6 @@
 
 // Core
 #include "SFMLEngine/Core.h"
-#include "SFMLEngine/Core.h"
 
 #include "SFMLEngine/Math.h"
 
@@ -30,10 +29,3 @@
 
 // Physics
 #include "SFMLEngine/Systems/Physics/Physics.h"
-
-
-
-
-
-// INCLUDE ENTRY POINT LAST
-#include "SFMLEngine/EntryPoint.h"

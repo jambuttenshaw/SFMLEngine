@@ -1,5 +1,5 @@
 #include <SFMLEngine.h>
-
+#include <SFMLEngine/EntryPoint.h> // mark this file as the entry point
 
 #include "TilemapEditor.h"
 #include "FollowMouse.h"

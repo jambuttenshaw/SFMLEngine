@@ -52,6 +52,19 @@ namespace SFMLEngine {
 	{
 		return sqrtf(SquareMagnitude(a));
 	}
+	Math::Direction Math::GetDirection(const sf::Vector2f& a)
+	{
+		float dirX = Dot(Normalize(a), UnitVector::Right);
+		float dirY = Dot(Normalize(a), UnitVector::Down);
+		if (fabsf(dirX) > fabsf(dirY))
+		{
+			return dirX > 0 ? Direction::Right : Direction::Left;
+		}
+		else
+		{
+			return dirY > 0 ? Direction::Down : Direction::Up;
+		}
+	}
 	
 	// VECTOR3
 	sf::Vector3f Math::Max(const sf::Vector3f& a, const sf::Vector3f& b)
@@ -81,6 +94,18 @@ namespace SFMLEngine {
 	float Math::Magnitude(const sf::Vector3f& a)
 	{
 		return sqrtf(SquareMagnitude(a));
+	}
+
+
+
+	sf::FloatRect Math::Intersection(const sf::FloatRect& a, const sf::FloatRect& b)
+	{
+		return {
+			std::max(a.left, b.left),
+			std::max(a.top, b.top),
+			std::max(0.0f, std::min(a.left + a.width,  b.left + b.width) - std::max(a.left, b.left)),
+			std::max(0.0f, std::min(a.top + a.height,  b.top + b.height) - std::max(a.top,  b.top))
+		};
 	}
 
 

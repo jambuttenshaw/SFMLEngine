@@ -1,7 +1,8 @@
 #include "PhysicsSystem.h"
 
 #include "SFMLEngine/ECS/Components/NativeScripts.h"
-
+#include "SFMLEngine/Math.h"
+#include "SFMLEngine/DebugTools.h"
 
 namespace SFMLEngine {
 
@@ -57,16 +58,8 @@ namespace SFMLEngine {
 
 			// the final amount the entity will move this frame
 			sf::Vector2f movement = rigidbody.Position - rigidbody.OldPosition;
-
-			
-			// detect if collisions occured on any axis
 			bool anyCollisions = false;
-
-			// deal with movement component-wise so we can detect collisions on each axis seperately
-
 			{
-				// x axis
-				// apply the movement to the transform
 				transform.Position.x += movement.x;
 
 
@@ -76,28 +69,41 @@ namespace SFMLEngine {
 				// if there was a collision we should move the object back and zero its velocity
 				if (collisionTest.Collided)
 				{
-					float offset = transform.Position.x - collisionTest.GlobalBounds.left;
-					if (movement.x > 0)
+					anyCollisions = true;
+
+					// work out the direction the collision occurred
+					Math::Direction collisionDir = Math::GetDirection({ movement.x, 0 });
+
+					sf::Vector2f offset = transform.Position - sf::Vector2f{ collisionTest.GlobalBounds.left, collisionTest.GlobalBounds.top };
+					sf::FloatRect i = Math::Intersection(collisionTest.GlobalBounds, collisionTest.OtherGlobalBounds);
+
+					switch (collisionDir)
 					{
-						// moving right: set the right of the collider to the left of the other collider
-						transform.Position.x = collisionTest.OtherGlobalBounds.left - collisionTest.GlobalBounds.width + offset;
+					case Math::Direction::Right:
+						transform.Position.x = collisionTest.OtherGlobalBounds.left - collisionTest.GlobalBounds.width + offset.x;
+						rigidbody.Velocity.x = 0;
+						break;
+					case Math::Direction::Left:
+						transform.Position.x = collisionTest.OtherGlobalBounds.left + collisionTest.OtherGlobalBounds.width + offset.x;
+						rigidbody.Velocity.x = 0;
+						break;
+					case Math::Direction::Down:
+						transform.Position.y = collisionTest.OtherGlobalBounds.top - collisionTest.GlobalBounds.height + offset.y;
+						rigidbody.Velocity.y = 0;
+						break;
+					case Math::Direction::Up:
+						transform.Position.y = collisionTest.OtherGlobalBounds.top + collisionTest.OtherGlobalBounds.height + offset.y;
+						rigidbody.Velocity.y = 0;
+						break;
 					}
-					else
-					{
-						// moving left: set the left of the collider to the right of the other collider
-						transform.Position.x = collisionTest.OtherGlobalBounds.left + collisionTest.OtherGlobalBounds.width + offset;
-					}
-					rigidbody.Velocity.x = 0;
 
 					CollisionEnterCallback(entity, collisionTest);
-					anyCollisions = true;
 				}
 			}
 
 			{
-				// y axis
-				// apply the movement to the transform
 				transform.Position.y += movement.y;
+
 
 				// run collision test
 				auto const& collisionTest = m_CollisionSystem->TestCollision(entity);
@@ -105,21 +111,35 @@ namespace SFMLEngine {
 				// if there was a collision we should move the object back and zero its velocity
 				if (collisionTest.Collided)
 				{
-					float offset = transform.Position.y - collisionTest.GlobalBounds.top;
-					if (movement.y > 0)
+					anyCollisions = true;
+
+					// work out the direction the collision occurred
+					Math::Direction collisionDir = Math::GetDirection({ 0, movement.y });
+
+					sf::Vector2f offset = transform.Position - sf::Vector2f{ collisionTest.GlobalBounds.left, collisionTest.GlobalBounds.top };
+					sf::FloatRect i = Math::Intersection(collisionTest.GlobalBounds, collisionTest.OtherGlobalBounds);
+
+					switch (collisionDir)
 					{
-						// moving down: set the bottom of the collider to the top of the other collider
-						transform.Position.y = collisionTest.OtherGlobalBounds.top - collisionTest.GlobalBounds.height + offset;
+					case Math::Direction::Right:
+						transform.Position.x = collisionTest.OtherGlobalBounds.left - collisionTest.GlobalBounds.width + offset.x;
+						rigidbody.Velocity.x = 0;
+						break;
+					case Math::Direction::Left:
+						transform.Position.x = collisionTest.OtherGlobalBounds.left + collisionTest.OtherGlobalBounds.width + offset.x;
+						rigidbody.Velocity.x = 0;
+						break;
+					case Math::Direction::Down:
+						transform.Position.y = collisionTest.OtherGlobalBounds.top - collisionTest.GlobalBounds.height + offset.y;
+						rigidbody.Velocity.y = 0;
+						break;
+					case Math::Direction::Up:
+						transform.Position.y = collisionTest.OtherGlobalBounds.top + collisionTest.OtherGlobalBounds.height + offset.y;
+						rigidbody.Velocity.y = 0;
+						break;
 					}
-					else
-					{
-						// moving up: set the top of the collider to the bottom of the other collider
-						transform.Position.y = collisionTest.OtherGlobalBounds.top + collisionTest.OtherGlobalBounds.height + offset;
-					}
-					rigidbody.Velocity.y = 0;
 
 					CollisionEnterCallback(entity, collisionTest);
-					anyCollisions = true;
 				}
 			}
 

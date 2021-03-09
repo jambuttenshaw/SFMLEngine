@@ -1,6 +1,6 @@
 #pragma once
 
-#include <SFML/System.hpp>
+#include <SFML/Graphics.hpp>
 #include "SFMLEngine/Core.h"
 #include <random>
 
@@ -16,6 +16,14 @@ namespace SFMLEngine {
 		static void Shutdown();
 
 		/*
+		ENUMS
+		*/
+		enum class Direction
+		{
+			Up, Down, Left, Right
+		};
+
+		/*
 		CONSTANTS
 		*/
 
@@ -23,6 +31,14 @@ namespace SFMLEngine {
 		static inline const float DEG_TO_RAD = 0.0174533f;
 
 		static inline const float PI = 3.1415926f;
+
+		// direction vectors
+		struct UnitVector {
+			static inline const sf::Vector2f Left{ -1,  0 };
+			static inline const sf::Vector2f Right{ 1,  0 };
+			static inline const sf::Vector2f Up{ 0, -1 };
+			static inline const sf::Vector2f Down{ 0,  1 };
+		};
 
 
 		/*
@@ -34,7 +50,7 @@ namespace SFMLEngine {
 		template <typename T>
 		static int Sign(T value)
 		{
-			return (T(0) < val) - (val < T(0));
+			return (T(0) < value) - (value < T(0));
 		}
 
 
@@ -63,6 +79,15 @@ namespace SFMLEngine {
 
 		template<typename T>
 		static T Lerp(const T& a, const T& b, float t) { return (1 - t) * a + t * b; }
+
+		// get direction not implemented for vector3
+		static Direction GetDirection(const sf::Vector2f& a);
+
+
+		/*
+		RECTANGLES
+		*/
+		static sf::FloatRect Intersection(const sf::FloatRect& a, const sf::FloatRect& b);
 
 
 		/*
