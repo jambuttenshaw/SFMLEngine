@@ -165,36 +165,35 @@ namespace SFMLEngine {
 		Size = bottomRight - topLeft;
 	}
 
-	std::pair<bool, sf::FloatRect> TilemapCollider::Colliding(TilemapCollider& other)
+	std::vector<sf::FloatRect> TilemapCollider::Colliding(TilemapCollider& other)
 	{
 		// tilemap vs tilemap collision
-		return std::make_pair(false, GetGlobalBounds());
+		return std::vector<sf::FloatRect>();
 	}
 
-	std::pair<bool, sf::FloatRect> TilemapCollider::Colliding(BoxCollider& other)
+	std::vector<sf::FloatRect> TilemapCollider::Colliding(BoxCollider& other)
 	{
 		// tilemap vs box collider collision
 		ZoneScoped;
+		std::vector<sf::FloatRect> collisions;
 
 		sf::FloatRect otherGlobalBounds = other.GetGlobalBounds();
 
-		bool collides = false;
 		sf::FloatRect globalQuad;
 		for (auto const& quad : m_CollisionGeometry)
 		{
 			globalQuad = m_Transform->GetLocalToWorldTransformMatrix().transformRect(quad);
 			if (globalQuad.intersects(otherGlobalBounds))
 			{
-				collides = true;
-				break;
+				collisions.push_back(std::move(globalQuad));
 			}
 		}
-
-		return std::make_pair(collides, globalQuad);
+		return collisions;
 	}
 
-	std::pair<bool, sf::FloatRect> TilemapCollider::Colliding(CircleCollider& other)
+	std::vector<sf::FloatRect> TilemapCollider::Colliding(CircleCollider& other)
 	{
+		/*
 		// tilemap vs circle collider collision
 		ZoneScoped;
 
@@ -211,8 +210,8 @@ namespace SFMLEngine {
 				break;
 			}
 		}
-
-		return std::make_pair(collides, globalQuad);
+		*/
+		return std::vector<sf::FloatRect>();
 	}
 
 	void TilemapCollider::DrawDebug(const sf::Transform& transform)

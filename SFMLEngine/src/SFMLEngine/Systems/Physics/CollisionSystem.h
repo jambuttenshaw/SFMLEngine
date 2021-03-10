@@ -17,7 +17,6 @@ namespace SFMLEngine {
 
 	struct Collision
 	{
-		bool Collided;
 		Entity Other;
 		sf::FloatRect GlobalBounds; // the boundaries of this objects collider
 		sf::FloatRect OtherGlobalBounds; // the boundaries of the object the collision occurred with
@@ -37,13 +36,16 @@ namespace SFMLEngine {
 		void EntityAddedToSystem(Entity entity) override;
 		void EntityRemovedFromSystem(Entity entity) override;
 
-		const Collision TestCollision(Entity entity);
+		const std::vector<Collision> TestCollision(Entity entity);
 
 	private:
 		template<typename T>
-		const Collision DoCollisionTest(T& collider, Layer layerMask, Entity thisEntity = INVALID_ENTITY_ID)
+		const std::vector<Collision> DoCollisionTest(T& collider, Layer layerMask, Entity thisEntity = INVALID_ENTITY_ID)
 		{
 			ZoneScoped;
+
+			std::vector<Collision> collisions;
+
 			for (auto& entity : m_Entities)
 			{
 				ZoneScoped;
@@ -63,27 +65,37 @@ namespace SFMLEngine {
 				// the data returned from the collision test include a bool saying if it was successful
 				// and a floatrect which is the global bounds of the object collided with
 				std::pair<bool, sf::FloatRect> collisionData;
+				std::vector<sf::FloatRect> tilemapCollisions;
 				switch (other.Type)
 				{
 				case ColliderType::Invalid:	SFMLE_CORE_ASSERT(0, "Invalid collider type!"); break;
-				case ColliderType::Box:		collisionData =  m_Coordinator->GetComponent<BoxCollider>(entity).Colliding(collider);
+
+				case ColliderType::Box:	
+					collisionData = m_Coordinator->GetComponent<BoxCollider>(entity).Colliding(collider);
+					if (collisionData.first)
+						collisions.push_back(Collision{ entity, collider.GetGlobalBounds(), collisionData.second });
+
 					break;
-				case ColliderType::Circle:	collisionData = m_Coordinator->GetComponent<CircleCollider>(entity).Colliding(collider);
-					break;									   
-				case ColliderType::Tilemap: collisionData = m_Coordinator->GetComponent<TilemapCollider>(entity).Colliding(collider);
+
+				case ColliderType::Circle:	
+					collisionData = m_Coordinator->GetComponent<CircleCollider>(entity).Colliding(collider);
+					if (collisionData.first)
+						collisions.push_back(Collision{ entity, collider.GetGlobalBounds(), collisionData.second });
+
 					break;
+
+				case ColliderType::Tilemap:
+					tilemapCollisions = m_Coordinator->GetComponent<TilemapCollider>(entity).Colliding(collider);
+					for (auto const& c : tilemapCollisions)
+						collisions.push_back(Collision{ entity, collider.GetGlobalBounds(), c });
+
+					break;
+
 				default:					SFMLE_CORE_ASSERT(0, "Unknown collider type!"); break;
 				}
-
-				if (collisionData.first)
-				{
-					return Collision{ true, entity,
-						collider.GetGlobalBounds(),
-						collisionData.second
-					};
-				}
 			}
-			return Collision{ false, INVALID_ENTITY_ID, sf::FloatRect(), sf::FloatRect() };
+
+			return collisions;
 		}
 
 	private:

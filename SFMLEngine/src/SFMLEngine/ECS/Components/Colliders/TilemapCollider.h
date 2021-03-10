@@ -43,9 +43,9 @@ namespace SFMLEngine {
 			FindBoundary();
 		}
 		
-		std::pair<bool, sf::FloatRect> Colliding(TilemapCollider& other);
-		std::pair<bool, sf::FloatRect> Colliding(BoxCollider& other);
-		std::pair<bool, sf::FloatRect> Colliding(CircleCollider& other);
+		std::vector<sf::FloatRect> Colliding(TilemapCollider& other);
+		std::vector<sf::FloatRect> Colliding(BoxCollider& other);
+		std::vector<sf::FloatRect> Colliding(CircleCollider& other);
 
 		sf::FloatRect GetLocalBounds() const override { return sf::FloatRect(Size, sf::Vector2f{}); }
 

@@ -57,98 +57,51 @@ namespace SFMLEngine {
 			rigidbody.Force *= 0.0f;
 
 			// the final amount the entity will move this frame
-			sf::Vector2f movement = rigidbody.Position - rigidbody.OldPosition;
-			bool anyCollisions = false;
+			transform.Position += rigidbody.Position - rigidbody.OldPosition;
+
+
+			// run collision test
+			auto const& allCollisions = m_CollisionSystem->TestCollision(entity);
+
+			for (auto const& collisionTest : allCollisions)
 			{
-				transform.Position.x += movement.x;
+				// there was a collision so we should move the object back and zero its velocity
+				sf::Vector2f offset = transform.Position - sf::Vector2f{ collisionTest.GlobalBounds.left, collisionTest.GlobalBounds.top };
 
 
-				// run collision test
-				auto const& collisionTest = m_CollisionSystem->TestCollision(entity);
+				// work out the direction the collision occurred
+				sf::Vector2f collisionCentroid = Math::Centroid(Math::Intersection(collisionTest.GlobalBounds, collisionTest.OtherGlobalBounds));
+				Math::Direction collisionDir = Math::GetDirection(collisionCentroid - Math::Centroid(collisionTest.GlobalBounds));
 
-				// if there was a collision we should move the object back and zero its velocity
-				if (collisionTest.Collided)
+				switch (collisionDir)
 				{
-					anyCollisions = true;
-
-					// work out the direction the collision occurred
-					Math::Direction collisionDir = Math::GetDirection({ movement.x, 0 });
-
-					sf::Vector2f offset = transform.Position - sf::Vector2f{ collisionTest.GlobalBounds.left, collisionTest.GlobalBounds.top };
-					sf::FloatRect i = Math::Intersection(collisionTest.GlobalBounds, collisionTest.OtherGlobalBounds);
-
-					switch (collisionDir)
-					{
-					case Math::Direction::Right:
-						transform.Position.x = collisionTest.OtherGlobalBounds.left - collisionTest.GlobalBounds.width + offset.x;
-						rigidbody.Velocity.x = 0;
-						break;
-					case Math::Direction::Left:
-						transform.Position.x = collisionTest.OtherGlobalBounds.left + collisionTest.OtherGlobalBounds.width + offset.x;
-						rigidbody.Velocity.x = 0;
-						break;
-					case Math::Direction::Down:
-						transform.Position.y = collisionTest.OtherGlobalBounds.top - collisionTest.GlobalBounds.height + offset.y;
-						rigidbody.Velocity.y = 0;
-						break;
-					case Math::Direction::Up:
-						transform.Position.y = collisionTest.OtherGlobalBounds.top + collisionTest.OtherGlobalBounds.height + offset.y;
-						rigidbody.Velocity.y = 0;
-						break;
-					}
-
-					CollisionEnterCallback(entity, collisionTest);
+				case Math::Direction::Right:
+					transform.Position.x = collisionTest.OtherGlobalBounds.left - collisionTest.GlobalBounds.width + offset.x;
+					rigidbody.Velocity.x = 0;
+					break;
+				case Math::Direction::Left:
+					transform.Position.x = collisionTest.OtherGlobalBounds.left + collisionTest.OtherGlobalBounds.width + offset.x;
+					rigidbody.Velocity.x = 0;
+					break;
+				case Math::Direction::Down:
+					transform.Position.y = collisionTest.OtherGlobalBounds.top - collisionTest.GlobalBounds.height + offset.y;
+					rigidbody.Velocity.y = 0;
+					break;
+				case Math::Direction::Up:
+					transform.Position.y = collisionTest.OtherGlobalBounds.top + collisionTest.OtherGlobalBounds.height + offset.y;
+					rigidbody.Velocity.y = 0;
+					break;
 				}
+
+				CollisionEnterCallback(entity, collisionTest);
+				
 			}
 
+			if (!allCollisions.size())
 			{
-				transform.Position.y += movement.y;
-
-
-				// run collision test
-				auto const& collisionTest = m_CollisionSystem->TestCollision(entity);
-
-				// if there was a collision we should move the object back and zero its velocity
-				if (collisionTest.Collided)
-				{
-					anyCollisions = true;
-
-					// work out the direction the collision occurred
-					Math::Direction collisionDir = Math::GetDirection({ 0, movement.y });
-
-					sf::Vector2f offset = transform.Position - sf::Vector2f{ collisionTest.GlobalBounds.left, collisionTest.GlobalBounds.top };
-					sf::FloatRect i = Math::Intersection(collisionTest.GlobalBounds, collisionTest.OtherGlobalBounds);
-
-					switch (collisionDir)
-					{
-					case Math::Direction::Right:
-						transform.Position.x = collisionTest.OtherGlobalBounds.left - collisionTest.GlobalBounds.width + offset.x;
-						rigidbody.Velocity.x = 0;
-						break;
-					case Math::Direction::Left:
-						transform.Position.x = collisionTest.OtherGlobalBounds.left + collisionTest.OtherGlobalBounds.width + offset.x;
-						rigidbody.Velocity.x = 0;
-						break;
-					case Math::Direction::Down:
-						transform.Position.y = collisionTest.OtherGlobalBounds.top - collisionTest.GlobalBounds.height + offset.y;
-						rigidbody.Velocity.y = 0;
-						break;
-					case Math::Direction::Up:
-						transform.Position.y = collisionTest.OtherGlobalBounds.top + collisionTest.OtherGlobalBounds.height + offset.y;
-						rigidbody.Velocity.y = 0;
-						break;
-					}
-
-					CollisionEnterCallback(entity, collisionTest);
-				}
-			}
-
-			if (!anyCollisions)
-			{
-				// no collisions happened with this entity this frame
-				// collision exit callback
 				CollisionExitCallback(entity);
 			}
+
 
 			// apply any collision detection changes to the rigidbody
 			rigidbody.Position = transform.Position;

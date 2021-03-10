@@ -94,7 +94,7 @@ namespace SFMLEngine {
 	}
 	void DebugTools::CoreDisplay(const std::string& label, float value)
 	{
-		s_CoreDebugInfo.push_back(label + ": " + std::to_string((int)round(value)));
+		s_CoreDebugInfo.push_back(label + ": " + std::to_string(value));
 	}
 	void DebugTools::CoreDisplay(const std::string& label, int value)
 	{
@@ -106,7 +106,7 @@ namespace SFMLEngine {
 	}
 	void DebugTools::CoreDisplay(const std::string& label, const sf::Vector2f& vec)
 	{
-		s_CoreDebugInfo.push_back(label + "  x: " + std::to_string((int)round(vec.x)) + " y: " + std::to_string((int)round(vec.y)));
+		s_CoreDebugInfo.push_back(label + "  x: " + std::to_string(vec.x) + " y: " + std::to_string(vec.y));
 	}
 
 
@@ -116,7 +116,7 @@ namespace SFMLEngine {
 	}
 	void DebugTools::AppDisplay(const std::string& label, float value)
 	{
-		s_AppDebugInfo.push_back(label + ": " + std::to_string((int)round(value)));
+		s_AppDebugInfo.push_back(label + ": " + std::to_string(value));
 	}
 	void DebugTools::AppDisplay(const std::string& label, int value)
 	{
@@ -128,7 +128,7 @@ namespace SFMLEngine {
 	}
 	void DebugTools::AppDisplay(const std::string& label, const sf::Vector2f& vec)
 	{
-		s_AppDebugInfo.push_back(label + "  x: " + std::to_string((int)round(vec.x)) + " y: " + std::to_string((int)round(vec.y)));
+		s_AppDebugInfo.push_back(label + "  x: " + std::to_string(vec.x) + " y: " + std::to_string(vec.y));
 	}
 
 

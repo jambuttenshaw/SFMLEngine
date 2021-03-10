@@ -32,7 +32,7 @@ namespace SFMLEngine {
 		return s_LayerMasks[layer];
 	}
 	
-	Collision Physics::CollisionAtPoint(const sf::Vector2f& point, float radius, Layer layerMask)
+	std::vector<Collision> Physics::CollisionAtPoint(const sf::Vector2f& point, float radius, Layer layerMask)
 	{
 		// run a collision test at the point
 		// creates a circle collider at that point in space

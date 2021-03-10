@@ -41,7 +41,7 @@ namespace SFMLEngine {
 
 	std::pair<bool, sf::FloatRect> CircleCollider::Colliding(TilemapCollider& other)
 	{
-		return std::make_pair(other.Colliding(*this).first, GetGlobalBounds());
+		return std::make_pair(false, sf::FloatRect());
 	}
 
 }

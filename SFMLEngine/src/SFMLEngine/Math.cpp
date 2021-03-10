@@ -107,6 +107,10 @@ namespace SFMLEngine {
 			std::max(0.0f, std::min(a.top + a.height,  b.top + b.height) - std::max(a.top,  b.top))
 		};
 	}
+	sf::Vector2f Math::Centroid(const sf::FloatRect& a)
+	{
+		return { a.left + 0.5f * a.width, a.top + 0.5f * a.height };
+	}
 
 
 

@@ -47,7 +47,7 @@ namespace SFMLEngine {
 		return CollisionData{ collision.Collided, sf::FloatRect{ Offset, Size }, Offset };
 		*/
 			
-		return std::make_pair(false, GetGlobalBounds());
+		return std::make_pair(false, sf::FloatRect());
 	}
 
 	void BoxCollider::DrawDebug(const sf::Transform& transform)

@@ -41,7 +41,7 @@ public:
 
 			// this object should be solid
 			// add a collider
-			AddComponent(m_Tilemap, TilemapCollider { TilemapCollider::OptimizationLevel::Standard });
+			AddComponent(m_Tilemap, TilemapCollider { TilemapCollider::OptimizationLevel::High });
 			AddComponent(m_Tilemap, ColliderInfo{ ColliderType::Tilemap });
 
 			AddNativeScript<ClickToDestroyTile>(m_Tilemap);

@@ -37,7 +37,7 @@ namespace SFMLEngine {
 
 	}
 
-	const Collision CollisionSystem::TestCollision(Entity entity)
+	const std::vector<Collision> CollisionSystem::TestCollision(Entity entity)
 	{
 		ZoneScoped;
 
@@ -53,6 +53,7 @@ namespace SFMLEngine {
 		default:					SFMLE_CORE_ASSERT(0, "Unknown collider type!"); break;
 		}
 
-		return Collision{ false, INVALID_ENTITY_ID };
+		// this shouldn't be reached
+		return std::vector<Collision>();
 	}
 }
