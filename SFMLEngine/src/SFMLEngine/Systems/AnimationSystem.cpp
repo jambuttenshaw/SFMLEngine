@@ -22,7 +22,7 @@ namespace SFMLEngine {
 		auto& spriteRenderer = m_Coordinator->GetComponent<SpriteRenderer>(entity);
 		auto& currentAnimation = animator.GetCurrentAnimation();
 
-		auto rect{ currentAnimation.Flipped != animator.Flip ? FlipRect(*currentAnimation.CurrentFrame) : *currentAnimation.CurrentFrame };
+		auto rect{ currentAnimation.Flipped != animator.Flip ? FlipRect(currentAnimation.CurrentFrame->ImageRect) : currentAnimation.CurrentFrame->ImageRect };
 		spriteRenderer.Sprite.setTextureRect(rect);
 	}
 
@@ -45,9 +45,17 @@ namespace SFMLEngine {
 
 			// flip the sprite if only 1 of the animation flip or animator flip is set
 			// if both are set, its the same as flipping it twice or not at all
-			auto rect{ currentAnimation.Flipped != animator.Flip ? FlipRect(*currentAnimation.CurrentFrame) : *currentAnimation.CurrentFrame };
-			// set the rect
-			spriteRenderer.Sprite.setTextureRect(rect);
+			if (currentAnimation.Flipped != animator.Flip)
+			{
+				spriteRenderer.Sprite.setTextureRect(FlipRect(currentAnimation.CurrentFrame->ImageRect));
+
+				// there is an offset property, for correcting the position of asymmetrical frames when flipping
+				spriteRenderer.Offset = currentAnimation.CurrentFrame->Offset;
+			}
+			else
+			{
+				spriteRenderer.Sprite.setTextureRect(currentAnimation.CurrentFrame->ImageRect);
+			}
 		}
 	}
 

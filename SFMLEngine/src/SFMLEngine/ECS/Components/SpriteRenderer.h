@@ -18,6 +18,7 @@ namespace SFMLEngine {
 		int RenderLayer;
 		ResourceID NormalMapHandle;
 		sf::Sprite Sprite;
+		sf::Vector2f Offset;
 		bool FlipNormals = false;
 
 		// for speed when rendering
@@ -25,15 +26,15 @@ namespace SFMLEngine {
 		sf::Texture* NormalMapPtr = nullptr;
 
 		SpriteRenderer()
-			: TextureHandle(NULL_RESOURCE_ID), MaterialHandle(NULL_RESOURCE_ID), RenderLayer(0), NormalMapHandle(NULL_RESOURCE_ID), Sprite()
+			: TextureHandle(NULL_RESOURCE_ID), MaterialHandle(NULL_RESOURCE_ID), RenderLayer(0), NormalMapHandle(NULL_RESOURCE_ID), Sprite(), Offset()
 		{}
 		SpriteRenderer(ResourceID texHandle, ResourceID material, int renderLayer)
-			: TextureHandle(texHandle), MaterialHandle(material), RenderLayer(renderLayer), NormalMapHandle(NULL_RESOURCE_ID), Sprite()
+			: TextureHandle(texHandle), MaterialHandle(material), RenderLayer(renderLayer), NormalMapHandle(NULL_RESOURCE_ID), Sprite(), Offset()
 		{
 			MaterialPtr = ResourceManager::GetResourceHandle<Material>(MaterialHandle);
 		}
 		SpriteRenderer(ResourceID texHandle, ResourceID material, int renderLayer, ResourceID normalMap)
-			: TextureHandle(texHandle), MaterialHandle(material), RenderLayer(renderLayer), NormalMapHandle(normalMap), Sprite()
+			: TextureHandle(texHandle), MaterialHandle(material), RenderLayer(renderLayer), NormalMapHandle(normalMap), Sprite(), Offset()
 		{
 			MaterialPtr = ResourceManager::GetResourceHandle<Material>(MaterialHandle);
 			NormalMapPtr = ResourceManager::GetResourceHandle<sf::Texture>(NormalMapHandle);

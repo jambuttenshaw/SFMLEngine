@@ -11,14 +11,36 @@
 
 namespace SFMLEngine {
 
+	struct AnimationFrame
+	{
+		sf::IntRect ImageRect;
+		sf::Vector2f Offset;
+
+		AnimationFrame()
+			: ImageRect(), Offset()
+		{}
+		AnimationFrame(const sf::IntRect& rect)
+			: ImageRect(rect), Offset()
+		{}
+		AnimationFrame(const sf::IntRect& rect, const sf::Vector2f& offset)
+			: ImageRect(rect), Offset(offset)
+		{}
+
+		AnimationFrame(int x, int y, int w, int h)
+			: ImageRect(x, y, w, h), Offset()
+		{}
+		AnimationFrame(int x, int y, int w, int h, float oX, float oY)
+			: ImageRect(x, y, w, h), Offset(oX, oY)
+		{}
+	};
 
 	struct Animation
 	{
 		std::string Name;
 
-		sf::IntRect* CurrentFrame = nullptr;
+		AnimationFrame* CurrentFrame = nullptr;
 		size_t FrameIndex = 0;
-		std::vector<sf::IntRect> Frames;
+		std::vector<AnimationFrame> Frames;
 
 		bool Flipped = false;
 		bool Looping = true;
@@ -29,10 +51,7 @@ namespace SFMLEngine {
 
 		Animation()
 		{}
-		Animation(const std::string& name, std::initializer_list<sf::IntRect> frames)
-			: Name(name), Frames(frames)
-		{}
-		Animation(const std::string& name, std::initializer_list<sf::IntRect> frames, float speed)
+		Animation(const std::string& name, std::initializer_list<AnimationFrame> frames, float speed = 1.0f)
 			: Name(name), Frames(frames), AnimationSpeed(speed)
 		{}
 		Animation(const Animation& other)
@@ -151,7 +170,7 @@ namespace SFMLEngine {
 		{
 			return Animations[CurrentAnimation];
 		}
-		const sf::IntRect& GetCurrentFrame()
+		const AnimationFrame& GetCurrentFrame()
 		{
 			return *Animations[CurrentAnimation].CurrentFrame;
 		}

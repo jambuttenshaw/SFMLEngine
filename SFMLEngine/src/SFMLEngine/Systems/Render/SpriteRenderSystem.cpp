@@ -84,7 +84,16 @@ namespace SFMLEngine {
 			}
 				
 			// create a transform
-			m_RenderState.transform = t->GetLocalToWorldTransformMatrix();
+			if (Math::SquareMagnitude(sR->Offset))
+			{
+				sf::Transform transform;
+				transform.translate(sR->Offset);
+				m_RenderState.transform = transform.combine(t->GetLocalToWorldTransformMatrix());
+			}
+			else
+			{
+				m_RenderState.transform = t->GetLocalToWorldTransformMatrix();
+			}
 			m_RenderState.shader = shader;
 				
 			{

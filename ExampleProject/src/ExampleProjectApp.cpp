@@ -123,8 +123,8 @@ public:
 				0.1f
 			}; jump.Looping = false;
 			Animation punch{ "punch", {
-				{0, 832, 32, 64},
-				{32, 832, 35, 64},
+				{0,  832, 32, 64},
+				{32, 832, 35, 64, -3, 0},
 				{67, 832, 32, 64} },
 				0.1f
 			}; punch.Looping = false;
