@@ -16,6 +16,9 @@ namespace SFMLEngine {
 	sf::VertexArray DebugTools::s_Geometry(sf::Triangles);
 	size_t DebugTools::s_TriangleIndex = 0;
 
+	sf::Vertex DebugTools::s_Line[2];
+	std::vector<std::pair<sf::Vertex, sf::Vertex>> DebugTools::s_LinesToDraw;
+
 	std::vector<std::string> DebugTools::s_CoreDebugInfo;
 	sf::Text DebugTools::s_CoreDebugText;
 	
@@ -28,7 +31,6 @@ namespace SFMLEngine {
 
 		s_DebugRectTexture = Texture::Create("assets/textures/debugBox.png");
 		s_DebugMaterial = Material::Create("Debug");
-
 
 		s_CoreDebugText.setFillColor(CORE_COLOR);
 		s_CoreDebugText.setFont(*ResourceManager::GetResourceHandle<sf::Font>(FontLibrary::GetFont("arial")));
@@ -49,6 +51,8 @@ namespace SFMLEngine {
 		ZoneScoped;
 		s_Geometry.clear();
 		s_TriangleIndex = 0;
+
+		s_LinesToDraw.clear();
 	}
 
 	void DebugTools::DrawRect(const sf::Vector2f& pos, const sf::Vector2f& size, const sf::Color& color)
@@ -69,6 +73,18 @@ namespace SFMLEngine {
 		s_TriangleIndex += 6;
 	}
 
+	void DebugTools::DrawLine(const sf::Vector2f& start, const sf::Vector2f& end, const sf::Color& color)
+	{
+		sf::Vertex a, b;
+		a.position = start;
+		a.color = color;
+
+		b.position = end;
+		b.color = color;
+
+		s_LinesToDraw.push_back(std::make_pair(a, b));
+	}
+
 	void DebugTools::DrawAllGameView()
 	{
 		ZoneScoped;
@@ -82,6 +98,15 @@ namespace SFMLEngine {
 		renderState.texture = texture;
 
 		s_WindowHandle->draw(s_Geometry, renderState);
+
+
+		for (auto const& line : s_LinesToDraw)
+		{
+			s_Line[0] = line.first;
+			s_Line[1] = line.second;
+
+			s_WindowHandle->draw(s_Line, 2, sf::Lines);
+		}
 		
 		ClearGameView();
 	}

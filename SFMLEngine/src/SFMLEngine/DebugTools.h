@@ -14,6 +14,8 @@ namespace SFMLEngine {
 
 		static void DrawRect(const sf::Vector2f& pos, const sf::Vector2f& size, const sf::Color& color);
 
+		static void DrawLine(const sf::Vector2f& start, const sf::Vector2f& end, const sf::Color& color);
+
 		static void ClearGameView();
 		static void DrawAllGameView();
 
@@ -43,6 +45,9 @@ namespace SFMLEngine {
 		static sf::VertexArray s_Geometry;
 		static size_t s_TriangleIndex;
 
+		static sf::Vertex s_Line[2];
+		static std::vector<std::pair<sf::Vertex, sf::Vertex>> s_LinesToDraw;
+
 		static std::vector<std::string> s_CoreDebugInfo;
 		static sf::Text s_CoreDebugText;
 
@@ -64,6 +69,7 @@ namespace SFMLEngine {
 // debug macros
 #ifdef SFMLENGINE_DEBUG
 	#define DEBUG_DRAW_RECT(...)		::SFMLEngine::DebugTools::DrawRect(__VA_ARGS__)
+	#define DEBUG_DRAW_LINE(...)		::SFMLEngine::DebugTools::DrawLine(__VA_ARGS__)
 
 	#define DEBUG_CORE_DISPLAY(...)		::SFMLEngine::DebugTools::CoreDisplay(__VA_ARGS__)
 
