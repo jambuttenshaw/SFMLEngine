@@ -71,7 +71,11 @@ namespace SFMLEngine {
 
 				// work out the direction the collision occurred
 				sf::Vector2f collisionCentroid = Math::Centroid(Math::Intersection(collisionTest.GlobalBounds, collisionTest.OtherGlobalBounds));
-				Math::Direction collisionDir = Math::GetDirection(collisionCentroid - Math::Centroid(collisionTest.GlobalBounds));
+				sf::Vector2f thisCentroid = Math::Centroid(collisionTest.GlobalBounds);
+
+				Math::Direction collisionDir = Math::GetDirection(collisionCentroid - thisCentroid);
+
+				DEBUG_DRAW_LINE(collisionCentroid, thisCentroid, sf::Color::Red);
 
 				switch (collisionDir)
 				{

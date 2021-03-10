@@ -72,6 +72,10 @@ namespace SFMLEngine {
 
 		s_TriangleIndex += 6;
 	}
+	void DebugTools::DrawRect(const sf::FloatRect& rect, const sf::Color& color)
+	{
+		DrawRect({ rect.left, rect.top }, { rect.width, rect.height }, color);
+	}
 
 	void DebugTools::DrawLine(const sf::Vector2f& start, const sf::Vector2f& end, const sf::Color& color)
 	{

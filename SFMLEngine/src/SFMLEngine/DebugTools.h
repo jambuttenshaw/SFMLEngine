@@ -13,6 +13,7 @@ namespace SFMLEngine {
 		static void Shutdown();
 
 		static void DrawRect(const sf::Vector2f& pos, const sf::Vector2f& size, const sf::Color& color);
+		static void DrawRect(const sf::FloatRect& rect, const sf::Color& color);
 
 		static void DrawLine(const sf::Vector2f& start, const sf::Vector2f& end, const sf::Color& color);
 
