@@ -70,12 +70,16 @@ namespace SFMLEngine {
 
 
 				// work out the direction the collision occurred
-				sf::Vector2f collisionCentroid = Math::Centroid(Math::Intersection(collisionTest.GlobalBounds, collisionTest.OtherGlobalBounds));
-				sf::Vector2f thisCentroid = Math::Centroid(collisionTest.GlobalBounds);
+				sf::FloatRect intersection = Math::Intersection(collisionTest.GlobalBounds, collisionTest.OtherGlobalBounds);
+				sf::Vector2f collisionCentroid = Math::Centroid(intersection);
+
+				sf::FloatRect matched = MatchMajorAxis(collisionTest.GlobalBounds, intersection);
+				sf::Vector2f thisCentroid = Math::Centroid(matched);
 
 				Math::Direction collisionDir = Math::GetDirection(collisionCentroid - thisCentroid);
 
 				DEBUG_DRAW_LINE(collisionCentroid, thisCentroid, sf::Color::Red);
+				DEBUG_DRAW_RECT(matched, sf::Color::Yellow);
 
 				switch (collisionDir)
 				{
@@ -160,4 +164,26 @@ namespace SFMLEngine {
 		}
 	}
 
+
+
+	sf::FloatRect PhysicsSystem::MatchMajorAxis(const sf::FloatRect& toBeMatched, const sf::FloatRect& toMatch)
+	{
+		// create a copy
+		sf::FloatRect newRect = toBeMatched;
+
+		if (toMatch.width > toMatch.height)
+		{
+			// the x axis is the major axis of the rect
+			newRect.left = toMatch.left;
+			newRect.width = toMatch.width;
+		}
+		else
+		{
+			// the y axis is the major axis of the rect
+			newRect.top = toMatch.top;
+			newRect.height = toMatch.height;
+		}
+
+		return newRect;
+	}
 }
