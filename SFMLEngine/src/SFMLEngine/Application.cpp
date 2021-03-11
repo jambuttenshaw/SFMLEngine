@@ -316,6 +316,7 @@ namespace SFMLEngine
         while (m_Window->isOpen())
         {
             Timestep ts(m_Clock.restart().asSeconds());
+            if (ts > m_DeltaTimeLimit) ts = m_DeltaTimeLimit;
 
 #ifdef SFMLENGINE_DEBUG
             if (m_DisplayDebug)

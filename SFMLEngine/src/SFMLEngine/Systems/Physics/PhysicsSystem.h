@@ -30,10 +30,6 @@ namespace SFMLEngine {
 		void CollisionExitCallback(Entity entity);
 
 	private:
-
-		sf::FloatRect MatchMajorAxis(const sf::FloatRect& toBeMatched, const sf::FloatRect& toMatch);
-
-	private:
 		Coordinator* m_Coordinator = nullptr;
 		std::shared_ptr<CollisionSystem> m_CollisionSystem;
 

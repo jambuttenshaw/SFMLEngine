@@ -20,12 +20,11 @@ void PlayerController::Update(Timestep ts)
 		}
 		else
 		{
-			Move(ts);
-			Jump(ts);
-
+			// animations need to be done first, as we want to set the animation based
+			// on the data of the player AFTER the physics is applied
 			if (m_OnGround)
 			{
-				if (fabsf(m_Move) > 100.0f)
+				if (fabsf(m_Rigidbody->Velocity.x) > 100.0f)
 				{
 					m_Animator->SetCurrentAnimation("run");
 				}
@@ -36,6 +35,11 @@ void PlayerController::Update(Timestep ts)
 			{
 				m_Animator->SetCurrentAnimation("jump");
 			}
+
+			// then we can move the player
+			Move(ts);
+			Jump(ts);
+			// when update exists, physics will be applied internally by the engine
 		}
 	}
 	else if (!m_Animator->GetCurrentAnimation().Playing)
@@ -65,18 +69,17 @@ void PlayerController::OnCollisionExit(Entity other)
 
 void PlayerController::Move(Timestep ts)
 {
-	m_Move = Math::Lerp(m_Move, 0.0f, m_Friction * ts);
+	m_Rigidbody->Velocity.x = Math::Lerp(m_Rigidbody->Velocity.x, 0.0f, m_Friction * ts);
 	if (Input::IsKeyDown(sf::Keyboard::D))
 	{
-		m_Move = m_MoveSpeed;
+		m_Rigidbody->Velocity.x = m_MoveSpeed;
 		m_FacingRight = true;
 	}
 	if (Input::IsKeyDown(sf::Keyboard::A))
 	{
-		m_Move = -m_MoveSpeed;
+		m_Rigidbody->Velocity.x = -m_MoveSpeed;
 		m_FacingRight = false;
 	}
-	m_Rigidbody->Position.x += ts * m_Move;
 }
 
 void PlayerController::Jump(Timestep ts)

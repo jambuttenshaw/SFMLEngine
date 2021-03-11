@@ -66,41 +66,38 @@ namespace SFMLEngine {
 			for (auto const& collisionTest : allCollisions)
 			{
 				// there was a collision so we should move the object back and zero its velocity
+
+				// the offset is the difference between the transforms position and the colliders position
+				// when we are correcting the position of the entity, we are adjusting the transform's position
+				// so we need to know the difference between the colliders pos and the transforms pos to adjust properly
 				sf::Vector2f offset = transform.Position - sf::Vector2f{ collisionTest.GlobalBounds.left, collisionTest.GlobalBounds.top };
 
-
-				// work out the direction the collision occurred
-				sf::FloatRect intersection = Math::Intersection(collisionTest.GlobalBounds, collisionTest.OtherGlobalBounds);
-				sf::Vector2f collisionCentroid = Math::Centroid(intersection);
-
-				sf::FloatRect matched = MatchMajorAxis(collisionTest.GlobalBounds, intersection);
-				sf::Vector2f thisCentroid = Math::Centroid(matched);
-
-				Math::Direction collisionDir = Math::GetDirection(collisionCentroid - thisCentroid);
-
-				DEBUG_DRAW_LINE(collisionCentroid, thisCentroid, sf::Color::Red);
-				DEBUG_DRAW_RECT(matched, sf::Color::Yellow);
-
-				switch (collisionDir)
+				// respond to the collision based off of the direction
+				switch (collisionTest.CollisionDirection)
 				{
 				case Math::Direction::Right:
+					// set the right of this entity to the left of the other entity
 					transform.Position.x = collisionTest.OtherGlobalBounds.left - collisionTest.GlobalBounds.width + offset.x;
 					rigidbody.Velocity.x = 0;
 					break;
 				case Math::Direction::Left:
+					// set the left of this entity to the right of the other entity
 					transform.Position.x = collisionTest.OtherGlobalBounds.left + collisionTest.OtherGlobalBounds.width + offset.x;
 					rigidbody.Velocity.x = 0;
 					break;
 				case Math::Direction::Down:
+					// set the bottom of this entity to the top of the other entity
 					transform.Position.y = collisionTest.OtherGlobalBounds.top - collisionTest.GlobalBounds.height + offset.y;
 					rigidbody.Velocity.y = 0;
 					break;
 				case Math::Direction::Up:
+					// set the top of this entity to the bottom of the other entity
 					transform.Position.y = collisionTest.OtherGlobalBounds.top + collisionTest.OtherGlobalBounds.height + offset.y;
 					rigidbody.Velocity.y = 0;
 					break;
 				}
 
+				// send collision callback to entities
 				CollisionEnterCallback(entity, collisionTest);
 				
 			}
@@ -113,7 +110,7 @@ namespace SFMLEngine {
 
 			// apply any collision detection changes to the rigidbody
 			rigidbody.Position = transform.Position;
-			rigidbody.OldPosition = rigidbody.Position;
+			rigidbody.OldPosition = transform.Position;
 		}
 	}
 
@@ -163,27 +160,5 @@ namespace SFMLEngine {
 			entry.clear();
 		}
 	}
-
-
-
-	sf::FloatRect PhysicsSystem::MatchMajorAxis(const sf::FloatRect& toBeMatched, const sf::FloatRect& toMatch)
-	{
-		// create a copy
-		sf::FloatRect newRect = toBeMatched;
-
-		if (toMatch.width > toMatch.height)
-		{
-			// the x axis is the major axis of the rect
-			newRect.left = toMatch.left;
-			newRect.width = toMatch.width;
-		}
-		else
-		{
-			// the y axis is the major axis of the rect
-			newRect.top = toMatch.top;
-			newRect.height = toMatch.height;
-		}
-
-		return newRect;
-	}
+	
 }

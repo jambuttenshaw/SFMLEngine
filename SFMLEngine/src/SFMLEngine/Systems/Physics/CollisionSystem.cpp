@@ -56,4 +56,5 @@ namespace SFMLEngine {
 		// this shouldn't be reached
 		return std::vector<Collision>();
 	}
+
 }

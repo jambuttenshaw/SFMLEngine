@@ -24,7 +24,6 @@ private:
 	bool m_OnGround = false;
 	bool m_Attacking = false;
 
-	float m_Move = 0;
 	float m_Friction = 14.0f;
 
 	float m_MoveSpeed = 250.0f;
