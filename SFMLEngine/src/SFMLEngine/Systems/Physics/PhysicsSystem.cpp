@@ -102,10 +102,21 @@ namespace SFMLEngine {
 				
 			}
 
-			if (!allCollisions.size())
+			// check to see if we have exited any colliders this frame
+			std::set<ColliderID> toRemove;
+			for (ColliderID colliderID : m_Collisions[entity])
 			{
-				CollisionExitCallback(entity);
+				if (m_ThisFrameCollisions.find(colliderID) == m_ThisFrameCollisions.end())
+				{
+					// we have previously logged this collision, but it did not occur again this frame
+					// we must have exited the collider
+					// send callback
+					CollisionExitCallback(entity, colliderID);
+					toRemove.insert(colliderID);
+				}
 			}
+			for (ColliderID c : toRemove) m_Collisions[entity].erase(c);
+			m_ThisFrameCollisions.clear();
 
 
 			// apply any collision detection changes to the rigidbody
@@ -117,6 +128,8 @@ namespace SFMLEngine {
 	void PhysicsSystem::CollisionEnterCallback(Entity entity, const Collision& collisionData)
 	{
 		ZoneScoped;
+
+		m_ThisFrameCollisions.insert(collisionData.OtherColliderID);
 
 		// all entities registered in the physics system have entries in the collisions map
 		// check that this entity has not already registered a collision with this other entity
@@ -139,26 +152,20 @@ namespace SFMLEngine {
 		}
 	}
 
-	void PhysicsSystem::CollisionExitCallback(Entity entity)
+	void PhysicsSystem::CollisionExitCallback(Entity entity, ColliderID otherColliderID)
 	{
 		ZoneScoped;
 
 		// send a collision exit callback for every registered collision
-		auto& entry = m_Collisions[entity];
-		if (entry.size() > 0)
-		{
-			// run collision callback
-			if (m_Coordinator->HasComponent<NativeScripts>(entity))
-			{
-				auto& scriptsComponent = m_Coordinator->GetComponent<NativeScripts>(entity);
-				for (auto& script : scriptsComponent.Scripts)
-				{
-					for (Entity other : entry)
-						script.second->OnCollisionExit(other);
-				}
-			}
 
-			entry.clear();
+		// run collision callback
+		if (m_Coordinator->HasComponent<NativeScripts>(entity))
+		{
+			auto& scriptsComponent = m_Coordinator->GetComponent<NativeScripts>(entity);
+			for (auto& script : scriptsComponent.Scripts)
+			{
+				script.second->OnCollisionExit(otherColliderID);
+			}
 		}
 	}
 	
