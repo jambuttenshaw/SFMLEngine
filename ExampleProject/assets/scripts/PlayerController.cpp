@@ -58,7 +58,9 @@ void PlayerController::Update(Timestep ts)
 
 void PlayerController::OnCollisionEnter(Collision collision)
 {
-	m_OnGround = true;
+	LOG_TRACE("Collision dir: {0}", Math::DirectionToString(collision.CollisionDirection));
+	if (collision.CollisionDirection == Math::Direction::Down)
+		m_OnGround = true;
 }
 void PlayerController::OnCollisionExit(Entity other)
 {

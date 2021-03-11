@@ -10,6 +10,10 @@
 
 namespace SFMLEngine {
 
+	std::queue<ColliderID> CollisionSystem::s_AvailableColliderIDs;
+	size_t CollisionSystem::s_LivingColliderCount = 0;
+
+
 	void CollisionSystem::Init(Coordinator* coordinator)
 	{
 		m_Coordinator = coordinator;
@@ -55,6 +59,30 @@ namespace SFMLEngine {
 
 		// this shouldn't be reached
 		return std::vector<Collision>();
+	}
+
+
+
+
+
+
+	void CollisionSystem::SetupColliderIDs()
+	{
+		for (ColliderID colliderID = 0; colliderID < MAX_COLLIDERS; ++colliderID)
+		{
+			s_AvailableColliderIDs.push(colliderID);
+		}
+	}
+
+	ColliderID CollisionSystem::GetNextColliderID()
+	{
+		SFMLE_CORE_ASSERT(s_LivingColliderCount < MAX_COLLIDERS, "Too many resources in existance!");
+
+		ColliderID nextID = s_AvailableColliderIDs.front();
+		s_AvailableColliderIDs.pop();
+		++s_LivingColliderCount;
+
+		return nextID;
 	}
 
 }

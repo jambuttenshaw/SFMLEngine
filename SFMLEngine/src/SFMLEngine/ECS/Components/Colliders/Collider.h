@@ -39,10 +39,14 @@ namespace SFMLEngine {
 
 		virtual ~Collider() {};
 
+		void Init();
+
 		void SetTransform(Transform* transform) { m_Transform = transform; }
 
 		virtual sf::FloatRect GetLocalBounds() const = 0;
 		sf::FloatRect GetGlobalBounds() { return m_Transform->GetLocalToWorldTransformMatrix().transformRect(GetLocalBounds()); }
+
+		ColliderID GetColliderID() { return m_ColliderID; }
 
 		/*
 		virtual sf::Vector2f GetLocalOffset() const = 0;
@@ -51,7 +55,9 @@ namespace SFMLEngine {
 
 	protected:
 		bool m_Modified = false;
+
 		Transform* m_Transform = nullptr;
+		ColliderID m_ColliderID = NULL_COLLIDER_ID;
 	};
 
 }

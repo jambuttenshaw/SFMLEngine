@@ -47,6 +47,8 @@ namespace SFMLEngine {
 			CollisionDirection = Math::GetDirection(collisionCentroid - thisCentroid);
 		}
 
+	private:
+
 		sf::FloatRect MatchMajorAxis(const sf::FloatRect& toBeMatched, const sf::FloatRect& toMatch)
 		{
 			// create a copy
@@ -145,8 +147,20 @@ namespace SFMLEngine {
 			return collisions;
 		}
 
+
+	public:
+		static void SetupColliderIDs();
+		static ColliderID GetNextColliderID();
+
+
 	private:
 		Coordinator* m_Coordinator = nullptr;
+
+
+	private:
+		static std::queue<ColliderID> s_AvailableColliderIDs;
+		static size_t s_LivingColliderCount;
+
 	};
 
 }

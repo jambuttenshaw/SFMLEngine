@@ -276,6 +276,7 @@ namespace SFMLEngine
         */
 
         Physics::Init(m_CollisionSystem);
+        CollisionSystem::SetupColliderIDs();
 
     }
 

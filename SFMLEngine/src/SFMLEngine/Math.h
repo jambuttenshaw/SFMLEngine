@@ -54,6 +54,18 @@ namespace SFMLEngine {
 		}
 
 
+		static std::string DirectionToString(Direction dir)
+		{
+			switch (dir)
+			{
+			case Direction::Down:	return "down";  break;
+			case Direction::Up:		return "up";    break;
+			case Direction::Left:	return "left";  break;
+			case Direction::Right:	return "right"; break;
+			}
+		}
+
+
 		/*
 		VECTOR MATH
 		*/

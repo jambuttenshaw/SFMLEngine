@@ -26,10 +26,14 @@ namespace SFMLEngine {
 
 		TilemapCollider()
 			: Optimization(OptimizationLevel::None)
-		{}
+		{
+			Init();
+		}
 		TilemapCollider(OptimizationLevel optimize)
 			: Optimization(optimize)
-		{}
+		{
+			Init();
+		}
 
 		void Setup(Tilemap* tilemapHandle)
 		{

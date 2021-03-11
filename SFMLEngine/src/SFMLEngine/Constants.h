@@ -73,4 +73,12 @@ namespace SFMLEngine {
 	const TileID MAX_TILES = 254;
 	const TileID NULL_TILE_ID = 255;
 
+	// ---------
+	// COLLISION
+	// ---------
+
+	using ColliderID = uint8_t;
+	const ColliderID MAX_COLLIDERS = 254;
+	const ColliderID NULL_COLLIDER_ID = 255;
+
 }
