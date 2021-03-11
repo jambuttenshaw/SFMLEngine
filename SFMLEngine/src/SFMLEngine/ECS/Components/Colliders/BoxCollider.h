@@ -19,9 +19,7 @@ namespace SFMLEngine {
 
 		BoxCollider()
 			: Size(), Offset()
-		{
-			Init(); 
-		}
+		{}
 		BoxCollider(const sf::Vector2f& size, const sf::Vector2f& offset)
 			: Size(size), Offset(offset)
 		{

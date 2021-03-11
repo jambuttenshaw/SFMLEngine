@@ -72,6 +72,9 @@ namespace SFMLEngine
         DebugTools::Init(m_Window);
 #endif
         
+        // this needs to be done before components are registered
+        CollisionSystem::SetupColliderIDs();
+
         /*
         ----------
         SET UP ECS
@@ -276,8 +279,6 @@ namespace SFMLEngine
         */
 
         Physics::Init(m_CollisionSystem);
-        CollisionSystem::SetupColliderIDs();
-
     }
 
     Application::~Application()

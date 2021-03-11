@@ -151,6 +151,7 @@ namespace SFMLEngine {
 	public:
 		static void SetupColliderIDs();
 		static ColliderID GetNextColliderID();
+		static void ReplaceColliderID(ColliderID id);
 
 
 	private:

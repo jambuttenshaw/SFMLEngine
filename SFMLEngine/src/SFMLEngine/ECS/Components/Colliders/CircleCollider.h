@@ -17,9 +17,7 @@ namespace SFMLEngine {
 
 		CircleCollider()
 			: Radius(0), Offset()
-		{
-			Init();
-		}
+		{}
 
 		CircleCollider(float radius, const sf::Vector2f& offset)
 			: Radius(radius), Offset(offset)

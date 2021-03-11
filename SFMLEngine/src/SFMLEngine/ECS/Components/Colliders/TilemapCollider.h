@@ -14,6 +14,12 @@ namespace SFMLEngine {
 
 	struct TilemapCollider : public Collider
 	{
+		struct SubCollider
+		{
+			ColliderID ID;
+			sf::FloatRect Rect;
+		};
+
 		enum class OptimizationLevel 
 		{
 			None = 0, Standard = 1, High = 2
@@ -26,9 +32,7 @@ namespace SFMLEngine {
 
 		TilemapCollider()
 			: Optimization(OptimizationLevel::None)
-		{
-			Init();
-		}
+		{}
 		TilemapCollider(OptimizationLevel optimize)
 			: Optimization(optimize)
 		{
@@ -53,8 +57,6 @@ namespace SFMLEngine {
 
 		sf::FloatRect GetLocalBounds() const override { return sf::FloatRect(Size, sf::Vector2f{}); }
 
-		const std::vector<sf::FloatRect>& GetCollisionGeometry() { return m_CollisionGeometry; }
-
 		void DrawDebug(const sf::Transform& transform);
 
 	private:
@@ -62,7 +64,7 @@ namespace SFMLEngine {
 		void FindBoundary();
 
 	private:
-		std::vector<sf::FloatRect> m_CollisionGeometry;
+		std::vector<SubCollider> m_CollisionGeometry;
 	};
 
 }

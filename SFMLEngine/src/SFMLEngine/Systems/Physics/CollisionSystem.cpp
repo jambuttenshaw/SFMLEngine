@@ -76,7 +76,7 @@ namespace SFMLEngine {
 
 	ColliderID CollisionSystem::GetNextColliderID()
 	{
-		SFMLE_CORE_ASSERT(s_LivingColliderCount < MAX_COLLIDERS, "Too many resources in existance!");
+		SFMLE_CORE_ASSERT(s_LivingColliderCount < MAX_COLLIDERS, "Too many colliders in existance!");
 
 		ColliderID nextID = s_AvailableColliderIDs.front();
 		s_AvailableColliderIDs.pop();
@@ -84,5 +84,14 @@ namespace SFMLEngine {
 
 		return nextID;
 	}
+
+	void CollisionSystem::ReplaceColliderID(ColliderID id)
+	{
+		if (id == NULL_COLLIDER_ID) return;
+
+		s_AvailableColliderIDs.push(id);
+		--s_LivingColliderCount;
+	}
+
 
 }

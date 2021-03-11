@@ -6,6 +6,8 @@
 #include "SFMLEngine/Math.h"
 #include "SFMLEngine/DebugTools.h"
 
+#include "SFMLEngine/Systems/Physics/CollisionSystem.h"
+
 #include <algorithm>
 
 namespace SFMLEngine {
@@ -24,9 +26,9 @@ namespace SFMLEngine {
 			// create a quad and add it to our collision geometry
 			// we want to deal with coordinates in tilemap space
 			// at the moment, to make the logic as simple as possible
-			m_CollisionGeometry.push_back(sf::FloatRect{
-				sf::Vector2f(tile.Position.x * TilemapHandle->TileSize.x, tile.Position.y * TilemapHandle->TileSize.y),
-				TilemapHandle->TileSize
+			m_CollisionGeometry.push_back(SubCollider{ NULL_COLLIDER_ID,
+				sf::FloatRect { sf::Vector2f(tile.Position.x * TilemapHandle->TileSize.x, tile.Position.y * TilemapHandle->TileSize.y),
+								TilemapHandle->TileSize }
 				});
 		}
 
@@ -52,21 +54,21 @@ namespace SFMLEngine {
 					{
 						if (std::find(indicesToDelete.begin(), indicesToDelete.end(), jIndex) != indicesToDelete.end()) continue;
 
-						if (secondQuad.top == quad.top && secondQuad != quad)
+						if (secondQuad.Rect.top == quad.Rect.top && secondQuad.Rect != quad.Rect)
 						{
 							// check to see if they are adjacent
-							bool firstQuadLeftmost = quad.left < secondQuad.left;
-							if (fabsf(quad.left - secondQuad.left) == (firstQuadLeftmost ? quad.width : secondQuad.width))
+							bool firstQuadLeftmost = quad.Rect.left < secondQuad.Rect.left;
+							if (fabsf(quad.Rect.left - secondQuad.Rect.left) == (firstQuadLeftmost ? quad.Rect.width : secondQuad.Rect.width))
 							{
 								// they are adjacent!
 								optimal = false;
 
-								quad.width += secondQuad.width;
+								quad.Rect.width += secondQuad.Rect.width;
 								if (!firstQuadLeftmost)
 								{
 									// second quad is to the left of the first quad
 									// we also need to move the quad to the left by the width of the second quad
-									quad.left -= secondQuad.width;
+									quad.Rect.left -= secondQuad.Rect.width;
 								}
 
 								// set the second quad to be removed
@@ -114,21 +116,21 @@ namespace SFMLEngine {
 						// quads must have the same x coordinate
 						// they must be the same width
 						// and they must not be the same quad
-						if ((secondQuad.left == quad.left) && (secondQuad.width == quad.width) && (secondQuad != quad))
+						if ((secondQuad.Rect.left == quad.Rect.left) && (secondQuad.Rect.width == quad.Rect.width) && (secondQuad.Rect != quad.Rect))
 						{
 							// check to see if they are adjacent
-							bool firstQuadAbove = quad.top < secondQuad.top;
-							if (fabsf(quad.top - secondQuad.top) == (firstQuadAbove ? quad.height : secondQuad.height))
+							bool firstQuadAbove = quad.Rect.top < secondQuad.Rect.top;
+							if (fabsf(quad.Rect.top - secondQuad.Rect.top) == (firstQuadAbove ? quad.Rect.height : secondQuad.Rect.height))
 							{
 								// they are adjacent!
 								optimal = false;
 
-								quad.height += secondQuad.height;
+								quad.Rect.height += secondQuad.Rect.height;
 								if (!firstQuadAbove)
 								{
 									// second quad is to the left of the first quad
 									// we also need to move the quad to the left by the width of the second quad
-									quad.top -= secondQuad.height;
+									quad.Rect.top -= secondQuad.Rect.height;
 								}
 
 								// set the second quad to be removed
@@ -151,6 +153,12 @@ namespace SFMLEngine {
 			}
 		}
 		// we have a fully optimized tilemap collider  B-)
+
+		// give each collider an ID
+		for (auto& i : m_CollisionGeometry)
+		{
+			i.ID = CollisionSystem::GetNextColliderID();
+		}
 	}
 
 	void TilemapCollider::FindBoundary()
@@ -158,8 +166,8 @@ namespace SFMLEngine {
 		sf::Vector2f topLeft, bottomRight;
 		for (auto const& quad : m_CollisionGeometry)
 		{
-			topLeft = Math::Max(topLeft, sf::Vector2f(quad.left, quad.top));
-			bottomRight = Math::Max(bottomRight, sf::Vector2f(quad.left + quad.width, quad.top + quad.height));
+			topLeft = Math::Max(topLeft, sf::Vector2f(quad.Rect.left, quad.Rect.top));
+			bottomRight = Math::Max(bottomRight, sf::Vector2f(quad.Rect.left + quad.Rect.width, quad.Rect.top + quad.Rect.height));
 		}
 
 		Size = bottomRight - topLeft;
@@ -182,7 +190,7 @@ namespace SFMLEngine {
 		sf::FloatRect globalQuad;
 		for (auto const& quad : m_CollisionGeometry)
 		{
-			globalQuad = m_Transform->GetLocalToWorldTransformMatrix().transformRect(quad);
+			globalQuad = m_Transform->GetLocalToWorldTransformMatrix().transformRect(quad.Rect);
 			if (globalQuad.intersects(otherGlobalBounds))
 			{
 				collisions.push_back(std::move(globalQuad));
@@ -218,7 +226,7 @@ namespace SFMLEngine {
 	{
 		for (auto const& rect : m_CollisionGeometry)
 		{
-			auto& transformed = transform.transformRect(rect);
+			auto& transformed = transform.transformRect(rect.Rect);
 			DEBUG_DRAW_RECT(sf::Vector2f(transformed.left, transformed.top), sf::Vector2f(transformed.width, transformed.height), sf::Color::Green);
 		}
 	}
