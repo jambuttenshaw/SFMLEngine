@@ -20,7 +20,7 @@ namespace SFMLEngine {
 
 		virtual void Update(Timestep ts) {}
 
-		virtual void OnCollisionEnter(Collision collisionData) {}
+		virtual void OnCollisionEnter(const Collision& collisionData) {}
 		virtual void OnCollisionExit(Entity other) {}
 
 		// components

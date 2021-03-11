@@ -26,14 +26,14 @@ namespace SFMLEngine {
 
 		void Update(Timestep ts);
 
-		void CollisionEnterCallback(Entity entity, Collision collisionData);
+		void CollisionEnterCallback(Entity entity, const Collision& collisionData);
 		void CollisionExitCallback(Entity entity);
 
 	private:
 		Coordinator* m_Coordinator = nullptr;
 		std::shared_ptr<CollisionSystem> m_CollisionSystem;
 
-		std::unordered_map<Entity, std::set<Entity>> m_Collisions;
+		std::unordered_map<Entity, std::set<ColliderID>> m_Collisions;
 	};
 
 }

@@ -10,7 +10,7 @@ public:
 	void Start() override;
 	void Update(Timestep ts) override;
 	
-	void OnCollisionEnter(Collision collision) override;
+	void OnCollisionEnter(const Collision& collision) override;
 	void OnCollisionExit(Entity other) override;
 
 	void Move(Timestep ts);

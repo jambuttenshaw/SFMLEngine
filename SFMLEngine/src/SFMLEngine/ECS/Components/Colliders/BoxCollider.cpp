@@ -10,7 +10,7 @@
 
 namespace SFMLEngine {
 
-	std::pair<bool, sf::FloatRect> BoxCollider::Colliding(BoxCollider& other)
+	std::pair<ColliderID, sf::FloatRect> BoxCollider::Colliding(BoxCollider& other)
 	{
 		ZoneScoped;
 
@@ -20,10 +20,13 @@ namespace SFMLEngine {
 		bool overlapX = (thisWorldPos.left + thisWorldPos.width >= otherWorldPos.left) && (otherWorldPos.left + otherWorldPos.width >= thisWorldPos.left);
 		bool overlapY = (thisWorldPos.top + thisWorldPos.height >= otherWorldPos.top) && (otherWorldPos.top + otherWorldPos.height >= thisWorldPos.top);
 
-		return std::make_pair(overlapX && overlapY, thisWorldPos);
+		if (overlapX && overlapY)
+			return std::make_pair(GetColliderID(), thisWorldPos);
+		else
+			return std::make_pair(NULL_COLLIDER_ID, sf::FloatRect{});
 	}
 
-	std::pair<bool, sf::FloatRect> BoxCollider::Colliding(CircleCollider& other)
+	std::pair<ColliderID, sf::FloatRect> BoxCollider::Colliding(CircleCollider& other)
 	{
 		/*
 		sf::Vector2f circleCentre = other.Offset + otherPos + sf::Vector2f{other.Radius, other.Radius};
@@ -35,10 +38,10 @@ namespace SFMLEngine {
 
 		return CollisionData{ Math::SquareMagnitude(diff) <= other.Radius * other.Radius, sf::FloatRect{ Offset, Size }, Offset };
 		*/
-		return std::make_pair(false, GetGlobalBounds());
+		return std::make_pair(NULL_COLLIDER_ID, GetGlobalBounds());
 	}
 
-	std::pair<bool, sf::FloatRect> BoxCollider::Colliding(TilemapCollider& other)
+	std::pair<ColliderID, sf::FloatRect> BoxCollider::Colliding(TilemapCollider& other)
 	{
 		/*
 		// tilemap vs box collider collision
@@ -47,7 +50,7 @@ namespace SFMLEngine {
 		return CollisionData{ collision.Collided, sf::FloatRect{ Offset, Size }, Offset };
 		*/
 			
-		return std::make_pair(false, sf::FloatRect());
+		return std::make_pair(NULL_COLLIDER_ID, sf::FloatRect());
 	}
 
 	void BoxCollider::DrawDebug(const sf::Transform& transform)

@@ -26,9 +26,9 @@ namespace SFMLEngine {
 			Init();
 		}
 
-		std::pair<bool, sf::FloatRect> Colliding(BoxCollider& other);
-		std::pair<bool, sf::FloatRect> Colliding(CircleCollider& other);
-		std::pair<bool, sf::FloatRect> Colliding(TilemapCollider& other);
+		std::pair<ColliderID, sf::FloatRect> Colliding(BoxCollider& other);
+		std::pair<ColliderID, sf::FloatRect> Colliding(CircleCollider& other);
+		std::pair<ColliderID, sf::FloatRect> Colliding(TilemapCollider& other);
 
 		sf::FloatRect GetLocalBounds() const override { return sf::FloatRect(Offset, Size); }
 

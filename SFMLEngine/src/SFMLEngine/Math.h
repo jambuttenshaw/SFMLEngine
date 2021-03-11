@@ -58,10 +58,11 @@ namespace SFMLEngine {
 		{
 			switch (dir)
 			{
-			case Direction::Down:	return "down";  break;
-			case Direction::Up:		return "up";    break;
-			case Direction::Left:	return "left";  break;
-			case Direction::Right:	return "right"; break;
+			case Direction::Down:	return "down";     break;
+			case Direction::Up:		return "up";       break;
+			case Direction::Left:	return "left";     break;
+			case Direction::Right:	return "right";    break;
+			default:				return "invalid";  break;
 			}
 		}
 

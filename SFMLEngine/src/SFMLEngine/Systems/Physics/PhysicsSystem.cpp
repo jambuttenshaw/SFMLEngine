@@ -24,7 +24,7 @@ namespace SFMLEngine {
 
 		// create an entry in the collisions map
 		// just now it maps to an empty set
-		m_Collisions.insert(std::make_pair(entity, std::set<Entity>{}));
+		m_Collisions.insert(std::make_pair(entity, std::set<ColliderID>{}));
 	}
 
 	void PhysicsSystem::EntityRemovedFromSystem(Entity entity)
@@ -114,17 +114,18 @@ namespace SFMLEngine {
 		}
 	}
 
-	void PhysicsSystem::CollisionEnterCallback(Entity entity, Collision collisionData)
+	void PhysicsSystem::CollisionEnterCallback(Entity entity, const Collision& collisionData)
 	{
 		ZoneScoped;
 
 		// all entities registered in the physics system have entries in the collisions map
 		// check that this entity has not already registered a collision with this other entity
 		auto& entry = m_Collisions[entity];
-		if (entry.find(collisionData.Other) == entry.end())
+		if (entry.find(collisionData.OtherColliderID) == entry.end())
 		{
 			// insert this collision into the set
-			entry.insert(collisionData.Other);
+			entry.insert(collisionData.OtherColliderID);
+
 
 			// run collision callback
 			if (m_Coordinator->HasComponent<NativeScripts>(entity))

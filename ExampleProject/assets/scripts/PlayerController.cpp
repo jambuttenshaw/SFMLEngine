@@ -56,9 +56,8 @@ void PlayerController::Update(Timestep ts)
 }
 
 
-void PlayerController::OnCollisionEnter(Collision collision)
+void PlayerController::OnCollisionEnter(const Collision& collision)
 {
-	LOG_TRACE("Collision dir: {0}", Math::DirectionToString(collision.CollisionDirection));
 	if (collision.CollisionDirection == Math::Direction::Down)
 		m_OnGround = true;
 }
