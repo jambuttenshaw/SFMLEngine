@@ -41,7 +41,7 @@ public:
 
 			// this object should be solid
 			// add a collider
-			AddComponent(m_Tilemap, TilemapCollider { TilemapCollider::OptimizationLevel::High });
+			AddComponent(m_Tilemap, TilemapCollider { TilemapCollider::OptimizationLevel::Standard });
 			AddComponent(m_Tilemap, ColliderInfo{ ColliderType::Tilemap });
 
 			AddNativeScript<ClickToDestroyTile>(m_Tilemap);
@@ -83,7 +83,7 @@ public:
 			m_PhysicsEntity = CreateEntity("Player", "Player", "Player");
 
 			// give the entity a transform
-			AddComponent(m_PhysicsEntity, Transform{ sf::Vector2f(0, -100) });
+			AddComponent(m_PhysicsEntity, Transform{ sf::Vector2f(0, -200) });
 			// add a rigidbody so this entity is affected by physics
 			AddComponent(m_PhysicsEntity, Rigidbody{ });
 			AddComponent(m_PhysicsEntity, BoxCollider{ sf::Vector2f(17, 48), sf::Vector2f(8, 16) });

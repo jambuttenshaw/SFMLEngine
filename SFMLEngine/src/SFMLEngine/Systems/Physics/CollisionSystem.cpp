@@ -77,49 +77,102 @@ namespace SFMLEngine {
 		Transform* transform = &m_Coordinator->GetComponent<Transform>(entity);
 		auto const& collider = m_Coordinator->GetComponent<ColliderInfo>(entity);
 
+		Collider* newCollider;
 		switch (collider.Type)
 		{
 		case ColliderType::Invalid:	SFMLE_CORE_ASSERT(0, "Invalid collider type!"); break;
-		case ColliderType::Box:		m_Coordinator->GetComponent<BoxCollider>(entity).SetTransform(transform); break;
-		case ColliderType::Circle:	m_Coordinator->GetComponent<CircleCollider>(entity).SetTransform(transform); break;
-		case ColliderType::Tilemap: m_Coordinator->GetComponent<TilemapCollider>(entity).SetTransform(transform); break;
+		case ColliderType::Box:		
+			newCollider = &m_Coordinator->GetComponent<BoxCollider>(entity);
+			m_ColliderMap.insert(std::make_pair(newCollider->GetColliderID(), ColliderData{ entity, collider.Type, newCollider }));
+			break;
+
+		case ColliderType::Circle:	
+			newCollider = &m_Coordinator->GetComponent<CircleCollider>(entity); 
+			m_ColliderMap.insert(std::make_pair(newCollider->GetColliderID(), ColliderData{ entity, collider.Type, newCollider }));
+			break;
+
+		case ColliderType::Tilemap: 
+			newCollider = &m_Coordinator->GetComponent<TilemapCollider>(entity); 
+			for (auto& box : static_cast<TilemapCollider*>(newCollider)->GetCollisionGeometry())
+			{
+				m_ColliderMap.insert(std::make_pair(box.GetColliderID(), ColliderData{ entity, ColliderType::Box, &box }));
+			}
+			break;
+
 		default:					SFMLE_CORE_ASSERT(0, "Unknown collider type!"); break;
 		}
+
+		newCollider->SetTransform(transform);
 	}
 
 	void CollisionSystem::EntityRemovedFromSystem(Entity entity)
 	{
+		// look through all of the colliders and see what ones belong to this entity
+		std::vector<ColliderID> toErase;
+		for (auto& collider : m_ColliderMap)
+		{
+			if (collider.second.Owner == entity)
+			{
+				toErase.push_back(collider.first);
+			}
+		}
+		for (ColliderID collider : toErase)
+			m_ColliderMap.erase(collider);
+	}
 
+	void CollisionSystem::DeleteTilemapColliderData(Entity tilemapCollider)
+	{
+		// look through all of the colliders and see what ones belong to this tilemap
+		std::vector<ColliderID> toErase;
+		for (auto& collider : m_ColliderMap)
+		{
+			if (collider.second.Owner == tilemapCollider)
+			{
+				toErase.push_back(collider.first);
+			}
+		}
+		for (ColliderID collider : toErase)
+			m_ColliderMap.erase(collider);
+	}
+	void CollisionSystem::AddTilemapColliderData(Entity tilemapCollider)
+	{
+		TilemapCollider* collider = &m_Coordinator->GetComponent<TilemapCollider>(tilemapCollider);
+		for (auto& box : static_cast<TilemapCollider*>(collider)->GetCollisionGeometry())
+		{
+			m_ColliderMap.insert(std::make_pair(box.GetColliderID(), ColliderData{ tilemapCollider, ColliderType::Box, &box }));
+		}
 	}
 
 
-	const std::vector<Collision> CollisionSystem::TestCollision(Entity entity)
+	const Collision CollisionSystem::TestCollision(Entity entity, ColliderID other)
 	{
-		ZoneScoped;
-
-		auto const& collider = m_Coordinator->GetComponent<ColliderInfo>(entity);
-		auto mask = Physics::GetLayerMask(m_Coordinator->GetComponent<Identity>(entity).EntityLayer);
-
-		switch (collider.Type)
+		auto& colliderInfo = m_Coordinator->GetComponent<ColliderInfo>(entity);
+		switch (colliderInfo.Type)
 		{
 		case ColliderType::Invalid:	SFMLE_CORE_ASSERT(0, "Invalid collider type!"); break;
-		case ColliderType::Box:		return DoCollisionTest(m_Coordinator->GetComponent<BoxCollider>(entity), mask, entity); break;
-		case ColliderType::Circle:	return DoCollisionTest(m_Coordinator->GetComponent<CircleCollider>(entity), mask, entity); break;
-		case ColliderType::Tilemap: return DoCollisionTest(m_Coordinator->GetComponent<TilemapCollider>(entity), mask, entity); break;
+		case ColliderType::Box:
+			return RunCollisionTest(m_Coordinator->GetComponent<BoxCollider>(entity), other);
+			break;
+
+		case ColliderType::Circle:
+			return RunCollisionTest(m_Coordinator->GetComponent<CircleCollider>(entity), other);
+			break;
+
+		case ColliderType::Tilemap: SFMLE_CORE_ASSERT(0, "Simulating physics on tilemaps is currently not supported."); break;
 		default:					SFMLE_CORE_ASSERT(0, "Unknown collider type!"); break;
 		}
 
-		// this shouldn't be reached
-		return std::vector<Collision>();
+
+		// this should never be reached
+		return Collision{ INVALID_ENTITY_ID, sf::FloatRect(), sf::FloatRect(), NULL_COLLIDER_ID };
 	}
-
-
 
 
 
 
 	void CollisionSystem::SetupColliderIDs()
 	{
+		ZoneScoped;
 		for (ColliderID colliderID = 0; colliderID < MAX_COLLIDERS; ++colliderID)
 		{
 			s_AvailableColliderIDs.push(colliderID);

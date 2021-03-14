@@ -14,23 +14,21 @@ namespace SFMLEngine {
 
 	struct BoxCollider : public Collider
 	{
-		sf::Vector2f Size;
-		sf::Vector2f Offset;
+		sf::FloatRect Bounds;
 
 		BoxCollider()
-			: Size(), Offset()
+			: Bounds()
 		{}
-		BoxCollider(const sf::Vector2f& size, const sf::Vector2f& offset)
-			: Size(size), Offset(offset)
+		BoxCollider(const sf::Vector2f& size, const sf::Vector2f& offset, bool autoAssignID = true)
+			: Bounds(offset, size)
 		{
-			Init();
+			if (autoAssignID) Init();
 		}
 
-		std::pair<ColliderID, sf::FloatRect> Colliding(BoxCollider& other);
-		std::pair<ColliderID, sf::FloatRect> Colliding(CircleCollider& other);
-		std::pair<ColliderID, sf::FloatRect> Colliding(TilemapCollider& other);
+		std::pair<bool, sf::FloatRect> Colliding(BoxCollider& other);
+		std::pair<bool, sf::FloatRect> Colliding(CircleCollider& other);
 
-		sf::FloatRect GetLocalBounds() const override { return sf::FloatRect(Offset, Size); }
+		sf::FloatRect GetLocalBounds() const override { return Bounds; }
 
 		void DrawDebug(const sf::Transform& transform);
 	};

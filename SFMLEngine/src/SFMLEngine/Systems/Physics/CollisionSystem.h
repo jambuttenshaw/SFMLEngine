@@ -31,6 +31,13 @@ namespace SFMLEngine {
 		sf::FloatRect MatchMajorAxis(const sf::FloatRect& toBeMatched, const sf::FloatRect& toMatch);
 	};
 
+	struct ColliderData
+	{
+		Entity Owner;
+		ColliderType Type;
+		Collider* ColliderPtr;
+	};
+
 	class CollisionSystem : public System
 	{
 	public:
@@ -46,66 +53,56 @@ namespace SFMLEngine {
 		void EntityRemovedFromSystem(Entity entity) override;
 
 		const std::set<Entity>& GetCollideableEntities() { return m_Entities; }
+		const std::unordered_map<ColliderID, ColliderData>& GetAllColliders() { return m_ColliderMap; }
 
-		const std::vector<Collision> TestCollision(Entity entity);
+
+		// for tilemaps to use
+		// when a tilemap collider is regenerated, it will invalidate all of the pointers
+		// and ColliderID's associated with it
+		// so old ones need to be removed and new ones put in
+		void DeleteTilemapColliderData(Entity tilemapCollider);
+		void AddTilemapColliderData(Entity tilemapCollider);
+
+
+		const Collision TestCollision(Entity entity, ColliderID other);
 
 	private:
-		template<typename T>
-		const std::vector<Collision> DoCollisionTest(T& collider, Layer layerMask, Entity thisEntity = INVALID_ENTITY_ID)
+		template <typename T>
+		const Collision RunCollisionTest(T& collider, ColliderID other)
 		{
-			ZoneScoped;
+			const ColliderData& otherCollider = m_ColliderMap[other];
 
-			std::vector<Collision> collisions;
+			std::pair<bool, sf::FloatRect> collisionData;
 
-			for (auto& entity : m_Entities)
+			switch (otherCollider.Type)
 			{
-				ZoneScoped;
-				ZoneName("ProcessEntity", 13);
+			case ColliderType::Invalid:	SFMLE_CORE_ASSERT(0, "Invalid collider type!"); break;
+			case ColliderType::Box:
+				collisionData = static_cast<BoxCollider*>(otherCollider.ColliderPtr)->Colliding(collider);
+				break;
 
-				// dont test collision against its own collider
-				if (entity == thisEntity) continue;
+			case ColliderType::Circle:
+				collisionData = static_cast<CircleCollider*>(otherCollider.ColliderPtr)->Colliding(collider);
+				break;
 
-				// make sure this entity applies to the layer mask
-				auto& id = m_Coordinator->GetComponent<Identity>(entity);
-				// if the set bit in the entity layer is not in the mask then skip this entity
-				if ((id.EntityLayer & layerMask) != id.EntityLayer) continue;
-
-				// find out what type of collider this object has
-				ColliderInfo& other = m_Coordinator->GetComponent<ColliderInfo>(entity);
-				
-				std::vector<std::pair<ColliderID, sf::FloatRect>> collisionData;
-				switch (other.Type)
-				{
-				case ColliderType::Invalid:	SFMLE_CORE_ASSERT(0, "Invalid collider type!"); break;
-
-				case ColliderType::Box:	
-					collisionData.push_back(m_Coordinator->GetComponent<BoxCollider>(entity).Colliding(collider));
-
-					break;
-
-				case ColliderType::Circle:	
-					collisionData.push_back(m_Coordinator->GetComponent<CircleCollider>(entity).Colliding(collider));
-
-					break;
-
-				case ColliderType::Tilemap:
-					collisionData = m_Coordinator->GetComponent<TilemapCollider>(entity).Colliding(collider);
-
-					break;
-
-				default:					SFMLE_CORE_ASSERT(0, "Unknown collider type!"); break;
-				}
-
-				for (auto const& c : collisionData)
-				{
-					if (c.first != NULL_COLLIDER_ID)
-					{
-						collisions.push_back(Collision{ entity, collider.GetGlobalBounds(), c.second, c.first });
-					}
-				}
+			case ColliderType::Tilemap: SFMLE_CORE_ASSERT(0, "Tilemap collider is an invalid collision primitive."); break;
+			default:					SFMLE_CORE_ASSERT(0, "Unknown collider type!"); break;
 			}
 
-			return collisions;
+			if (collisionData.first)
+			{
+				return Collision
+				{
+					otherCollider.Owner,
+					collider.GetGlobalBounds(),
+					collisionData.second,
+					other
+				};
+			}
+			else
+			{
+				return Collision{ INVALID_ENTITY_ID, sf::FloatRect(), sf::FloatRect(), NULL_COLLIDER_ID };
+			}
 		}
 
 
@@ -117,7 +114,7 @@ namespace SFMLEngine {
 
 	private:
 		Coordinator* m_Coordinator = nullptr;
-
+		std::unordered_map<ColliderID, ColliderData> m_ColliderMap;
 
 	private:
 		static std::queue<ColliderID> s_AvailableColliderIDs;

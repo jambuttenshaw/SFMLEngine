@@ -32,6 +32,7 @@ namespace SFMLEngine {
 		return s_LayerMasks[layer];
 	}
 	
+	/*
 	std::vector<Collision> Physics::CollisionAtPoint(const sf::Vector2f& point, float radius, Layer layerMask)
 	{
 		// run a collision test at the point
@@ -46,5 +47,5 @@ namespace SFMLEngine {
 
 		return s_CollisionSystem->DoCollisionTest(collider, layerMask);
 	}
-
+	*/
 }

@@ -12,4 +12,13 @@ namespace SFMLEngine {
 		m_ColliderID = CollisionSystem::GetNextColliderID();
 	}
 
+	void Collider::SetNewColliderID()
+	{
+		// delete the old collider ID if it isnt null
+		if (m_ColliderID != NULL_COLLIDER_ID)
+			CollisionSystem::ReplaceColliderID(m_ColliderID);
+
+		m_ColliderID = CollisionSystem::GetNextColliderID();
+	}
+
 }

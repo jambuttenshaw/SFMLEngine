@@ -26,14 +26,19 @@ namespace SFMLEngine {
 			// create a quad and add it to our collision geometry
 			// we want to deal with coordinates in tilemap space
 			// at the moment, to make the logic as simple as possible
-			m_CollisionGeometry.push_back(SubCollider{ NULL_COLLIDER_ID,
-				sf::FloatRect { sf::Vector2f(tile.Position.x * TilemapHandle->TileSize.x, tile.Position.y * TilemapHandle->TileSize.y),
-								TilemapHandle->TileSize }
+			m_CollisionGeometry.push_back(
+				BoxCollider{
+					TilemapHandle->TileSize, // size
+					{tile.Position.x * TilemapHandle->TileSize.x, tile.Position.y * TilemapHandle->TileSize.y}, // offset
+					false // dont auto assign the id for the box collider
 				});
 		}
 
 		if (Optimization > OptimizationLevel::None) 
 		{
+			ZoneScoped;
+			ZoneName("Level1", 6);
+
 			// then optimize out as many of those quads as possible
 			bool optimal = false;
 			std::vector<size_t> indicesToDelete;
@@ -54,21 +59,21 @@ namespace SFMLEngine {
 					{
 						if (std::find(indicesToDelete.begin(), indicesToDelete.end(), jIndex) != indicesToDelete.end()) continue;
 
-						if (secondQuad.Rect.top == quad.Rect.top && secondQuad.Rect != quad.Rect)
+						if (secondQuad.Bounds.top == quad.Bounds.top && secondQuad.Bounds != quad.Bounds)
 						{
 							// check to see if they are adjacent
-							bool firstQuadLeftmost = quad.Rect.left < secondQuad.Rect.left;
-							if (fabsf(quad.Rect.left - secondQuad.Rect.left) == (firstQuadLeftmost ? quad.Rect.width : secondQuad.Rect.width))
+							bool firstQuadLeftmost = quad.Bounds.left < secondQuad.Bounds.left;
+							if (fabsf(quad.Bounds.left - secondQuad.Bounds.left) == (firstQuadLeftmost ? quad.Bounds.width : secondQuad.Bounds.width))
 							{
 								// they are adjacent!
 								optimal = false;
 
-								quad.Rect.width += secondQuad.Rect.width;
+								quad.Bounds.width += secondQuad.Bounds.width;
 								if (!firstQuadLeftmost)
 								{
 									// second quad is to the left of the first quad
 									// we also need to move the quad to the left by the width of the second quad
-									quad.Rect.left -= secondQuad.Rect.width;
+									quad.Bounds.left -= secondQuad.Bounds.width;
 								}
 
 								// set the second quad to be removed
@@ -93,6 +98,9 @@ namespace SFMLEngine {
 
 		if (Optimization > OptimizationLevel::Standard)
 		{
+			ZoneScoped;
+			ZoneName("Level2", 6);
+
 			// a second round of optimization
 			bool optimal = false;
 			std::vector<size_t> indicesToDelete;
@@ -116,21 +124,21 @@ namespace SFMLEngine {
 						// quads must have the same x coordinate
 						// they must be the same width
 						// and they must not be the same quad
-						if ((secondQuad.Rect.left == quad.Rect.left) && (secondQuad.Rect.width == quad.Rect.width) && (secondQuad.Rect != quad.Rect))
+						if ((secondQuad.Bounds.left == quad.Bounds.left) && (secondQuad.Bounds.width == quad.Bounds.width) && (secondQuad.Bounds != quad.Bounds))
 						{
 							// check to see if they are adjacent
-							bool firstQuadAbove = quad.Rect.top < secondQuad.Rect.top;
-							if (fabsf(quad.Rect.top - secondQuad.Rect.top) == (firstQuadAbove ? quad.Rect.height : secondQuad.Rect.height))
+							bool firstQuadAbove = quad.Bounds.top < secondQuad.Bounds.top;
+							if (fabsf(quad.Bounds.top - secondQuad.Bounds.top) == (firstQuadAbove ? quad.Bounds.height : secondQuad.Bounds.height))
 							{
 								// they are adjacent!
 								optimal = false;
 
-								quad.Rect.height += secondQuad.Rect.height;
+								quad.Bounds.height += secondQuad.Bounds.height;
 								if (!firstQuadAbove)
 								{
 									// second quad is to the left of the first quad
 									// we also need to move the quad to the left by the width of the second quad
-									quad.Rect.top -= secondQuad.Rect.height;
+									quad.Bounds.top -= secondQuad.Bounds.height;
 								}
 
 								// set the second quad to be removed
@@ -154,79 +162,44 @@ namespace SFMLEngine {
 		}
 		// we have a fully optimized tilemap collider  B-)
 
-		// give each collider an ID
-		for (auto& i : m_CollisionGeometry)
 		{
-			i.ID = CollisionSystem::GetNextColliderID();
+			ZoneScoped;
+			ZoneName("AssignID", 8);
+
+			// give each collider an ID
+			for (auto& i : m_CollisionGeometry)
+			{
+				i.SetNewColliderID();
+				i.SetTransform(m_Transform);
+			}
 		}
 	}
+
+	void TilemapCollider::SetTransform(Transform* transform)
+	{ 
+		m_Transform = transform; 
+		for (auto& collider : m_CollisionGeometry)
+			collider.SetTransform(transform);
+	}
+
 
 	void TilemapCollider::FindBoundary()
 	{
 		sf::Vector2f topLeft, bottomRight;
 		for (auto const& quad : m_CollisionGeometry)
 		{
-			topLeft = Math::Max(topLeft, sf::Vector2f(quad.Rect.left, quad.Rect.top));
-			bottomRight = Math::Max(bottomRight, sf::Vector2f(quad.Rect.left + quad.Rect.width, quad.Rect.top + quad.Rect.height));
+			topLeft = Math::Max(topLeft, sf::Vector2f(quad.Bounds.left, quad.Bounds.top));
+			bottomRight = Math::Max(bottomRight, sf::Vector2f(quad.Bounds.left + quad.Bounds.width, quad.Bounds.top + quad.Bounds.height));
 		}
 
 		Size = bottomRight - topLeft;
-	}
-
-	std::vector<std::pair<ColliderID, sf::FloatRect>> TilemapCollider::Colliding(TilemapCollider& other)
-	{
-		// tilemap vs tilemap collision
-		return std::vector<std::pair<ColliderID, sf::FloatRect>>();
-	}
-
-	std::vector<std::pair<ColliderID, sf::FloatRect>> TilemapCollider::Colliding(BoxCollider& other)
-	{
-		// tilemap vs box collider collision
-		ZoneScoped;
-		std::vector<std::pair<ColliderID, sf::FloatRect>> collisions;
-
-		sf::FloatRect otherGlobalBounds = other.GetGlobalBounds();
-
-		sf::FloatRect globalQuad;
-		for (auto const& quad : m_CollisionGeometry)
-		{
-			globalQuad = m_Transform->GetLocalToWorldTransformMatrix().transformRect(quad.Rect);
-			if (globalQuad.intersects(otherGlobalBounds))
-			{
-				collisions.push_back(std::make_pair(quad.ID, std::move(globalQuad)));
-			}
-		}
-		return collisions;
-	}
-
-	std::vector<std::pair<ColliderID, sf::FloatRect>> TilemapCollider::Colliding(CircleCollider& other)
-	{
-		/*
-		// tilemap vs circle collider collision
-		ZoneScoped;
-
-		sf::FloatRect otherGlobalBounds = other.GetGlobalBounds();
-
-		bool collides = false;
-		sf::FloatRect globalQuad;
-		for (auto const& quad : m_CollisionGeometry)
-		{
-			globalQuad = m_Transform->GetLocalToWorldTransformMatrix().transformRect(quad);
-			if (globalQuad.intersects(otherGlobalBounds))
-			{
-				collides = true;
-				break;
-			}
-		}
-		*/
-		return std::vector<std::pair<ColliderID, sf::FloatRect>>();
 	}
 
 	void TilemapCollider::DrawDebug(const sf::Transform& transform)
 	{
 		for (auto const& rect : m_CollisionGeometry)
 		{
-			auto& transformed = transform.transformRect(rect.Rect);
+			auto& transformed = transform.transformRect(rect.Bounds);
 			DEBUG_DRAW_RECT(sf::Vector2f(transformed.left, transformed.top), sf::Vector2f(transformed.width, transformed.height), sf::Color::Green);
 		}
 	}

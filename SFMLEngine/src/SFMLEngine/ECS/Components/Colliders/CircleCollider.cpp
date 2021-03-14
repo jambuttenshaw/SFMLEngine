@@ -7,7 +7,7 @@
 
 namespace SFMLEngine {
 
-	std::pair<ColliderID, sf::FloatRect> CircleCollider::Colliding(CircleCollider& other)
+	std::pair<bool, sf::FloatRect> CircleCollider::Colliding(CircleCollider& other)
 	{
 		// circle vs circle collision
 		auto& thisGlobalBounds = GetGlobalBounds();
@@ -28,20 +28,15 @@ namespace SFMLEngine {
 			sf::Vector2f toEdge = Radius * Math::Normalize(d);
 			sf::Vector2f halfExtents{ fabsf(Math::Dot(toEdge, {1, 0})), fabsf(Math::Dot(toEdge, {0, 1})) };
 
-			return std::make_pair(GetColliderID(), sf::FloatRect(thisCentre - halfExtents, 2.0f * halfExtents));
+			return std::make_pair(true, sf::FloatRect(thisCentre - halfExtents, 2.0f * halfExtents));
 		}
 		else
-			return std::make_pair(NULL_COLLIDER_ID, sf::FloatRect{});
+			return std::make_pair(false, sf::FloatRect{});
 	}
 
-	std::pair<ColliderID, sf::FloatRect> CircleCollider::Colliding(BoxCollider& other)
+	std::pair<bool, sf::FloatRect> CircleCollider::Colliding(BoxCollider& other)
 	{
-		return std::make_pair(other.Colliding(*this).first == NULL_COLLIDER_ID ? NULL_COLLIDER_ID : GetColliderID(), GetGlobalBounds());
-	}
-
-	std::pair<ColliderID, sf::FloatRect> CircleCollider::Colliding(TilemapCollider& other)
-	{
-		return std::make_pair(NULL_COLLIDER_ID, sf::FloatRect());
+		return std::make_pair(other.Colliding(*this).first, GetGlobalBounds());
 	}
 
 }

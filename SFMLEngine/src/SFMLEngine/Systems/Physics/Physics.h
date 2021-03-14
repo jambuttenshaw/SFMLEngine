@@ -13,7 +13,7 @@ namespace SFMLEngine {
 		static Layer GetLayerMask(Layer layer);
 		
 
-		static std::vector<Collision> CollisionAtPoint(const sf::Vector2f& point, float radius, Layer layerMask = Layer{});
+		// static std::vector<Collision> CollisionAtPoint(const sf::Vector2f& point, float radius, Layer layerMask = Layer{});
 
 	public:
 		static sf::Vector2f Gravity;

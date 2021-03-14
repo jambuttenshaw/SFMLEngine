@@ -60,46 +60,53 @@ namespace SFMLEngine {
 			transform.Position += rigidbody.Position - rigidbody.OldPosition;
 
 
-			// run collision test
-			auto const& allCollisions = m_CollisionSystem->TestCollision(entity);
-
-			for (auto const& collisionTest : allCollisions)
+			// test for collisions against each collider
+			for (auto const& collider : m_CollisionSystem->GetAllColliders())
 			{
-				// there was a collision so we should move the object back and zero its velocity
+				// dont check collision against itself
+				if (collider.second.Owner == entity) continue;
 
-				// the offset is the difference between the transforms position and the colliders position
-				// when we are correcting the position of the entity, we are adjusting the transform's position
-				// so we need to know the difference between the colliders pos and the transforms pos to adjust properly
-				sf::Vector2f offset = transform.Position - sf::Vector2f{ collisionTest.GlobalBounds.left, collisionTest.GlobalBounds.top };
+				// test against the current collider
+				Collision collisionTest = m_CollisionSystem->TestCollision(entity, collider.first);
 
-				// respond to the collision based off of the direction
-				switch (collisionTest.CollisionDirection)
+				// did a collision occur?
+				if (collisionTest.OtherColliderID != NULL_COLLIDER_ID)
 				{
-				case Math::Direction::Right:
-					// set the right of this entity to the left of the other entity
-					transform.Position.x = collisionTest.OtherGlobalBounds.left - collisionTest.GlobalBounds.width + offset.x;
-					rigidbody.Velocity.x = 0;
-					break;
-				case Math::Direction::Left:
-					// set the left of this entity to the right of the other entity
-					transform.Position.x = collisionTest.OtherGlobalBounds.left + collisionTest.OtherGlobalBounds.width + offset.x;
-					rigidbody.Velocity.x = 0;
-					break;
-				case Math::Direction::Down:
-					// set the bottom of this entity to the top of the other entity
-					transform.Position.y = collisionTest.OtherGlobalBounds.top - collisionTest.GlobalBounds.height + offset.y;
-					rigidbody.Velocity.y = 0;
-					break;
-				case Math::Direction::Up:
-					// set the top of this entity to the bottom of the other entity
-					transform.Position.y = collisionTest.OtherGlobalBounds.top + collisionTest.OtherGlobalBounds.height + offset.y;
-					rigidbody.Velocity.y = 0;
-					break;
-				}
+					// there was a collision so we should move the object back and zero its velocity
 
-				// send collision callback to entities
-				CollisionEnterCallback(entity, collisionTest);
-				
+					// the offset is the difference between the transforms position and the colliders position
+					// when we are correcting the position of the entity, we are adjusting the transform's position
+					// so we need to know the difference between the colliders pos and the transforms pos to adjust properly
+					sf::Vector2f offset = transform.Position - sf::Vector2f{ collisionTest.GlobalBounds.left, collisionTest.GlobalBounds.top };
+
+					// respond to the collision based off of the direction
+					switch (collisionTest.CollisionDirection)
+					{
+					case Math::Direction::Right:
+						// set the right of this entity to the left of the other entity
+						transform.Position.x = collisionTest.OtherGlobalBounds.left - collisionTest.GlobalBounds.width + offset.x;
+						rigidbody.Velocity.x = 0;
+						break;
+					case Math::Direction::Left:
+						// set the left of this entity to the right of the other entity
+						transform.Position.x = collisionTest.OtherGlobalBounds.left + collisionTest.OtherGlobalBounds.width + offset.x;
+						rigidbody.Velocity.x = 0;
+						break;
+					case Math::Direction::Down:
+						// set the bottom of this entity to the top of the other entity
+						transform.Position.y = collisionTest.OtherGlobalBounds.top - collisionTest.GlobalBounds.height + offset.y;
+						rigidbody.Velocity.y = 0;
+						break;
+					case Math::Direction::Up:
+						// set the top of this entity to the bottom of the other entity
+						transform.Position.y = collisionTest.OtherGlobalBounds.top + collisionTest.OtherGlobalBounds.height + offset.y;
+						rigidbody.Velocity.y = 0;
+						break;
+					}
+
+					// send collision callback to entities
+					CollisionEnterCallback(entity, collisionTest);
+				}
 			}
 
 			// check to see if we have exited any colliders this frame

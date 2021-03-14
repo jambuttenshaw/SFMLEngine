@@ -5,12 +5,15 @@
 #include "SFMLEngine/ECS/Components/Tilemap.h"
 #include "SFMLEngine/ECS/Components/Colliders/TilemapCollider.h"
 
+#include "SFMLEngine/Systems/Physics/CollisionSystem.h"
+
 
 namespace SFMLEngine {
 
-	void TilemapSystem::Init(Coordinator* coordinator)
+	void TilemapSystem::Init(Coordinator* coordinator, std::shared_ptr<CollisionSystem> collisionSystem)
 	{
 		m_Coordinator = coordinator;
+		m_CollisionSystem = collisionSystem;
 	}
 
 	void TilemapSystem::EntityAddedToSystem(Entity entity)
@@ -47,7 +50,9 @@ namespace SFMLEngine {
 			m_ColliderCache[entity]->DrawDebug(m_TransformCache[entity]->GetLocalToWorldTransformMatrix());
 			if (ComponentModified(m_TilemapCache[entity]))
 			{
+				m_CollisionSystem->DeleteTilemapColliderData(entity);
 				m_ColliderCache[entity]->UpdateGeometry();
+				m_CollisionSystem->AddTilemapColliderData(entity);
 
 				ResetModified(m_TilemapCache[entity]);
 			}

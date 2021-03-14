@@ -230,7 +230,7 @@ namespace SFMLEngine
 
             // Tilemap system
             m_TilemapSystem = m_Coordinator->RegisterSystem<TilemapSystem>();
-            m_TilemapSystem->Init(m_Coordinator);
+            m_TilemapSystem->Init(m_Coordinator, m_CollisionSystem);
             {
                 Signature signature;
                 signature.set(m_Coordinator->GetComponentType<Transform>());

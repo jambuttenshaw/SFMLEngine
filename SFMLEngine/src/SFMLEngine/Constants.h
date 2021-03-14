@@ -77,8 +77,8 @@ namespace SFMLEngine {
 	// COLLISION
 	// ---------
 
-	using ColliderID = uint16_t;
-	const ColliderID MAX_COLLIDERS = 5000;
+	using ColliderID = uint32_t;
+	const ColliderID MAX_COLLIDERS = 10000;
 	const ColliderID NULL_COLLIDER_ID = MAX_COLLIDERS + 1;
 
 }
