@@ -14,6 +14,57 @@ namespace SFMLEngine {
 	size_t CollisionSystem::s_LivingColliderCount = 0;
 
 
+
+
+	Collision::Collision(Entity otherEntity, const sf::FloatRect& thisBounds, const sf::FloatRect& otherBounds, ColliderID otherColliderID)
+		: Other(otherEntity), GlobalBounds(thisBounds), OtherGlobalBounds(otherBounds), OtherColliderID(otherColliderID)
+	{
+		// work out the direction the collision occurred
+
+		// the collision direction can be considered to be the direction from some point in this entity's collider
+		// to the centre of the intersection rectangle
+
+		// the difficulty is choosing which point to use inside this entity
+		// the way I overcame this was by matching the major axis of the intersection to the same axis on this entity's collider
+		// that way the direction from this entity to the intersection will always be correct
+
+		// get the intersection rect and its center
+		sf::FloatRect intersection = Math::Intersection(GlobalBounds, OtherGlobalBounds);
+		sf::Vector2f collisionCentroid = Math::Centroid(intersection);
+
+		// match the major axis  of this entity's bounds to the intersection and find its center
+		sf::FloatRect matched = MatchMajorAxis(GlobalBounds, intersection);
+		sf::Vector2f thisCentroid = Math::Centroid(matched);
+
+		// the collision direction can now be considered to be the direction between these 2 points
+		CollisionDirection = Math::GetDirection(collisionCentroid - thisCentroid);
+	}
+
+	sf::FloatRect Collision::MatchMajorAxis(const sf::FloatRect& toBeMatched, const sf::FloatRect& toMatch)
+	{
+		// create a copy
+		sf::FloatRect newRect = toBeMatched;
+
+		if (toMatch.width > toMatch.height)
+		{
+			// the x axis is the major axis of the rect
+			newRect.left = toMatch.left;
+			newRect.width = toMatch.width;
+		}
+		else
+		{
+			// the y axis is the major axis of the rect
+			newRect.top = toMatch.top;
+			newRect.height = toMatch.height;
+		}
+
+		return newRect;
+	}
+
+
+
+
+
 	void CollisionSystem::Init(Coordinator* coordinator)
 	{
 		m_Coordinator = coordinator;
@@ -40,6 +91,7 @@ namespace SFMLEngine {
 	{
 
 	}
+
 
 	const std::vector<Collision> CollisionSystem::TestCollision(Entity entity)
 	{

@@ -56,13 +56,13 @@ namespace SFMLEngine {
 	{
 		float dirX = Dot(Normalize(a), UnitVector::Right);
 		float dirY = Dot(Normalize(a), UnitVector::Down);
-		if (fabsf(dirX) > fabsf(dirY))
+		if (fabsf(dirY) >= fabsf(dirX))
 		{
-			return dirX > 0 ? Direction::Right : Direction::Left;
+			return dirY > 0 ? Direction::Down : Direction::Up;
 		}
 		else
 		{
-			return dirY > 0 ? Direction::Down : Direction::Up;
+			return dirX > 0 ? Direction::Right : Direction::Left;
 		}
 	}
 	
