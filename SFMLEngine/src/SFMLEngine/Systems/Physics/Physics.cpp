@@ -4,8 +4,6 @@
 #include "SFMLEngine/ECS/Components/Colliders/CircleCollider.h"
 #include "SFMLEngine/ECS/Components/Transform.h"
 
-#include "SFMLEngine/LayerManager.h"
-
 #include "SFMLEngine/DebugTools.h"
 
 namespace SFMLEngine {
@@ -22,14 +20,33 @@ namespace SFMLEngine {
 		// set up the default layer masks
 		for (auto const& layer : LayerManager::GetAllLayers())
 		{
-			Layer newMask = Layer{}.set(1);
-			s_LayerMasks.insert(std::make_pair(layer, newMask));
+			AddPhysicsLayer(layer);
 		}
 	}
 
-	Layer Physics::GetLayerMask(Layer layer)
+	void Physics::AddPhysicsLayer(Layer newLayer)
+	{
+		Layer newMask = Layer{}.set();
+		s_LayerMasks.insert(std::make_pair(newLayer, newMask));
+	}
+
+	Layer Physics::GetPhysicsLayerMask(Layer layer)
 	{
 		return s_LayerMasks[layer];
+	}
+
+	void Physics::AllowCollisions(Layer layer1, Layer layer2)
+	{
+		// set Layer2's bit in Layer1's mask, and vice-versa
+		s_LayerMasks[layer1] |= layer2;
+		s_LayerMasks[layer2] |= layer1;
+	}
+
+	void Physics::DisallowCollisions(Layer layer1, Layer layer2)
+	{
+		// reset Layer2's but in Layer1's mask, and vice-versa
+		s_LayerMasks[layer1] &= ~layer2;
+		s_LayerMasks[layer2] &= ~layer1;
 	}
 	
 	/*

@@ -24,6 +24,7 @@ public:
 		{
 
 			m_Tilemap = CreateEntity();
+			SetEntityLayer(m_Tilemap, "Ground");
 
 			AddComponent(m_Tilemap, Transform{ sf::Vector2f(0, 0) });
 			
@@ -79,18 +80,20 @@ public:
 		
 
 		{
-			// creating a second entity
-			m_PhysicsEntity = CreateEntity("Player", "Player", "Player");
+			// create the player
+			// its name, tag and layer should all be Player
+			m_Player = CreateEntity("Player", "Player", "Player");
 
 			// give the entity a transform
-			AddComponent(m_PhysicsEntity, Transform{ sf::Vector2f(0, -200) });
+			AddComponent(m_Player, Transform{ sf::Vector2f(0, -200) });
+
 			// add a rigidbody so this entity is affected by physics
-			AddComponent(m_PhysicsEntity, Rigidbody{ });
-			AddComponent(m_PhysicsEntity, BoxCollider{ sf::Vector2f(17, 48), sf::Vector2f(8, 16) });
-			AddComponent(m_PhysicsEntity, ColliderInfo{ ColliderType::Box });
+			AddComponent(m_Player, Rigidbody{ });
+			AddComponent(m_Player, BoxCollider{ sf::Vector2f(17, 48), sf::Vector2f(8, 16) });
+			AddComponent(m_Player, ColliderInfo{ ColliderType::Box });
 
 			// add the sprite renderer component
-			AddComponent(m_PhysicsEntity, SpriteRenderer{
+			AddComponent(m_Player, SpriteRenderer{
 				Texture::Create("assets/textures/characterSheet.png"),
 				Material::Create("Lit"),
 				1,
@@ -136,17 +139,17 @@ public:
 			animator.AddAnimation(punch);
 
 			animator.SetCurrentAnimation("idle");
-			AddComponent(m_PhysicsEntity, animator);
+			AddComponent(m_Player, animator);
 			
 
-			AddNativeScript<PlayerController>(m_PhysicsEntity);
+			AddNativeScript<PlayerController>(m_Player);
 		}
 
 		{
 			m_Light = CreateEntity();
 
 			// light is a child transform of physics entity
-			AddComponent(m_Light, Transform{ sf::Vector2f(16, 32), & GetComponent<Transform>(m_PhysicsEntity) });
+			AddComponent(m_Light, Transform{ sf::Vector2f(16, 32), & GetComponent<Transform>(m_Player) });
 			AddComponent(m_Light, PointLight{ 1.3f, 100.0f, sf::Color(219, 113, 114, 255) });
 
 			AddNativeScript<ScrollToControlLight>(m_Light);
@@ -169,6 +172,7 @@ public:
 
 			AddComponent(m_Light2, DirectionalLight{ 0, 0, 0.6f, sf::Color{94, 62, 180, 255}, true });
 		}
+
 	}
 
 private:
@@ -177,7 +181,7 @@ private:
 
 	Entity m_Camera = INVALID_ENTITY_ID;
 
-	Entity m_PhysicsEntity = INVALID_ENTITY_ID;
+	Entity m_Player = INVALID_ENTITY_ID;
 
 	Entity m_Light = INVALID_ENTITY_ID;
 	Entity m_Light2 = INVALID_ENTITY_ID;

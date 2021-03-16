@@ -146,24 +146,30 @@ namespace SFMLEngine {
 
 	const Collision CollisionSystem::TestCollision(Entity entity, ColliderID other)
 	{
-		auto& colliderInfo = m_Coordinator->GetComponent<ColliderInfo>(entity);
-		switch (colliderInfo.Type)
+		// make sure entity and other are in layers that can collide
+		Layer entityLayer = m_Coordinator->GetComponent<Identity>(entity).EntityLayer;
+		Layer otherLayer = m_Coordinator->GetComponent<Identity>(m_ColliderMap[other].Owner).EntityLayer;
+
+		if ((entityLayer & Physics::GetPhysicsLayerMask(otherLayer)) == entityLayer)
 		{
-		case ColliderType::Invalid:	SFMLE_CORE_ASSERT(0, "Invalid collider type!"); break;
-		case ColliderType::Box:
-			return RunCollisionTest(m_Coordinator->GetComponent<BoxCollider>(entity), other);
-			break;
+			auto& colliderInfo = m_Coordinator->GetComponent<ColliderInfo>(entity);
+			switch (colliderInfo.Type)
+			{
+			case ColliderType::Invalid:	SFMLE_CORE_ASSERT(0, "Invalid collider type!"); break;
+			case ColliderType::Box:
+				return RunCollisionTest(m_Coordinator->GetComponent<BoxCollider>(entity), other);
+				break;
 
-		case ColliderType::Circle:
-			return RunCollisionTest(m_Coordinator->GetComponent<CircleCollider>(entity), other);
-			break;
+			case ColliderType::Circle:
+				return RunCollisionTest(m_Coordinator->GetComponent<CircleCollider>(entity), other);
+				break;
 
-		case ColliderType::Tilemap: SFMLE_CORE_ASSERT(0, "Simulating physics on tilemaps is currently not supported."); break;
-		default:					SFMLE_CORE_ASSERT(0, "Unknown collider type!"); break;
+			case ColliderType::Tilemap: SFMLE_CORE_ASSERT(0, "Simulating physics on tilemaps is currently not supported."); break;
+			default:					SFMLE_CORE_ASSERT(0, "Unknown collider type!"); break;
+			}
 		}
 
-
-		// this should never be reached
+		// no collision was tested
 		return Collision{ INVALID_ENTITY_ID, sf::FloatRect(), sf::FloatRect(), NULL_COLLIDER_ID };
 	}
 

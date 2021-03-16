@@ -2,13 +2,15 @@
 
 #include "Core.h"
 
+#include "SFMLEngine/Systems/Physics/Physics.h"
+
 
 namespace SFMLEngine {
 
 	uint8_t LayerManager::s_LayerCount = 0;
 	std::unordered_map<std::string, Layer> LayerManager::s_Layers;
 
-	Layer LayerManager::CreateLayer(const std::string& layerName)
+	Layer LayerManager::LayerFromString(const std::string& layerName)
 	{
 		// make sure we dont have too many layers once this new one is created
 		SFMLE_CORE_ASSERT(s_LayerCount + 1 < MAX_LAYERS, "Too many layers!");
@@ -30,7 +32,10 @@ namespace SFMLEngine {
 
 		// insert into the layers dict
 		s_Layers.insert(std::make_pair(layerName, newLayer));
-			
+		
+		// register this new layer with the physics system
+		Physics::AddPhysicsLayer(newLayer);
+
 		// return the new layer
 		return newLayer;
 	}
@@ -44,6 +49,19 @@ namespace SFMLEngine {
 		// return the layer
 		// this will be an empty layer if it doesnt exist
 		return layer.second;
+	}
+
+	const std::string& LayerManager::GetLayerName(Layer layer)
+	{
+		for (auto const& pair : s_Layers)
+		{
+			if (pair.second == layer)
+				return pair.first;
+		}
+
+		SFMLE_CORE_ASSERT(0, "Failed to retrieve layer name.");
+
+		return std::string();
 	}
 
 	std::vector<Layer> LayerManager::GetAllLayers()

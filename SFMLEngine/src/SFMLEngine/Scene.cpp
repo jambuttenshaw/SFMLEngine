@@ -54,7 +54,7 @@ namespace SFMLEngine {
 		m_EntityRegistry->insert(newEntity);
 
 		// add an identity component
-		Identity id{ name, tag, LayerManager::CreateLayer(layerName) };
+		Identity id{ name, tag, LayerManager::LayerFromString(layerName) };
 		AddComponent(newEntity, id);
 
 		return newEntity;
@@ -64,6 +64,38 @@ namespace SFMLEngine {
 	{ 
 		m_EntityRegistry->erase(entity);
 		m_Coordinator->DestroyEntity(entity); 
+	}
+
+
+	void Scene::SetEntityName(Entity entity, const std::string& name)
+	{
+		Identity& identityComponent = GetComponent<Identity>(entity);
+		identityComponent.Name = name;
+	}
+	const std::string& Scene::GetEntityName(Entity entity)
+	{
+		return GetComponent<Identity>(entity).Name;
+	}
+
+
+	void Scene::SetEntityTag(Entity entity, const std::string& tag)
+	{
+		Identity& identityComponent = GetComponent<Identity>(entity);
+		identityComponent.Tag = tag;
+	}
+	const std::string& Scene::GetEntityTag(Entity entity)
+	{
+		return GetComponent<Identity>(entity).Tag;
+	}
+
+	void Scene::SetEntityLayer(Entity entity, const std::string& layerName)
+	{
+		Identity& identityComponent = GetComponent<Identity>(entity);
+		identityComponent.EntityLayer = LayerManager::LayerFromString(layerName);
+	}
+	const std::string& Scene::GetEntityLayer(Entity entity)
+	{
+		return LayerManager::GetLayerName(GetComponent<Identity>(entity).EntityLayer);
 	}
 
 

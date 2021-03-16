@@ -12,8 +12,9 @@ namespace SFMLEngine {
 	public:
 
 		// layers
-		static Layer CreateLayer(const std::string& layerName);
+		static Layer LayerFromString(const std::string& layerName);
 		static Layer GetLayer(const std::string& layerName);
+		static const std::string& GetLayerName(Layer layer);
 		static std::vector<Layer> GetAllLayers();
 
 		// layer masks

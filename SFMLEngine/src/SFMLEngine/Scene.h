@@ -60,6 +60,17 @@ namespace SFMLEngine {
 		T& GetNativeScript(Entity entity) { return m_ScriptableEntitySystem->GetNativeScript<T>(entity); }
 
 
+		// HANDIER ENTITY ID FUNCTIONS
+		void SetEntityName(Entity entity, const std::string& name);
+		const std::string& GetEntityName(Entity entity);
+
+		void SetEntityTag(Entity entity, const std::string& tag);
+		const std::string& GetEntityTag(Entity entity);
+
+		void SetEntityLayer(Entity entity, const std::string& layerName);
+		const std::string& GetEntityLayer(Entity entity);
+
+
 		// ENTITY RETRIEVAL
 		const std::vector<Entity>& GetEntitiesWithTag(const std::string& tag) { return m_IdentitySystem->GetEntitiesWithTag(tag); }
 
