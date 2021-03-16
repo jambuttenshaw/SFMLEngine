@@ -20,8 +20,12 @@ namespace SFMLEngine {
 
 		virtual void Update(Timestep ts) {}
 
-		virtual void OnCollisionEnter(const Collision& collisionData) {}
-		virtual void OnCollisionExit(Entity other) {}
+		virtual void OnColliderEnter(const Collision& collisionData) {}
+		virtual void OnColliderExit(Entity other) {}
+
+		virtual void OnTriggerEnter(const Collision& collisionData) {}
+		virtual void OnTriggerExit(Entity other) {}
+
 
 		// components
 		template<typename T>

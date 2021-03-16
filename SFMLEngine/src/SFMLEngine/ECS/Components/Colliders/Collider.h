@@ -37,6 +37,12 @@ namespace SFMLEngine {
 	{
 		friend class System;
 
+
+		// whether the collider is just used as an event trigger
+		// or whether it is also used for physics
+		bool IsTrigger = false;
+
+
 		virtual ~Collider() {};
 
 		void Init();

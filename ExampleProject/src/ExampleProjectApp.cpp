@@ -173,6 +173,25 @@ public:
 			AddComponent(m_Light2, DirectionalLight{ 0, 0, 0.6f, sf::Color{94, 62, 180, 255}, true });
 		}
 
+
+		{
+			m_Door = CreateEntity();
+
+			AddComponent(m_Door, Transform{ { -64, -96 } });
+
+			BoxCollider collider{ { 32, 68 }, { 0, 28 } };
+			collider.IsTrigger = true;
+
+			AddComponent(m_Door, collider);
+			AddComponent(m_Door, ColliderInfo{ ColliderType::Box });
+
+			AddComponent(m_Door, SpriteRenderer{
+				Texture::Create("assets/textures/door.png"),
+				Material::Create("Lit"),
+				0,
+				Texture::Create("assets/textures/door_n.png") });
+		}
+
 	}
 
 private:
@@ -182,6 +201,7 @@ private:
 	Entity m_Camera = INVALID_ENTITY_ID;
 
 	Entity m_Player = INVALID_ENTITY_ID;
+	Entity m_Door = INVALID_ENTITY_ID;
 
 	Entity m_Light = INVALID_ENTITY_ID;
 	Entity m_Light2 = INVALID_ENTITY_ID;

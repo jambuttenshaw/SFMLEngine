@@ -19,13 +19,17 @@ namespace SFMLEngine {
 	struct Collision
 	{
 		Math::Direction CollisionDirection;
+		sf::Vector2f Centroid;
+
 		Entity Other;
 		sf::FloatRect GlobalBounds; // the boundaries of this objects collider
 		sf::FloatRect OtherGlobalBounds; // the boundaries of the object the collision occurred with
 
 		ColliderID OtherColliderID;
 
-		Collision(Entity otherEntity, const sf::FloatRect& thisBounds, const sf::FloatRect& otherBounds, ColliderID otherColliderID);
+		bool Trigger;
+
+		Collision(Entity otherEntity, const sf::FloatRect& thisBounds, const sf::FloatRect& otherBounds, ColliderID otherColliderID, bool trigger = false);
 		
 	private:
 		sf::FloatRect MatchMajorAxis(const sf::FloatRect& toBeMatched, const sf::FloatRect& toMatch);
@@ -96,7 +100,8 @@ namespace SFMLEngine {
 					otherCollider.Owner,
 					collider.GetGlobalBounds(),
 					collisionData.second,
-					other
+					other,
+					otherCollider.ColliderPtr->IsTrigger
 				};
 			}
 			else

@@ -200,7 +200,9 @@ namespace SFMLEngine {
 		for (auto const& rect : m_CollisionGeometry)
 		{
 			auto& transformed = transform.transformRect(rect.Bounds);
-			DEBUG_DRAW_RECT(sf::Vector2f(transformed.left, transformed.top), sf::Vector2f(transformed.width, transformed.height), sf::Color::Green);
+			DEBUG_DRAW_RECT(sf::Vector2f(transformed.left, transformed.top),
+				sf::Vector2f(transformed.width, transformed.height),
+				IsTrigger ? DebugTools::TRIGGER_COLOR : DebugTools::COLLIDER_COLOR);
 		}
 	}
 

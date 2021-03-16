@@ -56,12 +56,12 @@ void PlayerController::Update(Timestep ts)
 }
 
 
-void PlayerController::OnCollisionEnter(const Collision& collision)
+void PlayerController::OnColliderEnter(const Collision& collision)
 {
 	if (collision.CollisionDirection == Math::Direction::Down)
 		m_OnGround = true;
 }
-void PlayerController::OnCollisionExit(Entity other)
+void PlayerController::OnColliderExit(Entity other)
 {
 	m_OnGround = false;
 }

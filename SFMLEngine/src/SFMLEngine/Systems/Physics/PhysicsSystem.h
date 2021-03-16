@@ -16,6 +16,13 @@ namespace SFMLEngine {
 	class PhysicsSystem : public System
 	{
 	public:
+		struct CollisionCache
+		{
+			Entity Owner;
+			bool Trigger;
+		};
+
+
 		PhysicsSystem() {}
 		~PhysicsSystem() = default;
 
@@ -27,13 +34,13 @@ namespace SFMLEngine {
 		void Update(Timestep ts);
 
 		void CollisionEnterCallback(Entity entity, const Collision& collisionData);
-		void CollisionExitCallback(Entity entity, ColliderID otherCollider);
+		void CollisionExitCallback(Entity entity, const CollisionCache& collision);
 
 	private:
 		Coordinator* m_Coordinator = nullptr;
 		std::shared_ptr<CollisionSystem> m_CollisionSystem;
 
-		std::unordered_map<Entity, std::set<ColliderID>> m_Collisions;
+		std::unordered_map<Entity, std::unordered_map<ColliderID, CollisionCache>> m_Collisions;
 		std::set<ColliderID> m_ThisFrameCollisions;
 	};
 

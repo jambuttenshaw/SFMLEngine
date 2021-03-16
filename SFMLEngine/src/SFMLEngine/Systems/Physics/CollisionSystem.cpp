@@ -16,8 +16,8 @@ namespace SFMLEngine {
 
 
 
-	Collision::Collision(Entity otherEntity, const sf::FloatRect& thisBounds, const sf::FloatRect& otherBounds, ColliderID otherColliderID)
-		: Other(otherEntity), GlobalBounds(thisBounds), OtherGlobalBounds(otherBounds), OtherColliderID(otherColliderID)
+	Collision::Collision(Entity otherEntity, const sf::FloatRect& thisBounds, const sf::FloatRect& otherBounds, ColliderID otherColliderID, bool trigger)
+		: Other(otherEntity), GlobalBounds(thisBounds), OtherGlobalBounds(otherBounds), OtherColliderID(otherColliderID), Trigger(trigger)
 	{
 		// work out the direction the collision occurred
 
@@ -30,14 +30,14 @@ namespace SFMLEngine {
 
 		// get the intersection rect and its center
 		sf::FloatRect intersection = Math::Intersection(GlobalBounds, OtherGlobalBounds);
-		sf::Vector2f collisionCentroid = Math::Centroid(intersection);
+		Centroid = Math::Centroid(intersection);
 
 		// match the major axis  of this entity's bounds to the intersection and find its center
 		sf::FloatRect matched = MatchMajorAxis(GlobalBounds, intersection);
 		sf::Vector2f thisCentroid = Math::Centroid(matched);
 
 		// the collision direction can now be considered to be the direction between these 2 points
-		CollisionDirection = Math::GetDirection(collisionCentroid - thisCentroid);
+		CollisionDirection = Math::GetDirection(Centroid - thisCentroid);
 	}
 
 	sf::FloatRect Collision::MatchMajorAxis(const sf::FloatRect& toBeMatched, const sf::FloatRect& toMatch)
@@ -146,11 +146,13 @@ namespace SFMLEngine {
 
 	const Collision CollisionSystem::TestCollision(Entity entity, ColliderID other)
 	{
+		auto const& colliderData = m_ColliderMap[other];
+
 		// make sure entity and other are in layers that can collide
 		Layer entityLayer = m_Coordinator->GetComponent<Identity>(entity).EntityLayer;
-		Layer otherLayer = m_Coordinator->GetComponent<Identity>(m_ColliderMap[other].Owner).EntityLayer;
+		Layer otherLayer = m_Coordinator->GetComponent<Identity>(colliderData.Owner).EntityLayer;
 
-		if ((entityLayer & Physics::GetPhysicsLayerMask(otherLayer)) == entityLayer)
+		if ((entityLayer & Physics::GetPhysicsLayerMask(otherLayer)) == entityLayer || (colliderData.ColliderPtr->IsTrigger))
 		{
 			auto& colliderInfo = m_Coordinator->GetComponent<ColliderInfo>(entity);
 			switch (colliderInfo.Type)

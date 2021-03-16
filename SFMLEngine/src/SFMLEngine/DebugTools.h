@@ -37,6 +37,11 @@ namespace SFMLEngine {
 		static void ClearHUDView();
 		static void DrawAllHUDView();
 
+	public:
+
+		static inline const sf::Color COLLIDER_COLOR{ 0, 255, 0, 255 };
+		static inline const sf::Color TRIGGER_COLOR{ 255, 255, 0, 255 };
+
 	private:
 		static sf::RenderWindow* s_WindowHandle;
 

@@ -10,8 +10,11 @@ public:
 	void Start() override;
 	void Update(Timestep ts) override;
 	
-	void OnCollisionEnter(const Collision& collision) override;
-	void OnCollisionExit(Entity other) override;
+	void OnColliderEnter(const Collision& collision) override;
+	void OnColliderExit(Entity other) override;
+
+	void OnTriggerEnter(const Collision& collision) override { LOG_TRACE("Entered door"); }
+	void OnTriggerExit(Entity other) override { LOG_TRACE("Left door"); }
 
 	void Move(Timestep ts);
 	void Jump(Timestep ts);

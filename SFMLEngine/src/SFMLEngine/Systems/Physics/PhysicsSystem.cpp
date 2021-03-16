@@ -24,7 +24,7 @@ namespace SFMLEngine {
 
 		// create an entry in the collisions map
 		// just now it maps to an empty set
-		m_Collisions.insert(std::make_pair(entity, std::set<ColliderID>{}));
+		m_Collisions.insert(std::make_pair(entity, std::unordered_map<ColliderID, CollisionCache>{}));
 	}
 
 	void PhysicsSystem::EntityRemovedFromSystem(Entity entity)
@@ -72,37 +72,45 @@ namespace SFMLEngine {
 				// did a collision occur?
 				if (collisionTest.OtherColliderID != NULL_COLLIDER_ID)
 				{
-					// there was a collision so we should move the object back and zero its velocity
-
-					// the offset is the difference between the transforms position and the colliders position
-					// when we are correcting the position of the entity, we are adjusting the transform's position
-					// so we need to know the difference between the colliders pos and the transforms pos to adjust properly
-					sf::Vector2f offset = transform.Position - sf::Vector2f{ collisionTest.GlobalBounds.left, collisionTest.GlobalBounds.top };
-
-					// respond to the collision based off of the direction
-					switch (collisionTest.CollisionDirection)
+					// did we collide with a trigger?
+					// if we did, we only want to send callbacks
+					// we do not want to adjust physics
+					if (!collisionTest.Trigger)
 					{
-					case Math::Direction::Right:
-						// set the right of this entity to the left of the other entity
-						transform.Position.x = collisionTest.OtherGlobalBounds.left - collisionTest.GlobalBounds.width + offset.x;
-						rigidbody.Velocity.x = 0;
-						break;
-					case Math::Direction::Left:
-						// set the left of this entity to the right of the other entity
-						transform.Position.x = collisionTest.OtherGlobalBounds.left + collisionTest.OtherGlobalBounds.width + offset.x;
-						rigidbody.Velocity.x = 0;
-						break;
-					case Math::Direction::Down:
-						// set the bottom of this entity to the top of the other entity
-						transform.Position.y = collisionTest.OtherGlobalBounds.top - collisionTest.GlobalBounds.height + offset.y;
-						rigidbody.Velocity.y = 0;
-						break;
-					case Math::Direction::Up:
-						// set the top of this entity to the bottom of the other entity
-						transform.Position.y = collisionTest.OtherGlobalBounds.top + collisionTest.OtherGlobalBounds.height + offset.y;
-						rigidbody.Velocity.y = 0;
-						break;
+
+						// there was a collision so we should move the object back and zero its velocity
+
+						// the offset is the difference between the transforms position and the colliders position
+						// when we are correcting the position of the entity, we are adjusting the transform's position
+						// so we need to know the difference between the colliders pos and the transforms pos to adjust properly
+						sf::Vector2f offset = transform.Position - sf::Vector2f{ collisionTest.GlobalBounds.left, collisionTest.GlobalBounds.top };
+
+						// respond to the collision based off of the direction
+						switch (collisionTest.CollisionDirection)
+						{
+						case Math::Direction::Right:
+							// set the right of this entity to the left of the other entity
+							transform.Position.x = collisionTest.OtherGlobalBounds.left - collisionTest.GlobalBounds.width + offset.x;
+							rigidbody.Velocity.x = 0;
+							break;
+						case Math::Direction::Left:
+							// set the left of this entity to the right of the other entity
+							transform.Position.x = collisionTest.OtherGlobalBounds.left + collisionTest.OtherGlobalBounds.width + offset.x;
+							rigidbody.Velocity.x = 0;
+							break;
+						case Math::Direction::Down:
+							// set the bottom of this entity to the top of the other entity
+							transform.Position.y = collisionTest.OtherGlobalBounds.top - collisionTest.GlobalBounds.height + offset.y;
+							rigidbody.Velocity.y = 0;
+							break;
+						case Math::Direction::Up:
+							// set the top of this entity to the bottom of the other entity
+							transform.Position.y = collisionTest.OtherGlobalBounds.top + collisionTest.OtherGlobalBounds.height + offset.y;
+							rigidbody.Velocity.y = 0;
+							break;
+						}
 					}
+
 
 					// send collision callback to entities
 					CollisionEnterCallback(entity, collisionTest);
@@ -111,15 +119,15 @@ namespace SFMLEngine {
 
 			// check to see if we have exited any colliders this frame
 			std::set<ColliderID> toRemove;
-			for (ColliderID colliderID : m_Collisions[entity])
+			for (auto const& collision : m_Collisions[entity])
 			{
-				if (m_ThisFrameCollisions.find(colliderID) == m_ThisFrameCollisions.end())
+				if (m_ThisFrameCollisions.find(collision.first) == m_ThisFrameCollisions.end())
 				{
 					// we have previously logged this collision, but it did not occur again this frame
 					// we must have exited the collider
 					// send callback
-					CollisionExitCallback(entity, colliderID);
-					toRemove.insert(colliderID);
+					CollisionExitCallback(entity, collision.second);
+					toRemove.insert(collision.first);
 				}
 			}
 			for (ColliderID c : toRemove) m_Collisions[entity].erase(c);
@@ -144,7 +152,7 @@ namespace SFMLEngine {
 		if (entry.find(collisionData.OtherColliderID) == entry.end())
 		{
 			// insert this collision into the set
-			entry.insert(collisionData.OtherColliderID);
+			entry.insert(std::make_pair(collisionData.OtherColliderID, CollisionCache{ collisionData.Other, collisionData.Trigger }));
 
 
 			// run collision callback
@@ -153,13 +161,16 @@ namespace SFMLEngine {
 				auto& scriptsComponent = m_Coordinator->GetComponent<NativeScripts>(entity);
 				for (auto& script : scriptsComponent.Scripts)
 				{
-					script.second->OnCollisionEnter(collisionData);
+					if (collisionData.Trigger)
+						script.second->OnTriggerEnter(collisionData);
+					else
+						script.second->OnColliderEnter(collisionData);
 				}
 			}
 		}
 	}
 
-	void PhysicsSystem::CollisionExitCallback(Entity entity, ColliderID otherColliderID)
+	void PhysicsSystem::CollisionExitCallback(Entity entity, const CollisionCache& collision)
 	{
 		ZoneScoped;
 
@@ -171,7 +182,10 @@ namespace SFMLEngine {
 			auto& scriptsComponent = m_Coordinator->GetComponent<NativeScripts>(entity);
 			for (auto& script : scriptsComponent.Scripts)
 			{
-				script.second->OnCollisionExit(otherColliderID);
+				if (collision.Trigger)
+					script.second->OnTriggerExit(collision.Owner);
+				else
+					script.second->OnColliderExit(collision.Owner);
 			}
 		}
 	}
