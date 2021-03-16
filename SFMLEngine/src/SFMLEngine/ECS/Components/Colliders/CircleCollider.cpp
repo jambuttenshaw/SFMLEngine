@@ -9,34 +9,53 @@ namespace SFMLEngine {
 
 	std::pair<bool, sf::FloatRect> CircleCollider::Colliding(CircleCollider& other)
 	{
-		// circle vs circle collision
-		auto& thisGlobalBounds = GetGlobalBounds();
-		sf::Vector2f thisCentre{ thisGlobalBounds.left + Radius, thisGlobalBounds.top + Radius };
+		sf::FloatRect globalBounds = GetGlobalBounds();
+		sf::FloatRect otherGlobalBounds = other.GetGlobalBounds();
 
-		auto& otherGlobalBounds = other.GetGlobalBounds();
-		sf::Vector2f otherCentre{ otherGlobalBounds.left + other.Radius, otherGlobalBounds.top + other.Radius };
-
-		sf::Vector2f d = otherCentre - thisCentre;
-		// they collide if the distance between the centres is less than the sum of their radii
-		bool collision = Math::SquareMagnitude(d) <= Radius * Radius + other.Radius * other.Radius;
-
-		if (collision)
+		if (globalBounds.intersects(otherGlobalBounds))
 		{
-			// compute a bounding box that is particular to the point on the edge of the circle
-			// that the collision occurred
-			// since an AABB wont accurately represent the shape of the circle
-			sf::Vector2f toEdge = Radius * Math::Normalize(d);
-			sf::Vector2f halfExtents{ fabsf(Math::Dot(toEdge, {1, 0})), fabsf(Math::Dot(toEdge, {0, 1})) };
+			float r = globalBounds.width * 0.5f;
+			sf::Vector2f centre{ globalBounds.left + r, globalBounds.top + r };
 
-			return std::make_pair(true, sf::FloatRect(thisCentre - halfExtents, 2.0f * halfExtents));
+			float r2 = otherGlobalBounds.width * 0.5f;
+			sf::Vector2f centre2{ otherGlobalBounds.left + r, otherGlobalBounds.top + r };
+
+			sf::Vector2f delta{ centre2 - centre };
+			if (Math::SquareMagnitude(delta) < (r * r + r2 * r2))
+			{
+				sf::Vector2f halfExtents{ Math::Normalize(delta) * r };
+				return std::make_pair(true, sf::FloatRect{ centre + halfExtents, 2.0f * Math::Abs(halfExtents) });
+			}
 		}
-		else
-			return std::make_pair(false, sf::FloatRect{});
+
+		return std::make_pair(false, sf::FloatRect{});
 	}
 
 	std::pair<bool, sf::FloatRect> CircleCollider::Colliding(BoxCollider& other)
 	{
-		return std::make_pair(other.Colliding(*this).first, GetGlobalBounds());
+		sf::FloatRect otherBounds{ other.GetGlobalBounds() };
+
+		sf::Vector2f otherTopLeft{ otherBounds.left, otherBounds.top };
+		sf::Vector2f otherSize{ otherBounds.width, otherBounds.height };
+
+		sf::FloatRect globalBounds = GetGlobalBounds();
+		float r = 0.5f * globalBounds.width;
+		sf::Vector2f centre{globalBounds.left + r, globalBounds.top + r};
+
+		sf::Vector2f delta{ centre - Math::Clamp(centre, otherTopLeft, otherTopLeft + otherSize) };
+
+		if (Math::SquareMagnitude(delta) < r * r)
+		{
+			// collision occurred
+			// get a fitting bounds for this collision
+			sf::Vector2f halfExtents{ Math::Normalize(delta) * r };
+			return std::make_pair(true, sf::FloatRect{ centre + halfExtents, 2.0f * Math::Abs(halfExtents) });
+		}
+		else
+		{
+			return std::make_pair(false, sf::FloatRect{});
+		}
+
 	}
 
 }

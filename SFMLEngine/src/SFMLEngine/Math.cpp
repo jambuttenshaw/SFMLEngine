@@ -31,6 +31,10 @@ namespace SFMLEngine {
 	{
 		return sf::Vector2f(std::min(a.x, b.x), std::max(a.y, b.y));
 	}
+	sf::Vector2f Math::Abs(const sf::Vector2f& a)
+	{
+		return sf::Vector2f(fabsf(a.x), fabsf(a.y));
+	}
 	float Math::Dot(const sf::Vector2f& a, const sf::Vector2f& b)
 	{
 		return a.x * b.x + a.y * b.y;
@@ -74,6 +78,10 @@ namespace SFMLEngine {
 	sf::Vector3f Math::Min(const sf::Vector3f& a, const sf::Vector3f& b)
 	{
 		return sf::Vector3f(std::min(a.x, b.x), std::min(a.y, b.y), std::min(a.z, b.z));
+	}
+	sf::Vector3f Math::Abs(const sf::Vector3f& a)
+	{
+		return sf::Vector3f(fabsf(a.x), fabsf(a.y), fabsf(a.z));
 	}
 	float Math::Dot(const sf::Vector3f& a, const sf::Vector3f& b)
 	{

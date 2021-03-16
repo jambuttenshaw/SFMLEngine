@@ -76,6 +76,9 @@ namespace SFMLEngine {
 		static sf::Vector2f Min(const sf::Vector2f& a, const sf::Vector2f& b);
 		static sf::Vector3f Min(const sf::Vector3f& a, const sf::Vector3f& b);
 
+		static sf::Vector2f Abs(const sf::Vector2f& a);
+		static sf::Vector3f Abs(const sf::Vector3f& a);
+
 		static float Dot(const sf::Vector2f& a, const sf::Vector2f& b);
 		static float Dot(const sf::Vector3f& a, const sf::Vector3f& b);
 
