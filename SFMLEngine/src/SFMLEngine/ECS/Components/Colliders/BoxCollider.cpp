@@ -24,8 +24,14 @@ namespace SFMLEngine {
 
 	std::pair<bool, sf::FloatRect> BoxCollider::Colliding(CircleCollider& other)
 	{
-		return std::make_pair(false, GetGlobalBounds());
+		return std::make_pair(other.Colliding(*this).first, GetGlobalBounds());
 	}
+
+	std::pair<bool, sf::FloatRect> BoxCollider::Colliding(const sf::Vector2f& point)
+	{
+		return std::make_pair(GetGlobalBounds().contains(point), GetGlobalBounds());
+	}
+
 
 	void BoxCollider::DrawDebug(const sf::Transform& transform)
 	{
@@ -34,5 +40,4 @@ namespace SFMLEngine {
 			sf::Vector2f(transformed.width, transformed.height),
 			IsTrigger ? DebugTools::TRIGGER_COLOR : DebugTools::COLLIDER_COLOR);
 	}
-
 }

@@ -55,7 +55,15 @@ namespace SFMLEngine {
 		{
 			return std::make_pair(false, sf::FloatRect{});
 		}
+	}
 
+	std::pair<bool, sf::FloatRect> CircleCollider::Colliding(const sf::Vector2f& point)
+	{
+		sf::FloatRect globalBounds = GetGlobalBounds();
+		float r = globalBounds.width * 0.5f;
+		sf::Vector2f d{ globalBounds.left + r - point.x, globalBounds.top + r - point.y };
+		
+		return std::make_pair(Math::SquareMagnitude(d) < r * r, globalBounds);
 	}
 
 }

@@ -27,6 +27,7 @@ namespace SFMLEngine {
 
 		std::pair<bool, sf::FloatRect> Colliding(BoxCollider& other);
 		std::pair<bool, sf::FloatRect> Colliding(CircleCollider& other);
+		std::pair<bool, sf::FloatRect> Colliding(const sf::Vector2f& point);
 
 		sf::FloatRect GetLocalBounds() const override { return Bounds; }
 

@@ -10,6 +10,8 @@ void PlayerController::Start()
 void PlayerController::Update(Timestep ts)
 {
 
+	m_OnGround = fabsf(m_Rigidbody->Velocity.y) < 0.001f;
+
 	if (!m_Attacking)
 	{
 		// player can attack
@@ -58,12 +60,11 @@ void PlayerController::Update(Timestep ts)
 
 void PlayerController::OnColliderEnter(const Collision& collision)
 {
-	if (collision.CollisionDirection == Math::Direction::Down)
-		m_OnGround = true;
+
 }
 void PlayerController::OnColliderExit(Entity other)
 {
-	m_OnGround = false;
+
 }
 
 

@@ -81,17 +81,20 @@ namespace SFMLEngine {
 		switch (collider.Type)
 		{
 		case ColliderType::Invalid:	SFMLE_CORE_ASSERT(0, "Invalid collider type!"); break;
-		case ColliderType::Box:		
+		case ColliderType::Box:
+			SFMLE_CORE_ASSERT(m_Coordinator->HasComponent<BoxCollider>(entity), "Missing BoxCollider component, make sure collider is added before collider info.");
 			newCollider = &m_Coordinator->GetComponent<BoxCollider>(entity);
 			m_ColliderMap.insert(std::make_pair(newCollider->GetColliderID(), ColliderData{ entity, collider.Type, newCollider }));
 			break;
 
 		case ColliderType::Circle:	
+			SFMLE_CORE_ASSERT(m_Coordinator->HasComponent<CircleCollider>(entity), "Missing CircleCollider component, make sure collider is added before collider info.");
 			newCollider = &m_Coordinator->GetComponent<CircleCollider>(entity); 
 			m_ColliderMap.insert(std::make_pair(newCollider->GetColliderID(), ColliderData{ entity, collider.Type, newCollider }));
 			break;
 
 		case ColliderType::Tilemap: 
+			SFMLE_CORE_ASSERT(m_Coordinator->HasComponent<TilemapCollider>(entity), "Missing TilemapCollider component, make sure collider is added before collider info.");
 			newCollider = &m_Coordinator->GetComponent<TilemapCollider>(entity); 
 			for (auto& box : static_cast<TilemapCollider*>(newCollider)->GetCollisionGeometry())
 			{
