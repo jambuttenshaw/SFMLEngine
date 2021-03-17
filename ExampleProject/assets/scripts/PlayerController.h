@@ -13,8 +13,8 @@ public:
 	void OnColliderEnter(const Collision& collision) override;
 	void OnColliderExit(Entity other) override;
 
-	void OnTriggerEnter(const Collision& collision) override { LOG_TRACE("Entered door"); }
-	void OnTriggerExit(Entity other) override { LOG_TRACE("Left door"); }
+	void OnTriggerEnter(const Collision& collision) override;
+	void OnTriggerExit(Entity other) override;
 
 	void Move(Timestep ts);
 	void Jump(Timestep ts);
@@ -26,6 +26,10 @@ private:
 
 	bool m_OnGround = false;
 	bool m_Attacking = false;
+
+	bool m_OnLadder = false;
+	float m_ClimbSpeed = 100.0f;
+	float m_ClimbHorizontalFactor = 0.3f;
 
 	float m_Friction = 14.0f;
 

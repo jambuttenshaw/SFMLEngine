@@ -48,6 +48,38 @@ public:
 			AddNativeScript<ClickToDestroyTile>(m_Tilemap);
 		}
 
+		{
+			m_Ladders = CreateEntity();
+			SetEntityTag(m_Ladders, "Ladder");
+			SetEntityLayer(m_Ladders, "Ground");
+
+			AddComponent(m_Ladders, Transform{ sf::Vector2f(0, 0) });
+
+			ResourceID tilePaletteID = TilePalette::LoadFromFile("assets/palettes/terrainPalette.json");
+			TilePalette* tilePalette = ResourceManager::GetResourceHandle<TilePalette>(tilePaletteID);
+			TileID ladderTile = tilePalette->GetTileByName("ladder");
+
+			// load a tilemap from a file
+			Tilemap tilemapComponent{ tilePaletteID };
+			tilemapComponent.PlaceTile({ 1, -1 }, ladderTile);
+			tilemapComponent.PlaceTile({ 1, -2 }, ladderTile);
+			tilemapComponent.PlaceTile({ 1, -3 }, ladderTile);
+			tilemapComponent.PlaceTile({ 1, -4 }, ladderTile);
+			tilemapComponent.PlaceTile({ 1, -5 }, ladderTile);
+
+			AddComponent(m_Ladders, tilemapComponent);
+
+			TilemapRenderer tilemapRendererComponent{ Material::Create("LitTilemap"), 1 };
+			AddComponent(m_Ladders, tilemapRendererComponent);
+
+
+			// this object should have a trigger collider so that the player knows when its collided with a ladder
+			TilemapCollider collider{ TilemapCollider::OptimizationLevel::High };
+			collider.IsTrigger = true;
+			AddComponent(m_Ladders, collider);
+			AddComponent(m_Ladders, ColliderInfo{ ColliderType::Tilemap });
+		}
+
 
 		{
 			m_Background = CreateEntity();
@@ -131,12 +163,21 @@ public:
 				{67, 832, 32, 64} },
 				0.1f
 			}; punch.Looping = false;
+			Animation climb{ "climb", {
+				{0, 510, 32, 64}, 
+				{29, 510, 32, 64}, 
+				{63, 510, 32, 64}, 
+				{93, 510, 32, 64}, 
+				{126, 510, 32, 64} },
+				0.15f
+			};
 
 			Animator animator;
 			animator.AddAnimation(idle);
 			animator.AddAnimation(run);
 			animator.AddAnimation(jump);
 			animator.AddAnimation(punch);
+			animator.AddAnimation(climb);
 
 			animator.SetCurrentAnimation("idle");
 			AddComponent(m_Player, animator);
@@ -197,6 +238,8 @@ public:
 private:
 	Entity m_Tilemap = INVALID_ENTITY_ID;
 	Entity m_Background = INVALID_ENTITY_ID;
+
+	Entity m_Ladders = INVALID_ENTITY_ID;
 
 	Entity m_Camera = INVALID_ENTITY_ID;
 

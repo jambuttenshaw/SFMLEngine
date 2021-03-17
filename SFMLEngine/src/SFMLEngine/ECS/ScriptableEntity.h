@@ -47,7 +47,10 @@ namespace SFMLEngine {
 		template<typename T>
 		T& GetNativeScript() { return m_SceneHandle->GetNativeScript<T>(m_EntityHandle); }
 
+		// tags
 		const std::vector<Entity>& GetEntitiesWithTag(const std::string& tag);
+
+		const std::string& GetTag(Entity entity);
 
 		void SetSceneHandle(void* scene);
 		void SetEntityHandle(Entity entity);

@@ -27,15 +27,16 @@ void PlayerController::Update(Timestep ts)
 			if (m_OnGround)
 			{
 				if (fabsf(m_Rigidbody->Velocity.x) > 100.0f)
-				{
 					m_Animator->SetCurrentAnimation("run");
-				}
 				else
 					m_Animator->SetCurrentAnimation("idle");
 			}
 			else
 			{
-				m_Animator->SetCurrentAnimation("jump");
+				if (m_OnLadder)
+					m_Animator->SetCurrentAnimation("climb");
+				else
+					m_Animator->SetCurrentAnimation("jump");
 			}
 
 			// then we can move the player
@@ -55,6 +56,7 @@ void PlayerController::Update(Timestep ts)
 	DEBUG_DISPLAY("Player position", m_Rigidbody->Position);
 	DEBUG_DISPLAY("Player velocity", m_Rigidbody->Velocity);
 	DEBUG_DISPLAY("Player on ground", m_OnGround);
+	DEBUG_DISPLAY("Player on ladder", m_OnLadder);
 }
 
 
@@ -65,6 +67,24 @@ void PlayerController::OnColliderEnter(const Collision& collision)
 void PlayerController::OnColliderExit(Entity other)
 {
 
+}
+
+
+void PlayerController::OnTriggerEnter(const Collision& collision)
+{						 
+	if (GetTag(collision.Other) == "Ladder")
+	{
+		// hit ladder
+		m_OnLadder = true;
+	}
+}						 
+void PlayerController::OnTriggerExit(Entity other)
+{
+	if (GetTag(other) == "Ladder")
+	{
+		// left ladder
+		m_OnLadder = false;
+	}
 }
 
 
@@ -82,13 +102,20 @@ void PlayerController::Move(Timestep ts)
 		m_Rigidbody->Velocity.x = -m_MoveSpeed;
 		m_FacingRight = false;
 	}
+	if (m_OnLadder && !m_OnGround)
+		m_Rigidbody->Velocity.x *= m_ClimbHorizontalFactor;
 }
 
 void PlayerController::Jump(Timestep ts)
 {
 	if (Input::IsKeyDown(sf::Keyboard::W))
 	{
-		if (fabsf(m_Rigidbody->Velocity.y) < 0.01f)
+		if (m_OnLadder)
+		{
+			m_Rigidbody->Velocity.y = -m_ClimbSpeed;
+			m_OnGround = false;
+		}
+		else if (fabsf(m_Rigidbody->Velocity.y) < 0.01f)
 		{
 			m_Rigidbody->Velocity.y -= m_JumpPower;
 			m_OnGround = false;
@@ -96,6 +123,13 @@ void PlayerController::Jump(Timestep ts)
 	}
 	if (m_Rigidbody->Velocity.y > 0)
 	{
-		m_Rigidbody->Velocity += Physics::Gravity * m_FallMultiplier * (float)ts;
+		if (m_OnLadder)
+		{
+			m_Rigidbody->Velocity.y = m_ClimbSpeed;
+		}
+		else
+		{
+			m_Rigidbody->Velocity += Physics::Gravity * m_FallMultiplier * (float)ts;
+		}
 	}
 }

@@ -171,6 +171,10 @@ namespace SFMLEngine {
 			{
 				i.SetNewColliderID();
 				i.SetTransform(m_Transform);
+
+				// if the tilemap collider is a trigger,
+				// then so should all of its sub-colliders
+				i.IsTrigger = IsTrigger;
 			}
 		}
 	}
