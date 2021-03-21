@@ -178,6 +178,45 @@ namespace SFMLEngine {
 		return Collision{ INVALID_ENTITY_ID, sf::FloatRect(), sf::FloatRect(), NULL_COLLIDER_ID };
 	}
 
+	const Collision CollisionSystem::CircleCast(const sf::Vector2f& centre, float radius, ColliderID other)
+	{
+		auto const& colliderData = m_ColliderMap[other];
+
+
+		// ADD LAYER CHECKS
+
+		std::pair<bool, sf::FloatRect> collisionData;
+		switch (colliderData.Type)
+		{
+		case ColliderType::Invalid:	SFMLE_CORE_ASSERT(0, "Invalid collider type!"); break;
+		case ColliderType::Box:
+			collisionData = static_cast<BoxCollider*>(colliderData.ColliderPtr)->Colliding(centre, radius);
+			break;
+
+		case ColliderType::Circle:
+			collisionData = static_cast<CircleCollider*>(colliderData.ColliderPtr)->Colliding(centre, radius);
+			break;
+
+		case ColliderType::Tilemap: SFMLE_CORE_ASSERT(0, "Internal collider mapping error occurred."); break;
+		default:					SFMLE_CORE_ASSERT(0, "Unknown collider type!"); break;
+		}
+
+		if (collisionData.first)
+		{
+			return Collision
+			{
+				colliderData.Owner,
+				sf::FloatRect{centre.x - radius, centre.y - radius, 2 * radius, 2 * radius},
+				collisionData.second,
+				other,
+				colliderData.ColliderPtr->IsTrigger
+			};
+		}
+		else
+		{
+			return Collision{ INVALID_ENTITY_ID, sf::FloatRect(), sf::FloatRect(), NULL_COLLIDER_ID };
+		}
+	}
 
 
 

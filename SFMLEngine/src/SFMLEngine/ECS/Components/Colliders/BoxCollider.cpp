@@ -32,6 +32,19 @@ namespace SFMLEngine {
 		return std::make_pair(GetGlobalBounds().contains(point), GetGlobalBounds());
 	}
 
+	std::pair<bool, sf::FloatRect> BoxCollider::Colliding(const sf::Vector2f& centre, float radius)
+	{
+		auto [topLeft, bottomRight] = Math::GetCorners(GetGlobalBounds());
+
+		// get closest point on box to centre of circle
+		sf::Vector2f closestPoint{ Math::Clamp(centre, topLeft, bottomRight) };
+		sf::Vector2f d = centre - closestPoint;
+
+		if (Math::SquareMagnitude(d) < radius * radius)
+			return std::make_pair(true, GetGlobalBounds());
+		else
+			return std::make_pair(false, sf::FloatRect{});
+	}
 
 	void BoxCollider::DrawDebug(const sf::Transform& transform)
 	{

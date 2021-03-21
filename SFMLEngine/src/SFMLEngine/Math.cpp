@@ -119,6 +119,14 @@ namespace SFMLEngine {
 	{
 		return { a.left + 0.5f * a.width, a.top + 0.5f * a.height };
 	}
+	std::pair<sf::Vector2f, sf::Vector2f> Math::GetCorners(const sf::FloatRect& a)
+	{
+		return std::make_pair(
+			sf::Vector2f{ a.left, a.top },
+			sf::Vector2f{ a.left + a.width, a.top + a.height }
+		);
+	}
+
 
 
 

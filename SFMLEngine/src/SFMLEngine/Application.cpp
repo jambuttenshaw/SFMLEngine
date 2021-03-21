@@ -278,7 +278,7 @@ namespace SFMLEngine
         ------------
         */
 
-        Physics::Init(m_CollisionSystem);
+        Physics::Init(m_Coordinator, m_CollisionSystem);
     }
 
     Application::~Application()

@@ -29,6 +29,7 @@ namespace SFMLEngine {
 
 		bool Trigger;
 
+		Collision() {};
 		Collision(Entity otherEntity, const sf::FloatRect& thisBounds, const sf::FloatRect& otherBounds, ColliderID otherColliderID, bool trigger = false);
 		
 	private:
@@ -69,6 +70,9 @@ namespace SFMLEngine {
 
 
 		const Collision TestCollision(Entity entity, ColliderID other);
+
+		// testing against circle
+		const Collision CircleCast(const sf::Vector2f& centre, float radius, ColliderID other);
 
 	private:
 		template <typename T>

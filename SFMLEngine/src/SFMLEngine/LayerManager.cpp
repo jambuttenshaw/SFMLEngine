@@ -98,7 +98,7 @@ namespace SFMLEngine {
 		for (auto const& layer : layers)
 		{
 			// remove each layers signature from the layer mask
-			newLayerMask ^= layer;
+			newLayerMask &= ~layer;
 		}
 
 		return newLayerMask;

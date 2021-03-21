@@ -105,6 +105,7 @@ namespace SFMLEngine {
 		*/
 		static sf::FloatRect Intersection(const sf::FloatRect& a, const sf::FloatRect& b);
 		static sf::Vector2f Centroid(const sf::FloatRect& a);
+		static std::pair<sf::Vector2f, sf::Vector2f> GetCorners(const sf::FloatRect& a);
 
 
 		/*

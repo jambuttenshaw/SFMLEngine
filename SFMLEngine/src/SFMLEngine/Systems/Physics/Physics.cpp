@@ -8,13 +8,15 @@
 
 namespace SFMLEngine {
 
+	Coordinator* Physics::s_Coordinator = nullptr;
 	std::shared_ptr<CollisionSystem> Physics::s_CollisionSystem = nullptr;
 	std::unordered_map<Layer, Layer> Physics::s_LayerMasks;
 
 	sf::Vector2f Physics::Gravity = { 0, 750 };
 
-	void Physics::Init(std::shared_ptr<CollisionSystem> collisionSystem)
+	void Physics::Init(Coordinator* coordinator, std::shared_ptr<CollisionSystem> collisionSystem)
 	{
+		s_Coordinator = coordinator;
 		s_CollisionSystem = collisionSystem;
 
 		// set up the default layer masks
@@ -35,34 +37,43 @@ namespace SFMLEngine {
 		return s_LayerMasks[layer];
 	}
 
-	void Physics::AllowCollisions(Layer layer1, Layer layer2)
+	void Physics::UnignoreCollisions(Layer layer1, Layer layer2)
 	{
 		// set Layer2's bit in Layer1's mask, and vice-versa
 		s_LayerMasks[layer1] |= layer2;
 		s_LayerMasks[layer2] |= layer1;
 	}
 
-	void Physics::DisallowCollisions(Layer layer1, Layer layer2)
+	void Physics::IgnoreCollisions(Layer layer1, Layer layer2)
 	{
 		// reset Layer2's but in Layer1's mask, and vice-versa
 		s_LayerMasks[layer1] &= ~layer2;
 		s_LayerMasks[layer2] &= ~layer1;
 	}
 	
-	/*
-	std::vector<Collision> Physics::CollisionAtPoint(const sf::Vector2f& point, float radius, Layer layerMask)
+	
+	std::pair<bool, Collision> Physics::CircleCast(const sf::Vector2f& centre, float radius, Layer layerMask)
 	{
-		// run a collision test at the point
-		// creates a circle collider at that point in space
-		// and see if it collides with any other colliders
+		// since theres no draw circle debug option
+		DEBUG_DRAW_RECT(sf::FloatRect{ centre.x - radius, centre.y - radius, 2 * radius, 2 * radius }, sf::Color::Red);
 
-		CircleCollider collider{ radius, point - sf::Vector2f{ radius, radius} };
-		Transform t{};
-		collider.SetTransform(&t);
+		for (auto const& collider : s_CollisionSystem->GetAllColliders())
+		{
+			// check to make sure this collider is compatible with the layer mask
+			Layer colliderLayer = s_Coordinator->GetComponent<Identity>(collider.second.Owner).EntityLayer;
+			// we only want to collide with colliders that agree with the layer mask
+			// and that are not triggers
+			if ((colliderLayer & layerMask) == colliderLayer && !collider.second.ColliderPtr->IsTrigger)
+			{
+				auto collisionTest = s_CollisionSystem->CircleCast(centre, radius, collider.first);
+				if (collisionTest.Other != INVALID_ENTITY_ID)
+				{
+					// collision occurred
+					return std::make_pair(true, collisionTest);
+				}
+			}
+		}
 
-		DEBUG_DRAW_RECT(point - sf::Vector2f{ radius, radius }, 2.0f * sf::Vector2f{ radius, radius }, sf::Color::Red);
-
-		return s_CollisionSystem->DoCollisionTest(collider, layerMask);
+		return std::make_pair(false, Collision{});
 	}
-	*/
 }

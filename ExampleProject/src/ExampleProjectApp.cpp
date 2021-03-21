@@ -36,7 +36,7 @@ public:
 
 			AddComponent(m_Tilemap, tilemapComponent);
 
-			TilemapRenderer tilemapRendererComponent{ Material::Create("Basic"), 1 };
+			TilemapRenderer tilemapRendererComponent{ Material::Create("LitTilemap"), 1 };
 			AddComponent(m_Tilemap, tilemapRendererComponent);
 
 
@@ -99,7 +99,7 @@ public:
 			// add the sprite renderer component
 			AddComponent(m_Player, SpriteRenderer{
 				Texture::Create("assets/textures/characterSheet.png"),
-				Material::Create("Basic"),
+				Material::Create("Lit"),
 				1,
 				Texture::Create("assets/textures/characterSheetNormals.png") });
 
