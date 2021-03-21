@@ -97,8 +97,24 @@ namespace SFMLEngine {
 		{
 			// place the tile data into the tile atlas
 			TileID newID = GetNextTileID();
+
+			sf::Vector2u pos{ element["x"], element["y"] };
+
+			sf::Vector2u size = m_TileSize;
+			if (element.find("w") != element.end())
+				size.x = element["w"];
+			if (element.find("h") != element.end())
+				size.y = element["h"];
+
+			sf::Vector2u colliderSize = size;
+			if (element.find("collider") != element.end())
+			{
+				colliderSize.x = element["collider"]["w"];
+				colliderSize.y = element["collider"]["h"];
+			}
+
 			m_TileAtlas.insert(std::make_pair(newID,
-				TileData{ element["name"], sf::Vector2u(element["x"], element["y"]), sf::Vector2u(element["w"], element["h"]) }
+				TileData{ element["name"], pos, size, colliderSize }
 			));
 		}
 
@@ -204,6 +220,12 @@ namespace SFMLEngine {
 	{
 		SFMLE_CORE_ASSERT(m_TileAtlas.find(tile) != m_TileAtlas.end(), "Tile has not been registered!");
 		return m_TileAtlas[tile].TexCoords;
+	}
+
+	const sf::Vector2u& TilePalette::GetColliderSize(TileID tile)
+	{
+		SFMLE_CORE_ASSERT(m_TileAtlas.find(tile) != m_TileAtlas.end(), "Tile has not been registered!");
+		return m_TileAtlas[tile].ColliderSize;
 	}
 
 	TileID TilePalette::GetNextTileID()

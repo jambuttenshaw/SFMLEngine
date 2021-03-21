@@ -36,7 +36,7 @@ public:
 
 			AddComponent(m_Tilemap, tilemapComponent);
 
-			TilemapRenderer tilemapRendererComponent{ Material::Create("LitTilemap"), 1 };
+			TilemapRenderer tilemapRendererComponent{ Material::Create("Basic"), 1 };
 			AddComponent(m_Tilemap, tilemapRendererComponent);
 
 
@@ -81,36 +81,6 @@ public:
 			AddComponent(m_Ladders, ColliderInfo{ ColliderType::Tilemap });
 		}
 		*/
-
-
-		{
-			m_Background = CreateEntity();
-
-			AddComponent(m_Background, Transform{ sf::Vector2f(0, 0) });
-
-			ResourceID tilePaletteID = TilePalette::Create(sf::Vector2u(256, 256));
-			TilePalette* tilePalette = ResourceManager::GetResourceHandle<TilePalette>(tilePaletteID);
-
-			TileID background = tilePalette->CreateTile("background", Texture::Create("assets/textures/background.png"), Texture::Create("assets/textures/backgroundNormals.png"));
-
-
-			Tilemap tilemapComponent{ tilePaletteID };
-
-			// place tiles into the tilemap
-			int numTiles = 32;
-			for (int x = 0; x < numTiles; x++)
-			{
-				for (int y = 0; y < 5; y++)
-				{
-					tilemapComponent.PlaceTile(sf::Vector2i(x - numTiles / 2, 1 - y), background);
-				}
-			}
-
-			AddComponent(m_Background, tilemapComponent);
-
-			TilemapRenderer tilemapRendererComponent{ Material::Create("LitTilemap"), 0 };
-			AddComponent(m_Background, tilemapRendererComponent);
-		}
 		
 
 		{
@@ -129,7 +99,7 @@ public:
 			// add the sprite renderer component
 			AddComponent(m_Player, SpriteRenderer{
 				Texture::Create("assets/textures/characterSheet.png"),
-				Material::Create("Lit"),
+				Material::Create("Basic"),
 				1,
 				Texture::Create("assets/textures/characterSheetNormals.png") });
 
@@ -216,38 +186,16 @@ public:
 			AddComponent(m_Light2, DirectionalLight{ 0, 0, 0.6f, sf::Color{94, 62, 180, 255}, true });
 		}
 
-		/*
-		{
-			m_Door = CreateEntity();
-
-			AddComponent(m_Door, Transform{ { -64, -96 } });
-
-			BoxCollider collider{ { 32, 68 }, { 0, 28 } };
-			collider.IsTrigger = true;
-
-			AddComponent(m_Door, collider);
-			AddComponent(m_Door, ColliderInfo{ ColliderType::Box });
-
-			AddComponent(m_Door, SpriteRenderer{
-				Texture::Create("assets/textures/door.png"),
-				Material::Create("Lit"),
-				0,
-				Texture::Create("assets/textures/door_n.png") });
-		}
-		*/
-
 	}
 
 private:
 	Entity m_Tilemap = INVALID_ENTITY_ID;
-	Entity m_Background = INVALID_ENTITY_ID;
 
 	Entity m_Ladders = INVALID_ENTITY_ID;
 
 	Entity m_Camera = INVALID_ENTITY_ID;
 
 	Entity m_Player = INVALID_ENTITY_ID;
-	Entity m_Door = INVALID_ENTITY_ID;
 
 	Entity m_Light = INVALID_ENTITY_ID;
 	Entity m_Light2 = INVALID_ENTITY_ID;
@@ -261,7 +209,7 @@ public:
 	SandboxApp()
 		: Application("Sandbox", sf::Vector2i(1200, 675))
 	{
-		SetClearColor(sf::Color::Magenta);
+		SetClearColor(sf::Color{0, 15, 17});
 
 		LoadScene<MainScene>();
 	}

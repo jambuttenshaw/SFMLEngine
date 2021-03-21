@@ -24,6 +24,7 @@ namespace SFMLEngine {
 		// just the image data is located in different images
 		sf::Vector2u TexCoords;
 		sf::Vector2u TileSize;
+		sf::Vector2u ColliderSize;
 	};
 
 	class TilePalette
@@ -44,6 +45,7 @@ namespace SFMLEngine {
 		const sf::Vector2u& GetTileSize() { return m_TileSize; }
 		const sf::Vector2u& GetTileSize(TileID tile);
 		const sf::Vector2u& GetTexCoords(TileID tile);
+		const sf::Vector2u& GetColliderSize(TileID tile);
 
 		ResourceID GetTexture() { return m_PaletteTextureID; }
 		ResourceID GetNormalMap() { return m_NormalMapTextureID; }
