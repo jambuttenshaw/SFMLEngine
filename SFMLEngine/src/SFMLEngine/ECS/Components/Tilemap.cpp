@@ -51,19 +51,20 @@ namespace SFMLEngine {
 		std::ifstream infile(dataPath);
 		if (!infile.good())
 		{
-			LOG_CORE_ERROR("Failed to open file '{0}'", dataPath);
-			SFMLE_CORE_ASSERT(0, "Error opening file");
+			LOG_CORE_ERROR("Failed to open file '{0}'. Creating empty tilemap.", dataPath);
 		}
-
-		nlohmann::json tilemapJson;
-		infile >> tilemapJson;
-
-		for (auto& element : tilemapJson)
+		else
 		{
-			PlaceTile({ element["x"], element["y"] }, element["type"]);
-		}
+			nlohmann::json tilemapJson;
+			infile >> tilemapJson;
 
-		infile.close();
+			for (auto& element : tilemapJson)
+			{
+				PlaceTile({ element["x"], element["y"] }, element["type"]);
+			}
+
+			infile.close();
+		}
 	}
 
 
@@ -96,13 +97,13 @@ namespace SFMLEngine {
 				{
 
 					// vertices need adjusting as the new tile is not the same size as the old one
-					Geometry[m_TriangleIndex].position = pos;
-					Geometry[m_TriangleIndex + 1].position = pos + sf::Vector2f(tileDimensions.x, 0);
-					Geometry[m_TriangleIndex + 2].position = pos + tileDimensions;
+					Geometry[geomIndex].position = pos;
+					Geometry[geomIndex + 1].position = pos + sf::Vector2f(tileDimensions.x, 0);
+					Geometry[geomIndex + 2].position = pos + tileDimensions;
 
-					Geometry[m_TriangleIndex + 3].position = pos;
-					Geometry[m_TriangleIndex + 4].position = pos + sf::Vector2f(0, tileDimensions.y);
-					Geometry[m_TriangleIndex + 5].position = pos + tileDimensions;
+					Geometry[geomIndex + 3].position = pos;
+					Geometry[geomIndex + 4].position = pos + sf::Vector2f(0, tileDimensions.y);
+					Geometry[geomIndex + 5].position = pos + tileDimensions;
 				}
 
 				Geometry[geomIndex].texCoords = texCoords;

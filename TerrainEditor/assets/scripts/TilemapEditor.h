@@ -33,7 +33,10 @@ public:
 			auto wheelDelta = Input::GetMouseWheelDelta();
 			if (abs(wheelDelta) > 0)
 			{
-				m_CurrentTile = (m_CurrentTile + static_cast<size_t>(wheelDelta)) % m_Palette->GetTileCount();
+				m_CurrentTile += wheelDelta;
+
+				if (m_CurrentTile > m_Palette->GetTileCount() - 1) m_CurrentTile = 0;
+
 				m_TilePreview->PlaceTile({ 0, 0 }, m_Palette->GetAllTiles()[m_CurrentTile], true);
 			}
 		}
@@ -41,7 +44,7 @@ public:
 		if (Input::IsKeyPressed(sf::Keyboard::Space))
 		{
 			
-			m_Tilemap->Export("D:/dev/SFML/SFMLEngine/ExampleProject/assets/tilemaps/terrain.json");
+			m_Tilemap->Export("D:/dev/SFML/SFMLEngine/ExampleProject/assets/tilemaps/terrain2.json");
 			LOG_INFO("Terrain exported.");
 			
 		}

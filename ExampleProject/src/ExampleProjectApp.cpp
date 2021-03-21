@@ -28,11 +28,11 @@ public:
 
 			AddComponent(m_Tilemap, Transform{ sf::Vector2f(0, 0) });
 			
-			ResourceID tilePaletteID = TilePalette::LoadFromFile("assets/palettes/terrainPalette.json");
+			ResourceID tilePaletteID = TilePalette::LoadFromFile("assets/palettes/revisedTerrainPalette.json");
 			TilePalette* tilePalette = ResourceManager::GetResourceHandle<TilePalette>(tilePaletteID);
 
 			// load a tilemap from a file
-			Tilemap tilemapComponent{ tilePaletteID, "assets/tilemaps/terrain.json" };
+			Tilemap tilemapComponent{ tilePaletteID, "assets/tilemaps/terrain2.json" };
 
 			AddComponent(m_Tilemap, tilemapComponent);
 
@@ -48,6 +48,7 @@ public:
 			AddNativeScript<ClickToDestroyTile>(m_Tilemap);
 		}
 
+		/*
 		{
 			m_Ladders = CreateEntity();
 			SetEntityTag(m_Ladders, "Ladder");
@@ -79,6 +80,7 @@ public:
 			AddComponent(m_Ladders, collider);
 			AddComponent(m_Ladders, ColliderInfo{ ColliderType::Tilemap });
 		}
+		*/
 
 
 		{
@@ -214,7 +216,7 @@ public:
 			AddComponent(m_Light2, DirectionalLight{ 0, 0, 0.6f, sf::Color{94, 62, 180, 255}, true });
 		}
 
-
+		/*
 		{
 			m_Door = CreateEntity();
 
@@ -232,6 +234,7 @@ public:
 				0,
 				Texture::Create("assets/textures/door_n.png") });
 		}
+		*/
 
 	}
 

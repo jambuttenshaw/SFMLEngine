@@ -12,7 +12,7 @@ class MainScene : public Scene
 public:
 	void Create() override
 	{
-		ResourceID tilePaletteID = TilePalette::LoadFromFile("D:/dev/SFML/SFMLEngine/ExampleProject/assets/palettes/terrainPalette.json");
+		ResourceID tilePaletteID = TilePalette::LoadFromFile("D:/dev/SFML/SFMLEngine/ExampleProject/assets/palettes/revisedTerrainPalette.json");
 		TilePalette* tilePalette = ResourceManager::GetResourceHandle<TilePalette>(tilePaletteID);
 
 		
@@ -24,7 +24,7 @@ public:
 			// create an empty tilemap
 			Tilemap tilemap{ tilePaletteID };
 
-			TileID tile0 = tilePalette->GetTileByName("ground");
+			TileID tile0 = tilePalette->GetAllTiles()[0];
 			tilemap.PlaceTile({ 0, 0 }, tile0);
 
 			AddComponent(m_TilePreview, tilemap);
@@ -47,7 +47,7 @@ public:
 
 			// create an empty tilemap
 			// AddComponent(m_Terrain, Tilemap{ tilePaletteID });
-			AddComponent(m_Terrain, Tilemap{ tilePaletteID, "D:/dev/SFML/SFMLEngine/ExampleProject/assets/tilemaps/terrain.json" });
+			AddComponent(m_Terrain, Tilemap{ tilePaletteID, "D:/dev/SFML/SFMLEngine/ExampleProject/assets/tilemaps/terrain2.json" });
 
 			// add a tilemap renderer
 			AddComponent(m_Terrain, TilemapRenderer{ Material::Create("Basic"), 0 });
