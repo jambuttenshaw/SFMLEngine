@@ -73,6 +73,11 @@ namespace SFMLEngine {
 			}
 		}
 
+		sf::Vector2f LocalPointToWorldPoint(const sf::Vector2f& p)
+		{
+			return GetLocalToWorldTransformMatrix().transformPoint(p);
+		}
+
 	private:
 		bool m_Modified = true;
 	};

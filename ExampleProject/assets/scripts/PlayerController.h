@@ -20,9 +20,15 @@ public:
 	void Jump(Timestep ts);
 
 private:
+
+	const float m_Width  = 32.0f;
+	const float m_Height = 64.0f;
+
 	Transform* m_Transform = nullptr;
 	Rigidbody* m_Rigidbody = nullptr;
 	Animator* m_Animator = nullptr;
+
+	Layer m_GroundLayerMask;
 
 	bool m_OnGround = false;
 	bool m_Attacking = false;
@@ -34,7 +40,7 @@ private:
 	float m_Friction = 14.0f;
 
 	float m_MoveSpeed = 250.0f;
-	float m_JumpPower = 450.0f;
+	float m_JumpPower = 400.0f;
 
 	float m_FallMultiplier = 0.4f;
 

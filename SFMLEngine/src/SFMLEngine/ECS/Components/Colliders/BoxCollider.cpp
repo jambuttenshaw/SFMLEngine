@@ -41,7 +41,9 @@ namespace SFMLEngine {
 		sf::Vector2f d = centre - closestPoint;
 
 		if (Math::SquareMagnitude(d) < radius * radius)
+		{
 			return std::make_pair(true, GetGlobalBounds());
+		}
 		else
 			return std::make_pair(false, sf::FloatRect{});
 	}

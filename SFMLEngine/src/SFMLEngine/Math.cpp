@@ -29,7 +29,7 @@ namespace SFMLEngine {
 	}
 	sf::Vector2f Math::Min(const sf::Vector2f& a, const sf::Vector2f& b)
 	{
-		return sf::Vector2f(std::min(a.x, b.x), std::max(a.y, b.y));
+		return sf::Vector2f(std::min(a.x, b.x), std::min(a.y, b.y));
 	}
 	sf::Vector2f Math::Abs(const sf::Vector2f& a)
 	{

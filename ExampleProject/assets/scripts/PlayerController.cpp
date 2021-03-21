@@ -5,10 +5,14 @@ void PlayerController::Start()
 	m_Transform = &GetComponent<Transform>();
 	m_Rigidbody = &GetComponent<Rigidbody>();
 	m_Animator = &GetComponent<Animator>();
+
+	m_GroundLayerMask = LayerManager::GetLayer("Ground");
 }
 
 void PlayerController::Update(Timestep ts)
 {
+	m_OnGround = Physics::CircleCast(m_Transform->Position + sf::Vector2f{ 0.5f * m_Width, m_Height }, 0.5f, m_GroundLayerMask).first;
+
 	if (!m_Attacking)
 	{
 		// player can attack
@@ -113,7 +117,7 @@ void PlayerController::Jump(Timestep ts)
 			m_Rigidbody->Velocity.y = -m_ClimbSpeed;
 			m_OnGround = false;
 		}
-		else if (fabsf(m_Rigidbody->Velocity.y) < 0.01f)
+		else if (m_OnGround)
 		{
 			m_Rigidbody->Velocity.y -= m_JumpPower;
 			m_OnGround = false;

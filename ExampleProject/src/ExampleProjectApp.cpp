@@ -32,12 +32,9 @@ public:
 			TilePalette* tilePalette = ResourceManager::GetResourceHandle<TilePalette>(tilePaletteID);
 
 			// load a tilemap from a file
-			Tilemap tilemapComponent{ tilePaletteID, "assets/tilemaps/terrain2.json" };
-
-			AddComponent(m_Tilemap, tilemapComponent);
-
-			TilemapRenderer tilemapRendererComponent{ Material::Create("LitTilemap"), 1 };
-			AddComponent(m_Tilemap, tilemapRendererComponent);
+			
+			AddComponent(m_Tilemap, Tilemap{ tilePaletteID, "assets/tilemaps/terrain2.json" });
+			AddComponent(m_Tilemap, TilemapRenderer{ Material::Create("LitTilemap"), 1 });
 
 
 			// this object should be solid
@@ -46,6 +43,7 @@ public:
 			AddComponent(m_Tilemap, ColliderInfo{ ColliderType::Tilemap });
 
 			AddNativeScript<ClickToDestroyTile>(m_Tilemap);
+
 		}
 
 		/*
@@ -174,7 +172,7 @@ public:
 			AddComponent(m_Camera, Transform{ });
 
 			Camera cam{ };
-			cam.Zoom = 0.4f;
+			cam.Zoom = 0.5f;
 			AddComponent(m_Camera, cam);
 
 			AddNativeScript<SmoothFollowPlayer>(m_Camera);
@@ -185,7 +183,6 @@ public:
 
 			AddComponent(m_Light2, DirectionalLight{ 0, 0, 0.6f, sf::Color{94, 62, 180, 255}, true });
 		}
-
 	}
 
 private:
