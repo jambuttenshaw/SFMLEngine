@@ -55,6 +55,13 @@ namespace SFMLEngine {
 			return ResourceManager::GetResourceHandle<sf::Texture>(NormalMapHandle);
 		}
 
+		void SetMaterial(ResourceID newMat)
+		{
+			MaterialHandle = newMat;
+			// the pointer to the material also needs updated when the material is changed
+			MaterialPtr = ResourceManager::GetResourceHandle<Material>(newMat);
+		}
+
 		void SetRenderLayer(int newRenderLayer) { RenderLayer = newRenderLayer; m_Modified = true; }
 
 	private:

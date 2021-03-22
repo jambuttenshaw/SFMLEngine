@@ -26,6 +26,12 @@ namespace SFMLEngine {
 			MaterialPtr = ResourceManager::GetResourceHandle<Material>(MaterialHandle);
 		}
 
+		void ChangeMaterial(ResourceID newMat)
+		{
+			MaterialHandle = newMat;
+			MaterialPtr = ResourceManager::GetResourceHandle<Material>(newMat);
+		}
+
 		void SetRenderLayer(int newRenderLayer) { RenderLayer = newRenderLayer; m_Modified = true; }
 
 	private:
