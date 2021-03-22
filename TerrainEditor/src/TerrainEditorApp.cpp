@@ -1,7 +1,8 @@
 #include <SFMLEngine.h>
 #include <SFMLEngine/EntryPoint.h> // mark this file as the entry point
 
-#include "TilemapEditor.h"
+#include "EditableTerrain.h"
+
 #include "FollowMouse.h"
 #include "CameraController.h"
 
@@ -41,21 +42,7 @@ public:
 			AddNativeScript<FollowMouse>(m_TilePreview);
 		}
 
-		{
-			m_Terrain = CreateEntity();
-			AddComponent(m_Terrain, Transform{ });
-
-			// create an empty tilemap
-			// AddComponent(m_Terrain, Tilemap{ tilePaletteID });
-			AddComponent(m_Terrain, Tilemap{ tilePaletteID, "D:/dev/SFML/SFMLEngine/ExampleProject/assets/tilemaps/terrain2.json" });
-
-			// add a tilemap renderer
-			AddComponent(m_Terrain, TilemapRenderer{ Material::Create("Basic"), 0 });
-
-			// add a script to control editing the terrain
-			auto& script = AddNativeScript<TilemapEditor>(m_Terrain);
-			script.SetTilePreviewEntity(m_TilePreview);
-		}
+		m_Terrain = new EditableTerrain(this, m_TilePreview, tilePaletteID, "D:/dev/SFML/SFMLEngine/ExampleProject/assets/tilemaps/terrain2.json");
 		
 
 		{
@@ -77,10 +64,27 @@ public:
 				Material::Create("Basic"),
 				1 });
 		}
+
+
+		// print controls
+		LOG_INFO("----- Terrain Editor Controls -----");
+		LOG_INFO("Place tiles:      LEFT MOUSE BUTTON");
+		LOG_INFO("Remove tiles:     RIGHT MOUSE BUTTON");
+		LOG_INFO("Cycle tiles:      SCROLL WHEEL");
+		LOG_INFO("Pan  camera:      WASD");
+		LOG_INFO("Zoom camera:      LCTRL + SCROLL WHEEL");
+		LOG_INFO("Cycle layers:     UP/DOWN ARROWS");
+		LOG_INFO("Export tilemaps:  SPACE");
+		LOG_INFO("-----------------------------------");
+	}
+
+	~MainScene()
+	{
+		delete m_Terrain;
 	}
 
 private:
-	Entity m_Terrain;
+	EditableTerrain* m_Terrain = nullptr;
 	Entity m_TilePreview;
 
 	Entity m_Camera;

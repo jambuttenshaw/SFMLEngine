@@ -44,7 +44,7 @@ public:
 		if (Input::IsKeyPressed(sf::Keyboard::Space))
 		{
 			
-			m_Tilemap->Export("D:/dev/SFML/SFMLEngine/ExampleProject/assets/tilemaps/terrain2.json");
+			m_Tilemap->Export(m_ExportPath);
 			LOG_INFO("Terrain exported.");
 			
 		}
@@ -55,6 +55,10 @@ public:
 	{
 		m_TilePreview = &GetComponent<Tilemap>(entity);
 	}
+	void SetExportPath(const std::string& path)
+	{
+		m_ExportPath = path;
+	}
 
 
 private:
@@ -62,6 +66,7 @@ private:
 	TilePalette* m_Palette = nullptr;
 
 	Tilemap* m_TilePreview = nullptr;
+	std::string m_ExportPath;
 
 	size_t m_CurrentTile = 0;
 
