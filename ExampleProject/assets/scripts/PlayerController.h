@@ -37,6 +37,8 @@ private:
 	float m_ClimbSpeed = 100.0f;
 	float m_ClimbHorizontalFactor = 0.3f;
 
+	bool m_InJumpThroughPlatform = false;
+
 	float m_Friction = 14.0f;
 
 	float m_MoveSpeed = 250.0f;

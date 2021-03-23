@@ -8,9 +8,17 @@ namespace SFMLEngine {
 		return m_SceneHandle->GetEntitiesWithTag(tag);
 	}
 
-	const std::string& ScriptableEntity::GetTag(Entity entity)
+	const std::string& ScriptableEntity::GetEntityName(Entity entity)
+	{
+		return m_SceneHandle->GetEntityName(entity);
+	}
+	const std::string& ScriptableEntity::GetEntityTag(Entity entity)
 	{
 		return m_SceneHandle->GetEntityTag(entity);
+	}
+	const std::string& ScriptableEntity::GetEntityLayer(Entity entity)
+	{
+		return m_SceneHandle->GetEntityLayer(entity);
 	}
 
 

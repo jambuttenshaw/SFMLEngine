@@ -13,13 +13,6 @@ void PlayerController::Update(Timestep ts)
 {
 	m_OnGround = Physics::CircleCast(m_Transform->Position + sf::Vector2f{ 0.5f * m_Width, m_Height }, 0.5f, m_GroundLayerMask).first;
 
-
-	if (m_Rigidbody->Velocity.y < 0)
-		Physics::IgnoreCollisions("Player", "JumpThrough");
-	else
-		Physics::UnignoreCollisions("Player", "JumpThrough");
-
-
 	if (!m_Attacking)
 	{
 		// player can attack
@@ -70,18 +63,26 @@ void PlayerController::Update(Timestep ts)
 
 void PlayerController::OnColliderEnter(const Collision& collision)
 {
-	if (collision.CollisionDirection == Math::Direction::Down)
-		m_OnGround = true;
+	const std::string& layer = GetEntityLayer(collision.Other);
+	if (layer == "Ground")
+	{
+		if (collision.CollisionDirection == Math::Direction::Down)
+			m_OnGround = true;
+	}
 }
 void PlayerController::OnColliderExit(Entity other)
 {
-	m_OnGround = false;
+	const std::string& layer = GetEntityLayer(other);
+	if (layer == "Ground")
+	{
+		m_OnGround = false;
+	}
 }
 
 
 void PlayerController::OnTriggerEnter(const Collision& collision)
 {						 
-	if (GetTag(collision.Other) == "Ladder")
+	if (GetEntityTag(collision.Other) == "Ladder")
 	{
 		// hit ladder
 		m_OnLadder = true;
@@ -89,7 +90,7 @@ void PlayerController::OnTriggerEnter(const Collision& collision)
 }						 
 void PlayerController::OnTriggerExit(Entity other)
 {
-	if (GetTag(other) == "Ladder")
+	if (GetEntityTag(other) == "Ladder")
 	{
 		// left ladder
 		m_OnLadder = false;

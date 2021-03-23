@@ -50,7 +50,9 @@ namespace SFMLEngine {
 		// tags
 		const std::vector<Entity>& GetEntitiesWithTag(const std::string& tag);
 
-		const std::string& GetTag(Entity entity);
+		const std::string& GetEntityName(Entity entity);
+		const std::string& GetEntityTag(Entity entity);
+		const std::string& GetEntityLayer(Entity entity);
 
 		void SetSceneHandle(void* scene);
 		void SetEntityHandle(Entity entity);
