@@ -6,12 +6,19 @@ void PlayerController::Start()
 	m_Rigidbody = &GetComponent<Rigidbody>();
 	m_Animator = &GetComponent<Animator>();
 
-	m_GroundLayerMask = LayerManager::GetLayer("Ground");
+	m_GroundLayerMask = LayerManager::GetLayer("Ground") | LayerManager::GetLayer("JumpThrough");
 }
 
 void PlayerController::Update(Timestep ts)
 {
 	m_OnGround = Physics::CircleCast(m_Transform->Position + sf::Vector2f{ 0.5f * m_Width, m_Height }, 0.5f, m_GroundLayerMask).first;
+
+
+	if (m_Rigidbody->Velocity.y < 0)
+		Physics::IgnoreCollisions("Player", "JumpThrough");
+	else
+		Physics::UnignoreCollisions("Player", "JumpThrough");
+
 
 	if (!m_Attacking)
 	{

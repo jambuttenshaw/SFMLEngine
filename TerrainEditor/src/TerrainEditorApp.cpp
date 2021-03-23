@@ -54,7 +54,7 @@ public:
 
 
 		// load in the terrain layers
-		std::string levelDir = "assets/tilemaps/level1";
+		std::string levelDir = "D:/dev/SFML/SFMLEngine/ExampleProject/assets/tilemaps/level1";
 		LOG_INFO("Loading level from '{0}'", levelDir);
 		for (const auto& layer : std::filesystem::directory_iterator(levelDir))
 		{

@@ -46,7 +46,7 @@ public:
 
 		if (Input::IsKeyPressed(sf::Keyboard::Space))
 		{
-			
+			LOG_TRACE(m_ExportPath);
 			m_Tilemap->Export(m_ExportPath);
 			LOG_INFO("Terrain exported.");
 			

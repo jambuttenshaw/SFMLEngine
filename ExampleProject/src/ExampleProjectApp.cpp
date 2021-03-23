@@ -21,29 +21,40 @@ class MainScene : public Scene
 public:
 	void Create() override
 	{
+		ResourceID tilePaletteID = TilePalette::LoadFromFile("assets/palettes/revisedTerrainPalette.json");
+		TilePalette* tilePalette = ResourceManager::GetResourceHandle<TilePalette>(tilePaletteID);
+
 		{
+			m_Ground = CreateEntity();
+			SetEntityLayer(m_Ground, "Ground");
 
-			m_Tilemap = CreateEntity();
-			SetEntityLayer(m_Tilemap, "Ground");
+			AddComponent(m_Ground, Transform{ });
 
-			AddComponent(m_Tilemap, Transform{ sf::Vector2f(0, 0) });
+			// add a tilemap
+			AddComponent(m_Ground, Tilemap{ tilePaletteID, "assets/tilemaps/level1/layer0.json" });
+			AddComponent(m_Ground, TilemapRenderer{ Material::Create("LitTilemap"), 1 });
+
 			
-			ResourceID tilePaletteID = TilePalette::LoadFromFile("assets/palettes/revisedTerrainPalette.json");
-			TilePalette* tilePalette = ResourceManager::GetResourceHandle<TilePalette>(tilePaletteID);
+			// this object should be solid
+			// add a collider
+			AddComponent(m_Ground, TilemapCollider { TilemapCollider::OptimizationLevel::Standard });
+			AddComponent(m_Ground, ColliderInfo{ ColliderType::Tilemap });
+		}
 
-			// load a tilemap from a file
-			
-			AddComponent(m_Tilemap, Tilemap{ tilePaletteID, "assets/tilemaps/terrain2.json" });
-			AddComponent(m_Tilemap, TilemapRenderer{ Material::Create("LitTilemap"), 1 });
+		{
+			m_JumpThroughPlatforms = CreateEntity();
+			SetEntityLayer(m_JumpThroughPlatforms, "JumpThrough");
+
+			AddComponent(m_JumpThroughPlatforms, Transform{ });
+
+			AddComponent(m_JumpThroughPlatforms, Tilemap{ tilePaletteID, "assets/tilemaps/level1/layer1.json" });
+			AddComponent(m_JumpThroughPlatforms, TilemapRenderer{ Material::Create("LitTilemap"), 1 });
 
 
 			// this object should be solid
 			// add a collider
-			AddComponent(m_Tilemap, TilemapCollider { TilemapCollider::OptimizationLevel::Standard });
-			AddComponent(m_Tilemap, ColliderInfo{ ColliderType::Tilemap });
-
-			AddNativeScript<ClickToDestroyTile>(m_Tilemap);
-
+			AddComponent(m_JumpThroughPlatforms, TilemapCollider{ TilemapCollider::OptimizationLevel::Standard });
+			AddComponent(m_JumpThroughPlatforms, ColliderInfo{ ColliderType::Tilemap });
 		}
 
 		/*
@@ -186,10 +197,11 @@ public:
 	}
 
 private:
-	Entity m_Tilemap = INVALID_ENTITY_ID;
-
+	Entity m_Ground = INVALID_ENTITY_ID;
+	Entity m_JumpThroughPlatforms = INVALID_ENTITY_ID;
+	
 	Entity m_Ladders = INVALID_ENTITY_ID;
-
+	
 	Entity m_Camera = INVALID_ENTITY_ID;
 
 	Entity m_Player = INVALID_ENTITY_ID;
@@ -206,7 +218,7 @@ public:
 	SandboxApp()
 		: Application("Sandbox", sf::Vector2i(1200, 675))
 	{
-		SetClearColor(sf::Color{0, 15, 17});
+		SetClearColor(sf::Color{0, 4, 12});
 
 		LoadScene<MainScene>();
 	}
