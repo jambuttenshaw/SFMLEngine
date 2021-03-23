@@ -33,28 +33,7 @@ namespace SFMLEngine {
 
 	std::pair<bool, sf::FloatRect> CircleCollider::Colliding(BoxCollider& other)
 	{
-		sf::FloatRect otherBounds{ other.GetGlobalBounds() };
-
-		sf::Vector2f otherTopLeft{ otherBounds.left, otherBounds.top };
-		sf::Vector2f otherSize{ otherBounds.width, otherBounds.height };
-
-		sf::FloatRect globalBounds = GetGlobalBounds();
-		float r = 0.5f * globalBounds.width;
-		sf::Vector2f centre{globalBounds.left + r, globalBounds.top + r};
-
-		sf::Vector2f delta{ centre - Math::Clamp(centre, otherTopLeft, otherTopLeft + otherSize) };
-
-		if (Math::SquareMagnitude(delta) < r * r)
-		{
-			// collision occurred
-			// get a fitting bounds for this collision
-			sf::Vector2f halfExtents{ Math::Normalize(delta) * r };
-			return std::make_pair(true, sf::FloatRect{ centre + halfExtents, 2.0f * Math::Abs(halfExtents) });
-		}
-		else
-		{
-			return std::make_pair(false, sf::FloatRect{});
-		}
+		return Colliding(other.GetGlobalBounds());
 	}
 
 	std::pair<bool, sf::FloatRect> CircleCollider::Colliding(const sf::Vector2f& point)
@@ -71,4 +50,27 @@ namespace SFMLEngine {
 		return std::make_pair(Math::SquareMagnitude(d) < r * r + radius * radius, globalBounds);
 	}
 
+	std::pair<bool, sf::FloatRect> CircleCollider::Colliding(const sf::FloatRect& rect)
+	{
+		sf::Vector2f otherTopLeft{ rect.left, rect.top };
+		sf::Vector2f otherSize{ rect.width, rect.height };
+
+		sf::FloatRect globalBounds = GetGlobalBounds();
+		float r = 0.5f * globalBounds.width;
+		sf::Vector2f centre{ globalBounds.left + r, globalBounds.top + r };
+
+		sf::Vector2f delta{ centre - Math::Clamp(centre, otherTopLeft, otherTopLeft + otherSize) };
+
+		if (Math::SquareMagnitude(delta) < r * r)
+		{
+			// collision occurred
+			// get a fitting bounds for this collision
+			sf::Vector2f halfExtents{ Math::Normalize(delta) * r };
+			return std::make_pair(true, sf::FloatRect{ centre + halfExtents, 2.0f * Math::Abs(halfExtents) });
+		}
+		else
+		{
+			return std::make_pair(false, sf::FloatRect{});
+		}
+	}
 }

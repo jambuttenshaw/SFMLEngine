@@ -73,6 +73,8 @@ namespace SFMLEngine {
 
 		// testing against circle
 		const Collision CircleCast(const sf::Vector2f& centre, float radius, ColliderID other);
+		// testing against box
+		const Collision BoxCast(const sf::FloatRect& rect, ColliderID other);
 
 	private:
 		template <typename T>

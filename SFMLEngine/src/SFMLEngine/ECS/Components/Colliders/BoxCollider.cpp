@@ -12,14 +12,7 @@ namespace SFMLEngine {
 
 	std::pair<bool, sf::FloatRect> BoxCollider::Colliding(BoxCollider& other)
 	{
-		ZoneScoped;
-		
-		if (GetGlobalBounds().intersects(other.GetGlobalBounds()))
-		{
-			return std::make_pair(true, GetGlobalBounds());
-		}
-		else
-			return std::make_pair(false, sf::FloatRect{});
+		return std::make_pair(GetGlobalBounds().intersects(other.GetGlobalBounds()), GetGlobalBounds());
 	}
 
 	std::pair<bool, sf::FloatRect> BoxCollider::Colliding(CircleCollider& other)
@@ -46,6 +39,11 @@ namespace SFMLEngine {
 		}
 		else
 			return std::make_pair(false, sf::FloatRect{});
+	}
+
+	std::pair<bool, sf::FloatRect> BoxCollider::Colliding(const sf::FloatRect& other)
+	{
+		return std::make_pair(GetGlobalBounds().intersects(other), GetGlobalBounds());
 	}
 
 	void BoxCollider::DrawDebug(const sf::Transform& transform)

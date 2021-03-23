@@ -11,7 +11,7 @@ void PlayerController::Start()
 
 void PlayerController::Update(Timestep ts)
 {
-	m_OnGround = Physics::CircleCast(m_Transform->Position + sf::Vector2f{ 0.5f * m_Width, m_Height }, 0.5f, m_GroundLayerMask).first;
+	m_OnGround = Physics::BoxCast({ m_Transform->Position + sf::Vector2f{ 8, m_Height }, { 17, 0.5f } }, m_GroundLayerMask).first;
 
 	if (!m_Attacking)
 	{

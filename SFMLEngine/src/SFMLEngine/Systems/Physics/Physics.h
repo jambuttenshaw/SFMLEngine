@@ -26,6 +26,7 @@ namespace SFMLEngine {
 		}
 		
 		static std::pair<bool, Collision> CircleCast(const sf::Vector2f& centre, float radius, Layer layerMask = Layer{});
+		static std::pair<bool, Collision> BoxCast(const sf::FloatRect& rect, Layer layerMask = Layer{});
 
 	public:
 		static sf::Vector2f Gravity;

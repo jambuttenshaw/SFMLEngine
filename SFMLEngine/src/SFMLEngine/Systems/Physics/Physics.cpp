@@ -76,4 +76,30 @@ namespace SFMLEngine {
 
 		return std::make_pair(false, Collision{});
 	}
+
+
+	std::pair<bool, Collision> Physics::BoxCast(const sf::FloatRect& rect, Layer layerMask)
+	{
+		// since theres no draw circle debug option
+		DEBUG_DRAW_RECT(rect, sf::Color::Red);
+
+		for (auto const& collider : s_CollisionSystem->GetAllColliders())
+		{
+			// check to make sure this collider is compatible with the layer mask
+			Layer colliderLayer = s_Coordinator->GetComponent<Identity>(collider.second.Owner).EntityLayer;
+			// we only want to collide with colliders that agree with the layer mask
+			// and that are not triggers
+			if ((colliderLayer & layerMask) == colliderLayer && !collider.second.ColliderPtr->IsTrigger)
+			{
+				auto collisionTest = s_CollisionSystem->BoxCast(rect, collider.first);
+				if (collisionTest.Other != INVALID_ENTITY_ID)
+				{
+					// collision occurred
+					return std::make_pair(true, collisionTest);
+				}
+			}
+		}
+
+		return std::make_pair(false, Collision{});
+	}
 }
