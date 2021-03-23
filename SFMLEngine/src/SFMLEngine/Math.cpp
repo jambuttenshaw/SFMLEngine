@@ -22,6 +22,13 @@ namespace SFMLEngine {
 	}
 
 
+	// FLOAT
+	float Math::Clamp(float value, float min, float max)
+	{
+		return std::max(std::min(value, max), min);
+	}
+
+
 	// VECTOR 2
 	sf::Vector2f Math::Max(const sf::Vector2f& a, const sf::Vector2f& b)
 	{

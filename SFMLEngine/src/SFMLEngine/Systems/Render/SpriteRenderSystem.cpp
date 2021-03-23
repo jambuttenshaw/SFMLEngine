@@ -56,6 +56,41 @@ namespace SFMLEngine {
 		m_Transforms.erase(entity);
 	}
 
+	void SpriteRenderSystem::Update()
+	{
+		for (auto& entity : m_Entities)
+		{
+			SpriteRenderer* renderer = m_SpriteRenderers[entity];
+			if (ComponentModified(renderer))
+			{
+				// check to see if the material has been changed
+				auto mat = renderer->MaterialHandle;
+				if (m_MaterialsMap[mat].find(entity) == m_MaterialsMap[mat].end())
+				{
+					// the material has been changed
+					// remove the entity from its material
+					for (auto& material : m_MaterialsMap)
+					{
+						material.second.erase(entity);
+					}
+
+
+					// insert the entity to the new material
+					if (m_MaterialsMap.find(mat) == m_MaterialsMap.end())
+					{
+						m_MaterialsMap.insert(std::make_pair(mat, std::set<Entity>{ entity }));
+					}
+					else
+					{
+						m_MaterialsMap[mat].insert(entity);
+					}
+				}
+
+				ResetModified(renderer);
+			}
+		}
+	}
+
 	void SpriteRenderSystem::Render(ResourceID material, int renderLayer)
 	{
 		ZoneScoped;

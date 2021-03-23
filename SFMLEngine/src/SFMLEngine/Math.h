@@ -85,6 +85,7 @@ namespace SFMLEngine {
 		static sf::Vector2f Normalize(const sf::Vector2f& a);
 		static sf::Vector3f Normalize(const sf::Vector3f& a);
 
+		static float Clamp(float value, float min, float max);
 		static sf::Vector2f Clamp(const sf::Vector2f& value, const sf::Vector2f& min, const sf::Vector2f& max);
 		static sf::Vector3f Clamp(const sf::Vector3f& value, const sf::Vector3f& min, const sf::Vector3f& max);
 

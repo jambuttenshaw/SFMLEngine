@@ -21,6 +21,8 @@ namespace SFMLEngine {
 		void EntityAddedToSystem(Entity entity) override;
 		void EntityRemovedFromSystem(Entity entity) override;
 
+		void Update();
+
 		void Render(ResourceID material, int renderLayer);
 
 		const std::set<int>& GetRenderLayersUsed() { return m_RenderLayers; }

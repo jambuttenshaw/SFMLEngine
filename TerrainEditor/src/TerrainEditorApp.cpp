@@ -5,6 +5,10 @@
 
 #include "FollowMouse.h"
 #include "CameraController.h"
+#include "EditorManager.h"
+
+
+#include <filesystem>
 
 using namespace SFMLEngine;
 
@@ -16,7 +20,13 @@ public:
 		ResourceID tilePaletteID = TilePalette::LoadFromFile("D:/dev/SFML/SFMLEngine/ExampleProject/assets/palettes/revisedTerrainPalette.json");
 		TilePalette* tilePalette = ResourceManager::GetResourceHandle<TilePalette>(tilePaletteID);
 
-		
+		ResourceID opaqueMat = Material::CreateInstance("Basic");
+
+
+		ResourceID translucentMat = Material::CreateInstance("Basic");
+		Material* matPtr = ResourceManager::GetResourceHandle<Material>(translucentMat);
+		matPtr->SetProperty("u_Color", sf::Color(255, 255, 255, 63));
+
 
 		{
 			m_TilePreview = CreateEntity();
@@ -42,7 +52,17 @@ public:
 			AddNativeScript<FollowMouse>(m_TilePreview);
 		}
 
-		m_Terrain = new EditableTerrain(this, m_TilePreview, tilePaletteID, "D:/dev/SFML/SFMLEngine/ExampleProject/assets/tilemaps/terrain2.json");
+
+		// load in the terrain layers
+		std::string levelDir = "assets/tilemaps/level1";
+		LOG_INFO("Loading level from '{0}'", levelDir);
+		for (const auto& layer : std::filesystem::directory_iterator(levelDir))
+		{
+			std::string layerPath = layer.path().string();
+			LOG_TRACE("Loading layer from '{0}'", layerPath);
+			m_TerrainLayers.push_back(new EditableTerrain(this, m_TilePreview, tilePaletteID, layerPath, opaqueMat, translucentMat));
+		}
+		LOG_INFO("Loading complete.");
 		
 
 		{
@@ -66,6 +86,13 @@ public:
 		}
 
 
+		{
+			m_Manager = CreateEntity();
+			m_ManagerScript = &AddNativeScript<EditorManager>(m_Manager);
+			m_ManagerScript->SetTerrainLayers(&m_TerrainLayers);
+		}
+
+
 		// print controls
 		LOG_INFO("----- Terrain Editor Controls -----");
 		LOG_INFO("Place tiles:      LEFT MOUSE BUTTON");
@@ -80,15 +107,19 @@ public:
 
 	~MainScene()
 	{
-		delete m_Terrain;
+		for (auto& terrain : m_TerrainLayers)
+			delete terrain;
+		m_TerrainLayers.clear();
 	}
 
 private:
-	EditableTerrain* m_Terrain = nullptr;
-	Entity m_TilePreview;
+	std::vector<EditableTerrain*> m_TerrainLayers;
+
+	Entity m_Manager;
+	EditorManager* m_ManagerScript = nullptr;
 
 	Entity m_Camera;
-
+	Entity m_TilePreview;
 	Entity m_CentreMarker;
 };
 

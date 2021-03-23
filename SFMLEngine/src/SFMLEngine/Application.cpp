@@ -407,6 +407,8 @@ namespace SFMLEngine
 
                 // apply any changes made to components
                 m_IdentitySystem->Update();
+                m_SpriteRenderSystem->Update();
+                m_TilemapRenderSystem->Update();
                 m_TilemapSystem->Update();
                 m_GUISystem->Update();
                 m_CameraSystem->Update();

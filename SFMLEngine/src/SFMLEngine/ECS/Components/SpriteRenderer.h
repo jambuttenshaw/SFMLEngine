@@ -60,6 +60,7 @@ namespace SFMLEngine {
 			MaterialHandle = newMat;
 			// the pointer to the material also needs updated when the material is changed
 			MaterialPtr = ResourceManager::GetResourceHandle<Material>(newMat);
+			m_Modified = true;
 		}
 
 		void SetRenderLayer(int newRenderLayer) { RenderLayer = newRenderLayer; m_Modified = true; }

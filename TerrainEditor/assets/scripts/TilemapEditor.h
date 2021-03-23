@@ -16,6 +16,9 @@ public:
 
 	void Update(Timestep ts) override
 	{
+		if (!m_Active) return;
+
+
 		if (Input::IsMouseButtonDown(sf::Mouse::Left))
 		{
 			m_Tilemap->PlaceTile(m_Tilemap->WorldToTileCoordinates(Input::GetMouseWorldPos()), m_Palette->GetAllTiles()[m_CurrentTile], true);
@@ -61,6 +64,10 @@ public:
 	}
 
 
+	void ActivateLayer() { m_Active = true; }
+	void DectivateLayer() { m_Active = false; }
+
+
 private:
 	Tilemap* m_Tilemap = nullptr;
 	TilePalette* m_Palette = nullptr;
@@ -69,5 +76,7 @@ private:
 	std::string m_ExportPath;
 
 	size_t m_CurrentTile = 0;
+
+	bool m_Active = true;
 
 };
