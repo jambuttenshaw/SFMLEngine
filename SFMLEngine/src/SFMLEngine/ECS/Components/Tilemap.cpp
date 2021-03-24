@@ -7,6 +7,7 @@
 
 namespace SFMLEngine {
 
+	bool Tilemap::s_WarnOnLoadFailure = true;
 
 	Tilemap::Tilemap()
 		: TileSize(), PaletteHandle(NULL_RESOURCE_ID), Tiles(), Geometry(sf::Triangles)
@@ -51,7 +52,8 @@ namespace SFMLEngine {
 		std::ifstream infile(dataPath);
 		if (!infile.good())
 		{
-			LOG_CORE_ERROR("Failed to open file '{0}'. Creating empty tilemap.", dataPath);
+			if (s_WarnOnLoadFailure)
+				LOG_CORE_WARN("Failed to open file '{0}'. Creating empty tilemap.", dataPath);
 		}
 		else
 		{

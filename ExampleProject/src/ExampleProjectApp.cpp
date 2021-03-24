@@ -16,6 +16,11 @@
 
 using namespace SFMLEngine;
 
+
+const sf::Color LightColor{ 139, 145, 171, 255 };
+const sf::Color BGColor{ 0, 15, 17, 255 };
+
+
 class MainScene : public Scene
 {
 public:
@@ -175,7 +180,7 @@ public:
 		{
 			m_Light2 = CreateEntity();
 
-			AddComponent(m_Light2, DirectionalLight{ 0, 0, 0.6f, sf::Color{94, 62, 180, 255}, true });
+			AddComponent(m_Light2, DirectionalLight{ 0, 0, 0.6f, LightColor, true });
 		}
 	}
 
@@ -194,14 +199,13 @@ private:
 };
 
 
-
 class SandboxApp : public Application
 {
 public:
 	SandboxApp()
 		: Application("Sandbox", sf::Vector2i(1200, 675))
 	{
-		SetClearColor(sf::Color{0, 4, 12});
+		SetClearColor(BGColor * LightColor);
 
 		LoadScene<MainScene>();
 	}

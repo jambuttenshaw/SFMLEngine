@@ -113,6 +113,7 @@ public:
 		: Application("Terrain Editor", { 1200, 675 })
 	{
 		SetClearColor({ 175, 209, 230 });
+		Tilemap::WarnOnLoadFailure(false);
 
 		LoadScene<MainScene>();
 	}

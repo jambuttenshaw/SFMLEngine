@@ -50,6 +50,11 @@ namespace SFMLEngine {
 
 		bool Export(const std::string& exportPath);
 
+	public:
+		static void WarnOnLoadFailure(bool flag) { s_WarnOnLoadFailure = flag; }
+	private:
+		static bool s_WarnOnLoadFailure;
+
 	private:
 		
 		void AddTileToGeometry(Tile& tile);
