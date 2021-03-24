@@ -46,6 +46,8 @@ namespace SFMLEngine {
 				for (auto script : scriptComponent.Scripts)
 					script.second->Start();
 			}
+
+			m_Started = true;
 		}
 
 		void Update(Timestep ts)
@@ -80,6 +82,9 @@ namespace SFMLEngine {
 			auto& nativeScriptComponent = m_Coordinator->GetComponent<NativeScripts>(entity);
 			nativeScriptComponent.Scripts.insert({ {typeName, scriptableEntity} });
 
+			// if the script is created during the game then call the start immediately after its created
+			if (m_Started) scriptableEntity->Start();
+
 			return *newScript;
 		}
 
@@ -109,6 +114,8 @@ namespace SFMLEngine {
 
 	private:
 		Coordinator* m_Coordinator = nullptr;
+
+		bool m_Started = false;
 	};
 
 }

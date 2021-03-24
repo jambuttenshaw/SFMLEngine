@@ -36,9 +36,13 @@ public:
 			auto wheelDelta = Input::GetMouseWheelDelta();
 			if (abs(wheelDelta) > 0)
 			{
-				m_CurrentTile += wheelDelta;
+				int newTile = static_cast<int>(m_CurrentTile) + wheelDelta;
 
-				if (m_CurrentTile > m_Palette->GetTileCount() - 1) m_CurrentTile = 0;
+				if (newTile < 0) newTile = m_Palette->GetTileCount() - 1;
+				if (newTile > m_Palette->GetTileCount() - 1) newTile = 0;
+
+				m_CurrentTile = static_cast<size_t>(newTile);
+
 
 				m_TilePreview->PlaceTile({ 0, 0 }, m_Palette->GetAllTiles()[m_CurrentTile], true);
 			}

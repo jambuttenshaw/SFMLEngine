@@ -8,8 +8,6 @@
 #include "EditorManager.h"
 
 
-#include <filesystem>
-
 using namespace SFMLEngine;
 
 class MainScene : public Scene
@@ -17,7 +15,7 @@ class MainScene : public Scene
 public:
 	void Create() override
 	{
-		ResourceID tilePaletteID = TilePalette::LoadFromFile("D:/dev/SFML/SFMLEngine/ExampleProject/assets/palettes/revisedTerrainPalette.json");
+		ResourceID tilePaletteID = TilePalette::LoadFromFile("D:/dev/SFML/SFMLEngine/ExampleProject/assets/palettes/terrainPalette.json");
 		TilePalette* tilePalette = ResourceManager::GetResourceHandle<TilePalette>(tilePaletteID);
 
 		ResourceID opaqueMat = Material::CreateInstance("Basic");
@@ -53,16 +51,7 @@ public:
 		}
 
 
-		// load in the terrain layers
-		std::string levelDir = "D:/dev/SFML/SFMLEngine/ExampleProject/assets/tilemaps/level1";
-		LOG_INFO("Loading level from '{0}'", levelDir);
-		for (const auto& layer : std::filesystem::directory_iterator(levelDir))
-		{
-			std::string layerPath = layer.path().string();
-			LOG_TRACE("Loading layer from '{0}'", layerPath);
-			m_TerrainLayers.push_back(new EditableTerrain(this, m_TilePreview, tilePaletteID, layerPath, opaqueMat, translucentMat));
-		}
-		LOG_INFO("Loading complete.");
+		
 		
 
 		{
@@ -89,7 +78,9 @@ public:
 		{
 			m_Manager = CreateEntity();
 			m_ManagerScript = &AddNativeScript<EditorManager>(m_Manager);
-			m_ManagerScript->SetTerrainLayers(&m_TerrainLayers);
+			
+			std::string levelDir = "D:/dev/SFML/SFMLEngine/ExampleProject/assets/tilemaps/level1";
+			m_ManagerScript->Setup(this, m_TilePreview, tilePaletteID, levelDir, opaqueMat, translucentMat);
 		}
 
 
@@ -105,16 +96,7 @@ public:
 		LOG_INFO("-----------------------------------");
 	}
 
-	~MainScene()
-	{
-		for (auto& terrain : m_TerrainLayers)
-			delete terrain;
-		m_TerrainLayers.clear();
-	}
-
 private:
-	std::vector<EditableTerrain*> m_TerrainLayers;
-
 	Entity m_Manager;
 	EditorManager* m_ManagerScript = nullptr;
 

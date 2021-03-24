@@ -21,7 +21,7 @@ class MainScene : public Scene
 public:
 	void Create() override
 	{
-		ResourceID tilePaletteID = TilePalette::LoadFromFile("assets/palettes/revisedTerrainPalette.json");
+		ResourceID tilePaletteID = TilePalette::LoadFromFile("assets/palettes/terrainPalette.json");
 		TilePalette* tilePalette = ResourceManager::GetResourceHandle<TilePalette>(tilePaletteID);
 
 		{
@@ -53,34 +53,22 @@ public:
 
 			// this object should be solid
 			// add a collider
-			AddComponent(m_JumpThroughPlatforms, TilemapCollider{ TilemapCollider::OptimizationLevel::Standard });
+			AddComponent(m_JumpThroughPlatforms, TilemapCollider{ TilemapCollider::OptimizationLevel::High });
 			AddComponent(m_JumpThroughPlatforms, ColliderInfo{ ColliderType::Tilemap });
 		}
 
-		/*
+		
 		{
 			m_Ladders = CreateEntity();
 			SetEntityTag(m_Ladders, "Ladder");
 			SetEntityLayer(m_Ladders, "Ground");
 
-			AddComponent(m_Ladders, Transform{ sf::Vector2f(0, 0) });
+			AddComponent(m_Ladders, Transform{ });
 
-			ResourceID tilePaletteID = TilePalette::LoadFromFile("assets/palettes/terrainPalette.json");
-			TilePalette* tilePalette = ResourceManager::GetResourceHandle<TilePalette>(tilePaletteID);
-			TileID ladderTile = tilePalette->GetTileByName("ladder");
 
-			// load a tilemap from a file
-			Tilemap tilemapComponent{ tilePaletteID };
-			tilemapComponent.PlaceTile({ 1, -1 }, ladderTile);
-			tilemapComponent.PlaceTile({ 1, -2 }, ladderTile);
-			tilemapComponent.PlaceTile({ 1, -3 }, ladderTile);
-			tilemapComponent.PlaceTile({ 1, -4 }, ladderTile);
-			tilemapComponent.PlaceTile({ 1, -5 }, ladderTile);
 
-			AddComponent(m_Ladders, tilemapComponent);
-
-			TilemapRenderer tilemapRendererComponent{ Material::Create("LitTilemap"), 1 };
-			AddComponent(m_Ladders, tilemapRendererComponent);
+			AddComponent(m_Ladders, Tilemap{ tilePaletteID, "assets/tilemaps/level1/layer2.json" });
+			AddComponent(m_Ladders, TilemapRenderer{ Material::Create("LitTilemap"), 1 });
 
 
 			// this object should have a trigger collider so that the player knows when its collided with a ladder
@@ -89,7 +77,7 @@ public:
 			AddComponent(m_Ladders, collider);
 			AddComponent(m_Ladders, ColliderInfo{ ColliderType::Tilemap });
 		}
-		*/
+		
 		
 
 		{

@@ -4,14 +4,36 @@
 
 using namespace SFMLEngine;
 
+#include <filesystem>
 #include "EditableTerrain.h"
 
 class EditorManager : public ScriptableEntity
 {
 public:
+	void Setup(Scene* scene, Entity tilePreviewEntity, ResourceID paletteID, const std::string& levelDir, ResourceID opaqueMat, ResourceID translucentMat)
+	{
+		m_Scene = scene;
+		m_TilePreviewEntity = tilePreviewEntity;
+		m_PaletteID = paletteID;
+		m_LevelDir = levelDir;
+		m_OpaqueMat = opaqueMat;
+		m_TranslucentMat = translucentMat;
+	}
+
+
 	void Start() override
 	{
-		if (m_TerrainLayers->size())
+		// load in the terrain layers
+		LOG_INFO("Loading level from '{0}'", m_LevelDir);
+		for (const auto& layer : std::filesystem::directory_iterator(m_LevelDir))
+		{
+			std::string layerPath = layer.path().string();
+			LOG_TRACE("Loading layer from '{0}'", layerPath);
+			m_TerrainLayers.push_back(new EditableTerrain(m_Scene, m_TilePreviewEntity, m_PaletteID, layerPath, m_OpaqueMat, m_TranslucentMat));
+		}
+		LOG_INFO("Loading complete.");
+
+		if (m_TerrainLayers.size())
 		{
 			SelectLayer();
 		}
@@ -19,7 +41,7 @@ public:
 
 	void Update(Timestep ts) override
 	{
-		if (!m_TerrainLayers->size()) return;
+		if (!m_TerrainLayers.size()) return;
 
 		// use a temporary int instead of directly using current layer
 		// because m_CurrentLayer is an unsigned type
@@ -28,14 +50,14 @@ public:
 		if (Input::IsKeyPressed(sf::Keyboard::Up))
 		{
 			nextLayer += 1;
-			if (nextLayer >= m_TerrainLayers->size())
+			if (nextLayer >= m_TerrainLayers.size())
 				nextLayer = 0;
 		}
 		if (Input::IsKeyPressed(sf::Keyboard::Down))
 		{
 			nextLayer -= 1;
 			if (nextLayer < 0)
-				nextLayer = static_cast<int>(m_TerrainLayers->size()) - 1;
+				nextLayer = static_cast<int>(m_TerrainLayers.size()) - 1;
 		}
 
 		if (nextLayer != m_CurrentLayer)
@@ -45,22 +67,32 @@ public:
 			SelectLayer();
 		}
 
+
+
+		// creating more layers
+		if (Input::IsKeyDown(sf::Keyboard::LShift) && Input::IsKeyPressed(sf::Keyboard::N))
+		{
+			LOG_INFO("Creating new layer...");
+			std::string layerPath = m_LevelDir + "/layer" + std::to_string(m_TerrainLayers.size()) + ".json";
+			m_TerrainLayers.push_back(new EditableTerrain(m_Scene, m_TilePreviewEntity, m_PaletteID, layerPath, m_OpaqueMat, m_TranslucentMat));
+			LOG_INFO("New layer created in '{0}'", layerPath);
+
+			m_CurrentLayer = m_TerrainLayers.size() - 1;
+			SelectLayer();
+		}
+
+
+
 		DEBUG_DISPLAY("Current Layer", static_cast<int>(m_CurrentLayer));
-	}
-
-
-	void SetTerrainLayers(std::vector<EditableTerrain*>* terrainLayers)
-	{
-		m_TerrainLayers = terrainLayers;
 	}
 
 
 	void SelectLayer()
 	{
 		// set the current layer active and all the others inactive
-		for (size_t i = 0; i < m_TerrainLayers->size(); i++)
+		for (size_t i = 0; i < m_TerrainLayers.size(); i++)
 		{
-			auto& currentLayer = m_TerrainLayers->at(i);
+			auto& currentLayer = m_TerrainLayers[i];
 			if (i == m_CurrentLayer)
 			{
 				currentLayer->GetEditorScript()->ActivateLayer();
@@ -74,10 +106,28 @@ public:
 		}
 	}
 
+	~EditorManager()
+	{
+		for (auto& terrain : m_TerrainLayers)
+			delete terrain;
+		m_TerrainLayers.clear();
+	}
+
 private:
+	Scene* m_Scene;
+
+	ResourceID m_PaletteID;
+
+	std::string m_LevelDir;
+	ResourceID m_OpaqueMat;
+	ResourceID m_TranslucentMat;
+
+	Entity m_TilePreviewEntity;
+
+
 	// the vector of terrain layers is owned by the scene
 	// but the manager has a pointer to it to control the layers
-	std::vector<EditableTerrain*>* m_TerrainLayers;
+	std::vector<EditableTerrain*> m_TerrainLayers;
 
 	size_t m_CurrentLayer = 0;
 };
