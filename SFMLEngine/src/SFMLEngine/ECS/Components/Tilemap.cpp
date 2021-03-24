@@ -35,6 +35,9 @@ namespace SFMLEngine {
 		{
 			AddTileToGeometry(tile);
 		}
+
+		// we dont need to regenerate tilemap geometry or anything on the first frame
+		m_Modified = false;
 	}
 
 
@@ -67,6 +70,9 @@ namespace SFMLEngine {
 
 			infile.close();
 		}
+
+		// we dont need to regenerate tilemap geometry or anything on the first frame
+		m_Modified = false;
 	}
 
 

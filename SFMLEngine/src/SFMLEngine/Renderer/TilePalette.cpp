@@ -84,42 +84,59 @@ namespace SFMLEngine {
 		}
 
 		nlohmann::json paletteJson;
-		infile >> paletteJson;
-
-		// now we can start loading up the tilemap
-		m_PaletteTextureID = Texture::Create(paletteJson["texturePath"]);
-		m_NormalMapTextureID = Texture::Create(paletteJson["normalsPath"]);
-
-
-		m_TileSize = sf::Vector2u(paletteJson["tileSizeX"], paletteJson["tileSizeY"]);
-
-		for (auto& element : paletteJson["tiles"])
+		try
 		{
-			// place the tile data into the tile atlas
-			TileID newID = GetNextTileID();
+			infile >> paletteJson;
+		}
+		catch (const std::exception& e)
+		{
+			LOG_CORE_ERROR("Exception occurred: {0}", e.what());
+			SFMLE_CORE_ASSERT(0, "Failed to parse palette JSON.");
+		}
+		
+		try
+		{
 
-			sf::Vector2u pos{ element["x"], element["y"] };
+			// now we can start loading up the tilemap
+			m_PaletteTextureID = Texture::Create(paletteJson["texturePath"]);
+			m_NormalMapTextureID = Texture::Create(paletteJson["normalsPath"]);
 
-			sf::Vector2u size = m_TileSize;
-			if (element.find("w") != element.end())
-				size.x = element["w"];
-			if (element.find("h") != element.end())
-				size.y = element["h"];
 
-			sf::Vector2u colliderSize = size;
-			sf::Vector2i colliderOffset;
-			if (element.find("collider") != element.end())
+			m_TileSize = sf::Vector2u(paletteJson["tileSizeX"], paletteJson["tileSizeY"]);
+
+			for (auto& element : paletteJson["tiles"])
 			{
-				colliderOffset.x = element["collider"]["x"];
-				colliderOffset.y = element["collider"]["y"];
-				
-				colliderSize.x = element["collider"]["w"];
-				colliderSize.y = element["collider"]["h"];
-			}
+				// place the tile data into the tile atlas
+				TileID newID = GetNextTileID();
 
-			m_TileAtlas.insert(std::make_pair(newID,
-				TileData{ element["name"], pos, size, colliderOffset, colliderSize }
-			));
+				sf::Vector2u pos{ element["x"], element["y"] };
+
+				sf::Vector2u size = m_TileSize;
+				if (element.find("w") != element.end())
+					size.x = element["w"];
+				if (element.find("h") != element.end())
+					size.y = element["h"];
+
+				sf::Vector2u colliderSize = size;
+				sf::Vector2i colliderOffset;
+				if (element.find("collider") != element.end())
+				{
+					colliderOffset.x = element["collider"]["x"];
+					colliderOffset.y = element["collider"]["y"];
+
+					colliderSize.x = element["collider"]["w"];
+					colliderSize.y = element["collider"]["h"];
+				}
+
+				m_TileAtlas.insert(std::make_pair(newID,
+					TileData{ element["name"], pos, size, colliderOffset, colliderSize }
+				));
+			}
+		}
+		catch (const std::exception& e)
+		{
+			LOG_CORE_ERROR("Exception occurred: {0}", e.what());
+			SFMLE_CORE_ASSERT(0, "Failed to construct palette, invalid palette JSON.");
 		}
 
 		// set the placing point for any future tiles
