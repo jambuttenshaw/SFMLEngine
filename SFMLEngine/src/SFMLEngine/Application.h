@@ -101,6 +101,8 @@ namespace SFMLEngine {
 
 	private:
 		sf::RenderWindow* m_Window;
+		// a view with topleft at 0,0 and size = window size
+		sf::View m_GUIView;
 
 		sf::Clock m_Clock;
 

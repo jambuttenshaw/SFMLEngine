@@ -137,9 +137,11 @@ void PlayerController::Jump(Timestep ts)
 		{
 			m_Rigidbody->Velocity.y = m_ClimbSpeed;
 		}
+		/*
 		else
 		{
 			m_Rigidbody->Velocity += Physics::Gravity * m_FallMultiplier * (float)ts;
 		}
+		*/
 	}
 }

@@ -60,6 +60,8 @@ namespace SFMLEngine
         m_Window->setFramerateLimit(m_FPSLimit);
         m_Window->setVerticalSyncEnabled(m_VSync);
 
+        m_GUIView = m_Window->getDefaultView();
+
         Renderer::InitGLEW();
 
         // load up the shader library
@@ -349,6 +351,9 @@ namespace SFMLEngine
                     if (event.type == sf::Event::Resized)
                     {
                         m_CameraSystem->WindowResized(sf::Vector2f((float)event.size.width, (float)event.size.height));
+
+                        // set the view to fill the window with topleft at 0, 0
+                        m_GUIView.reset({ 0, 0, static_cast<float>(event.size.width), static_cast<float>(event.size.height) });
                         continue;
                     }
 
@@ -477,7 +482,8 @@ namespace SFMLEngine
                 ZoneName("RenderGUI", 9);
 
                 // set the windows view to the default for the GUI
-                m_Window->setView(m_Window->getDefaultView());
+                m_Window->setView(m_GUIView);
+
                 // draw the GUI onto the display
                 m_GUISystem->Render();
             }
