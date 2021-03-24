@@ -37,7 +37,7 @@ public:
 			
 			// this object should be solid
 			// add a collider
-			AddComponent(m_Ground, TilemapCollider { TilemapCollider::OptimizationLevel::Standard });
+			AddComponent(m_Ground, TilemapCollider { TilemapCollider::OptimizationLevel::High });
 			AddComponent(m_Ground, ColliderInfo{ ColliderType::Tilemap });
 		}
 
@@ -49,7 +49,6 @@ public:
 
 			AddComponent(m_JumpThroughPlatforms, Tilemap{ tilePaletteID, "assets/tilemaps/level1/layer1.json" });
 			AddComponent(m_JumpThroughPlatforms, TilemapRenderer{ Material::Create("LitTilemap"), 1 });
-
 
 			// this object should be solid
 			// add a collider
@@ -65,11 +64,8 @@ public:
 
 			AddComponent(m_Ladders, Transform{ });
 
-
-
 			AddComponent(m_Ladders, Tilemap{ tilePaletteID, "assets/tilemaps/level1/layer2.json" });
 			AddComponent(m_Ladders, TilemapRenderer{ Material::Create("LitTilemap"), 1 });
-
 
 			// this object should have a trigger collider so that the player knows when its collided with a ladder
 			TilemapCollider collider{ TilemapCollider::OptimizationLevel::High };
@@ -77,7 +73,6 @@ public:
 			AddComponent(m_Ladders, collider);
 			AddComponent(m_Ladders, ColliderInfo{ ColliderType::Tilemap });
 		}
-		
 		
 
 		{

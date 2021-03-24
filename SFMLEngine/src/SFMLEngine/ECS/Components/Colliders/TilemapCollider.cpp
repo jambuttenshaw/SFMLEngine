@@ -26,13 +26,15 @@ namespace SFMLEngine {
 			// create a quad and add it to our collision geometry
 
 			const sf::Vector2u& colliderSize = TilemapHandle->PalettePtr->GetColliderSize(tile.TileType);
+			const sf::Vector2i& colliderOffset = TilemapHandle->PalettePtr->GetColliderOffset(tile.TileType);
 			if (colliderSize.x == 0 || colliderSize.y == 0) continue; // dont create geometry for colliders that are missing a dimension
 
 			// the size of the collider should be the size of the tile
 			m_CollisionGeometry.push_back(
 				BoxCollider{
 					static_cast<sf::Vector2f>(colliderSize), // size
-					{tile.Position.x * TilemapHandle->TileSize.x, tile.Position.y * TilemapHandle->TileSize.y}, // offset
+					{ (tile.Position.x * TilemapHandle->TileSize.x) + colliderOffset.x,
+					  (tile.Position.y * TilemapHandle->TileSize.y) + colliderOffset.y }, // offset
 					false // dont auto assign the id for the box collider
 				});
 		}

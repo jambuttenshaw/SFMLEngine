@@ -107,14 +107,18 @@ namespace SFMLEngine {
 				size.y = element["h"];
 
 			sf::Vector2u colliderSize = size;
+			sf::Vector2i colliderOffset;
 			if (element.find("collider") != element.end())
 			{
+				colliderOffset.x = element["collider"]["x"];
+				colliderOffset.y = element["collider"]["y"];
+				
 				colliderSize.x = element["collider"]["w"];
 				colliderSize.y = element["collider"]["h"];
 			}
 
 			m_TileAtlas.insert(std::make_pair(newID,
-				TileData{ element["name"], pos, size, colliderSize }
+				TileData{ element["name"], pos, size, colliderOffset, colliderSize }
 			));
 		}
 
@@ -226,6 +230,12 @@ namespace SFMLEngine {
 	{
 		SFMLE_CORE_ASSERT(m_TileAtlas.find(tile) != m_TileAtlas.end(), "Tile has not been registered!");
 		return m_TileAtlas[tile].ColliderSize;
+	}
+
+	const sf::Vector2i& TilePalette::GetColliderOffset(TileID tile)
+	{
+		SFMLE_CORE_ASSERT(m_TileAtlas.find(tile) != m_TileAtlas.end(), "Tile has not been registered!");
+		return m_TileAtlas[tile].ColliderOffset;
 	}
 
 	TileID TilePalette::GetNextTileID()
