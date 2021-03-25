@@ -197,7 +197,7 @@ namespace SFMLEngine {
 		sf::Vector2f topLeft, bottomRight;
 		for (auto const& quad : m_CollisionGeometry)
 		{
-			topLeft = Math::Max(topLeft, sf::Vector2f(quad.Bounds.left, quad.Bounds.top));
+			topLeft = Math::Min(topLeft, sf::Vector2f(quad.Bounds.left, quad.Bounds.top));
 			bottomRight = Math::Max(bottomRight, sf::Vector2f(quad.Bounds.left + quad.Bounds.width, quad.Bounds.top + quad.Bounds.height));
 		}
 
