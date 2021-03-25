@@ -348,7 +348,7 @@ namespace SFMLEngine
                         continue;
                     }
 
-                    if (event.type == sf::Event::Resized)
+                    else if (event.type == sf::Event::Resized)
                     {
                         m_CameraSystem->WindowResized(sf::Vector2f((float)event.size.width, (float)event.size.height));
 
@@ -357,28 +357,28 @@ namespace SFMLEngine
                         continue;
                     }
 
-                    if (event.type == sf::Event::GainedFocus)
+                    else if (event.type == sf::Event::GainedFocus)
                     {
                         Input::SetFocused(true);
                         continue;
                     }
 
-                    if (event.type == sf::Event::LostFocus)
+                    else if (event.type == sf::Event::LostFocus)
                     {
                         Input::SetFocused(false);
                         continue;
                     }
 
-                    if (event.type == sf::Event::MouseMoved)
+                    else if (event.type == sf::Event::MouseMoved)
                         Input::SetMouseDelta(sf::Vector2f((float)event.mouseMove.x, (float)event.mouseMove.y));
 
-                    if (event.type == sf::Event::MouseWheelMoved)
+                    else if (event.type == sf::Event::MouseWheelMoved)
                         Input::SetWheelDelta(event.mouseWheel.delta);
 
-                    if (event.type == sf::Event::MouseButtonPressed)
+                    else if (event.type == sf::Event::MouseButtonPressed)
                         Input::SetMousePressed(event.mouseButton.button);
 
-                    if (event.type == sf::Event::KeyPressed)
+                    else if (event.type == sf::Event::KeyPressed)
                     {
                         // send the key to input module to be registered as pressed this frame
                         Input::SetKeyPressed(event.key.code);
@@ -391,6 +391,9 @@ namespace SFMLEngine
                         }
 #endif
                     }
+
+                    else if (event.type == sf::Event::KeyReleased)
+                        Input::SetKeyUp(event.key.code);
                 }
             }
 

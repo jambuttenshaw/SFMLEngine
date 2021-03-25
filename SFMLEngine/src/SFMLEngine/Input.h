@@ -32,8 +32,17 @@ namespace SFMLEngine {
 		static void Reset();
 		static void SetMouseDelta(const sf::Vector2f& newPos) { s_MouseDelta = s_OldMousePos - newPos; s_OldMousePos = newPos; }
 		static void SetWheelDelta(int delta) { s_WheelDelta = delta; }
-		static void SetKeyPressed(sf::Keyboard::Key key) { s_KeysPressed.insert(static_cast<int>(key)); }
+		static void SetKeyPressed(sf::Keyboard::Key key)
+		{ 
+			int keycode = static_cast<int>(key);
+			if (s_WaitingForRelease.find(keycode) == s_WaitingForRelease.end())
+			{
+				s_KeysPressed.insert(keycode);
+				s_WaitingForRelease.insert(keycode);
+			}
+		}
 		static void SetMousePressed(sf::Mouse::Button button) { s_MouseButtonsPressed.insert(static_cast<int>(button)); }
+		static void SetKeyUp(sf::Keyboard::Key key) { s_WaitingForRelease.erase(static_cast<int>(key)); }
 
 	private:
 		static sf::RenderWindow* s_Window;
@@ -48,6 +57,8 @@ namespace SFMLEngine {
 		// all of the keys pressed this frame
 		static std::set<int> s_KeysPressed;
 		static std::set<int> s_MouseButtonsPressed;
+
+		static std::set<int> s_WaitingForRelease;
 
 	};
 

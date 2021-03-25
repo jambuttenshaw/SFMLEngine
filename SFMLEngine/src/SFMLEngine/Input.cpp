@@ -16,6 +16,8 @@ namespace SFMLEngine {
 	std::set<int> Input::s_KeysPressed;
 	std::set<int> Input::s_MouseButtonsPressed;
 
+	std::set<int> Input::s_WaitingForRelease;
+
 	void Input::Init(sf::RenderWindow* window, std::shared_ptr<CameraSystem> cameraSystem)
 	{
 		ZoneScoped;
