@@ -31,6 +31,7 @@ private:
 	Layer m_GroundLayerMask;
 
 	bool m_OnGround = false;
+	bool m_AgainstWall = false;
 	bool m_Attacking = false;
 
 	bool m_OnLadder = false;

@@ -42,7 +42,7 @@ public:
 			
 			// this object should be solid
 			// add a collider
-			AddComponent(m_Ground, TilemapCollider { TilemapCollider::OptimizationLevel::High });
+			AddComponent(m_Ground, TilemapCollider { TilemapCollider::OptimizationLevel::Standard });
 			AddComponent(m_Ground, ColliderInfo{ ColliderType::Tilemap });
 		}
 

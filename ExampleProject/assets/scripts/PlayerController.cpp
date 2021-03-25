@@ -12,6 +12,10 @@ void PlayerController::Start()
 void PlayerController::Update(Timestep ts)
 {
 	m_OnGround = Physics::BoxCast({ m_Transform->Position + sf::Vector2f{ 8, m_Height }, { 17, 0.5f } }, m_GroundLayerMask).first;
+	if (m_FacingRight)
+		m_AgainstWall = Physics::BoxCast({ m_Transform->Position + sf::Vector2f{ 25, 16 }, {0.5f, 48} }, m_GroundLayerMask).first;
+	else
+		m_AgainstWall = Physics::BoxCast({ m_Transform->Position + sf::Vector2f{ 7, 16 }, {0.5f, 48} }, m_GroundLayerMask).first;
 
 	if (!m_Attacking)
 	{
@@ -57,6 +61,7 @@ void PlayerController::Update(Timestep ts)
 	DEBUG_DISPLAY("Player position", m_Rigidbody->Position);
 	DEBUG_DISPLAY("Player velocity", m_Rigidbody->Velocity);
 	DEBUG_DISPLAY("Player on ground", m_OnGround);
+	DEBUG_DISPLAY("Player against wall", m_AgainstWall);
 	DEBUG_DISPLAY("Player on ladder", m_OnLadder);
 }
 
@@ -68,7 +73,13 @@ void PlayerController::OnColliderEnter(const Collision& collision)
 	{
 		if (collision.CollisionDirection == Math::Direction::Down)
 			m_OnGround = true;
+
+	//	if (collision.CollisionDirection == Math::Direction::Left ||)
+	//		m_Rigidbody->Velocity += // bounce
 	}
+
+
+	// handle collision from jump through platforms
 }
 void PlayerController::OnColliderExit(Entity other)
 {
@@ -102,12 +113,14 @@ void PlayerController::OnTriggerExit(Entity other)
 void PlayerController::Move(Timestep ts)
 {
 	m_Rigidbody->Velocity.x = Math::Lerp(m_Rigidbody->Velocity.x, 0.0f, m_Friction * ts);
-	if (Input::IsKeyDown(sf::Keyboard::D))
+	// dont let the player move right if its against the wall and facing right
+	if (Input::IsKeyDown(sf::Keyboard::D) && !(m_AgainstWall && m_FacingRight))
 	{
 		m_Rigidbody->Velocity.x = m_MoveSpeed;
 		m_FacingRight = true;
 	}
-	if (Input::IsKeyDown(sf::Keyboard::A))
+	// dont let the player move left if it is against the wall and facing left
+	if (Input::IsKeyDown(sf::Keyboard::A) && !(m_AgainstWall && !m_FacingRight))
 	{
 		m_Rigidbody->Velocity.x = -m_MoveSpeed;
 		m_FacingRight = false;
