@@ -168,6 +168,22 @@ namespace SFMLEngine {
 				}
 			}
 		}
+		else
+		{
+			// we've already sent a collision enter callback, so instead send a collision stay callback
+			// run collision callback
+			if (m_Coordinator->HasComponent<NativeScripts>(entity))
+			{
+				auto& scriptsComponent = m_Coordinator->GetComponent<NativeScripts>(entity);
+				for (auto& script : scriptsComponent.Scripts)
+				{
+					if (collisionData.Trigger)
+						script.second->OnTriggerStay(collisionData);
+					else
+						script.second->OnColliderStay(collisionData);
+				}
+			}
+		}
 	}
 
 	void PhysicsSystem::CollisionExitCallback(Entity entity, const CollisionCache& collision)

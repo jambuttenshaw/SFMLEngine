@@ -21,9 +21,11 @@ namespace SFMLEngine {
 		virtual void Update(Timestep ts) {}
 
 		virtual void OnColliderEnter(const Collision& collisionData) {}
+		virtual void OnColliderStay(const Collision& collisionData) {}
 		virtual void OnColliderExit(Entity other) {}
 
 		virtual void OnTriggerEnter(const Collision& collisionData) {}
+		virtual void OnTriggerStay(const Collision& collisionData) {}
 		virtual void OnTriggerExit(Entity other) {}
 
 

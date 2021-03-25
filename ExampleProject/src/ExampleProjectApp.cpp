@@ -57,7 +57,9 @@ public:
 
 			// this object should be solid
 			// add a collider
-			AddComponent(m_JumpThroughPlatforms, TilemapCollider{ TilemapCollider::OptimizationLevel::High });
+			TilemapCollider collider{ TilemapCollider::OptimizationLevel::High };
+			collider.IsTrigger = true;
+			AddComponent(m_JumpThroughPlatforms, collider);
 			AddComponent(m_JumpThroughPlatforms, ColliderInfo{ ColliderType::Tilemap });
 		}
 

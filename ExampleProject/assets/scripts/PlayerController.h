@@ -14,6 +14,7 @@ public:
 	void OnColliderExit(Entity other) override;
 
 	void OnTriggerEnter(const Collision& collision) override;
+	void OnTriggerStay(const Collision& collision) override;
 	void OnTriggerExit(Entity other) override;
 
 	void Move(Timestep ts);
@@ -31,10 +32,15 @@ private:
 	Layer m_GroundLayerMask;
 
 	bool m_OnGround = false;
+	bool m_OnJumpThrough = false;
+	int m_JumpThroughContactCount = 0;
+
 	bool m_AgainstWall = false;
 	bool m_Attacking = false;
+	bool m_CanLandOnPlatform = true;
 
 	bool m_OnLadder = false;
+	bool m_Sliding = false;
 	float m_ClimbSpeed = 100.0f;
 	float m_ClimbHorizontalFactor = 0.3f;
 

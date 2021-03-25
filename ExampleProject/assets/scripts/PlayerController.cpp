@@ -11,11 +11,25 @@ void PlayerController::Start()
 
 void PlayerController::Update(Timestep ts)
 {
-	m_OnGround = Physics::BoxCast({ m_Transform->Position + sf::Vector2f{ 8, m_Height }, { 17, 0.5f } }, m_GroundLayerMask).first;
+	if (!(m_OnJumpThrough && m_CanLandOnPlatform)) m_OnGround = Physics::BoxCast({ m_Transform->Position + sf::Vector2f{ 8, m_Height }, { 17, 0.5f } }, m_GroundLayerMask).first;
+
 	if (m_FacingRight)
 		m_AgainstWall = Physics::BoxCast({ m_Transform->Position + sf::Vector2f{ 25, 16 }, {0.5f, 48} }, m_GroundLayerMask).first;
 	else
 		m_AgainstWall = Physics::BoxCast({ m_Transform->Position + sf::Vector2f{ 7, 16 }, {0.5f, 48} }, m_GroundLayerMask).first;
+
+	if (m_CanLandOnPlatform)
+	{
+		if (Input::IsKeyDown(sf::Keyboard::S))
+			m_CanLandOnPlatform = false;
+	}
+	else
+	{
+		// we are no longer on a jump through and S is no longer held down
+		// we are able to land on another jump through
+		if (!m_OnJumpThrough && !Input::IsKeyDown(sf::Keyboard::S))
+			m_CanLandOnPlatform = true;
+	}
 
 	if (!m_Attacking)
 	{
@@ -24,6 +38,7 @@ void PlayerController::Update(Timestep ts)
 		{
 			m_Attacking = true;
 			m_Animator->SetCurrentAnimation("punch");
+			m_Rigidbody->Velocity.x = 0;
 		}
 		else
 		{
@@ -38,7 +53,7 @@ void PlayerController::Update(Timestep ts)
 			}
 			else
 			{
-				if (m_OnLadder)
+				if (m_OnLadder && !m_Sliding)
 					m_Animator->SetCurrentAnimation("climb");
 				else
 					m_Animator->SetCurrentAnimation("jump");
@@ -63,31 +78,18 @@ void PlayerController::Update(Timestep ts)
 	DEBUG_DISPLAY("Player on ground", m_OnGround);
 	DEBUG_DISPLAY("Player against wall", m_AgainstWall);
 	DEBUG_DISPLAY("Player on ladder", m_OnLadder);
+	DEBUG_DISPLAY("Jump through contact count", m_JumpThroughContactCount);
 }
 
 
 void PlayerController::OnColliderEnter(const Collision& collision)
 {
-	const std::string& layer = GetEntityLayer(collision.Other);
-	if (layer == "Ground")
-	{
-		if (collision.CollisionDirection == Math::Direction::Down)
-			m_OnGround = true;
 
-	//	if (collision.CollisionDirection == Math::Direction::Left ||)
-	//		m_Rigidbody->Velocity += // bounce
-	}
-
-
-	// handle collision from jump through platforms
 }
+
 void PlayerController::OnColliderExit(Entity other)
 {
-	const std::string& layer = GetEntityLayer(other);
-	if (layer == "Ground")
-	{
-		m_OnGround = false;
-	}
+
 }
 
 
@@ -98,13 +100,47 @@ void PlayerController::OnTriggerEnter(const Collision& collision)
 		// hit ladder
 		m_OnLadder = true;
 	}
-}						 
+	else if (GetEntityLayer(collision.Other) == "JumpThrough")
+	{
+		m_JumpThroughContactCount++;
+	}
+
+}	
+
+void PlayerController::OnTriggerStay(const Collision& collision)
+{
+	if (GetEntityLayer(collision.Other) == "JumpThrough")
+	{
+		// if collider bottom is *almost* above other collider top
+		// by definition, a collision CANNOT occurr of the bottom is actually above the others top
+		// it just needs to be "close enough" to count as landing on the platform
+
+		// we also only want to do it when the player is moving down
+		if (collision.GlobalBounds.top + 0.75f * collision.GlobalBounds.height < collision.OtherGlobalBounds.top && m_Rigidbody->Velocity.y > 0)
+		{
+			if (m_CanLandOnPlatform)
+			{
+				m_Transform->Position.y = collision.OtherGlobalBounds.top - collision.GlobalBounds.height + m_Transform->Position.y - collision.GlobalBounds.top;
+				m_Rigidbody->Velocity.y = 0;
+				m_OnGround = true;
+				m_OnJumpThrough = true;
+			}
+		}
+	}
+}
+
 void PlayerController::OnTriggerExit(Entity other)
 {
 	if (GetEntityTag(other) == "Ladder")
 	{
 		// left ladder
 		m_OnLadder = false;
+	}
+	else if (GetEntityLayer(other) == "JumpThrough")
+	{
+		m_JumpThroughContactCount--;
+		if (!m_JumpThroughContactCount)
+			m_OnJumpThrough = false;
 	}
 }
 
@@ -148,13 +184,18 @@ void PlayerController::Jump(Timestep ts)
 	{
 		if (m_OnLadder)
 		{
-			m_Rigidbody->Velocity.y = m_ClimbSpeed;
+			if (Input::IsKeyDown(sf::Keyboard::S))
+				m_Sliding = true;
+			else
+			{
+				m_Rigidbody->Velocity.y = m_ClimbSpeed;
+				m_Sliding = false;
+			}
 		}
-		/*
+		
 		else
 		{
 			m_Rigidbody->Velocity += Physics::Gravity * m_FallMultiplier * (float)ts;
 		}
-		*/
 	}
 }
