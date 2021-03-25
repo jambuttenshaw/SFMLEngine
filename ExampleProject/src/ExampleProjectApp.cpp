@@ -42,7 +42,7 @@ public:
 			
 			// this object should be solid
 			// add a collider
-			AddComponent(m_Ground, TilemapCollider { TilemapCollider::OptimizationLevel::Standard });
+			AddComponent(m_Ground, TilemapCollider { TilemapCollider::OptimizationLevel::High });
 			AddComponent(m_Ground, ColliderInfo{ ColliderType::Tilemap });
 		}
 
@@ -79,6 +79,23 @@ public:
 			collider.IsTrigger = true;
 			AddComponent(m_Ladders, collider);
 			AddComponent(m_Ladders, ColliderInfo{ ColliderType::Tilemap });
+		}
+
+		{
+			m_Crystals = CreateEntity();
+			SetEntityTag(m_Crystals, "Crystals");
+			SetEntityLayer(m_Crystals, "Crystals");
+
+			AddComponent(m_Crystals, Transform{ });
+
+			AddComponent(m_Crystals, Tilemap{ tilePaletteID, "assets/tilemaps/level1/layer3.json" });
+			AddComponent(m_Crystals, TilemapRenderer{ Material::Create("LitTilemap"), 1 });
+
+			// we need every crystal to have a unique collider so we do not optimize at all
+			TilemapCollider collider{ TilemapCollider::OptimizationLevel::None };
+			collider.IsTrigger = true;
+			AddComponent(m_Crystals, collider);
+			AddComponent(m_Crystals, ColliderInfo{ ColliderType::Tilemap });
 		}
 		
 
@@ -162,7 +179,7 @@ public:
 
 			// light is a child transform of physics entity
 			AddComponent(m_Light, Transform{ sf::Vector2f(16, 32), & GetComponent<Transform>(m_Player) });
-			AddComponent(m_Light, PointLight{ 1.3f, 100.0f, sf::Color(219, 113, 114, 255) });
+			AddComponent(m_Light, PointLight{ 2.3f, 100.0f, sf::Color(219, 113, 114, 255) });
 
 			AddNativeScript<ScrollToControlLight>(m_Light);
 		}
@@ -171,7 +188,7 @@ public:
 			m_Camera = CreateEntity();
 
 			AddComponent(m_Camera, Transform{ });
-
+			
 			Camera cam{ };
 			cam.Zoom = 0.5f;
 			AddComponent(m_Camera, cam);
@@ -179,11 +196,13 @@ public:
 			AddNativeScript<SmoothFollowPlayer>(m_Camera);
 		}
 		
+		/*
 		{
 			m_Light2 = CreateEntity();
 
 			AddComponent(m_Light2, DirectionalLight{ 0, 0, 0.6f, LightColor, true });
 		}
+		*/
 	}
 
 private:
@@ -191,6 +210,7 @@ private:
 	Entity m_JumpThroughPlatforms = INVALID_ENTITY_ID;
 	
 	Entity m_Ladders = INVALID_ENTITY_ID;
+	Entity m_Crystals = INVALID_ENTITY_ID;
 	
 	Entity m_Camera = INVALID_ENTITY_ID;
 
@@ -198,6 +218,7 @@ private:
 
 	Entity m_Light = INVALID_ENTITY_ID;
 	Entity m_Light2 = INVALID_ENTITY_ID;
+
 };
 
 
@@ -207,7 +228,8 @@ public:
 	SandboxApp()
 		: Application("Sandbox", sf::Vector2i(1200, 675))
 	{
-		SetClearColor(BGColor * LightColor);
+		SetClearColor(sf::Color::Black);
+		SetVSync(false);
 
 		LoadScene<MainScene>();
 	}
