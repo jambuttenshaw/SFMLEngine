@@ -25,6 +25,11 @@ namespace SFMLEngine {
 			if (autoAssignID) Init();
 		}
 
+		void Reset(const sf::FloatRect& localBounds)
+		{
+			Bounds = localBounds;
+		}
+
 		// collision with other colliders
 		std::pair<bool, sf::FloatRect> Colliding(BoxCollider& other);
 		std::pair<bool, sf::FloatRect> Colliding(CircleCollider& other);

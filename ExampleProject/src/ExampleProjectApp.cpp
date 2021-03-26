@@ -17,10 +17,6 @@
 using namespace SFMLEngine;
 
 
-const sf::Color LightColor{ 139, 145, 171, 255 };
-const sf::Color BGColor{ 0, 15, 17, 255 };
-
-
 class MainScene : public Scene
 {
 public:
@@ -159,6 +155,20 @@ public:
 				{126, 510, 32, 64} },
 				0.15f
 			};
+			Animation idleCrawl{ "idleCrawl", {
+				{0, 288, 64, 32} },
+				0.1f
+			}; idleCrawl.Looping = false;
+			Animation crawl{ "crawl", {
+				{0, 288, 64, 32},
+				{61, 288, 64, 32},
+				{126, 288, 64, 32},
+				{192, 288, 64, 32},
+				{253, 288, 64, 32},
+				{317, 288, 64, 32},
+				{384, 288, 64, 32} },
+				0.1f
+			};
 
 			Animator animator;
 			animator.AddAnimation(idle);
@@ -166,6 +176,8 @@ public:
 			animator.AddAnimation(jump);
 			animator.AddAnimation(punch);
 			animator.AddAnimation(climb);
+			animator.AddAnimation(idleCrawl);
+			animator.AddAnimation(crawl);
 
 			animator.SetCurrentAnimation("idle");
 			AddComponent(m_Player, animator);

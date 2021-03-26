@@ -20,14 +20,22 @@ public:
 	void Move(Timestep ts);
 	void Jump(Timestep ts);
 
+	void StartCrawl();
+	void EndCrawl();
+
 private:
 
-	const float m_Width  = 32.0f;
-	const float m_Height = 64.0f;
+	sf::Vector2f m_LeftCastPoint;
+	sf::Vector2f m_RightCastPoint;
+	sf::Vector2f m_BottomCastPoint;
+
+	sf::Vector2f m_HorizontalCastSize;
+	sf::Vector2f m_VerticalCastSize;
 
 	Transform* m_Transform = nullptr;
 	Rigidbody* m_Rigidbody = nullptr;
 	Animator* m_Animator = nullptr;
+	BoxCollider* m_Collider = nullptr;
 
 	Layer m_GroundLayerMask;
 
@@ -38,6 +46,7 @@ private:
 	bool m_AgainstWall = false;
 	bool m_Attacking = false;
 	bool m_CanLandOnPlatform = true;
+	bool m_Crawling = false;
 
 	bool m_OnLadder = false;
 	bool m_Sliding = false;
@@ -54,4 +63,8 @@ private:
 	float m_FallMultiplier = 0.4f;
 
 	bool m_FacingRight = true;
+
+
+	const sf::FloatRect m_StandingHitbox{ 8, 16, 17, 48 };
+	const sf::FloatRect m_CrawlingHitbox{ 5, 10, 54, 22 };
 };
