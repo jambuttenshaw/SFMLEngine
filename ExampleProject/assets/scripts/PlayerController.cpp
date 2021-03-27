@@ -104,12 +104,6 @@ void PlayerController::Update(Timestep ts)
 
 	m_Animator->Flip = !m_FacingRight;
 
-	DEBUG_DISPLAY("Player position", m_Rigidbody->Position);
-	DEBUG_DISPLAY("Player velocity", m_Rigidbody->Velocity);
-	DEBUG_DISPLAY("Player on ground", m_OnGround);
-	DEBUG_DISPLAY("Player against wall", m_AgainstWall);
-	DEBUG_DISPLAY("Player on ladder", m_OnLadder);
-	DEBUG_DISPLAY("Jump through contact count", m_JumpThroughContactCount);
 }
 
 

@@ -6,7 +6,11 @@
 // scripts
 #include "PlayerController.h"
 #include "CrystalCollector.h"
+
+#include "EnemyController.h"
+
 #include "SmoothFollowPlayer.h"
+
 #include "ScrollToControlLight.h"
 
 
@@ -189,7 +193,7 @@ public:
 
 			// light is a child transform of physics entity
 			AddComponent(m_Light, Transform{ sf::Vector2f(16, 32), & GetComponent<Transform>(m_Player) });
-			AddComponent(m_Light, PointLight{ 2.3f, 100.0f, sf::Color(219, 113, 114, 255) });
+			AddComponent(m_Light, PointLight{ 3.0f, 200.0f, sf::Color(219, 113, 114, 255) });
 
 			AddNativeScript<ScrollToControlLight>(m_Light);
 		}
@@ -206,6 +210,28 @@ public:
 			AddNativeScript<SmoothFollowPlayer>(m_Camera);
 		}
 		
+
+		{
+			m_Enemy = CreateEntity();
+			SetEntityLayer(m_Enemy, "Enemies");
+
+			AddComponent(m_Enemy, Transform{ { 0, -300 } });
+
+			// add the sprite renderer component
+			AddComponent(m_Enemy, SpriteRenderer{
+				Texture::Create("assets/textures/wolf.png"),
+				Material::Create("Lit"),
+				2,
+				Texture::Create("assets/textures/wolf_n.png") });
+
+			AddComponent(m_Enemy, Rigidbody{ });
+			AddComponent(m_Enemy, BoxCollider{ sf::Vector2f(51, 29), sf::Vector2f(13, 3) });
+			AddComponent(m_Enemy, ColliderInfo{ ColliderType::Box });
+
+			AddNativeScript<EnemyController>(m_Enemy);
+		}
+
+
 		/*
 		{
 			m_Light2 = CreateEntity();
@@ -213,6 +239,8 @@ public:
 			AddComponent(m_Light2, DirectionalLight{ 0, 0, 0.6f, LightColor, true });
 		}
 		*/
+
+		Physics::IgnoreCollisions("Player", "Enemies");
 	}
 
 private:
@@ -225,6 +253,8 @@ private:
 	Entity m_Camera = INVALID_ENTITY_ID;
 
 	Entity m_Player = INVALID_ENTITY_ID;
+
+	Entity m_Enemy = INVALID_ENTITY_ID;
 
 	Entity m_Light = INVALID_ENTITY_ID;
 	Entity m_Light2 = INVALID_ENTITY_ID;
