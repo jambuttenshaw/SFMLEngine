@@ -175,8 +175,8 @@ public:
 			animator.AddAnimation(climb);
 			animator.AddAnimation(idleCrawl);
 			animator.AddAnimation(crawl);
-
 			animator.SetCurrentAnimation("idle");
+
 			AddComponent(m_Player, animator);
 			
 
@@ -211,7 +211,7 @@ public:
 			m_Enemy = CreateEntity();
 			SetEntityLayer(m_Enemy, "Enemies");
 
-			AddComponent(m_Enemy, Transform{ { 0, -300 } });
+			AddComponent(m_Enemy, Transform{ { -416, -64 } });
 
 			// add the sprite renderer component
 			AddComponent(m_Enemy, SpriteRenderer{
@@ -244,16 +244,24 @@ public:
 				{ 128, 0, 64, 32 },
 				{ 64,  0, 64, 32 },
 				{ 0,   0, 64, 32 } },
-				0.1f
+				0.05f
 			}; wake.Looping = false;
 
 			Animation alert{ "alert", {
-				{ 192, 64, 64, 32 },
-				{ 128, 59, 64, 37 },
-				{ 64,  55, 64, 41 },
-				{ 0,   55, 64, 41 } },
+				{ 0,   64, 64, 32,  0,  0 },
+				{ 64,  59, 64, 37,  0, -5 },
+				{ 128, 55, 64, 41,  0, -9 },
+				{ 192, 55, 64, 41,  0, -9 } },
 				0.1f
 			}; alert.Looping = false;
+
+			Animation unalert{ "unalert", {
+				{ 192, 55, 64, 41,  0, -9 },
+				{ 128, 55, 64, 41,  0, -9 },
+				{ 64,  59, 64, 37,  0, -5 },
+				{ 0,   64, 64, 32,  0,  0 } },
+				0.05f
+			}; unalert.Looping = false;
 
 			Animation walk{ "walk", {
 				{ 0,   96, 64, 32 },
@@ -287,6 +295,7 @@ public:
 			animator.AddAnimation(sleep);
 			animator.AddAnimation(wake);
 			animator.AddAnimation(alert);
+			animator.AddAnimation(unalert);
 			animator.AddAnimation(walk);
 			animator.AddAnimation(run);
 			animator.AddAnimation(bite);

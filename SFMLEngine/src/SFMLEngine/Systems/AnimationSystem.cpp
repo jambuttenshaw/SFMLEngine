@@ -55,6 +55,8 @@ namespace SFMLEngine {
 			else
 			{
 				spriteRenderer.Sprite.setTextureRect(currentAnimation.CurrentFrame->ImageRect);
+				// only apply y offset when not flipped
+				spriteRenderer.Offset.y = currentAnimation.CurrentFrame->Offset.y;
 			}
 		}
 	}
