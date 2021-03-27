@@ -13,7 +13,6 @@ public:
 		Sleep,
 		Wake,
 		Alert,
-		BeginFollow,
 		Follow,
 		Attack
 	};
@@ -36,20 +35,20 @@ public:
 	{
 		float dist = Math::SquareMagnitude(m_PlayerTransform->Position - m_Transform->Position);
 
+		if (Input::IsKeyPressed(sf::Keyboard::R)) Wake();
 
 		// waking up
-		if (m_State == WolfState::Wake)
+		if (m_State == WolfState::Sleep)
+		{
+			// what will wake the wolf?
+		}
+		else if (m_State == WolfState::Wake)
 		{
 			if (!m_Animator->GetCurrentAnimation().Playing)
 			{
 				// if the animation has stopped playing the wolf is awake
 				m_State = WolfState::Alert;
 			}
-		}
-
-		if (m_State == WolfState::Sleep)
-		{
-			// what will wake the wolf?
 		}
 		else
 		{
@@ -79,16 +78,7 @@ public:
 				// the player is close enough to follow but we are still in alert mode
 				// play the un alert animation
 			{
-				m_Animator->SetCurrentAnimation("unalert");
-				m_State = WolfState::BeginFollow;
-			}
-			else if (m_State == WolfState::BeginFollow)
-			{
-				if (!m_Animator->GetCurrentAnimation().Playing)
-				{
-					// if the animation has stopped playing the wolf can now follow the player
-					m_State = WolfState::Follow;
-				}
+				m_State = WolfState::Follow;
 			}
 			else
 			{
@@ -132,7 +122,6 @@ public:
 		DEBUG_DISPLAY("Enemy against wall", m_AgainstWall);
 
 
-		if (Input::IsKeyPressed(sf::Keyboard::R)) Wake();
 	}
 
 
@@ -160,7 +149,7 @@ private:
 	WolfState m_State = WolfState::Sleep;
 
 	float m_InitialInterest = 5.0f;
-	float m_Interest = 0.0f;
+	float m_Interest = m_InitialInterest;
 
 	sf::Vector2f m_LeftCastPoint{ -0.5f, 3 };
 	sf::Vector2f m_RightCastPoint{ 64, 3 };

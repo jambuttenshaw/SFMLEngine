@@ -255,14 +255,6 @@ public:
 				0.1f
 			}; alert.Looping = false;
 
-			Animation unalert{ "unalert", {
-				{ 192, 55, 64, 41,  0, -9 },
-				{ 128, 55, 64, 41,  0, -9 },
-				{ 64,  59, 64, 37,  0, -5 },
-				{ 0,   64, 64, 32,  0,  0 } },
-				0.05f
-			}; unalert.Looping = false;
-
 			Animation walk{ "walk", {
 				{ 0,   96, 64, 32 },
 				{ 64,  96, 64, 32 },
@@ -295,7 +287,6 @@ public:
 			animator.AddAnimation(sleep);
 			animator.AddAnimation(wake);
 			animator.AddAnimation(alert);
-			animator.AddAnimation(unalert);
 			animator.AddAnimation(walk);
 			animator.AddAnimation(run);
 			animator.AddAnimation(bite);
