@@ -142,7 +142,7 @@ namespace SFMLEngine {
 		std::shared_ptr<AnimationSystem> m_AnimationSystem;
 
 
-		bool m_DisplayDebug = true;
+		bool m_DisplayDebug = false;
 
 	public:
 		static Application* GetApplicationHandle() { return s_Instance; }

@@ -11,6 +11,7 @@ public:
 	{
 		m_Rigidbody = &GetComponent<Rigidbody>();
 		m_Transform = &GetComponent<Transform>();
+		m_Animator = &GetComponent<Animator>();
 
 		m_PlayerTransform = &GetComponent<Transform>(GetEntitiesWithTag("Player")[0]);
 
@@ -34,6 +35,18 @@ public:
 		}
 		
 
+		if (fabsf(m_Rigidbody->Velocity.x) > 50)
+		{
+			m_Animator->SetCurrentAnimation("walk");
+		}
+		else
+		{
+			m_Animator->SetCurrentAnimation("idle");
+		}
+		
+		m_Animator->Flip = !m_FacingRight;
+
+
 		DEBUG_DISPLAY("Enemy position", m_Rigidbody->Position);
 		DEBUG_DISPLAY("Enemy velocity", m_Rigidbody->Velocity);
 		DEBUG_DISPLAY("Enemy facing right", m_FacingRight);
@@ -42,8 +55,9 @@ public:
 
 private:
 	Rigidbody* m_Rigidbody;
-
 	Transform* m_Transform;
+	Animator* m_Animator;
+
 	Transform* m_PlayerTransform;
 	
 	Layer m_GroundLayerMask;
@@ -51,12 +65,12 @@ private:
 	bool m_FacingRight = true;
 	bool m_AgainstWall = false;
 
-	sf::Vector2f m_LeftCastPoint{ 13, 3 };
+	sf::Vector2f m_LeftCastPoint{ -0.5f, 3 };
 	sf::Vector2f m_RightCastPoint{ 64, 3 };
 	sf::Vector2f m_CastSize{ 0.5f, 29 };
 
-	float m_MoveSpeed = 300.0f;
-	float m_Friction = 10.0f;
+	float m_MoveSpeed = 100.0f;
+	float m_Friction = 8.0f;
 	float m_MinPlayerFollowDistance = 20.0f;
 
 };

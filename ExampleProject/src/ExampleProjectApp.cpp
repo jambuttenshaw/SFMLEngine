@@ -219,16 +219,62 @@ public:
 
 			// add the sprite renderer component
 			AddComponent(m_Enemy, SpriteRenderer{
-				Texture::Create("assets/textures/wolf.png"),
+				Texture::Create("assets/textures/wolfSheet.png"),
 				Material::Create("Lit"),
 				2,
-				Texture::Create("assets/textures/wolf_n.png") });
+				Texture::Create("assets/textures/wolfSheet_n.png") });
 
 			AddComponent(m_Enemy, Rigidbody{ });
-			AddComponent(m_Enemy, BoxCollider{ sf::Vector2f(51, 29), sf::Vector2f(13, 3) });
+			AddComponent(m_Enemy, BoxCollider{ sf::Vector2f(64, 29), sf::Vector2f(0, 3) });
 			AddComponent(m_Enemy, ColliderInfo{ ColliderType::Box });
 
 			AddNativeScript<EnemyController>(m_Enemy);
+
+			Animation idle{ "idle", {
+				{ 0, 0, 64, 32 } },
+				0.1f
+			}; idle.Looping = false;
+			Animation sleep{ "sleep", {
+				{ 0,   0, 64, 32 },
+				{ 64,  0, 64, 32 },
+				{ 128, 0, 64, 32 },
+				{ 192, 0, 64, 32 } },
+				0.1f
+			}; sleep.Looping = false;
+			Animation walk{ "walk", {
+				{ 0,   96, 64, 32 },
+				{ 64,  96, 64, 32 },
+				{ 128, 96, 64, 32 },
+				{ 192, 96, 64, 32 },
+				{ 256, 96, 64, 32 } },
+				0.1f
+			};
+			Animation run{ "run", {
+				{ 0,   128, 64, 32 },
+				{ 64,  128, 64, 32 },
+				{ 128, 128, 64, 32 },
+				{ 192, 128, 64, 32 },
+				{ 256, 128, 64, 32 } },
+				0.1f
+			};
+			Animation bite{ "bite", {
+				{ 0,   160, 64, 32 },
+				{ 64,  160, 64, 32 },
+				{ 128, 160, 64, 32 },
+				{ 192, 160, 64, 32 },
+				{ 256, 160, 64, 32 } },
+				0.1f
+			}; bite.Looping = false;
+
+			Animator animator;
+			animator.AddAnimation(idle);
+			animator.AddAnimation(sleep);
+			animator.AddAnimation(walk);
+			animator.AddAnimation(run);
+			animator.AddAnimation(bite);
+
+			animator.SetCurrentAnimation("idle");
+			AddComponent(m_Enemy, animator);
 		}
 
 
