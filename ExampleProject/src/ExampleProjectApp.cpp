@@ -4,12 +4,8 @@
 #include <SFML/Graphics.hpp>
 
 // scripts
-#include "GoToEntity.h"
-#include "GoToMouse.h"
-#include "MoveByWASD.h"
-#include "ClickToDestroyTile.h"
-#include "ClickToPlace.h"
 #include "PlayerController.h"
+#include "CrystalCollector.h"
 #include "SmoothFollowPlayer.h"
 #include "ScrollToControlLight.h"
 
@@ -80,7 +76,6 @@ public:
 		{
 			m_Crystals = CreateEntity();
 			SetEntityTag(m_Crystals, "Crystals");
-			SetEntityLayer(m_Crystals, "Crystals");
 
 			AddComponent(m_Crystals, Transform{ });
 
@@ -184,6 +179,9 @@ public:
 			
 
 			AddNativeScript<PlayerController>(m_Player);
+
+			auto& script = AddNativeScript<CrystalCollector>(m_Player);
+			script.SetCrystalMap(m_Crystals);
 		}
 
 		{

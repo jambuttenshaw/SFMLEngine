@@ -43,6 +43,7 @@ namespace SFMLEngine {
 		// add an identity component
 		std::string name = "Entity " + std::to_string(newEntity);
 		Identity id{ name };
+		id.EntityLayer = LayerManager::LayerFromString("Default");
 		AddComponent(newEntity, id);
 
 		return newEntity;
