@@ -11,8 +11,6 @@
 
 #include "SmoothFollowPlayer.h"
 
-#include "ScrollToControlLight.h"
-
 
 using namespace SFMLEngine;
 
@@ -194,8 +192,6 @@ public:
 			// light is a child transform of physics entity
 			AddComponent(m_Light, Transform{ sf::Vector2f(16, 32), & GetComponent<Transform>(m_Player) });
 			AddComponent(m_Light, PointLight{ 3.0f, 200.0f, sf::Color(219, 113, 114, 255) });
-
-			AddNativeScript<ScrollToControlLight>(m_Light);
 		}
 
 		{
@@ -204,7 +200,7 @@ public:
 			AddComponent(m_Camera, Transform{ });
 			
 			Camera cam{ };
-			cam.Zoom = 0.5f;
+			cam.Zoom = 0.75f;
 			AddComponent(m_Camera, cam);
 
 			AddNativeScript<SmoothFollowPlayer>(m_Camera);
@@ -234,6 +230,7 @@ public:
 				{ 0, 0, 64, 32 } },
 				0.1f
 			}; idle.Looping = false;
+
 			Animation sleep{ "sleep", {
 				{ 0,   0, 64, 32 },
 				{ 64,  0, 64, 32 },
@@ -241,6 +238,23 @@ public:
 				{ 192, 0, 64, 32 } },
 				0.1f
 			}; sleep.Looping = false;
+
+			Animation wake{ "wake", {
+				{ 192, 0, 64, 32 },
+				{ 128, 0, 64, 32 },
+				{ 64,  0, 64, 32 },
+				{ 0,   0, 64, 32 } },
+				0.1f
+			}; wake.Looping = false;
+
+			Animation alert{ "alert", {
+				{ 192, 64, 64, 32 },
+				{ 128, 59, 64, 37 },
+				{ 64,  55, 64, 41 },
+				{ 0,   55, 64, 41 } },
+				0.1f
+			}; alert.Looping = false;
+
 			Animation walk{ "walk", {
 				{ 0,   96, 64, 32 },
 				{ 64,  96, 64, 32 },
@@ -249,6 +263,7 @@ public:
 				{ 256, 96, 64, 32 } },
 				0.1f
 			};
+
 			Animation run{ "run", {
 				{ 0,   128, 64, 32 },
 				{ 64,  128, 64, 32 },
@@ -257,6 +272,7 @@ public:
 				{ 256, 128, 64, 32 } },
 				0.1f
 			};
+
 			Animation bite{ "bite", {
 				{ 0,   160, 64, 32 },
 				{ 64,  160, 64, 32 },
@@ -269,6 +285,8 @@ public:
 			Animator animator;
 			animator.AddAnimation(idle);
 			animator.AddAnimation(sleep);
+			animator.AddAnimation(wake);
+			animator.AddAnimation(alert);
 			animator.AddAnimation(walk);
 			animator.AddAnimation(run);
 			animator.AddAnimation(bite);
