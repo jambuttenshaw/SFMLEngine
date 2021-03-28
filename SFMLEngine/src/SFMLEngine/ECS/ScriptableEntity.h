@@ -40,6 +40,7 @@ namespace SFMLEngine {
 		// components on different entities
 		template<typename T>
 		T& GetComponent(Entity entity) { return m_SceneHandle->GetComponent<T>(entity); }
+		
 
 		// native scripting
 		template<typename T>
@@ -48,6 +49,11 @@ namespace SFMLEngine {
 		void RemoveNativeScript() { m_SceneHandle->RemoveNativeScript<T>(m_EntityHandle); }
 		template<typename T>
 		T& GetNativeScript() { return m_SceneHandle->GetNativeScript<T>(m_EntityHandle); }
+
+		// native scripts on other entities
+		template<typename T>
+		T& GetNativeScript(Entity entity) { return m_SceneHandle->GetNativeScript<T>(entity); }
+
 
 		// tags
 		const std::vector<Entity>& GetEntitiesWithTag(const std::string& tag);

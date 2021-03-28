@@ -53,53 +53,51 @@ void PlayerController::Update(Timestep ts)
 	}
 
 
-	if (!m_Attacking)
+	// friction should ALWAYS be applied to the player
+	m_Rigidbody->Velocity.x = Math::Lerp(m_Rigidbody->Velocity.x, 0.0f, m_Friction * ts);
+
+
+
+	if (m_Hurting)
 	{
-		// player can attack
-		if (Input::IsKeyPressed(sf::Keyboard::Space) && m_OnGround && !m_Crawling)
+		if (!m_Animator->GetCurrentAnimation().Playing)
 		{
-			m_Attacking = true;
-			m_Animator->SetCurrentAnimation("punch");
-			m_Rigidbody->Velocity.x = 0;
+			// the attack animation has finished playing
+			m_Hurting = false;
 		}
-		else
+	}
+	else
+	{
+		Move(ts);
+		Jump(ts);
+
+
+
+		if (m_OnGround)
 		{
-			Move(ts);
-			Jump(ts);
-
-
-
-			if (m_OnGround)
+			if (m_Crawling)
 			{
-				if (m_Crawling)
-				{
-					if (fabsf(m_Rigidbody->Velocity.x) > 50.0f)
-						m_Animator->SetCurrentAnimation("crawl");
-					else
-						m_Animator->SetCurrentAnimation("idleCrawl");
-					
-				}
+				if (fabsf(m_Rigidbody->Velocity.x) > 50.0f)
+					m_Animator->SetCurrentAnimation("crawl");
 				else
-				{
-					if (fabsf(m_Rigidbody->Velocity.x) > 100.0f)
-						m_Animator->SetCurrentAnimation("run");
-					else
-						m_Animator->SetCurrentAnimation("idle");
-				}
+					m_Animator->SetCurrentAnimation("idleCrawl");
+					
 			}
 			else
 			{
-				if (m_OnLadder && !m_Sliding)
-					m_Animator->SetCurrentAnimation("climb");
+				if (fabsf(m_Rigidbody->Velocity.x) > 100.0f)
+					m_Animator->SetCurrentAnimation("run");
 				else
-					m_Animator->SetCurrentAnimation("jump");
+					m_Animator->SetCurrentAnimation("idle");
 			}
 		}
-	}
-	else if (!m_Animator->GetCurrentAnimation().Playing)
-	{
-		// the attack animation has finished playing
-		m_Attacking = false;
+		else
+		{
+			if (m_OnLadder && !m_Sliding)
+				m_Animator->SetCurrentAnimation("climb");
+			else
+				m_Animator->SetCurrentAnimation("jump");
+		}
 	}
 
 	m_Animator->Flip = !m_FacingRight;
@@ -173,7 +171,6 @@ void PlayerController::OnTriggerExit(Entity other)
 
 void PlayerController::Move(Timestep ts)
 {
-	m_Rigidbody->Velocity.x = Math::Lerp(m_Rigidbody->Velocity.x, 0.0f, m_Friction * ts);
 	// dont let the player move right if its against the wall and facing right
 	if (Input::IsKeyDown(sf::Keyboard::D) && !(m_AgainstWall && m_FacingRight))
 	{
@@ -286,5 +283,26 @@ void PlayerController::EndCrawl()
 		m_VerticalCastSize = { 0.5f, 48 };
 
 		m_Crawling = false;
+	}
+}
+
+
+void PlayerController::Hurt(bool toTheRight)
+{
+	m_Hurting = true;
+	// face towards the threat
+	m_FacingRight = !toTheRight;
+
+
+	// if were crawling then just make the player not move
+	if (m_Crawling)
+	{
+		m_Rigidbody->Velocity.x = (toTheRight ? m_HurtBounceVelocity : -m_HurtBounceVelocity) / m_ClimbHorizontalFactor;
+		m_Animator->SetCurrentAnimation("idleCrawl");
+	}
+	else
+	{
+		m_Rigidbody->Velocity.x = toTheRight ? m_HurtBounceVelocity : -m_HurtBounceVelocity;
+		m_Animator->SetCurrentAnimation("hurt");
 	}
 }

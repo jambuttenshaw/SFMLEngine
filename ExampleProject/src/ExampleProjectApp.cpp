@@ -138,12 +138,6 @@ public:
 				{64, 320, 32, 64} },
 				0.1f
 			}; jump.Looping = false;
-			Animation punch{ "punch", {
-				{0,  832, 32, 64},
-				{32, 832, 35, 64, -3, 0},
-				{67, 832, 32, 64} },
-				0.1f
-			}; punch.Looping = false;
 			Animation climb{ "climb", {
 				{0, 510, 32, 64}, 
 				{29, 510, 32, 64}, 
@@ -166,15 +160,24 @@ public:
 				{384, 288, 64, 32} },
 				0.1f
 			};
-
+			Animation hurt{ "hurt", {
+				{0, 1024, 32, 64},
+				{30, 1024, 32, 64},
+				{63, 1024, 32, 64},
+				{97, 1024, 32, 64},
+				{128, 1024, 32, 64} },
+				// {160, 1024, 32, 64} },
+				0.09f
+			}; hurt.Looping = false;
+				
 			Animator animator;
 			animator.AddAnimation(idle);
 			animator.AddAnimation(run);
 			animator.AddAnimation(jump);
-			animator.AddAnimation(punch);
 			animator.AddAnimation(climb);
 			animator.AddAnimation(idleCrawl);
 			animator.AddAnimation(crawl);
+			animator.AddAnimation(hurt);
 			animator.SetCurrentAnimation("idle");
 
 			AddComponent(m_Player, animator);

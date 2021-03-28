@@ -23,6 +23,16 @@ public:
 	void StartCrawl();
 	void EndCrawl();
 
+	void Hurt(bool toTheRight);
+
+	sf::Vector2f GetCentre()
+	{
+		if (m_Crawling)
+			return m_Transform->Position + sf::Vector2f{32, 16}; 
+		else
+			return m_Transform->Position + sf::Vector2f{16, 32}; 
+	}
+
 private:
 
 	sf::Vector2f m_LeftCastPoint;
@@ -44,7 +54,6 @@ private:
 	int m_JumpThroughContactCount = 0;
 
 	bool m_AgainstWall = false;
-	bool m_Attacking = false;
 	bool m_CanLandOnPlatform = true;
 	bool m_Crawling = false;
 
@@ -52,6 +61,9 @@ private:
 	bool m_Sliding = false;
 	float m_ClimbSpeed = 100.0f;
 	float m_ClimbHorizontalFactor = 0.3f;
+
+	bool m_Hurting = false;
+	float m_HurtBounceVelocity = 175.0f;
 
 	bool m_InJumpThroughPlatform = false;
 

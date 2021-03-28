@@ -2,6 +2,8 @@
 
 #include <SFMLEngine.h>
 
+#include "PlayerController.h"
+
 using namespace SFMLEngine;
 
 class WolfController: public ScriptableEntity
@@ -26,14 +28,15 @@ public:
 		m_Animator = &GetComponent<Animator>();
 		m_Animator->SetCurrentAnimation("sleep");
 
-		m_PlayerTransform = &GetComponent<Transform>(GetEntitiesWithTag("Player")[0]);
+		Entity player = GetEntitiesWithTag("Player")[0];
+		m_PlayerController = &GetNativeScript<PlayerController>(player);
 
 		m_GroundLayerMask = LayerManager::GetLayer("Ground");
 	}
 
 	void Update(Timestep ts) override
 	{
-		float dist = Math::SquareMagnitude(m_PlayerTransform->Position - m_Transform->Position);
+		float dist = Math::SquareMagnitude(m_PlayerController->GetCentre() - m_Transform->Position - sf::Vector2f{32, 16});
 
 		if (Input::IsKeyPressed(sf::Keyboard::R)) Wake();
 
@@ -101,15 +104,17 @@ public:
 			else
 			{
 				// the player is close; the wolf should move towards it
-				float diff = m_PlayerTransform->Position.x - m_Transform->Position.x - 16;
+				float diff = m_PlayerController->GetCentre().x - m_Transform->Position.x - 32;
 				m_FacingRight = diff > 0;
 
 				m_AgainstWall = Physics::BoxCast({ m_Transform->Position + (m_FacingRight ? m_RightCastPoint : m_LeftCastPoint), m_CastSize }, m_GroundLayerMask).first;
 
 				m_Rigidbody->Velocity.x = Math::Lerp(m_Rigidbody->Velocity.x, 0.0f, m_Friction * ts);
-				if (!m_AgainstWall)
+
+
+				if (fabsf(diff) > m_MinPlayerFollowDistance)
 				{
-					if (fabsf(diff) > m_MinPlayerFollowDistance)
+					if (!m_AgainstWall)
 					{
 						// ts is not a factor in the velocity
 						// as it is not a change of velocity over time; it is being set to a constant value
@@ -128,18 +133,41 @@ public:
 					}
 					else
 					{
-						// the player is really close; within biting range!
-						m_State = WolfState::Attack;
-						m_Animator->SetCurrentAnimation("bite");
-						m_Animator->Reset();
-
-						m_Rigidbody->Velocity.x = 0;
+						m_Animator->SetCurrentAnimation("idle");
 					}
 				}
-				else
+				else 
 				{
-					m_Animator->SetCurrentAnimation("idle");
+					// the player is too close to follow
+					// check if they are close enough to attack
+					if (fabsf(dist) < m_AttackDist * m_AttackDist)
+					{// the player is really close; within biting range!
+					// make sure we havent JUST attacked the player
+						if (m_AttackCooldown <= 0)
+						{
+							m_State = WolfState::Attack;
+							m_Animator->SetCurrentAnimation("bite");
+							m_Animator->Reset();
+
+							m_AttackCooldown = m_InitialAttackCooldown;
+
+							m_PlayerController->Hurt(diff > 0);
+						}
+						else
+						{
+							m_Animator->SetCurrentAnimation("idle");
+						}
+					}
+					else
+					{
+						m_Animator->SetCurrentAnimation("idle");
+					}
+					m_Rigidbody->Velocity.x = 0;
 				}
+				
+
+				// make the attack cool down
+				m_AttackCooldown -= ts;
 			}
 			break;
 			
@@ -176,7 +204,7 @@ private:
 	Transform* m_Transform;
 	Animator* m_Animator;
 
-	Transform* m_PlayerTransform;
+	PlayerController* m_PlayerController;
 	
 	Layer m_GroundLayerMask;
 
@@ -195,7 +223,11 @@ private:
 	float m_MoveSpeed = 200.0f;
 	float m_Friction = 8.0f;
 
+	float m_AttackDist = 27.0f;
 	float m_MinPlayerFollowDistance = 20.0f;
 	float m_MaxPlayerFollowDistance = 200.0f;
+
+	float m_InitialAttackCooldown = 1.0f;
+	float m_AttackCooldown = 0.0f;
 
 };
