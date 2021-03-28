@@ -14,7 +14,7 @@ public:
 
 	void Update(Timestep ts) override
 	{
-		if (Input::IsKeyPressed(sf::Keyboard::E))
+		if (Input::IsKeyPressed(sf::Keyboard::Space))
 		{
 			if (m_CollidingWithCrystal)
 			{

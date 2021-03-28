@@ -111,10 +111,22 @@ public:
 
 				m_Rigidbody->Velocity.x = Math::Lerp(m_Rigidbody->Velocity.x, 0.0f, m_Friction * ts);
 
-
+				
 				if (fabsf(diff) > m_MinPlayerFollowDistance)
 				{
-					if (!m_AgainstWall)
+					if (m_AgainstWall)
+					{
+						// the wolf has hit a wall!
+						// it needs to get over it
+						m_Animator->SetCurrentAnimation("idle");
+
+						// it can do that by jumping
+						if (fabsf(m_Rigidbody->Velocity.y) < 0.001f)
+						{
+							m_Rigidbody->Velocity.y = -250.0f;
+						}
+					}
+					else
 					{
 						// ts is not a factor in the velocity
 						// as it is not a change of velocity over time; it is being set to a constant value
@@ -130,10 +142,6 @@ public:
 						{
 							m_Animator->SetCurrentAnimation("walk");
 						}
-					}
-					else
-					{
-						m_Animator->SetCurrentAnimation("idle");
 					}
 				}
 				else 
