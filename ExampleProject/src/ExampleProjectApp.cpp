@@ -166,7 +166,6 @@ public:
 				{63, 1024, 32, 64},
 				{97, 1024, 32, 64},
 				{128, 1024, 32, 64} },
-				// {160, 1024, 32, 64} },
 				0.09f
 			}; hurt.Looping = false;
 				
@@ -194,7 +193,7 @@ public:
 
 			// light is a child transform of physics entity
 			AddComponent(m_Light, Transform{ sf::Vector2f(16, 32), & GetComponent<Transform>(m_Player) });
-			AddComponent(m_Light, PointLight{ 3.0f, 300.0f, sf::Color(219, 113, 114, 255) });
+			AddComponent(m_Light, PointLight{ 3.0f, 350.0f, sf::Color(219, 113, 114, 255) });
 		}
 
 		{
@@ -214,7 +213,7 @@ public:
 			m_Enemy = CreateEntity();
 			SetEntityLayer(m_Enemy, "Enemies");
 
-			AddComponent(m_Enemy, Transform{ { -416, -64 } });
+			AddComponent(m_Enemy, Transform{ { -128, -64 } });
 
 			// add the sprite renderer component
 			AddComponent(m_Enemy, SpriteRenderer{
@@ -285,6 +284,15 @@ public:
 				0.1f
 			}; bite.Looping = false;
 
+			Animation climb{ "climb", {
+				{ 320, 256, 32, 64 },
+				{ 320, 192, 32, 64 },
+				{ 320, 128, 32, 64 },
+				{ 320, 64,  32, 64 },
+				{ 320, 0,   32, 64 } },
+				0.1f
+			};
+
 			Animator animator;
 			animator.AddAnimation(idle);
 			animator.AddAnimation(sleep);
@@ -293,6 +301,7 @@ public:
 			animator.AddAnimation(walk);
 			animator.AddAnimation(run);
 			animator.AddAnimation(bite);
+			animator.AddAnimation(climb);
 
 			animator.SetCurrentAnimation("idle");
 			AddComponent(m_Enemy, animator);
