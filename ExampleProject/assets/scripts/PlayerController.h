@@ -2,6 +2,8 @@
 
 #include <SFMLEngine.h>
 
+#include "PlayerStatsController.h"
+
 using namespace SFMLEngine;
 
 class PlayerController : public ScriptableEntity
@@ -46,6 +48,8 @@ private:
 	Rigidbody* m_Rigidbody = nullptr;
 	Animator* m_Animator = nullptr;
 	BoxCollider* m_Collider = nullptr;
+
+	PlayerStatsController* m_StatsController = nullptr;
 
 	Layer m_GroundLayerMask;
 

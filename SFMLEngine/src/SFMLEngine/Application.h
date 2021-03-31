@@ -91,7 +91,7 @@ namespace SFMLEngine {
 			}
 			else
 			{
-				// no scene currently exists, so we dont need to delte the old one first
+				// no scene currently exists, so we dont need to delete the old one first
 				// that means scene loading can be completed this frame
 
 				// even though no scene was already loaded, reset scriptable entity system just to be safe
@@ -104,7 +104,6 @@ namespace SFMLEngine {
 
 				// pure virtual function that will create a scene T
 				newScene->Create();
-
 			}
 		}
 

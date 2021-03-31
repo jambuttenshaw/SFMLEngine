@@ -7,6 +7,8 @@ void PlayerController::Start()
 	m_Animator = &GetComponent<Animator>();
 	m_Collider = &GetComponent<BoxCollider>();
 
+	m_StatsController = &GetNativeScript<PlayerStatsController>();
+
 	m_GroundLayerMask = LayerManager::GetLayer("Ground") | LayerManager::GetLayer("JumpThrough");
 
 	m_LeftCastPoint = { 7, 16 };
@@ -305,4 +307,6 @@ void PlayerController::Hurt(bool toTheRight)
 		m_Rigidbody->Velocity.x = toTheRight ? m_HurtBounceVelocity : -m_HurtBounceVelocity;
 		m_Animator->SetCurrentAnimation("hurt");
 	}
+
+	m_StatsController->Damage(10);
 }

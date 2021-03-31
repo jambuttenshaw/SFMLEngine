@@ -4,6 +4,7 @@
 
 // scripts
 #include "PlayerController.h"
+#include "PlayerStatsController.h"
 #include "CrystalCollector.h"
 
 #include "WolfController.h"
@@ -189,6 +190,8 @@ public:
 
 			auto& script = AddNativeScript<CrystalCollector>(m_Player);
 			script.SetCrystalMap(m_Crystals);
+
+			AddNativeScript<PlayerStatsController>(m_Player);
 		}
 
 		{
