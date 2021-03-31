@@ -61,7 +61,7 @@ private:
 	bool m_CanLandOnPlatform = true;
 	bool m_Crawling = false;
 
-	bool m_OnLadder = false;
+	int m_LadderContacts = 0;
 	bool m_Sliding = false;
 	float m_ClimbSpeed = 100.0f;
 	float m_ClimbHorizontalFactor = 0.3f;

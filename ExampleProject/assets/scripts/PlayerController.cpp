@@ -95,7 +95,7 @@ void PlayerController::Update(Timestep ts)
 		}
 		else
 		{
-			if (m_OnLadder && !m_Sliding)
+			if (m_LadderContacts && !m_Sliding)
 				m_Animator->SetCurrentAnimation("climb");
 			else
 				m_Animator->SetCurrentAnimation("jump");
@@ -123,7 +123,7 @@ void PlayerController::OnTriggerEnter(const Collision& collision)
 	if (GetEntityTag(collision.Other) == "Ladder")
 	{
 		// hit ladder
-		m_OnLadder = true;
+		m_LadderContacts += 1;
 	}
 	else if (GetEntityLayer(collision.Other) == "JumpThrough")
 	{
@@ -159,7 +159,7 @@ void PlayerController::OnTriggerExit(Entity other)
 	if (GetEntityTag(other) == "Ladder")
 	{
 		// left ladder
-		m_OnLadder = false;
+		m_LadderContacts -= 1;
 	}
 	else if (GetEntityLayer(other) == "JumpThrough")
 	{
@@ -185,7 +185,7 @@ void PlayerController::Move(Timestep ts)
 		m_Rigidbody->Velocity.x = -m_MoveSpeed;
 		m_FacingRight = false;
 	}
-	if ((m_OnLadder && !m_OnGround) || m_Crawling)
+	if ((m_LadderContacts && !m_OnGround) || m_Crawling)
 		m_Rigidbody->Velocity.x *= m_ClimbHorizontalFactor;
 }
 
@@ -193,7 +193,7 @@ void PlayerController::Jump(Timestep ts)
 {
 	if (Input::IsKeyDown(sf::Keyboard::W))
 	{
-		if (m_OnLadder)
+		if (m_LadderContacts)
 		{
 			m_Rigidbody->Velocity.y = -m_ClimbSpeed;
 			m_OnGround = false;
@@ -220,7 +220,7 @@ void PlayerController::Jump(Timestep ts)
 	}
 	if (m_Rigidbody->Velocity.y > 0)
 	{
-		if (m_OnLadder)
+		if (m_LadderContacts)
 		{
 			if (Input::IsKeyDown(sf::Keyboard::S))
 				m_Sliding = true;
