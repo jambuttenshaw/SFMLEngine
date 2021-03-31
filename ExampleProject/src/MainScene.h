@@ -34,6 +34,7 @@ public:
 			AddComponent(m_Ground, Transform{ });
 
 			// add a tilemap
+
 			AddComponent(m_Ground, Tilemap{ tilePaletteID, "assets/tilemaps/level1/layer0.json" });
 			AddComponent(m_Ground, TilemapRenderer{ Material::Create("LitTilemap"), 1 });
 
@@ -44,6 +45,7 @@ public:
 			AddComponent(m_Ground, ColliderInfo{ ColliderType::Tilemap });
 		}
 
+		
 		{
 			m_JumpThroughPlatforms = CreateEntity();
 			SetEntityLayer(m_JumpThroughPlatforms, "JumpThrough");
@@ -60,8 +62,9 @@ public:
 			AddComponent(m_JumpThroughPlatforms, collider);
 			AddComponent(m_JumpThroughPlatforms, ColliderInfo{ ColliderType::Tilemap });
 		}
+		
 
-
+		
 		{
 			m_Ladders = CreateEntity();
 			SetEntityTag(m_Ladders, "Ladder");
@@ -94,7 +97,7 @@ public:
 			AddComponent(m_Crystals, collider);
 			AddComponent(m_Crystals, ColliderInfo{ ColliderType::Tilemap });
 		}
-
+		
 
 		{
 			// create the player
@@ -188,9 +191,9 @@ public:
 
 			AddNativeScript<PlayerController>(m_Player);
 
-			auto& script = AddNativeScript<CrystalCollector>(m_Player);
-			script.SetCrystalMap(m_Crystals);
-
+			// auto& script = AddNativeScript<CrystalCollector>(m_Player);
+			// script.SetCrystalMap(m_Crystals);
+			// 
 			AddNativeScript<PlayerStatsController>(m_Player);
 		}
 

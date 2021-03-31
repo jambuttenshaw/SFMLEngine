@@ -81,4 +81,8 @@ namespace SFMLEngine {
 	const ColliderID MAX_COLLIDERS = 10000;
 	const ColliderID NULL_COLLIDER_ID = MAX_COLLIDERS + 1;
 
+	// the max size width and height of an optimized collider as part of a tilemap collider
+	// is 4 times the original tile size of the tilemap
+	const int MAX_TILEMAP_COLLIDER_SIZE = 4;
+
 }

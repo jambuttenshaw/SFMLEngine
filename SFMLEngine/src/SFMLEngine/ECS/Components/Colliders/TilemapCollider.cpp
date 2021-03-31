@@ -52,16 +52,28 @@ namespace SFMLEngine {
 				optimal = true;
 
 				// we want to combine as many horizontally adjacent quads as we can
-				size_t index = 0;
+				size_t index = -1;
 				for (auto& quad : m_CollisionGeometry)
 				{
+					index++;
+
+					
+					// if this quad has reached the max size then we do not want to add anymore tiles onto it
+					if (quad.Bounds.width >= MAX_TILEMAP_COLLIDER_SIZE * TilemapHandle->TileSize.x) continue;
+
+
 					// we dont want to try to optimize quads that are to be removed this pass
 					if (std::find(indicesToDelete.begin(), indicesToDelete.end(), index) != indicesToDelete.end()) continue;
 
-					size_t jIndex = 0;
+					size_t jIndex = -1;
 					// look to see if there are any other quads at the same y level
 					for (auto& secondQuad : m_CollisionGeometry)
 					{
+						jIndex++;
+
+						// make sure joining these quads will not make them too large
+						if (secondQuad.Bounds.width + quad.Bounds.width > MAX_TILEMAP_COLLIDER_SIZE * TilemapHandle->TileSize.x) continue;
+
 						if (std::find(indicesToDelete.begin(), indicesToDelete.end(), jIndex) != indicesToDelete.end()) continue;
 
 						if (secondQuad.Bounds.top == quad.Bounds.top && secondQuad.Bounds != quad.Bounds)
@@ -84,11 +96,13 @@ namespace SFMLEngine {
 								// set the second quad to be removed
 								// add the index of the second quad to the set
 								indicesToDelete.push_back(jIndex);
+
+								// check if this quad has now reached the max size
+								if (quad.Bounds.width >= MAX_TILEMAP_COLLIDER_SIZE * TilemapHandle->TileSize.x) break;
+
 							}
 						}
-						jIndex++;
 					}
-					index++;
 				}
 
 				// delete any quads that were optimized out
@@ -114,16 +128,28 @@ namespace SFMLEngine {
 				optimal = true;
 
 				// we want to combine as many vertically adjacent quads of identical width as we can
-				size_t index = 0;
+				size_t index = -1;
 				for (auto& quad : m_CollisionGeometry)
 				{
+					index++;
+
+					// if this quad has reached the max size then we do not want to add anymore tiles onto it
+					if (quad.Bounds.height >= MAX_TILEMAP_COLLIDER_SIZE * TilemapHandle->TileSize.y) continue;
+
+
 					// we dont want to try to optimize quads that are to be removed this pass
 					if (std::find(indicesToDelete.begin(), indicesToDelete.end(), index) != indicesToDelete.end()) continue;
 
-					size_t jIndex = 0;
+					size_t jIndex = -1;
 					// look to see if there are any other quads of the same width and horizontally aligned
 					for (auto& secondQuad : m_CollisionGeometry)
 					{
+						jIndex++;
+
+						// make sure joining these quads will not make them too large
+						if (secondQuad.Bounds.height + quad.Bounds.height > MAX_TILEMAP_COLLIDER_SIZE * TilemapHandle->TileSize.y) continue;
+
+
 						if (std::find(indicesToDelete.begin(), indicesToDelete.end(), jIndex) != indicesToDelete.end()) continue;
 
 						// quads must have the same x coordinate
@@ -149,11 +175,12 @@ namespace SFMLEngine {
 								// set the second quad to be removed
 								// add the index of the second quad to the set
 								indicesToDelete.push_back(jIndex);
+
+								// check if this quad has now reached the max size
+								if (quad.Bounds.height >= MAX_TILEMAP_COLLIDER_SIZE * TilemapHandle->TileSize.y) break;
 							}
 						}
-						jIndex++;
 					}
-					index++;
 				}
 
 				// delete any quads that were optimized out

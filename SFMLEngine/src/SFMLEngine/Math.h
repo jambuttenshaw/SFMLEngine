@@ -4,6 +4,26 @@
 #include "SFMLEngine/Core.h"
 #include <random>
 
+
+
+namespace std
+{
+	// allows Vector2f's to be used as keys in std::unordered_map's
+	template<> struct hash<sf::Vector2i>
+	{
+		std::size_t operator()(const sf::Vector2i& vec) const noexcept
+		{
+			// hash a vector2 to produce a scalar value
+			// the idea is that every unique vector should produce a unique corresponding scalar
+			// thus why prime numbers are used in the calculation
+			// 4327 is the maximum number of hashes that can be produced
+			return ((static_cast<size_t>(vec.x) * 73856093) ^ (static_cast<size_t>(vec.y) * 19349663)) % 4327;
+		}
+	};
+}
+
+
+
 namespace SFMLEngine {
 
 	class Math
@@ -70,6 +90,8 @@ namespace SFMLEngine {
 		/*
 		VECTOR MATH
 		*/
+
+
 
 		static sf::Vector2f Max(const sf::Vector2f& a, const sf::Vector2f& b);
 		static sf::Vector3f Max(const sf::Vector3f& a, const sf::Vector3f& b);
