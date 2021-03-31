@@ -319,6 +319,16 @@ namespace SFMLEngine
 
         while (m_Window->isOpen())
         {
+
+            // check if we have to load in a new scene before beginning this frame
+            if (m_LoadNewScene)
+            {
+                CompleteLoadingNewScene();
+                m_ScriptableEntitySystem->Start();
+            }
+
+
+
             Timestep ts(m_Clock.restart().asSeconds());
             if (ts > m_DeltaTimeLimit) ts = m_DeltaTimeLimit;
 

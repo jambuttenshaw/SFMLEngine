@@ -50,6 +50,8 @@ namespace SFMLEngine {
 			m_Started = true;
 		}
 
+		void Reset() { m_Started = false; }
+
 		void Update(Timestep ts)
 		{
 			ZoneScoped;

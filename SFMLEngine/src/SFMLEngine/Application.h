@@ -78,26 +78,57 @@ namespace SFMLEngine {
 			// T MUST inherit from Scene
 			static_assert(std::is_base_of<Scene, T>::value, "T should inherit from Scene.");
 
+			// create a new scene
+			T* newScene = new T;
+
 			// check if theres a scene already loaded
 			if (m_CurrentScene)
 			{
-				// clear out all of the existing entities
-				m_CurrentScene->Destroy();
-				delete m_CurrentScene;
+				// flag that a new scene should be loaded
+				m_LoadNewScene = true;
+				// store the new scene temporarily until its loaded next frame
+				m_NewScene = newScene;
 			}
+			else
+			{
+				// no scene currently exists, so we dont need to delte the old one first
+				// that means scene loading can be completed this frame
 
-			T* newScene = new T;
-			// implicit conversion to Scene* since T inherits from Scene
-			m_CurrentScene = newScene;
+				// even though no scene was already loaded, reset scriptable entity system just to be safe
+				m_ScriptableEntitySystem->Reset();
 
-			newScene->Init(m_Coordinator, m_ScriptableEntitySystem, m_IdentitySystem);
+				// implicit conversion to Scene* since T inherits from Scene
+				m_CurrentScene = newScene;
 
-			// pure virtual function that will create a scene T
-			newScene->Create();
+				newScene->Init(m_Coordinator, m_ScriptableEntitySystem, m_IdentitySystem);
+
+				// pure virtual function that will create a scene T
+				newScene->Create();
+
+			}
 		}
 
 	private:
 		sf::Vector2u GetWindowDimensions() { return m_Window->getSize(); }
+
+		void CompleteLoadingNewScene()
+		{
+			// clear out all of the existing entities
+			m_CurrentScene->Destroy();
+			delete m_CurrentScene;
+			m_ScriptableEntitySystem->Reset();
+
+			m_CurrentScene = m_NewScene;
+
+			m_NewScene->Init(m_Coordinator, m_ScriptableEntitySystem, m_IdentitySystem);
+
+			// pure virtual function that will create a scene T
+			m_NewScene->Create();
+
+
+			m_NewScene = nullptr;
+			m_LoadNewScene = false;
+		}
 
 	private:
 		sf::RenderWindow* m_Window;
@@ -107,6 +138,9 @@ namespace SFMLEngine {
 		sf::Clock m_Clock;
 
 		Scene* m_CurrentScene = nullptr;
+
+		bool m_LoadNewScene = false;
+		Scene* m_NewScene = nullptr;
 
 		// VSync enabled by default
 		bool m_VSync = true;
