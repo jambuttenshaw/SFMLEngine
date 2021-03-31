@@ -14,7 +14,12 @@
 #include "SFMLEngine/ECS/Components/Colliders/TilemapCollider.h"
 
 
+
+
 namespace SFMLEngine {
+
+	class SpatialPartition;
+
 
 	struct Collision
 	{
@@ -38,6 +43,7 @@ namespace SFMLEngine {
 
 	struct ColliderData
 	{
+		ColliderID ID;
 		Entity Owner;
 		ColliderType Type;
 		Collider* ColliderPtr;
@@ -48,8 +54,8 @@ namespace SFMLEngine {
 	public:
 		friend class Physics;
 
-		CollisionSystem() = default;
-		~CollisionSystem() = default;
+		CollisionSystem();
+		~CollisionSystem();
 
 		void Init(Coordinator* coordinator);
 
@@ -126,6 +132,8 @@ namespace SFMLEngine {
 	private:
 		Coordinator* m_Coordinator = nullptr;
 		std::unordered_map<ColliderID, ColliderData> m_ColliderMap;
+
+		SpatialPartition* m_SpatialPartition;
 
 	private:
 		static std::queue<ColliderID> s_AvailableColliderIDs;

@@ -8,6 +8,9 @@
 #include "SFMLEngine/ECS/Components/Colliders/TilemapCollider.h"
 
 
+#include "SpatialPartition.h"
+
+
 namespace SFMLEngine {
 
 	std::queue<ColliderID> CollisionSystem::s_AvailableColliderIDs;
@@ -62,7 +65,14 @@ namespace SFMLEngine {
 	}
 
 
-
+	CollisionSystem::CollisionSystem()
+	{
+		m_SpatialPartition = new SpatialPartition(MAX_TILEMAP_COLLIDER_SIZE * 32); 
+	}
+	CollisionSystem::~CollisionSystem()
+	{ 
+		delete m_SpatialPartition; 
+	}
 
 
 	void CollisionSystem::Init(Coordinator* coordinator)
@@ -84,13 +94,13 @@ namespace SFMLEngine {
 		case ColliderType::Box:
 			SFMLE_CORE_ASSERT(m_Coordinator->HasComponent<BoxCollider>(entity), "Missing BoxCollider component, make sure collider is added before collider info.");
 			newCollider = &m_Coordinator->GetComponent<BoxCollider>(entity);
-			m_ColliderMap.insert(std::make_pair(newCollider->GetColliderID(), ColliderData{ entity, collider.Type, newCollider }));
+			m_ColliderMap.insert(std::make_pair(newCollider->GetColliderID(), ColliderData{ newCollider->GetColliderID(), entity, collider.Type, newCollider }));
 			break;
 
 		case ColliderType::Circle:	
 			SFMLE_CORE_ASSERT(m_Coordinator->HasComponent<CircleCollider>(entity), "Missing CircleCollider component, make sure collider is added before collider info.");
 			newCollider = &m_Coordinator->GetComponent<CircleCollider>(entity); 
-			m_ColliderMap.insert(std::make_pair(newCollider->GetColliderID(), ColliderData{ entity, collider.Type, newCollider }));
+			m_ColliderMap.insert(std::make_pair(newCollider->GetColliderID(), ColliderData{ newCollider->GetColliderID(), entity, collider.Type, newCollider }));
 			break;
 
 		case ColliderType::Tilemap: 
@@ -98,7 +108,7 @@ namespace SFMLEngine {
 			newCollider = &m_Coordinator->GetComponent<TilemapCollider>(entity); 
 			for (auto& box : static_cast<TilemapCollider*>(newCollider)->GetCollisionGeometry())
 			{
-				m_ColliderMap.insert(std::make_pair(box.GetColliderID(), ColliderData{ entity, ColliderType::Box, &box }));
+				m_ColliderMap.insert(std::make_pair(box.GetColliderID(), ColliderData{ newCollider->GetColliderID(), entity, ColliderType::Box, &box }));
 			}
 			break;
 
@@ -142,7 +152,7 @@ namespace SFMLEngine {
 		TilemapCollider* collider = &m_Coordinator->GetComponent<TilemapCollider>(tilemapCollider);
 		for (auto& box : static_cast<TilemapCollider*>(collider)->GetCollisionGeometry())
 		{
-			m_ColliderMap.insert(std::make_pair(box.GetColliderID(), ColliderData{ tilemapCollider, ColliderType::Box, &box }));
+			m_ColliderMap.insert(std::make_pair(box.GetColliderID(), ColliderData{ box.GetColliderID(), tilemapCollider, ColliderType::Box, &box }));
 		}
 	}
 
