@@ -67,6 +67,10 @@ namespace SFMLEngine {
 		const std::unordered_map<ColliderID, ColliderData>& GetAllColliders() { return m_ColliderMap; }
 
 
+		const std::vector<ColliderData*> GetAllCollidersSharingPartition(const sf::FloatRect& rect);
+		const std::vector<ColliderData*> GetAllCollidersSharingPartition(Entity entity);
+
+
 		// for tilemaps to use
 		// when a tilemap collider is regenerated, it will invalidate all of the pointers
 		// and ColliderID's associated with it
@@ -75,7 +79,7 @@ namespace SFMLEngine {
 		void AddTilemapColliderData(Entity tilemapCollider);
 
 
-		const Collision TestCollision(Entity entity, ColliderID other);
+		const Collision TestCollision(Entity entity, const ColliderData& other);
 
 		// testing against circle
 		const Collision CircleCast(const sf::Vector2f& centre, float radius, ColliderID other);
@@ -84,21 +88,19 @@ namespace SFMLEngine {
 
 	private:
 		template <typename T>
-		const Collision RunCollisionTest(T& collider, ColliderID other)
+		const Collision RunCollisionTest(T& collider, const ColliderData& other)
 		{
-			const ColliderData& otherCollider = m_ColliderMap[other];
-
 			std::pair<bool, sf::FloatRect> collisionData;
 
-			switch (otherCollider.Type)
+			switch (other.Type)
 			{
 			case ColliderType::Invalid:	SFMLE_CORE_ASSERT(0, "Invalid collider type!"); break;
 			case ColliderType::Box:
-				collisionData = static_cast<BoxCollider*>(otherCollider.ColliderPtr)->Colliding(collider);
+				collisionData = static_cast<BoxCollider*>(other.ColliderPtr)->Colliding(collider);
 				break;
 
 			case ColliderType::Circle:
-				collisionData = static_cast<CircleCollider*>(otherCollider.ColliderPtr)->Colliding(collider);
+				collisionData = static_cast<CircleCollider*>(other.ColliderPtr)->Colliding(collider);
 				break;
 
 			case ColliderType::Tilemap: SFMLE_CORE_ASSERT(0, "Tilemap collider is an invalid collision primitive."); break;
@@ -109,11 +111,11 @@ namespace SFMLEngine {
 			{
 				return Collision
 				{
-					otherCollider.Owner,
+					other.Owner,
 					collider.GetGlobalBounds(),
 					collisionData.second,
-					other,
-					otherCollider.ColliderPtr->IsTrigger
+					other.ID,
+					other.ColliderPtr->IsTrigger
 				};
 			}
 			else

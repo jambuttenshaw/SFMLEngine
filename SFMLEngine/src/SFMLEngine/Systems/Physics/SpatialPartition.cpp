@@ -6,13 +6,15 @@ namespace SFMLEngine {
 	SpatialPartition::SpatialPartition(int partitionSize)
 		: m_PartitionSize(partitionSize)
 	{
-
+		if (m_PartitionSize != 0)
+			// why do the divisions every frame when you can just do them once instead
+			m_InversePartitionSize = 1.0f / static_cast<float>(m_PartitionSize);
 	}
 
 
-	void SpatialPartition::Insert(const ColliderData& newCollider)
+	void SpatialPartition::Insert(ColliderData* newCollider)
 	{
-		auto [topLeft, bottomRight] = Math::GetCorners(newCollider.ColliderPtr->GetGlobalBounds());
+		auto [topLeft, bottomRight] = Math::GetCorners(newCollider->ColliderPtr->GetGlobalBounds());
 		sf::Vector2i topLeftPartition = WorldToSpacialPartitionCoords(topLeft);
 		sf::Vector2i bottomRightPartition = WorldToSpacialPartitionCoords(bottomRight);
 
@@ -22,14 +24,28 @@ namespace SFMLEngine {
 		// it may also exist in other partitions depending on the dimensions of the collider
 		bool topRight = bottomRightPartition.x > topLeftPartition.x;
 		bool bottomLeft = bottomRightPartition.y > topLeftPartition.y;
-		
+
 		// the partition size will always be selected such that a collider can exist in no more than 4 partitions
-		if (topRight) 
-			m_PartitionedColliders.insert(std::make_pair(sf::Vector2i{bottomRightPartition.x, topLeftPartition.y}, newCollider));
-		if (bottomLeft) 
-			m_PartitionedColliders.insert(std::make_pair(sf::Vector2i{topLeftPartition.x, bottomRightPartition.y}, newCollider));
-		if (topRight && bottomLeft) 
+		if (topRight)
+			m_PartitionedColliders.insert(std::make_pair(sf::Vector2i{ bottomRightPartition.x, topLeftPartition.y }, newCollider));
+		if (bottomLeft)
+			m_PartitionedColliders.insert(std::make_pair(sf::Vector2i{ topLeftPartition.x, bottomRightPartition.y }, newCollider));
+		if (topRight && bottomLeft)
 			m_PartitionedColliders.insert(std::make_pair(bottomRightPartition, newCollider));
+	}
+
+
+	void SpatialPartition::Delete(ColliderID id)
+	{
+		std::vector<std::unordered_multimap<sf::Vector2i, ColliderData*>::iterator> toErase;
+		for (auto it = m_PartitionedColliders.begin(); it != m_PartitionedColliders.end(); it++)
+		{
+			if ((*it).second->ID == id)
+			{
+				toErase.push_back(it);
+			}
+		}
+		for (auto const& it : toErase) m_PartitionedColliders.erase(it);
 	}
 
 
@@ -60,8 +76,8 @@ namespace SFMLEngine {
 
 	sf::Vector2i SpatialPartition::WorldToSpacialPartitionCoords(const sf::Vector2f& position)
 	{
-		return { static_cast<int>(position.x) / m_PartitionSize,
-				 static_cast<int>(position.y) / m_PartitionSize };
+		return { static_cast<int>(position.x * m_InversePartitionSize ),
+				 static_cast<int>(position.y * m_InversePartitionSize ) };
 	}
 
 
@@ -74,7 +90,7 @@ namespace SFMLEngine {
 			for (auto& itr = start; (itr != m_PartitionedColliders.end()) && (itr->first == partition); itr++)
 			{
 				// loop through all colliders in this partition and add them to the vector
-				colliders.push_back(&itr->second);
+				colliders.push_back(itr->second);
 			}
 		}
 	}

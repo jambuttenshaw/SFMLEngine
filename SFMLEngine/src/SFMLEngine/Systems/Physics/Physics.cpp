@@ -57,15 +57,15 @@ namespace SFMLEngine {
 		// since theres no draw circle debug option
 		DEBUG_DRAW_RECT(sf::FloatRect{ centre.x - radius, centre.y - radius, 2 * radius, 2 * radius }, sf::Color::Red);
 
-		for (auto const& collider : s_CollisionSystem->GetAllColliders())
+		for (auto const& collider : s_CollisionSystem->GetAllCollidersSharingPartition(sf::FloatRect{ centre.x - radius, centre.y - radius, 2 * radius, 2 * radius }))
 		{
 			// check to make sure this collider is compatible with the layer mask
-			Layer colliderLayer = s_Coordinator->GetComponent<Identity>(collider.second.Owner).EntityLayer;
+			Layer colliderLayer = s_Coordinator->GetComponent<Identity>(collider->Owner).EntityLayer;
 			// we only want to collide with colliders that agree with the layer mask
 			// and that are not triggers
-			if ((colliderLayer & layerMask) == colliderLayer && !collider.second.ColliderPtr->IsTrigger)
+			if ((colliderLayer & layerMask) == colliderLayer && !collider->ColliderPtr->IsTrigger)
 			{
-				auto collisionTest = s_CollisionSystem->CircleCast(centre, radius, collider.first);
+				auto collisionTest = s_CollisionSystem->CircleCast(centre, radius, collider->ID);
 				if (collisionTest.Other != INVALID_ENTITY_ID)
 				{
 					// collision occurred
@@ -83,15 +83,15 @@ namespace SFMLEngine {
 		// since theres no draw circle debug option
 		DEBUG_DRAW_RECT(rect, sf::Color::Red);
 
-		for (auto const& collider : s_CollisionSystem->GetAllColliders())
+		for (auto const& collider : s_CollisionSystem->GetAllCollidersSharingPartition(rect))
 		{
 			// check to make sure this collider is compatible with the layer mask
-			Layer colliderLayer = s_Coordinator->GetComponent<Identity>(collider.second.Owner).EntityLayer;
+			Layer colliderLayer = s_Coordinator->GetComponent<Identity>(collider->Owner).EntityLayer;
 			// we only want to collide with colliders that agree with the layer mask
 			// and that are not triggers
-			if ((colliderLayer & layerMask) == colliderLayer && !collider.second.ColliderPtr->IsTrigger)
+			if ((colliderLayer & layerMask) == colliderLayer && !collider->ColliderPtr->IsTrigger)
 			{
-				auto collisionTest = s_CollisionSystem->BoxCast(rect, collider.first);
+				auto collisionTest = s_CollisionSystem->BoxCast(rect, collider->ID);
 				if (collisionTest.Other != INVALID_ENTITY_ID)
 				{
 					// collision occurred

@@ -73,6 +73,26 @@ namespace SFMLEngine {
 	{ 
 		delete m_SpatialPartition; 
 	}
+	const std::vector<ColliderData*> CollisionSystem::GetAllCollidersSharingPartition(const sf::FloatRect& rect)
+	{ 
+		return m_SpatialPartition->CollidersSharingPartition(rect);
+	}
+	
+	const std::vector<ColliderData*> CollisionSystem::GetAllCollidersSharingPartition(Entity entity)
+	{
+		sf::FloatRect rect;
+
+		auto& colliderInfo = m_Coordinator->GetComponent<ColliderInfo>(entity);
+		switch (colliderInfo.Type)
+		{
+		case ColliderType::Invalid:	SFMLE_CORE_ASSERT(0, "Invalid collider type!"); break;
+		case ColliderType::Box:		rect = m_Coordinator->GetComponent<BoxCollider>(entity).GetGlobalBounds(); break;
+		case ColliderType::Circle:	rect = m_Coordinator->GetComponent<CircleCollider>(entity).GetGlobalBounds(); break;
+		case ColliderType::Tilemap: SFMLE_CORE_ASSERT(0, "Simulating physics on tilemaps is currently not supported."); break;
+		default:					SFMLE_CORE_ASSERT(0, "Unknown collider type!"); break;
+		}
+		return GetAllCollidersSharingPartition(rect);
+	}
 
 
 	void CollisionSystem::Init(Coordinator* coordinator)
@@ -94,28 +114,36 @@ namespace SFMLEngine {
 		case ColliderType::Box:
 			SFMLE_CORE_ASSERT(m_Coordinator->HasComponent<BoxCollider>(entity), "Missing BoxCollider component, make sure collider is added before collider info.");
 			newCollider = &m_Coordinator->GetComponent<BoxCollider>(entity);
+			newCollider->SetTransform(transform);
+
 			m_ColliderMap.insert(std::make_pair(newCollider->GetColliderID(), ColliderData{ newCollider->GetColliderID(), entity, collider.Type, newCollider }));
+			m_SpatialPartition->Insert(&m_ColliderMap[newCollider->GetColliderID()]);
 			break;
 
 		case ColliderType::Circle:	
 			SFMLE_CORE_ASSERT(m_Coordinator->HasComponent<CircleCollider>(entity), "Missing CircleCollider component, make sure collider is added before collider info.");
 			newCollider = &m_Coordinator->GetComponent<CircleCollider>(entity); 
+			newCollider->SetTransform(transform);
+
 			m_ColliderMap.insert(std::make_pair(newCollider->GetColliderID(), ColliderData{ newCollider->GetColliderID(), entity, collider.Type, newCollider }));
+			m_SpatialPartition->Insert(&m_ColliderMap[newCollider->GetColliderID()]);
 			break;
 
 		case ColliderType::Tilemap: 
 			SFMLE_CORE_ASSERT(m_Coordinator->HasComponent<TilemapCollider>(entity), "Missing TilemapCollider component, make sure collider is added before collider info.");
 			newCollider = &m_Coordinator->GetComponent<TilemapCollider>(entity); 
+			newCollider->SetTransform(transform);
+
 			for (auto& box : static_cast<TilemapCollider*>(newCollider)->GetCollisionGeometry())
 			{
-				m_ColliderMap.insert(std::make_pair(box.GetColliderID(), ColliderData{ newCollider->GetColliderID(), entity, ColliderType::Box, &box }));
+				m_ColliderMap.insert(std::make_pair(box.GetColliderID(), ColliderData{ box.GetColliderID(), entity, ColliderType::Box, &box }));
+				m_SpatialPartition->Insert(&m_ColliderMap[box.GetColliderID()]);
 			}
 			break;
 
 		default:					SFMLE_CORE_ASSERT(0, "Unknown collider type!"); break;
 		}
 
-		newCollider->SetTransform(transform);
 	}
 
 	void CollisionSystem::EntityRemovedFromSystem(Entity entity)
@@ -130,7 +158,10 @@ namespace SFMLEngine {
 			}
 		}
 		for (ColliderID collider : toErase)
+		{
 			m_ColliderMap.erase(collider);
+			m_SpatialPartition->Delete(collider);
+		}
 	}
 
 	void CollisionSystem::DeleteTilemapColliderData(Entity tilemapCollider)
@@ -145,27 +176,30 @@ namespace SFMLEngine {
 			}
 		}
 		for (ColliderID collider : toErase)
+		{
 			m_ColliderMap.erase(collider);
+			m_SpatialPartition->Delete(collider);
+		}
 	}
 	void CollisionSystem::AddTilemapColliderData(Entity tilemapCollider)
 	{
+		LOG_CORE_TRACE("Adding tilemap collider");
 		TilemapCollider* collider = &m_Coordinator->GetComponent<TilemapCollider>(tilemapCollider);
 		for (auto& box : static_cast<TilemapCollider*>(collider)->GetCollisionGeometry())
 		{
 			m_ColliderMap.insert(std::make_pair(box.GetColliderID(), ColliderData{ box.GetColliderID(), tilemapCollider, ColliderType::Box, &box }));
+			m_SpatialPartition->Insert(&m_ColliderMap[box.GetColliderID()]);
 		}
 	}
 
 
-	const Collision CollisionSystem::TestCollision(Entity entity, ColliderID other)
+	const Collision CollisionSystem::TestCollision(Entity entity, const ColliderData& other)
 	{
-		auto const& colliderData = m_ColliderMap[other];
-
 		// make sure entity and other are in layers that can collide
 		Layer entityLayer = m_Coordinator->GetComponent<Identity>(entity).EntityLayer;
-		Layer otherLayer = m_Coordinator->GetComponent<Identity>(colliderData.Owner).EntityLayer;
+		Layer otherLayer = m_Coordinator->GetComponent<Identity>(other.Owner).EntityLayer;
 
-		if ((entityLayer & Physics::GetPhysicsLayerMask(otherLayer)) == entityLayer || (colliderData.ColliderPtr->IsTrigger))
+		if ((entityLayer & Physics::GetPhysicsLayerMask(otherLayer)) == entityLayer || (other.ColliderPtr->IsTrigger))
 		{
 			auto& colliderInfo = m_Coordinator->GetComponent<ColliderInfo>(entity);
 			switch (colliderInfo.Type)

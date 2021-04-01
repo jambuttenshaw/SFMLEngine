@@ -14,11 +14,11 @@ namespace SFMLEngine {
 		SpatialPartition(int partitionSize);
 		~SpatialPartition() = default;
 
-		void Insert(const ColliderData& newCollider);
+		void Insert(ColliderData* newCollider);
+		void Delete(ColliderID id);
 
 		// get a vector of all colliders that share partitions with the rect passed in
 		const std::vector<ColliderData*> CollidersSharingPartition(const sf::FloatRect& rect);
-
 
 	private:
 		sf::Vector2i WorldToSpacialPartitionCoords(const sf::Vector2f& pos);
@@ -27,7 +27,8 @@ namespace SFMLEngine {
 	
 	private:
 		int m_PartitionSize = 0;
-		std::unordered_multimap<sf::Vector2i, ColliderData> m_PartitionedColliders;
+		float m_InversePartitionSize = 0;
+		std::unordered_multimap<sf::Vector2i, ColliderData*> m_PartitionedColliders;
 
 	};
 	

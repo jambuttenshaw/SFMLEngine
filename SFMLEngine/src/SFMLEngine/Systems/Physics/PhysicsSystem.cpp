@@ -60,14 +60,15 @@ namespace SFMLEngine {
 			transform.Position += rigidbody.Position - rigidbody.OldPosition;
 
 
-			// test for collisions against each collider
-			for (auto const& collider : m_CollisionSystem->GetAllColliders())
+			// test for collisions against each collider in the same or adjacent (if required) partitions
+			auto& colliders = m_CollisionSystem->GetAllCollidersSharingPartition(entity);
+			for (auto const& collider : colliders)
 			{
 				// dont check collision against itself
-				if (collider.second.Owner == entity) continue;
+				if (collider->Owner == entity) continue;
 
 				// test against the current collider
-				Collision collisionTest = m_CollisionSystem->TestCollision(entity, collider.first);
+				Collision collisionTest = m_CollisionSystem->TestCollision(entity, *collider);
 
 				// did a collision occur?
 				if (collisionTest.OtherColliderID != NULL_COLLIDER_ID)
