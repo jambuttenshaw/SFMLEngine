@@ -119,7 +119,7 @@ void PlayerController::OnColliderExit(Entity other)
 
 
 void PlayerController::OnTriggerEnter(const Collision& collision)
-{						 
+{					
 	if (GetEntityTag(collision.Other) == "Ladder")
 	{
 		// hit ladder

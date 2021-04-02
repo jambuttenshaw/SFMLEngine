@@ -191,9 +191,9 @@ public:
 
 			AddNativeScript<PlayerController>(m_Player);
 
-			// auto& script = AddNativeScript<CrystalCollector>(m_Player);
-			// script.SetCrystalMap(m_Crystals);
-			// 
+			auto& script = AddNativeScript<CrystalCollector>(m_Player);
+			script.SetCrystalMap(m_Crystals);
+			
 			AddNativeScript<PlayerStatsController>(m_Player);
 		}
 
@@ -217,7 +217,7 @@ public:
 			AddNativeScript<SmoothFollowPlayer>(m_Camera);
 		}
 
-
+		
 		{
 			m_Enemy = CreateEntity();
 			SetEntityLayer(m_Enemy, "Enemies");
@@ -315,14 +315,15 @@ public:
 			animator.SetCurrentAnimation("idle");
 			AddComponent(m_Enemy, animator);
 		}
-
-
+		
+		/*
 		{
 			m_Text = CreateEntity();
-
+		
 			AddComponent(m_Text, Transform{ });
 			AddComponent(m_Text, Text{ fontID, "This is some example text.", 16, sf::Color::White });
 		}
+		*/
 
 
 		Physics::IgnoreCollisions("Player", "Enemies");

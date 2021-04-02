@@ -159,8 +159,8 @@ namespace SFMLEngine {
 		}
 		for (ColliderID collider : toErase)
 		{
-			m_ColliderMap.erase(collider);
 			m_SpatialPartition->Delete(collider);
+			m_ColliderMap.erase(collider);
 		}
 	}
 
@@ -177,8 +177,8 @@ namespace SFMLEngine {
 		}
 		for (ColliderID collider : toErase)
 		{
-			m_ColliderMap.erase(collider);
 			m_SpatialPartition->Delete(collider);
+			m_ColliderMap.erase(collider);
 		}
 	}
 	void CollisionSystem::AddTilemapColliderData(Entity tilemapCollider)
