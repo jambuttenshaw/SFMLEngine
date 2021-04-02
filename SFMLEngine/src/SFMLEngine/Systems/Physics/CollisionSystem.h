@@ -79,28 +79,28 @@ namespace SFMLEngine {
 		void AddTilemapColliderData(Entity tilemapCollider);
 
 
-		const Collision TestCollision(Entity entity, const ColliderData& other);
+		const Collision TestCollision(Entity entity, const ColliderData* const other);
 
 		// testing against circle
-		const Collision CircleCast(const sf::Vector2f& centre, float radius, ColliderID other);
+		const Collision CircleCast(const sf::Vector2f& centre, float radius, const ColliderData* const other);
 		// testing against box
-		const Collision BoxCast(const sf::FloatRect& rect, ColliderID other);
+		const Collision BoxCast(const sf::FloatRect& rect, const ColliderData* const other);
 
 	private:
 		template <typename T>
-		const Collision RunCollisionTest(T& collider, const ColliderData& other)
+		const Collision RunCollisionTest(T& collider, const ColliderData* const other)
 		{
 			std::pair<bool, sf::FloatRect> collisionData;
 
-			switch (other.Type)
+			switch (other->Type)
 			{
 			case ColliderType::Invalid:	SFMLE_CORE_ASSERT(0, "Invalid collider type!"); break;
 			case ColliderType::Box:
-				collisionData = static_cast<BoxCollider*>(other.ColliderPtr)->Colliding(collider);
+				collisionData = static_cast<BoxCollider*>(other->ColliderPtr)->Colliding(collider);
 				break;
 
 			case ColliderType::Circle:
-				collisionData = static_cast<CircleCollider*>(other.ColliderPtr)->Colliding(collider);
+				collisionData = static_cast<CircleCollider*>(other->ColliderPtr)->Colliding(collider);
 				break;
 
 			case ColliderType::Tilemap: SFMLE_CORE_ASSERT(0, "Tilemap collider is an invalid collision primitive."); break;
@@ -111,11 +111,11 @@ namespace SFMLEngine {
 			{
 				return Collision
 				{
-					other.Owner,
+					other->Owner,
 					collider.GetGlobalBounds(),
 					collisionData.second,
-					other.ID,
-					other.ColliderPtr->IsTrigger
+					other->ID,
+					other->ColliderPtr->IsTrigger
 				};
 			}
 			else

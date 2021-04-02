@@ -183,7 +183,6 @@ namespace SFMLEngine {
 	}
 	void CollisionSystem::AddTilemapColliderData(Entity tilemapCollider)
 	{
-		LOG_CORE_TRACE("Adding tilemap collider");
 		TilemapCollider* collider = &m_Coordinator->GetComponent<TilemapCollider>(tilemapCollider);
 		for (auto& box : static_cast<TilemapCollider*>(collider)->GetCollisionGeometry())
 		{
@@ -193,13 +192,13 @@ namespace SFMLEngine {
 	}
 
 
-	const Collision CollisionSystem::TestCollision(Entity entity, const ColliderData& other)
+	const Collision CollisionSystem::TestCollision(Entity entity, const ColliderData* const other)
 	{
 		// make sure entity and other are in layers that can collide
 		Layer entityLayer = m_Coordinator->GetComponent<Identity>(entity).EntityLayer;
-		Layer otherLayer = m_Coordinator->GetComponent<Identity>(other.Owner).EntityLayer;
+		Layer otherLayer = m_Coordinator->GetComponent<Identity>(other->Owner).EntityLayer;
 
-		if ((entityLayer & Physics::GetPhysicsLayerMask(otherLayer)) == entityLayer || (other.ColliderPtr->IsTrigger))
+		if ((entityLayer & Physics::GetPhysicsLayerMask(otherLayer)) == entityLayer || (other->ColliderPtr->IsTrigger))
 		{
 			auto& colliderInfo = m_Coordinator->GetComponent<ColliderInfo>(entity);
 			switch (colliderInfo.Type)
@@ -222,23 +221,19 @@ namespace SFMLEngine {
 		return Collision{ INVALID_ENTITY_ID, sf::FloatRect(), sf::FloatRect(), NULL_COLLIDER_ID };
 	}
 
-	const Collision CollisionSystem::CircleCast(const sf::Vector2f& centre, float radius, ColliderID other)
+	const Collision CollisionSystem::CircleCast(const sf::Vector2f& centre, float radius, const ColliderData* const other)
 	{
-		auto const& colliderData = m_ColliderMap[other];
-
-
-		// ADD LAYER CHECKS
 
 		std::pair<bool, sf::FloatRect> collisionData;
-		switch (colliderData.Type)
+		switch (other->Type)
 		{
 		case ColliderType::Invalid:	SFMLE_CORE_ASSERT(0, "Invalid collider type!"); break;
 		case ColliderType::Box:
-			collisionData = static_cast<BoxCollider*>(colliderData.ColliderPtr)->Colliding(centre, radius);
+			collisionData = static_cast<BoxCollider*>(other->ColliderPtr)->Colliding(centre, radius);
 			break;
 
 		case ColliderType::Circle:
-			collisionData = static_cast<CircleCollider*>(colliderData.ColliderPtr)->Colliding(centre, radius);
+			collisionData = static_cast<CircleCollider*>(other->ColliderPtr)->Colliding(centre, radius);
 			break;
 
 		case ColliderType::Tilemap: SFMLE_CORE_ASSERT(0, "Internal collider mapping error occurred."); break;
@@ -249,11 +244,11 @@ namespace SFMLEngine {
 		{
 			return Collision
 			{
-				colliderData.Owner,
+				other->Owner,
 				sf::FloatRect{centre.x - radius, centre.y - radius, 2 * radius, 2 * radius},
 				collisionData.second,
-				other,
-				colliderData.ColliderPtr->IsTrigger
+				other->ID,
+				other->ColliderPtr->IsTrigger
 			};
 		}
 		else
@@ -262,23 +257,18 @@ namespace SFMLEngine {
 		}
 	}
 
-	const Collision CollisionSystem::BoxCast(const sf::FloatRect& rect, ColliderID other)
+	const Collision CollisionSystem::BoxCast(const sf::FloatRect& rect, const ColliderData* const other)
 	{
-		auto const& colliderData = m_ColliderMap[other];
-
-
-		// ADD LAYER CHECKS
-
 		std::pair<bool, sf::FloatRect> collisionData;
-		switch (colliderData.Type)
+		switch (other->Type)
 		{
 		case ColliderType::Invalid:	SFMLE_CORE_ASSERT(0, "Invalid collider type!"); break;
 		case ColliderType::Box:
-			collisionData = static_cast<BoxCollider*>(colliderData.ColliderPtr)->Colliding(rect);
+			collisionData = static_cast<BoxCollider*>(other->ColliderPtr)->Colliding(rect);
 			break;
 
 		case ColliderType::Circle:
-			collisionData = static_cast<CircleCollider*>(colliderData.ColliderPtr)->Colliding(rect);
+			collisionData = static_cast<CircleCollider*>(other->ColliderPtr)->Colliding(rect);
 			break;
 
 		case ColliderType::Tilemap: SFMLE_CORE_ASSERT(0, "Internal collider mapping error occurred."); break;
@@ -289,11 +279,11 @@ namespace SFMLEngine {
 		{
 			return Collision
 			{
-				colliderData.Owner,
+				other->Owner,
 				rect,
 				collisionData.second,
-				other,
-				colliderData.ColliderPtr->IsTrigger
+				other->ID,
+				other->ColliderPtr->IsTrigger
 			};
 		}
 		else

@@ -68,7 +68,7 @@ namespace SFMLEngine {
 				if (collider->Owner == entity) continue;
 
 				// test against the current collider
-				Collision collisionTest = m_CollisionSystem->TestCollision(entity, *collider);
+				Collision collisionTest = m_CollisionSystem->TestCollision(entity, collider);
 
 				// did a collision occur?
 				if (collisionTest.OtherColliderID != NULL_COLLIDER_ID)

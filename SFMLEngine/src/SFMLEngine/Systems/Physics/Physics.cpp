@@ -65,7 +65,7 @@ namespace SFMLEngine {
 			// and that are not triggers
 			if ((colliderLayer & layerMask) == colliderLayer && !collider->ColliderPtr->IsTrigger)
 			{
-				auto collisionTest = s_CollisionSystem->CircleCast(centre, radius, collider->ID);
+				auto collisionTest = s_CollisionSystem->CircleCast(centre, radius, collider);
 				if (collisionTest.Other != INVALID_ENTITY_ID)
 				{
 					// collision occurred
@@ -91,7 +91,7 @@ namespace SFMLEngine {
 			// and that are not triggers
 			if ((colliderLayer & layerMask) == colliderLayer && !collider->ColliderPtr->IsTrigger)
 			{
-				auto collisionTest = s_CollisionSystem->BoxCast(rect, collider->ID);
+				auto collisionTest = s_CollisionSystem->BoxCast(rect, collider);
 				if (collisionTest.Other != INVALID_ENTITY_ID)
 				{
 					// collision occurred
