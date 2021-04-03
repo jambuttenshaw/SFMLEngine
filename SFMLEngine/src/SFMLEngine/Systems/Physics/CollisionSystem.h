@@ -132,7 +132,7 @@ namespace SFMLEngine {
 
 	private:
 		Coordinator* m_Coordinator = nullptr;
-		std::unordered_map<ColliderID, ColliderData> m_ColliderMap;
+		// std::unordered_map<ColliderID, ColliderData> m_ColliderMap;
 
 		SpatialPartition* m_SpatialPartition;
 
