@@ -56,6 +56,8 @@ namespace SFMLEngine {
 
 		void Run();
 
+		void Close() { m_Window->close(); }
+
 		void Shutdown();
 
 		

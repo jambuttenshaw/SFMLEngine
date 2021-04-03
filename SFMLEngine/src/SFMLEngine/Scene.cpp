@@ -83,6 +83,7 @@ namespace SFMLEngine {
 	{
 		Identity& identityComponent = GetComponent<Identity>(entity);
 		identityComponent.Tag = tag;
+		m_IdentitySystem->UpdateTag(entity);
 	}
 	const std::string& Scene::GetEntityTag(Entity entity)
 	{

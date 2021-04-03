@@ -116,7 +116,7 @@ public:
 			AddComponent(m_Player, SpriteRenderer{
 				Texture::Create("assets/textures/characterSheet.png"),
 				Material::Create("Lit"),
-				1,
+				2,
 				Texture::Create("assets/textures/characterSheetNormals.png") });
 
 

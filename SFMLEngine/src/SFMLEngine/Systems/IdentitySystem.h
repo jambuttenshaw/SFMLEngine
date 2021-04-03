@@ -19,9 +19,6 @@ namespace SFMLEngine {
 		const std::vector<Entity>& GetEntitiesWithTag(const std::string& tag);
 
 		void Update();
-
-	private:
-
 		void UpdateTag(Entity entity);
 
 	private:
