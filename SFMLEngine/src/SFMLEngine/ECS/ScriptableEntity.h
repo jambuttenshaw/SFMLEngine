@@ -62,6 +62,8 @@ namespace SFMLEngine {
 		const std::string& GetEntityTag(Entity entity);
 		const std::string& GetEntityLayer(Entity entity);
 
+		Entity GetEntityHandle() { return m_EntityHandle; }
+
 		void SetSceneHandle(void* scene);
 		void SetEntityHandle(Entity entity);
 

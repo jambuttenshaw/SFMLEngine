@@ -2,7 +2,7 @@
 
 #include <SFMLEngine.h>
 
-#include "MainMenuManager.h"
+#include "menu/PlayButton.h"
 
 
 using namespace SFMLEngine;
@@ -14,21 +14,23 @@ public:
 
 	void Create() override
 	{
-		m_Entity = CreateEntity();
+		{
+			m_PlayButton = CreateEntity();
 
-		AddComponent(m_Entity, Transform{ { 0, 0 }, 0, { 4.0f, 4.0f } });
-		AddComponent(m_Entity, SpriteRenderer{
-				Texture::Create("assets/textures/wolf.png"),
-				Material::Create("Basic"),
-				0 });
+			AddComponent(m_PlayButton, Transform{ { -90, -40 } });
+			AddComponent(m_PlayButton, SpriteRenderer{
+					Texture::Create("assets/textures/playButton.png"),
+					Material::Create("Basic"),
+					0
+				});
+			
+			AddComponent(m_PlayButton, BoxCollider{ {180, 80}, {0, 0} });
+			AddComponent(m_PlayButton, ColliderInfo{ ColliderType::Box });
+
+			AddNativeScript<PlayButton>(m_PlayButton);
+		}
 
 
-
-		m_MenuManager = CreateEntity();
-		AddNativeScript<MainMenuManager>(m_MenuManager);
-
-
-		
 
 		m_Camera = CreateEntity();
 
@@ -37,7 +39,6 @@ public:
 	}
 
 private:
-	Entity m_Entity = INVALID_ENTITY_ID;
-	Entity m_MenuManager = INVALID_ENTITY_ID;
+	Entity m_PlayButton = INVALID_ENTITY_ID;
 	Entity m_Camera = INVALID_ENTITY_ID;
 };

@@ -3,13 +3,13 @@
 #include <SFMLEngine.h>
 
 // scripts
-#include "PlayerController.h"
-#include "PlayerStatsController.h"
-#include "CrystalCollector.h"
+#include "game/PlayerController.h"
+#include "game/PlayerStatsController.h"
+#include "game/CrystalCollector.h"
 
-#include "WolfController.h"
+#include "game/WolfController.h"
 
-#include "SmoothFollowPlayer.h"
+#include "game/SmoothFollowPlayer.h"
 
 
 using namespace SFMLEngine;

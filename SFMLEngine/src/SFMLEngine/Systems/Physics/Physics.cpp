@@ -13,6 +13,7 @@ namespace SFMLEngine {
 	std::unordered_map<Layer, Layer> Physics::s_LayerMasks;
 
 	sf::Vector2f Physics::Gravity = { 0, 750 };
+	Layer Physics::AllMask;
 
 	void Physics::Init(Coordinator* coordinator, std::shared_ptr<CollisionSystem> collisionSystem)
 	{
@@ -24,6 +25,9 @@ namespace SFMLEngine {
 		{
 			AddPhysicsLayer(layer);
 		}
+
+		// set all bits to true, so that AllMask will never filter out any colliders
+		AllMask.set();
 	}
 
 	void Physics::AddPhysicsLayer(Layer newLayer)

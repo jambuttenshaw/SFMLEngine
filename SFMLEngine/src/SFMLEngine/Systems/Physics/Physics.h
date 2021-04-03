@@ -31,6 +31,8 @@ namespace SFMLEngine {
 	public:
 		static sf::Vector2f Gravity;
 
+		static Layer AllMask;
+
 	private:
 		static Coordinator* s_Coordinator;
 		static std::shared_ptr<CollisionSystem> s_CollisionSystem;
