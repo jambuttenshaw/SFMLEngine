@@ -117,7 +117,7 @@ namespace SFMLEngine {
 			newCollider->SetTransform(transform);
 
 			m_ColliderMap.insert(std::make_pair(newCollider->GetColliderID(), ColliderData{ newCollider->GetColliderID(), entity, collider.Type, newCollider }));
-			m_SpatialPartition->Insert(&m_ColliderMap[newCollider->GetColliderID()]);
+			m_SpatialPartition->Insert(ColliderData{ newCollider->GetColliderID(), entity, ColliderType::Box, newCollider });
 			break;
 
 		case ColliderType::Circle:	
@@ -126,7 +126,7 @@ namespace SFMLEngine {
 			newCollider->SetTransform(transform);
 
 			m_ColliderMap.insert(std::make_pair(newCollider->GetColliderID(), ColliderData{ newCollider->GetColliderID(), entity, collider.Type, newCollider }));
-			m_SpatialPartition->Insert(&m_ColliderMap[newCollider->GetColliderID()]);
+			m_SpatialPartition->Insert(ColliderData{ newCollider->GetColliderID(), entity, ColliderType::Box, newCollider });
 			break;
 
 		case ColliderType::Tilemap: 
@@ -137,7 +137,7 @@ namespace SFMLEngine {
 			for (auto& box : static_cast<TilemapCollider*>(newCollider)->GetCollisionGeometry())
 			{
 				m_ColliderMap.insert(std::make_pair(box.GetColliderID(), ColliderData{ box.GetColliderID(), entity, ColliderType::Box, &box }));
-				m_SpatialPartition->Insert(&m_ColliderMap[box.GetColliderID()]);
+				m_SpatialPartition->Insert(ColliderData{ box.GetColliderID(), entity, ColliderType::Box, &box });
 			}
 			break;
 
@@ -148,6 +148,8 @@ namespace SFMLEngine {
 
 	void CollisionSystem::EntityRemovedFromSystem(Entity entity)
 	{
+		m_SpatialPartition->Erase(entity);
+
 		// look through all of the colliders and see what ones belong to this entity
 		std::vector<ColliderID> toErase;
 		for (auto& collider : m_ColliderMap)
@@ -159,13 +161,14 @@ namespace SFMLEngine {
 		}
 		for (ColliderID collider : toErase)
 		{
-			m_SpatialPartition->Delete(collider);
 			m_ColliderMap.erase(collider);
 		}
 	}
 
 	void CollisionSystem::DeleteTilemapColliderData(Entity tilemapCollider)
 	{
+		m_SpatialPartition->Erase(tilemapCollider);
+
 		// look through all of the colliders and see what ones belong to this tilemap
 		std::vector<ColliderID> toErase;
 		for (auto& collider : m_ColliderMap)
@@ -177,7 +180,6 @@ namespace SFMLEngine {
 		}
 		for (ColliderID collider : toErase)
 		{
-			m_SpatialPartition->Delete(collider);
 			m_ColliderMap.erase(collider);
 		}
 	}
@@ -187,7 +189,7 @@ namespace SFMLEngine {
 		for (auto& box : static_cast<TilemapCollider*>(collider)->GetCollisionGeometry())
 		{
 			m_ColliderMap.insert(std::make_pair(box.GetColliderID(), ColliderData{ box.GetColliderID(), tilemapCollider, ColliderType::Box, &box }));
-			m_SpatialPartition->Insert(&m_ColliderMap[box.GetColliderID()]);
+			m_SpatialPartition->Insert(ColliderData{ box.GetColliderID(), tilemapCollider, ColliderType::Box, &box });
 		}
 	}
 

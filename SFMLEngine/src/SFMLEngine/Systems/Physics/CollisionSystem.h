@@ -64,7 +64,6 @@ namespace SFMLEngine {
 		void EntityRemovedFromSystem(Entity entity) override;
 
 		const std::set<Entity>& GetCollideableEntities() { return m_Entities; }
-		const std::unordered_map<ColliderID, ColliderData>& GetAllColliders() { return m_ColliderMap; }
 
 
 		const std::vector<ColliderData*> GetAllCollidersSharingPartition(const sf::FloatRect& rect);
