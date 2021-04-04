@@ -77,8 +77,10 @@ namespace SFMLEngine {
 		}
 
 	private:
+		// a map holding the signature of each system
 		std::unordered_map<const char*, Signature> m_Signatures{};
 
+		// a map holding the pointer to each system
 		std::unordered_map<const char*, std::shared_ptr<System>> m_Systems{};
 
 	};

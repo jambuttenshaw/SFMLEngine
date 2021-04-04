@@ -3,6 +3,9 @@
 
 namespace SFMLEngine {
 
+	// any functions that need to interact with the scene need defined in the cpp file to avoid circular includes
+
+
 	const std::vector<Entity>& ScriptableEntity::GetEntitiesWithTag(const std::string& tag)
 	{ 
 		return m_SceneHandle->GetEntitiesWithTag(tag);
