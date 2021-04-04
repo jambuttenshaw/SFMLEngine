@@ -287,7 +287,7 @@ namespace SFMLEngine {
 		return nextID;
 	}
 
-	void CollisionSystem::ReplaceColliderID(ColliderID id)
+	void CollisionSystem::DeletedColliderID(ColliderID id)
 	{
 		if (id == NULL_COLLIDER_ID) return;
 
