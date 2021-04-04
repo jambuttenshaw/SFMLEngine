@@ -79,7 +79,7 @@ public:
 			m_Manager = CreateEntity();
 			m_ManagerScript = &AddNativeScript<EditorManager>(m_Manager);
 			
-			std::string levelDir = "D:/dev/SFML/SFMLEngine/ExampleProject/assets/tilemaps/level1";
+			std::string levelDir = "D:/dev/SFML/SFMLEngine/ExampleProject/assets/tilemaps/menu";
 			m_ManagerScript->Setup(this, m_TilePreview, tilePaletteID, levelDir, opaqueMat, translucentMat);
 		}
 
@@ -92,6 +92,7 @@ public:
 		LOG_INFO("Pan  camera:      WASD");
 		LOG_INFO("Zoom camera:      LCTRL + SCROLL WHEEL");
 		LOG_INFO("Cycle layers:     UP/DOWN ARROWS");
+		LOG_INFO("Create layer:     LSHIFT + N");
 		LOG_INFO("Export tilemaps:  SPACE");
 		LOG_INFO("-----------------------------------");
 	}

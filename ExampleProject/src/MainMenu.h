@@ -19,11 +19,10 @@ public:
 	{
 
 		
-
 		{
 			m_PlayButton = CreateEntity();
 
-			AddComponent(m_PlayButton, Transform{ { -96, -48 } });
+			AddComponent(m_PlayButton, Transform{ { -160, -160 } });
 			AddComponent(m_PlayButton, SpriteRenderer{
 					Texture::Create("assets/textures/playButton.png"),
 					Material::Create("Lit"),
@@ -31,18 +30,35 @@ public:
 					Texture::Create("assets/textures/playButton_n.png")
 				});
 			
-			AddComponent(m_PlayButton, BoxCollider{ {192, 96}, {0, 0} });
+			AddComponent(m_PlayButton, BoxCollider{ {128, 64}, {0, 0} });
 			AddComponent(m_PlayButton, ColliderInfo{ ColliderType::Box });
 
 			AddNativeScript<PlayButton>(m_PlayButton);
 		}
 
+		
+		
+		
+		{
+			m_OptionsButton = CreateEntity();
 
+			AddComponent(m_OptionsButton, Transform{ { -128, 64 } });
+			AddComponent(m_OptionsButton, SpriteRenderer{
+					Texture::Create("assets/textures/optionsButton.png"),
+					Material::Create("Lit"),
+					0,
+					Texture::Create("assets/textures/optionsButton_n.png")
+				});
+
+			AddComponent(m_OptionsButton, BoxCollider{ {160, 64}, {0, 0} });
+			AddComponent(m_OptionsButton, ColliderInfo{ ColliderType::Box });
+		}
+		
 		
 		{
 			m_QuitButton = CreateEntity();
 
-			AddComponent(m_QuitButton, Transform{ { -96, 68 } });
+			AddComponent(m_QuitButton, Transform{ { 0, 224 } });
 			AddComponent(m_QuitButton, SpriteRenderer{
 					Texture::Create("assets/textures/quitButton.png"),
 					Material::Create("Lit"),
@@ -50,12 +66,23 @@ public:
 					Texture::Create("assets/textures/quitButton_n.png")
 				});
 
-			AddComponent(m_QuitButton, BoxCollider{ {192, 96}, {0, 0} });
+			AddComponent(m_QuitButton, BoxCollider{ {128, 64}, {0, 0} });
 			AddComponent(m_QuitButton, ColliderInfo{ ColliderType::Box });
 
 			AddNativeScript<QuitButton>(m_QuitButton);
 		}
 		
+
+		{
+			m_Ground = CreateEntity();
+
+			AddComponent(m_Ground, Transform{ });
+
+			// add a tilemap
+
+			AddComponent(m_Ground, Tilemap{ TilePalette::LoadFromFile("assets/palettes/terrainPalette.json"), "assets/tilemaps/menu/layer0.json" });
+			AddComponent(m_Ground, TilemapRenderer{ Material::Create("LitTilemap"), 0 });
+		}
 
 
 		m_Light = CreateEntity();
@@ -63,6 +90,8 @@ public:
 		AddComponent(m_Light, Transform{ });
 		AddComponent(m_Light, PointLight{ 2.5f, 300.0f, sf::Color(219, 113, 114, 255) });
 		AddNativeScript<GoToMouse>(m_Light);
+
+
 
 		m_Camera = CreateEntity();
 
@@ -73,7 +102,11 @@ public:
 
 private:
 	Entity m_PlayButton = INVALID_ENTITY_ID;
+	Entity m_OptionsButton = INVALID_ENTITY_ID;
 	Entity m_QuitButton = INVALID_ENTITY_ID;
+
+	Entity m_Ground = INVALID_ENTITY_ID;
+
 	Entity m_Camera = INVALID_ENTITY_ID;
 	Entity m_Light = INVALID_ENTITY_ID;
 };

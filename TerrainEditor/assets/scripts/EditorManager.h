@@ -41,6 +41,20 @@ public:
 
 	void Update(Timestep ts) override
 	{
+		// creating more layers
+		if (Input::IsKeyDown(sf::Keyboard::LShift) && Input::IsKeyPressed(sf::Keyboard::N))
+		{
+			LOG_INFO("Creating new layer...");
+			std::string layerPath = m_LevelDir + "/layer" + std::to_string(m_TerrainLayers.size()) + ".json";
+			m_TerrainLayers.push_back(new EditableTerrain(m_Scene, m_TilePreviewEntity, m_PaletteID, layerPath, m_OpaqueMat, m_TranslucentMat));
+			LOG_INFO("New layer created in '{0}'", layerPath);
+
+			m_CurrentLayer = m_TerrainLayers.size() - 1;
+			SelectLayer();
+		}
+
+
+
 		if (!m_TerrainLayers.size()) return;
 
 		// use a temporary int instead of directly using current layer
@@ -66,22 +80,6 @@ public:
 			m_CurrentLayer = static_cast<size_t>(nextLayer);
 			SelectLayer();
 		}
-
-
-
-		// creating more layers
-		if (Input::IsKeyDown(sf::Keyboard::LShift) && Input::IsKeyPressed(sf::Keyboard::N))
-		{
-			LOG_INFO("Creating new layer...");
-			std::string layerPath = m_LevelDir + "/layer" + std::to_string(m_TerrainLayers.size()) + ".json";
-			m_TerrainLayers.push_back(new EditableTerrain(m_Scene, m_TilePreviewEntity, m_PaletteID, layerPath, m_OpaqueMat, m_TranslucentMat));
-			LOG_INFO("New layer created in '{0}'", layerPath);
-
-			m_CurrentLayer = m_TerrainLayers.size() - 1;
-			SelectLayer();
-		}
-
-
 
 		DEBUG_DISPLAY("Current Layer", static_cast<int>(m_CurrentLayer));
 	}
