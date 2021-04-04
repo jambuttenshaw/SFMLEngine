@@ -4,6 +4,8 @@
 
 #include "menu/PlayButton.h"
 #include "menu/QuitButton.h"
+#include "menu/OptionsButton.h"
+#include "menu/BackButton.h"
 
 #include "menu/GoToMouse.h"
 #include "menu/MenuCameraController.h"
@@ -52,6 +54,25 @@ public:
 
 			AddComponent(m_OptionsButton, BoxCollider{ {160, 64}, {0, 0} });
 			AddComponent(m_OptionsButton, ColliderInfo{ ColliderType::Box });
+
+			AddNativeScript<OptionsButton>(m_OptionsButton);
+		}
+
+		{
+			m_OptionsBackButton = CreateEntity();
+
+			AddComponent(m_OptionsBackButton, Transform{ { -192, 1056 } });
+			AddComponent(m_OptionsBackButton, SpriteRenderer{
+					Texture::Create("assets/textures/backButton.png"),
+					Material::Create("Lit"),
+					0,
+					Texture::Create("assets/textures/backButton_n.png")
+				});
+
+			AddComponent(m_OptionsBackButton, BoxCollider{ {128, 64}, {0, 0} });
+			AddComponent(m_OptionsBackButton, ColliderInfo{ ColliderType::Box });
+
+			auto& script = AddNativeScript<BackButton>(m_OptionsBackButton);
 		}
 		
 		
@@ -94,6 +115,7 @@ public:
 
 
 		m_Camera = CreateEntity();
+		SetEntityTag(m_Camera, "Camera");
 
 		AddComponent(m_Camera, Transform{ });
 		AddComponent(m_Camera, Camera{ });
@@ -102,8 +124,10 @@ public:
 
 private:
 	Entity m_PlayButton = INVALID_ENTITY_ID;
-	Entity m_OptionsButton = INVALID_ENTITY_ID;
 	Entity m_QuitButton = INVALID_ENTITY_ID;
+	
+	Entity m_OptionsButton = INVALID_ENTITY_ID;
+	Entity m_OptionsBackButton = INVALID_ENTITY_ID;
 
 	Entity m_Ground = INVALID_ENTITY_ID;
 

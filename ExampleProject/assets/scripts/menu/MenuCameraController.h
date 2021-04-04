@@ -23,7 +23,7 @@ public:
 			if (Math::SquareMagnitude(m_Transform->Position - aim) < 1.0f)
 			{
 				m_MovingToTarget = false;
-				m_Transform->Position = m_Target;
+				m_Transform->Position = aim;
 			}
 			
 		}

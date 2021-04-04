@@ -8,10 +8,6 @@ using namespace SFMLEngine;
 class Button : public ScriptableEntity
 {
 public:
-	void Start() override
-	{
-
-	}
 
 	void Update(Timestep ts) override
 	{
