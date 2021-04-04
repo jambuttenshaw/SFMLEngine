@@ -7,6 +7,18 @@
 #include "Collider.h"
 
 
+/*
+Tilemap colliders are quite different from other colliders.
+
+Instead of itself being an object that can be collided with, it instead holds a number of BoxColliders
+that define its geometry. A tilemap collider automatically generates to match the shape of a tilemap assigned to it,
+and an optimization level can be specified specify how many BoxColliders should be optimized out of the tilemap collider.
+
+A higher optimization level means faster collision detection, but regenerating tilemap collider geometry takes significantly longer.
+If you know the tilemap geometry will be edited infrequently then a high optimization level is ideal.
+*/
+
+
 namespace SFMLEngine {
 
 	struct BoxCollider;
@@ -14,6 +26,7 @@ namespace SFMLEngine {
 
 	struct TilemapCollider : public Collider
 	{
+		// Specifies the level of optimization that should be applied to the collider
 		enum class OptimizationLevel 
 		{
 			None = 0, Standard = 1, High = 2

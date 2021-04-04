@@ -6,9 +6,22 @@
 
 #include "SFMLEngine/ECS/System.h"
 
+/*
+A BoxCollider is a rectangle that handles detecting overlaps with other geometry.
+It contains a Rectangle that defines its size and local position.
+
+It holds a pointer to a transform, which tells the BoxCollider how it is positioned in space.
+
+BoxCollider is a Collider, and so it is automatically assigned a unique identifier to be used
+internally in the collision system.
+
+The main feature of a box collider (and indeed most colliders) is the overloads of the Colliding function,
+which detects if this BoxCollider is intersecting with the geometry described the paramter or paramters passed in.
+*/
 
 namespace SFMLEngine {
 
+	// forward-declare other types of collider, as to avoid circular includes
 	struct CircleCollider;
 	struct TilemapCollider;
 

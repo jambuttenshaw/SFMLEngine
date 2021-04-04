@@ -5,6 +5,19 @@
 #include "SFMLEngine/ECS/System.h"
 #include "Collider.h"
 
+/*
+A CircleCollider is a circle defined by a centre and a radius that can detect overlaps between
+other geometry in the game world.
+
+It holds a pointer to a transform, which tells the CircleCollider how it is positioned in space.
+
+CircleCollider is a Collider, and so it is automatically assigned a unique identifier to be used
+internally in the collision system.
+
+The main feature of a CircleCollider (and indeed most colliders) is the overloads of the Colliding function,
+which detects if this CircleCollider is intersecting with the geometry described the paramter or paramters passed in.
+*/
+
 namespace SFMLEngine {
 
 	struct BoxCollider;
