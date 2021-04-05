@@ -19,7 +19,8 @@
 #include "Systems/Lighting/PointLightSystem.h"
 #include "Systems/Lighting/DirectionalLightSystem.h"
 
-#include "Systems/GUISystem.h"
+#include "Systems/GUI/GUIPositionSystem.h"
+#include "Systems/GUI/GUITextSystem.h"
 
 #include "Systems/CameraSystem.h"
 
@@ -164,7 +165,8 @@ namespace SFMLEngine {
 		std::shared_ptr<PointLightSystem> m_PointLightSystem;
 		std::shared_ptr<DirectionalLightSystem> m_DirectionalLightSystem;
 
-		std::shared_ptr<GUISystem> m_GUISystem;
+		std::shared_ptr<GUIPositionSystem> m_GUIPositionSystem;
+		std::shared_ptr<GUITextSystem> m_GUITextSystem;
 
 		std::shared_ptr<CameraSystem> m_CameraSystem;
 

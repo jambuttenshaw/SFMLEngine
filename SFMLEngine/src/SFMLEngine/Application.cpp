@@ -105,6 +105,7 @@ namespace SFMLEngine
             m_Coordinator->RegisterComponent<PointLight>();
             m_Coordinator->RegisterComponent<DirectionalLight>();
 
+            m_Coordinator->RegisterComponent<GUITransform>();
             m_Coordinator->RegisterComponent<Text>();
 
             m_Coordinator->RegisterComponent<Camera>();
@@ -186,14 +187,19 @@ namespace SFMLEngine
             }
 
 
-            // GUI system
-            m_GUISystem = m_Coordinator->RegisterSystem<GUISystem>();
-            m_GUISystem->Init(m_Coordinator, m_Window);
+            // GUI systems
+
+
+            // ADDING IN GUI POSITION SYSTEM
+
+
+            m_GUITextSystem = m_Coordinator->RegisterSystem<GUITextSystem>();
+            m_GUITextSystem->Init(m_Coordinator, m_Window);
             {
                 Signature signature;
                 signature.set(m_Coordinator->GetComponentType<Transform>());
                 signature.set(m_Coordinator->GetComponentType<Text>());
-                m_Coordinator->SetSystemSignature<GUISystem>(signature);
+                m_Coordinator->SetSystemSignature<GUITextSystem>(signature);
             }
 
 
@@ -428,7 +434,7 @@ namespace SFMLEngine
                 m_SpriteRenderSystem->Update();
                 m_TilemapRenderSystem->Update();
                 m_TilemapSystem->Update();
-                m_GUISystem->Update();
+                m_GUITextSystem->Update();
                 m_CameraSystem->Update();
 
 #ifdef SFMLENGINE_DEBUG
@@ -498,7 +504,7 @@ namespace SFMLEngine
                 m_Window->setView(m_GUIView);
 
                 // draw the GUI onto the display
-                m_GUISystem->Render();
+                m_GUITextSystem->Render();
             }
 
 

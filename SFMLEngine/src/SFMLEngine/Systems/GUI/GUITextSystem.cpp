@@ -1,17 +1,17 @@
-#include "GUISystem.h"
+#include "GUITextSystem.h"
 
 #include "SFMLEngine/ECS/Components/Transform.h"
 #include "SFMLEngine/ECS/Components/Text.h"
 
 namespace SFMLEngine {
 
-	void GUISystem::Init(Coordinator* coordinator, sf::RenderWindow* window)
+	void GUITextSystem::Init(Coordinator* coordinator, sf::RenderWindow* window)
 	{
 		m_Coordinator = coordinator;
 		m_RenderWindow = window;
 	}
 
-	void GUISystem::EntityAddedToSystem(Entity entity)
+	void GUITextSystem::EntityAddedToSystem(Entity entity)
 	{
 		auto& text = m_Coordinator->GetComponent<Text>(entity);
 		if (text.Font != NULL_RESOURCE_ID)
@@ -27,7 +27,7 @@ namespace SFMLEngine {
 		text.TextObject.setFillColor(text.TextColor);
 	}
 
-	void GUISystem::Update()
+	void GUITextSystem::Update()
 	{
 		ZoneScoped;
 		for (auto& e : m_Entities)
@@ -44,7 +44,7 @@ namespace SFMLEngine {
 		}
 	}
 
-	void GUISystem::Render()
+	void GUITextSystem::Render()
 	{
 		ZoneScoped;
 		sf::RenderStates renderState;

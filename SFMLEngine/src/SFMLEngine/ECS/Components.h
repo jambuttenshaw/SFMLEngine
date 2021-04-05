@@ -13,7 +13,9 @@
 #include "Components/PointLight.h"
 #include "Components/DirectionalLight.h"
 
-#include "Components/Text.h"
+#include "Components/GUI/GUITransform.h"
+#include "Components/GUI/Text.h"
+#include "Components/GUI/GUIImage.h"
 
 #include "Components/Camera.h"
 

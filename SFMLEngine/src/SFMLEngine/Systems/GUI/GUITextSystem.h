@@ -7,11 +7,11 @@
 
 namespace SFMLEngine {
 
-	class GUISystem : public System
+	class GUITextSystem : public System
 	{
 	public:
-		GUISystem() = default;
-		~GUISystem() = default;
+		GUITextSystem() = default;
+		~GUITextSystem() = default;
 
 		void Init(Coordinator* coordinator, sf::RenderWindow* window);
 
