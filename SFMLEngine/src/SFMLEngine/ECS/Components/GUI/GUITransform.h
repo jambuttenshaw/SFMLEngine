@@ -41,7 +41,7 @@ namespace SFMLEngine {
 		sf::Transform GetTransformMatrix()
 		{
 			sf::Transform t;
-			t.translate(m_ScreenPosition);
+			t.translate(static_cast<sf::Vector2f>(m_ScreenPosition));
 			return t;
 		}
 
@@ -54,8 +54,8 @@ namespace SFMLEngine {
 		}
 		const sf::Vector2f& GetPosition() { return m_Position; }
 
-		void SetScreenPosition(const sf::Vector2f& pos) { m_ScreenPosition = pos; }
-		const sf::Vector2f& GetScreenPosition() { return m_ScreenPosition; }
+		void SetScreenPosition(const sf::Vector2i& pos) { m_ScreenPosition = pos; }
+		const sf::Vector2i& GetScreenPosition() { return m_ScreenPosition; }
 
 
 		void SetHorizontalAnchor(Anchor a)
@@ -97,7 +97,7 @@ namespace SFMLEngine {
 		// the position is always normalized between 0 and 1
 		// where 0,0 is the topleft of the screen and 1,1 is the bottomright
 		sf::Vector2f m_Position;
-		sf::Vector2f m_ScreenPosition;
+		sf::Vector2i m_ScreenPosition;
 
 		// anchors say which part of the object is positioned at m_Position
 		// for example, anchors of Left, Top will position the topleft at m_Position

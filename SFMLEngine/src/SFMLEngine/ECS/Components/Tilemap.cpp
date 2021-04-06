@@ -145,12 +145,14 @@ namespace SFMLEngine {
 		m_Modified = true;
 	}
 
-	void Tilemap::RemoveTile(const sf::Vector2i& location)
+	TileID Tilemap::RemoveTile(const sf::Vector2i& location)
 	{
-		if (!TileAtLocation(location)) return;
+		if (!TileAtLocation(location)) return NULL_TILE_ID;
 
 		// find out where the tile to be removed is in the array
 		size_t tileIndex = GetTileIndex(location);
+
+		TileID tiletype = Tiles[tileIndex].TileType;
 
 		// we dont need to move any data about if were deleting the last tile in the array
 		if (tileIndex != Tiles.size() - 1)
@@ -194,6 +196,8 @@ namespace SFMLEngine {
 
 		// flag this component as modified
 		m_Modified = true;
+
+		return tiletype;
 	}
 
 

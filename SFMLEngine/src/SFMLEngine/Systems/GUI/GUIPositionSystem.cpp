@@ -78,10 +78,10 @@ namespace SFMLEngine {
 		// then since the position of a gui element is between 0 and 1, it is effectively a fraction of the window size
 		// with the anchor offset applied
 		guiTransform.SetScreenPosition(
-			{
+			static_cast<sf::Vector2i>(sf::Vector2f{
 				m_WindowSize.x * guiTransform.GetPosition().x - anchorOffset.x,
 				m_WindowSize.y * guiTransform.GetPosition().y - anchorOffset.y,
-			}
+			})
 		);
 	}
 

@@ -27,7 +27,7 @@ public:
 		TilePalette* tilePalette = ResourceManager::GetResourceHandle<TilePalette>(tilePaletteID);
 
 
-		ResourceID fontID = FontLibrary::GetFont("arial");
+		ResourceID fontID = FontLibrary::LoadNewFont("arcade", "assets/fonts/ARCADECLASSIC.TTF");
 
 
 		{
@@ -197,8 +197,15 @@ public:
 
 			AddNativeScript<PlayerController>(m_Player);
 
+
+			{
+				m_CrystalScoreText = CreateEntity();
+				AddComponent(m_CrystalScoreText, GUITransform{ { 0.01f, 0.1f }, GUIElementType::Text });
+				AddComponent(m_CrystalScoreText, GUIText{ fontID, "", 32, sf::Color::White });
+			}
 			auto& crystalScript = AddNativeScript<CrystalCollector>(m_Player);
 			crystalScript.SetCrystalMap(m_Crystals);
+			crystalScript.SetScoreText(m_CrystalScoreText);
 			
 
 			for (int i = 0; i < 3; i++)
@@ -329,8 +336,6 @@ public:
 		}
 		
 		
-		
-
 
 		Physics::IgnoreCollisions("Player", "Enemies");
 	}
@@ -351,6 +356,7 @@ private:
 	Entity m_Light = INVALID_ENTITY_ID;
 
 	std::vector<Entity> m_PlayerHearts;
+	Entity m_CrystalScoreText = INVALID_ENTITY_ID;
 
 };
 

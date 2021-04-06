@@ -9,7 +9,13 @@ class CrystalCollector : public ScriptableEntity
 public:
 	void Start() override
 	{
-		
+		m_CrystalValues.insert({ m_CrystalMap->PalettePtr->GetTileByName("crystal1"), 5  });
+		m_CrystalValues.insert({ m_CrystalMap->PalettePtr->GetTileByName("crystal4"), 10 });
+		m_CrystalValues.insert({ m_CrystalMap->PalettePtr->GetTileByName("crystal2"), 20 });
+		m_CrystalValues.insert({ m_CrystalMap->PalettePtr->GetTileByName("crystal5"), 30 });
+		m_CrystalValues.insert({ m_CrystalMap->PalettePtr->GetTileByName("crystal3"), 50 });
+
+		UpdateText();
 	}
 
 	void Update(Timestep ts) override
@@ -18,9 +24,13 @@ public:
 		{
 			if (m_CollidingWithCrystal)
 			{
-				m_CrystalMap->RemoveTile(m_CollidingCrystalPos);
+				TileID removedType = m_CrystalMap->RemoveTile(m_CollidingCrystalPos);
+				m_CrystalScore += m_CrystalValues[removedType];
+			
+				UpdateText();
 			}
 		}
+
 	}
 
 	void OnTriggerEnter(const Collision& collision) override
@@ -40,14 +50,34 @@ public:
 		}
 	}
 
+
+
+	void UpdateText()
+	{
+		m_ScoreText->SetString("Score  " + std::to_string(m_CrystalScore));
+	}
+
+
+
 	void SetCrystalMap(Entity crystals)
 	{
 		m_CrystalMap = &GetComponent<Tilemap>(crystals);
 	}
 
+	void SetScoreText(Entity scoreText)
+	{
+		m_ScoreText = &GetComponent<GUIText>(scoreText);
+	}
+
 private:
-	Tilemap* m_CrystalMap;
+	Tilemap* m_CrystalMap = nullptr;
+
+	GUIText* m_ScoreText = nullptr;
 
 	bool m_CollidingWithCrystal = false;
 	sf::Vector2i m_CollidingCrystalPos;
+
+	std::unordered_map<TileID, int> m_CrystalValues;
+
+	int m_CrystalScore = 0;
 };

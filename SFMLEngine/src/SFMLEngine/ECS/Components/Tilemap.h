@@ -42,7 +42,8 @@ namespace SFMLEngine {
 		Tilemap(ResourceID tilePalette, const std::string& dataFile);
 
 		void PlaceTile(const sf::Vector2i& location, TileID tileType, bool overwrite = false);
-		void RemoveTile(const sf::Vector2i& location);
+		// returns the ID of the type of tile that was removed; null tile id if no tile was removed
+		TileID RemoveTile(const sf::Vector2i& location);
 
 		sf::Vector2i WorldToTileCoordinates(const sf::Vector2f& worldCoords);
 
