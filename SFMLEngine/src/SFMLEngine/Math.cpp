@@ -134,7 +134,14 @@ namespace SFMLEngine {
 		);
 	}
 
-
+	sf::FloatRect Math::FlipRect(const sf::FloatRect& rect)
+	{
+		return { rect.left + rect.width, rect.top, -rect.width, rect.height };
+	}
+	sf::IntRect Math::FlipRect(const sf::IntRect& rect)
+	{
+		return { rect.left + rect.width, rect.top, -rect.width, rect.height };
+	}
 
 
 

@@ -21,9 +21,6 @@ namespace SFMLEngine {
 		void Update(Timestep ts);
 
 	private:
-		sf::IntRect FlipRect(const sf::IntRect& rect);
-
-	private:
 		Coordinator* m_Coordinator = nullptr;
 
 	};

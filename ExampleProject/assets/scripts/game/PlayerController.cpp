@@ -102,7 +102,7 @@ void PlayerController::Update(Timestep ts)
 		}
 	}
 
-	m_Animator->Flip = !m_FacingRight;
+	m_Animator->SetFlipped(!m_FacingRight);
 
 }
 

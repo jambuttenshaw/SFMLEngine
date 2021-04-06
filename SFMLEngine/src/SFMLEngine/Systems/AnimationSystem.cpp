@@ -3,6 +3,7 @@
 
 #include "SFMLEngine/ECS/Components/Animator.h"
 #include "SFMLEngine/ECS/Components/SpriteRenderer.h"
+#include "SFMLEngine/ECS/Components/GUI/GUIImage.h"
 
 
 namespace SFMLEngine {
@@ -17,13 +18,18 @@ namespace SFMLEngine {
 		auto& animator = m_Coordinator->GetComponent<Animator>(entity);
 		
 		animator.Reset();
-		if (animator.CurrentAnimation == "null") return;
+		if (animator.GetCurrentAnimationName() == "null") return;
 
-		auto& spriteRenderer = m_Coordinator->GetComponent<SpriteRenderer>(entity);
+		Animable* animObject = nullptr;
+		switch (animator.GetAnimableType())
+		{
+		case AnimableType::Invalid:		SFMLE_CORE_ASSERT(0, "Invalid animable type!");						break;
+		case AnimableType::Sprite:		animObject = &m_Coordinator->GetComponent<SpriteRenderer>(entity);	break;
+		case AnimableType::GUIImage:	animObject = &m_Coordinator->GetComponent<GUIImage>(entity);		break;
+		}
 		auto& currentAnimation = animator.GetCurrentAnimation();
 
-		auto rect{ currentAnimation.Flipped != animator.Flip ? FlipRect(currentAnimation.CurrentFrame->ImageRect) : currentAnimation.CurrentFrame->ImageRect };
-		spriteRenderer.Sprite.setTextureRect(rect);
+		animObject->SetFrame(*currentAnimation.CurrentFrame, currentAnimation.Flipped != animator.GetFlipped());
 	}
 
 	void AnimationSystem::EntityRemovedFromSystem(Entity entity)
@@ -36,34 +42,22 @@ namespace SFMLEngine {
 		for (auto entity : m_Entities)
 		{
 			auto& animator = m_Coordinator->GetComponent<Animator>(entity);
-			if (animator.CurrentAnimation == "null") continue;
+			if (animator.GetCurrentAnimationName() == "null") continue;
 
-			auto& spriteRenderer = m_Coordinator->GetComponent<SpriteRenderer>(entity);
-			
+			Animable* animObject = nullptr;
+			switch (animator.GetAnimableType())
+			{
+			case AnimableType::Invalid:		SFMLE_CORE_ASSERT(0, "Invalid animable type!");						break;
+			case AnimableType::Sprite:		animObject = &m_Coordinator->GetComponent<SpriteRenderer>(entity);	break;
+			case AnimableType::GUIImage:	animObject = &m_Coordinator->GetComponent<GUIImage>(entity);		break;
+			}
 			auto& currentAnimation = animator.GetCurrentAnimation();
+			
+
 			currentAnimation.Animate(ts);
 
-			// flip the sprite if only 1 of the animation flip or animator flip is set
-			// if both are set, its the same as flipping it twice or not at all
-			if (currentAnimation.Flipped != animator.Flip)
-			{
-				spriteRenderer.Sprite.setTextureRect(FlipRect(currentAnimation.CurrentFrame->ImageRect));
 
-				// there is an offset property, for correcting the position of asymmetrical frames when flipping
-				spriteRenderer.Offset = currentAnimation.CurrentFrame->Offset;
-			}
-			else
-			{
-				spriteRenderer.Sprite.setTextureRect(currentAnimation.CurrentFrame->ImageRect);
-				// only apply y offset when not flipped
-				spriteRenderer.Offset.y = currentAnimation.CurrentFrame->Offset.y;
-			}
+			animObject->SetFrame(*currentAnimation.CurrentFrame, currentAnimation.Flipped != animator.GetFlipped());
 		}
 	}
-
-	sf::IntRect AnimationSystem::FlipRect(const sf::IntRect& rect)
-	{
-		return { rect.left + rect.width, rect.top, -rect.width, rect.height };
-	}
-
 }

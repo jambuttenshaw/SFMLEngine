@@ -130,6 +130,9 @@ namespace SFMLEngine {
 		static sf::Vector2f Centroid(const sf::FloatRect& a);
 		static std::pair<sf::Vector2f, sf::Vector2f> GetCorners(const sf::FloatRect& a);
 
+		static sf::FloatRect FlipRect(const sf::FloatRect& rect);
+		static sf::IntRect FlipRect(const sf::IntRect& rect);
+
 
 		/*
 		RANDOM NUMBERS

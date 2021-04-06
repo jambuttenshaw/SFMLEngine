@@ -2,12 +2,13 @@
 
 #include "SFMLEngine/ECS/System.h"
 #include "GUIElement.h"
+#include "../Animable.h"
 #include "SFMLEngine/ResourceManagement/ResourceManager.h"
 
 namespace SFMLEngine {
 
 
-	class GUIImage : public GUIElement
+	class GUIImage : public GUIElement, public Animable
 	{
 	public:
 
@@ -25,6 +26,10 @@ namespace SFMLEngine {
 
 
 		virtual sf::Vector2f GetSize() override { return static_cast<sf::Vector2f>(Sprite.getTexture()->getSize()); }
+		virtual void SetFrame(const AnimationFrame& frame, bool flipped) override
+		{ 
+			Sprite.setTextureRect(frame.ImageRect);
+		}
 
 	private:
 		bool m_Modified = false;

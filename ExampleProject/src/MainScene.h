@@ -176,7 +176,7 @@ public:
 				0.09f
 			}; hurt.Looping = false;
 
-			Animator animator;
+			Animator animator{ AnimableType::Sprite };
 			animator.AddAnimation(idle);
 			animator.AddAnimation(run);
 			animator.AddAnimation(jump);
@@ -302,7 +302,7 @@ public:
 				0.1f
 			};
 
-			Animator animator;
+			Animator animator{ AnimableType::Sprite };
 			animator.AddAnimation(idle);
 			animator.AddAnimation(sleep);
 			animator.AddAnimation(wake);
@@ -318,14 +318,33 @@ public:
 		
 		
 		{
-			m_PlayerHealth = CreateEntity();
+			m_PlayerHeart = CreateEntity();
 		
-			GUITransform t{ { 0.5f, 0.0f }, GUIElementType::Text };
-			t.SetHorizontalAnchor(GUITransform::Anchor::Middle);
-			t.SetVerticalAnchor(GUITransform::Anchor::Top);
 
-			AddComponent(m_PlayerHealth, t);
-			AddComponent(m_PlayerHealth, GUIImage{ Texture::Create("assets/textures/temp.png") });
+			AddComponent(m_PlayerHeart, GUITransform{ { 0.0f, 0.0f }, GUIElementType::Image });
+			AddComponent(m_PlayerHeart, GUIImage{ Texture::Create("assets/textures/heart.png") });
+
+
+			Animation full{ "full", {
+				{ 0, 0,   64, 64 } },
+				1.0f
+			};
+			Animation half{ "half", {
+				{ 64, 0,   64, 64 } },
+				1.0f
+			};
+			Animation empty{ "empty", {
+				{ 128, 0,   64, 64 } },
+				1.0f
+			};
+
+			Animator animator{ AnimableType::GUIImage };
+			animator.AddAnimation(full);
+			animator.AddAnimation(half);
+			animator.AddAnimation(empty);
+
+			animator.SetCurrentAnimation("full");
+			AddComponent(m_PlayerHeart, animator);
 		}
 		
 
@@ -348,7 +367,7 @@ private:
 
 	Entity m_Light = INVALID_ENTITY_ID;
 
-	Entity m_PlayerHealth = INVALID_ENTITY_ID;
+	Entity m_PlayerHeart = INVALID_ENTITY_ID;
 
 };
 

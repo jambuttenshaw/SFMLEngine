@@ -275,7 +275,6 @@ namespace SFMLEngine
             {
                 Signature signature;
                 signature.set(m_Coordinator->GetComponentType<Animator>());
-                signature.set(m_Coordinator->GetComponentType<SpriteRenderer>());
                 m_Coordinator->SetSystemSignature<AnimationSystem>(signature);
             }
         }

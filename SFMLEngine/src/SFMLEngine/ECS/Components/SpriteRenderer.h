@@ -5,11 +5,13 @@
 #include "SFMLEngine/ECS/System.h"
 #include "SFMLEngine/ResourceManagement/ResourceManager.h"
 #include "SFMLEngine/Renderer/Material.h"
+#include "Animable.h"
+#include "SFMLEngine/Math.h"
 
 
 namespace SFMLEngine {
 
-	struct SpriteRenderer
+	struct SpriteRenderer : public Animable
 	{
 		friend class System;
 
@@ -64,6 +66,20 @@ namespace SFMLEngine {
 		}
 
 		void SetRenderLayer(int newRenderLayer) { RenderLayer = newRenderLayer; m_Modified = true; }
+
+		virtual void SetFrame(const AnimationFrame& frame, bool flipped) override
+		{ 
+			if (flipped)
+			{
+				Sprite.setTextureRect(Math::FlipRect(frame.ImageRect));
+				Offset = frame.Offset;
+			}
+			else
+			{
+				Sprite.setTextureRect(frame.ImageRect);
+				Offset.y = frame.Offset.y;
+			}
+		}
 
 	private:
 		bool m_Modified = true;

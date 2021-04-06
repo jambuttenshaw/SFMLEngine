@@ -111,78 +111,92 @@ namespace SFMLEngine {
 
 	};
 
+	
 
-	struct Animator
+	enum class AnimableType
 	{
+		Invalid = 0, Sprite, GUIImage
+	};
+
+
+
+	class Animator
+	{
+	public:
 		friend class System;
 
-		std::unordered_map<std::string, Animation> Animations;
-		std::string CurrentAnimation = "null";
-		
-		bool Flip = false;
-
 		Animator()
-			: Animations()
+			: m_Animations()
 		{}
-		Animator(std::unordered_map<std::string, Animation> anims)
-			: Animations{ anims }
+		Animator(AnimableType type)
+			: m_Animations(), m_ObjectType(type)
 		{}
-		Animator(const Animator& other)
-		{
-			Animations = other.Animations;
-			Flip = other.Flip;
 
-			SetCurrentAnimation(other.CurrentAnimation);
-		}
+
+		AnimableType GetAnimableType() { return m_ObjectType; }
+		
+
+		bool GetFlipped() { return m_Flip; }
+		void SetFlipped(bool flip) { m_Flip = flip; }
+
 
 		void AddAnimation(Animation anim)
 		{
-			SFMLE_CORE_ASSERT(Animations.find(anim.Name) == Animations.end(), "Animation with that name already exists!");
+			SFMLE_CORE_ASSERT(m_Animations.find(anim.Name) == m_Animations.end(), "Animation with that name already exists!");
 			SFMLE_CORE_ASSERT(anim.Name != "null", "Cannot create animation with that name!");
-			Animations.insert(std::make_pair(anim.Name, anim));
+			m_Animations.insert(std::make_pair(anim.Name, anim));
 		}
 
 
 		void SetCurrentAnimation(const std::string& name)
 		{
-			SFMLE_CORE_ASSERT(Animations.find(name) != Animations.end(), "Animation doesn't exist!");
-			if (CurrentAnimation != name)
+			SFMLE_CORE_ASSERT(m_Animations.find(name) != m_Animations.end(), "Animation doesn't exist!");
+			if (m_CurrentAnimation != name)
 			{
-				CurrentAnimation = name;
-				Animations[CurrentAnimation].Reset();
+				m_CurrentAnimation = name;
+				m_Animations[m_CurrentAnimation].Reset();
 			}
 		}
 
 		void Stop()
 		{
-			CurrentAnimation = "null";
+			m_CurrentAnimation = "null";
 		}
 		void Pause()
 		{
-			Animations[CurrentAnimation].Playing = false;
+			m_Animations[m_CurrentAnimation].Playing = false;
 		}
 		void Resume()
 		{
-			Animations[CurrentAnimation].Playing = true;
+			m_Animations[m_CurrentAnimation].Playing = true;
 		}
+
+		const std::string& GetCurrentAnimationName() { return m_CurrentAnimation; }
 
 		Animation& GetCurrentAnimation()
 		{
-			return Animations[CurrentAnimation];
+			return m_Animations[m_CurrentAnimation];
 		}
 		const AnimationFrame& GetCurrentFrame()
 		{
-			return *Animations[CurrentAnimation].CurrentFrame;
+			return *m_Animations[m_CurrentAnimation].CurrentFrame;
 		}
 
 
 		void Reset()
 		{
-			for (auto& anim : Animations) anim.second.Reset();
+			for (auto& anim : m_Animations) anim.second.Reset();
 		}
 
 	private:
 		bool m_Modified = false;
+
+		std::unordered_map<std::string, Animation> m_Animations;
+		std::string m_CurrentAnimation = "null";
+
+		bool m_Flip = false;
+
+		AnimableType m_ObjectType{ AnimableType::Invalid };
 	};
 
 
