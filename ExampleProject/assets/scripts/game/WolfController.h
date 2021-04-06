@@ -29,6 +29,7 @@ public:
 
 	void StartClimb();
 	void EndClimb();
+	void EndClimbFromRoof();
 
 
 private:
@@ -59,6 +60,12 @@ private:
 	sf::Vector2f m_ClimbLeftCastPoint{ -0.5f, 0 };
 	sf::Vector2f m_ClimbRightCastPoint{ 32, 0 };
 	sf::Vector2f m_ClimbCastSize{ 0.5f, 32 };
+
+	sf::Vector2f m_LeftCanClimbCastPoint{ 4, -32.5f };
+	sf::Vector2f m_RightCanClimbCastPoint{ 44, -32.5f };
+
+	sf::Vector2f m_ClimbRoofCastPoint{ 8, -0.5f };
+	sf::Vector2f m_ClimbRoofCastSize{ 16, 5.0f };
 
 
 

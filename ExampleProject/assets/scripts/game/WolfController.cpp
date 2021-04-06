@@ -107,14 +107,21 @@ void WolfController::Update(Timestep ts)
 					{
 						// the wolf is on the ground
 						// test 1 tile above the wolfs current position
-						bool shouldClimb = Physics::BoxCast({ m_Transform->Position + (m_FacingRight ? m_RightCastPoint : m_LeftCastPoint) - sf::Vector2f{0, 32}, m_CastSize }, m_GroundLayerMask).first;
-						if (shouldClimb)
+						bool tooTallToJump = Physics::BoxCast({ m_Transform->Position + (m_FacingRight ? m_RightCastPoint : m_LeftCastPoint) - sf::Vector2f{0, 32}, m_CastSize }, m_GroundLayerMask).first;
+
+						// make sure we dont start climbing a 2-block high wall with a roof above it, cause this will look glitchy
+						bool tooShortToClimb = Physics::BoxCast({ m_Transform->Position + (m_FacingRight ? m_RightCanClimbCastPoint : m_LeftCanClimbCastPoint), m_ClimbRoofCastSize }, m_GroundLayerMask).first;
+
+						if (tooTallToJump)
 						{
-							// the wall is too high for the wolf to jump over
-							// it should climb it instead
-							m_State = WolfState::Climb;
-							m_Animator->SetCurrentAnimation("climb");
-							StartClimb();
+							if (!tooShortToClimb)
+							{
+								// the wall is too high for the wolf to jump over
+								// it should climb it instead
+								m_State = WolfState::Climb;
+								m_Animator->SetCurrentAnimation("climb");
+								StartClimb();
+							}
 						}
 						else
 						{
@@ -207,6 +214,19 @@ void WolfController::Update(Timestep ts)
 			EndClimb();
 			m_State = WolfState::Follow;
 		}
+		else
+		{
+			// we do not want a wolf to get stuck against the ceiling, so we need to check that it hasn't hit the roof
+			// do another cast to see if theres a roof above us
+			bool hitRoof = Physics::BoxCast({ m_Transform->Position + m_ClimbRoofCastPoint, m_ClimbRoofCastSize }, m_GroundLayerMask).first;
+			if (hitRoof)
+			{
+				EndClimbFromRoof();
+
+				m_State = WolfState::Follow;
+			}
+		}
+
 
 		break;
 	}
@@ -255,4 +275,25 @@ void WolfController::EndClimb()
 		// the wolf needs moved 1 tile left
 		m_Transform->Position.x -= 32;
 	}
+}
+
+void WolfController::EndClimbFromRoof()
+{
+	// go back to the standing hitbox
+	m_Collider->Reset(m_StandHitbox);
+
+	// this function is called when the wolf is stuck at the roof
+	// so we need to help it get out of the roof
+	if (m_FacingRight)
+	{
+		m_Transform->Position.x -= 32;
+
+		// the wolf should then face away from the wall it just got stuck in
+		m_FacingRight = false;
+	}
+	else
+	{
+		m_FacingRight = true;
+	}
+
 }

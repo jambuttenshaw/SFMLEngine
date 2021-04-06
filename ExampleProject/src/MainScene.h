@@ -13,6 +13,7 @@
 
 
 #include "entities/PlayerHeart.h"
+#include "entities/Wolf.h"
 
 
 using namespace SFMLEngine;
@@ -237,103 +238,7 @@ public:
 		}
 
 		
-		{
-			m_Enemy = CreateEntity();
-			SetEntityLayer(m_Enemy, "Enemies");
-
-			AddComponent(m_Enemy, Transform{ { -128, -64 } });
-
-			// add the sprite renderer component
-			AddComponent(m_Enemy, SpriteRenderer{
-				Texture::Create("assets/textures/wolfSheet.png"),
-				Material::Create("Lit"),
-				2,
-				Texture::Create("assets/textures/wolfSheet_n.png") });
-
-			AddComponent(m_Enemy, Rigidbody{ });
-			AddComponent(m_Enemy, BoxCollider{ sf::Vector2f(64, 29), sf::Vector2f(0, 3) });
-			AddComponent(m_Enemy, ColliderInfo{ ColliderType::Box });
-
-			AddNativeScript<WolfController>(m_Enemy);
-
-			Animation idle{ "idle", {
-				{ 0, 0, 64, 32 } },
-				0.1f
-			}; idle.Looping = false;
-
-			Animation sleep{ "sleep", {
-				{ 0,   0, 64, 32 },
-				{ 64,  0, 64, 32 },
-				{ 128, 0, 64, 32 },
-				{ 192, 0, 64, 32 } },
-				0.1f
-			}; sleep.Looping = false;
-
-			Animation wake{ "wake", {
-				{ 192, 0, 64, 32 },
-				{ 128, 0, 64, 32 },
-				{ 64,  0, 64, 32 },
-				{ 0,   0, 64, 32 } },
-				0.05f
-			}; wake.Looping = false;
-
-			Animation alert{ "alert", {
-				{ 0,   64, 64, 32,  0,  0 },
-				{ 64,  59, 64, 37,  0, -5 },
-				{ 128, 55, 64, 41,  0, -9 },
-				{ 192, 55, 64, 41,  0, -9 } },
-				0.1f
-			}; alert.Looping = false;
-
-			Animation walk{ "walk", {
-				{ 0,   96, 64, 32 },
-				{ 64,  96, 64, 32 },
-				{ 128, 96, 64, 32 },
-				{ 192, 96, 64, 32 },
-				{ 256, 96, 64, 32 } },
-				0.1f
-			};
-
-			Animation run{ "run", {
-				{ 0,   128, 64, 32 },
-				{ 64,  128, 64, 32 },
-				{ 128, 128, 64, 32 },
-				{ 192, 128, 64, 32 },
-				{ 256, 128, 64, 32 } },
-				0.1f
-			};
-
-			Animation bite{ "bite", {
-				{ 0,   160, 64, 32 },
-				{ 64,  160, 64, 32 },
-				{ 128, 160, 64, 32 },
-				{ 192, 160, 64, 32 },
-				{ 256, 160, 64, 32 } },
-				0.1f
-			}; bite.Looping = false;
-
-			Animation climb{ "climb", {
-				{ 320, 256, 32, 64 },
-				{ 320, 192, 32, 64 },
-				{ 320, 128, 32, 64 },
-				{ 320, 64,  32, 64 },
-				{ 320, 0,   32, 64 } },
-				0.1f
-			};
-
-			Animator animator{ AnimableType::Sprite };
-			animator.AddAnimation(idle);
-			animator.AddAnimation(sleep);
-			animator.AddAnimation(wake);
-			animator.AddAnimation(alert);
-			animator.AddAnimation(walk);
-			animator.AddAnimation(run);
-			animator.AddAnimation(bite);
-			animator.AddAnimation(climb);
-
-			animator.SetCurrentAnimation("idle");
-			AddComponent(m_Enemy, animator);
-		}
+		m_Enemy = Wolf::Create(this, { -128, -64 });
 		
 		
 
