@@ -12,6 +12,9 @@
 #include "game/SmoothFollowPlayer.h"
 
 
+#include "entities/PlayerHeart.h"
+
+
 using namespace SFMLEngine;
 
 
@@ -98,6 +101,9 @@ public:
 			AddComponent(m_Crystals, ColliderInfo{ ColliderType::Tilemap });
 		}
 		
+
+		
+
 
 		{
 			// create the player
@@ -191,10 +197,16 @@ public:
 
 			AddNativeScript<PlayerController>(m_Player);
 
-			auto& script = AddNativeScript<CrystalCollector>(m_Player);
-			script.SetCrystalMap(m_Crystals);
+			auto& crystalScript = AddNativeScript<CrystalCollector>(m_Player);
+			crystalScript.SetCrystalMap(m_Crystals);
 			
-			AddNativeScript<PlayerStatsController>(m_Player);
+
+			for (int i = 0; i < 3; i++)
+			{
+				m_PlayerHearts.push_back(PlayerHeart::Create(this, { 0.05f * i, 0 }));
+			}
+			auto& statScript = AddNativeScript<PlayerStatsController>(m_Player);
+			statScript.SetupHearts(&m_PlayerHearts);
 		}
 
 		{
@@ -317,35 +329,6 @@ public:
 		}
 		
 		
-		{
-			m_PlayerHeart = CreateEntity();
-		
-
-			AddComponent(m_PlayerHeart, GUITransform{ { 0.0f, 0.0f }, GUIElementType::Image });
-			AddComponent(m_PlayerHeart, GUIImage{ Texture::Create("assets/textures/heart.png") });
-
-
-			Animation full{ "full", {
-				{ 0, 0,   64, 64 } },
-				1.0f
-			};
-			Animation half{ "half", {
-				{ 64, 0,   64, 64 } },
-				1.0f
-			};
-			Animation empty{ "empty", {
-				{ 128, 0,   64, 64 } },
-				1.0f
-			};
-
-			Animator animator{ AnimableType::GUIImage };
-			animator.AddAnimation(full);
-			animator.AddAnimation(half);
-			animator.AddAnimation(empty);
-
-			animator.SetCurrentAnimation("full");
-			AddComponent(m_PlayerHeart, animator);
-		}
 		
 
 
@@ -367,7 +350,7 @@ private:
 
 	Entity m_Light = INVALID_ENTITY_ID;
 
-	Entity m_PlayerHeart = INVALID_ENTITY_ID;
+	std::vector<Entity> m_PlayerHearts;
 
 };
 

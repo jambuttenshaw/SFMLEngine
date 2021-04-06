@@ -308,5 +308,5 @@ void PlayerController::Hurt(bool toTheRight)
 		m_Animator->SetCurrentAnimation("hurt");
 	}
 
-	m_StatsController->Damage(10);
+	m_StatsController->Damage();
 }
