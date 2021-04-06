@@ -26,9 +26,13 @@ public:
 			{
 				TileID removedType = m_CrystalMap->RemoveTile(m_CollidingCrystalPos);
 				m_CrystalScore += m_CrystalValues[removedType];
-			
-				UpdateText();
 			}
+		}
+
+		if (m_DisplayCrystalScore < m_CrystalScore)
+		{
+			m_DisplayCrystalScore += 50 * ts;
+			UpdateText();
 		}
 
 	}
@@ -54,7 +58,7 @@ public:
 
 	void UpdateText()
 	{
-		m_ScoreText->SetString("Score  " + std::to_string(m_CrystalScore));
+		m_ScoreText->SetString("Score  " + std::to_string(static_cast<int>(m_DisplayCrystalScore)));
 	}
 
 
@@ -80,4 +84,5 @@ private:
 	std::unordered_map<TileID, int> m_CrystalValues;
 
 	int m_CrystalScore = 0;
+	float m_DisplayCrystalScore = 0;
 };
