@@ -320,9 +320,9 @@ public:
 		{
 			m_PlayerHealth = CreateEntity();
 		
-			GUITransform t{ { 1.0f, 1.0f }, GUIElementType::Image };
-			t.SetHorizontalAnchor(GUITransform::Anchor::Right);
-			t.SetVerticalAnchor(GUITransform::Anchor::Bottom);
+			GUITransform t{ { 0.5f, 0.0f }, GUIElementType::Text };
+			t.SetHorizontalAnchor(GUITransform::Anchor::Middle);
+			t.SetVerticalAnchor(GUITransform::Anchor::Top);
 
 			AddComponent(m_PlayerHealth, t);
 			AddComponent(m_PlayerHealth, GUIImage{ Texture::Create("assets/textures/temp.png") });

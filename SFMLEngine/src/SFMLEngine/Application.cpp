@@ -107,7 +107,7 @@ namespace SFMLEngine
 
             m_Coordinator->RegisterComponent<GUITransform>();
             m_Coordinator->RegisterComponent<GUIImage>();
-            m_Coordinator->RegisterComponent<Text>();
+            m_Coordinator->RegisterComponent<GUIText>();
 
             m_Coordinator->RegisterComponent<Camera>();
 
@@ -210,7 +210,7 @@ namespace SFMLEngine
             {
                 Signature signature;
                 signature.set(m_Coordinator->GetComponentType<GUITransform>());
-                signature.set(m_Coordinator->GetComponentType<Text>());
+                signature.set(m_Coordinator->GetComponentType<GUIText>());
                 m_Coordinator->SetSystemSignature<GUITextSystem>(signature);
             }
 
@@ -450,8 +450,6 @@ namespace SFMLEngine
                 m_TilemapSystem->Update();
 
                 m_GUIPositionSystem->Update();
-                m_GUIImageSystem->Update();
-                m_GUITextSystem->Update();
 
                 m_CameraSystem->Update();
 

@@ -14,7 +14,7 @@
 #include "Components/DirectionalLight.h"
 
 #include "Components/GUI/GUITransform.h"
-#include "Components/GUI/Text.h"
+#include "Components/GUI/GUIText.h"
 #include "Components/GUI/GUIImage.h"
 
 #include "Components/Camera.h"

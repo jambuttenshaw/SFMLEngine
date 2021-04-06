@@ -2,6 +2,7 @@
 
 #include "SFMLEngine/ECS/Components/GUI/GUITransform.h"
 #include "SFMLEngine/ECS/Components/GUI/GUIImage.h"
+#include "SFMLEngine/ECS/Components/GUI/GUIText.h"
 
 
 namespace SFMLEngine {
@@ -16,7 +17,6 @@ namespace SFMLEngine {
 
 	void GUIPositionSystem::EntityAddedToSystem(Entity entity)
 	{
-		// UpdatePosition(entity, m_Coordinator->GetComponent<GUITransform>(entity));
 	}
 
 	void GUIPositionSystem::EntityRemovedFromSystem(Entity entity)
@@ -56,7 +56,7 @@ namespace SFMLEngine {
 		{
 		case GUIElementType::Invalid:		SFMLE_CORE_ASSERT(0, "Invalid element type!");					break;
 		case GUIElementType::Image:			size = m_Coordinator->GetComponent<GUIImage>(entity).GetSize();	break;
-		case GUIElementType::Text:			SFMLE_CORE_ASSERT(0, "Text currently isn't supported");			break;
+		case GUIElementType::Text:			size = m_Coordinator->GetComponent<GUIText>(entity).GetSize();	break;
 		}
 
 

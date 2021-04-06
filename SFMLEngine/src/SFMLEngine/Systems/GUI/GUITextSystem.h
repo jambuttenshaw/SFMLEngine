@@ -18,12 +18,11 @@ namespace SFMLEngine {
 		void EntityAddedToSystem(Entity entity) override;
 		void EntityRemovedFromSystem(Entity entity) override {}
 
-		void Update();
 		void Render();
 
 	private:
-		Coordinator* m_Coordinator;
-		sf::RenderWindow* m_RenderWindow;
+		Coordinator* m_Coordinator = nullptr;
+		sf::RenderWindow* m_RenderWindow = nullptr;
 	};
 
 }

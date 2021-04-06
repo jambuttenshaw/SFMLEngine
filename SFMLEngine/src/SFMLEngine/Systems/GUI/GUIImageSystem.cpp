@@ -29,10 +29,6 @@ namespace SFMLEngine {
 	{
 	}
 
-	void GUIImageSystem::Update()
-	{
-	}
-
 	void GUIImageSystem::Render()
 	{
 		ZoneScoped;
