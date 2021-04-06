@@ -6,7 +6,7 @@
 void CrystalCollector::Start()
 {
 	m_Transform = &GetComponent<Transform>();
-
+	m_CrystalMap = &GetComponent<Tilemap>(GetEntitiesWithTag("Crystals")[0]);
 
 	m_CrystalValues.insert({ m_CrystalMap->PalettePtr->GetTileByName("crystal1"), 5 });
 	m_CrystalValues.insert({ m_CrystalMap->PalettePtr->GetTileByName("crystal4"), 10 });
@@ -61,13 +61,6 @@ void CrystalCollector::OnTriggerExit(Entity other)
 void CrystalCollector::UpdateText()
 {
 	m_ScoreText->SetString("Score  " + std::to_string(static_cast<int>(m_DisplayCrystalScore)));
-}
-
-
-
-void CrystalCollector::SetCrystalMap(Entity crystals)
-{
-	m_CrystalMap = &GetComponent<Tilemap>(crystals);
 }
 
 void CrystalCollector::SetScoreText(Entity scoreText)

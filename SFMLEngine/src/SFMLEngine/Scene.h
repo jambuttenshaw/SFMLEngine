@@ -22,6 +22,13 @@ they can create their entities and attatch their components.
 
 namespace SFMLEngine {
 
+	
+	enum class LoadSceneMode
+	{
+		Single, Additive
+	};
+
+
 	class Scene
 	{
 	public:
@@ -73,9 +80,6 @@ namespace SFMLEngine {
 
 		// ENTITY RETRIEVAL
 		const std::vector<Entity>& GetEntitiesWithTag(const std::string& tag) { return m_IdentitySystem->GetEntitiesWithTag(tag); }
-
-
-		void DisplayDebug();
 
 	private:
 		Coordinator* m_Coordinator = nullptr;

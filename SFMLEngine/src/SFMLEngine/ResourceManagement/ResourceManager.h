@@ -125,9 +125,6 @@ namespace SFMLEngine {
 			return static_cast<T*>(s_Resources.at(resourceID));
 		}
 
-
-		static void DisplayDebug();
-
 	private:
 		static ResourceID GetNextID();
 

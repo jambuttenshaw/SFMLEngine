@@ -100,10 +100,4 @@ namespace SFMLEngine {
 		return LayerManager::GetLayerName(GetComponent<Identity>(entity).EntityLayer);
 	}
 
-
-	void Scene::DisplayDebug()
-	{
-		DEBUG_CORE_DISPLAY("Living entities", (int)m_EntityRegistry->size());
-	}
-
 }

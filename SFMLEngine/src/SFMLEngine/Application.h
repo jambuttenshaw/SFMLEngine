@@ -77,7 +77,7 @@ namespace SFMLEngine {
 
 
 		template <typename T>
-		void LoadScene()
+		void LoadScene(LoadSceneMode mode)
 		{
 			// T MUST inherit from Scene
 			static_assert(std::is_base_of<Scene, T>::value, "T should inherit from Scene.");
@@ -86,23 +86,23 @@ namespace SFMLEngine {
 			T* newScene = new T;
 
 			// check if theres a scene already loaded
-			if (m_CurrentScene)
+			// in which case scene loading must wait until the start of the next frame
+			if (m_CurrentScenes.size())
 			{
-				// flag that a new scene should be loaded
-				m_LoadNewScene = true;
-				// store the new scene temporarily until its loaded next frame
-				m_NewScene = newScene;
+				m_ScenesToLoad.push_back(std::make_pair(static_cast<Scene*>(newScene), mode));
 			}
 			else
 			{
 				// no scene currently exists, so we dont need to delete the old one first
 				// that means scene loading can be completed this frame
 
+				// also, it does not matter the loading mode as both would produce the same result
+
 				// even though no scene was already loaded, reset scriptable entity system just to be safe
 				m_ScriptableEntitySystem->Reset();
 
 				// implicit conversion to Scene* since T inherits from Scene
-				m_CurrentScene = newScene;
+				m_CurrentScenes.push_back(newScene);
 
 				newScene->Init(m_Coordinator, m_ScriptableEntitySystem, m_IdentitySystem);
 
@@ -114,23 +114,25 @@ namespace SFMLEngine {
 	private:
 		sf::Vector2u GetWindowDimensions() { return m_Window->getSize(); }
 
-		void CompleteLoadingNewScene()
+		void DeleteAllCurrentScenes()
 		{
-			// clear out all of the existing entities
-			m_CurrentScene->Destroy();
-			delete m_CurrentScene;
+			for (Scene* scene : m_CurrentScenes)
+			{
+				// clear out all of the existing entities
+				scene->Destroy();
+				delete scene;
+			}
+			m_CurrentScenes.clear();
 			m_ScriptableEntitySystem->Reset();
+		}
+		void CompleteLoadingNewScene(Scene* newScene)
+		{
+			m_CurrentScenes.push_back(newScene);
 
-			m_CurrentScene = m_NewScene;
-
-			m_NewScene->Init(m_Coordinator, m_ScriptableEntitySystem, m_IdentitySystem);
+			newScene->Init(m_Coordinator, m_ScriptableEntitySystem, m_IdentitySystem);
 
 			// pure virtual function that will create a scene T
-			m_NewScene->Create();
-
-
-			m_NewScene = nullptr;
-			m_LoadNewScene = false;
+			newScene->Create();
 		}
 
 	private:
@@ -140,10 +142,8 @@ namespace SFMLEngine {
 
 		sf::Clock m_Clock;
 
-		Scene* m_CurrentScene = nullptr;
-
-		bool m_LoadNewScene = false;
-		Scene* m_NewScene = nullptr;
+		std::vector<Scene*> m_CurrentScenes;
+		std::vector<std::pair<Scene*, LoadSceneMode>> m_ScenesToLoad;
 
 		// VSync enabled by default
 		bool m_VSync = true;

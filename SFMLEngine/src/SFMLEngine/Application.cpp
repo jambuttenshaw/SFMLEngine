@@ -337,14 +337,58 @@ namespace SFMLEngine
         while (m_Window->isOpen())
         {
 
+            ///////////////////
+            // SCENE LOADING //
+            ///////////////////
+
+
             // check if we have to load in a new scene before beginning this frame
-            if (m_LoadNewScene)
+            // if there are multiple to load then we want to load them all
+            if (m_ScenesToLoad.size())
             {
-                CompleteLoadingNewScene();
+                // if any of the scenes to be loaded are single scenes, all existing scenes need to be removed
+                int singleScenes = 0;
+                for (auto scene : m_ScenesToLoad)
+                {
+                    if (scene.second == LoadSceneMode::Single)
+                    {
+                        singleScenes++;
+                    }
+                }
+
+                // there exists 1 single scene to be loaded, so we must delete all scenes currently loaded
+                if (singleScenes == 1)
+                {
+                    DeleteAllCurrentScenes();
+                }
+                else if (singleScenes > 1)
+                {
+                    // error! we cannot load more than 1 single scenes in the same frame
+                    SFMLE_CORE_ASSERT(0, "Cannot load more than 1 single scene in one frame.");
+                }
+
+
+                // then load in the new ones
+                // if there at multiple scenes at this point,
+                // at least one of them must be additive
+                for (auto scene : m_ScenesToLoad)
+                {
+                    // to complete loading, the mode is now irrelevent
+                    // either the existing scenes will be deleted to be replaced,
+                    // or the still exist to be added to
+                    
+                    // so either way the only thing left to do is add in the new entities
+                    CompleteLoadingNewScene(scene.first);
+                }
+                m_ScenesToLoad.clear();
+
+                // then the scriptable entity system can be restarted
                 m_ScriptableEntitySystem->Start();
             }
 
-
+            ///////////
+            // CLOCK //
+            ///////////
 
             Timestep ts(m_Clock.restart().asSeconds());
             if (ts > m_DeltaTimeLimit) ts = m_DeltaTimeLimit;
@@ -460,9 +504,6 @@ namespace SFMLEngine
                     ZoneName("GetDebugInfo", 12);
 
                     m_BoxColliderDebugSystem->Update();
-                    
-                    ResourceManager::DisplayDebug();
-                    m_CurrentScene->DisplayDebug();
                 }
 #endif
             }
@@ -554,11 +595,12 @@ namespace SFMLEngine
     void Application::Shutdown()
     {
         // delete the currently open scene
-        if (m_CurrentScene)
+        for (Scene* scene : m_CurrentScenes)
         {
-            m_CurrentScene->Destroy();
-            delete m_CurrentScene;
+            scene->Destroy();
+            delete scene;
         }
+        m_CurrentScenes.clear();
 
         // shutdown the renderer
         Renderer::Shutdown();

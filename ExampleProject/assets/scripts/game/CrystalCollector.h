@@ -16,7 +16,6 @@ public:
 
 	void UpdateText();
 
-	void SetCrystalMap(Entity crystals);
 	void SetScoreText(Entity scoreText);
 
 	void AwakenWolves();

@@ -30,7 +30,7 @@ public:
 			if (m_FadeTimer >= m_FadeTime)
 			{
 				// time to switch scene
-				Application::GetApplicationHandle()->LoadScene<MainScene>();
+				Application::GetApplicationHandle()->LoadScene<MainScene>(LoadSceneMode::Single);
 			}
 		}
 		

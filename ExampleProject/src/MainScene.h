@@ -103,7 +103,12 @@ public:
 		}
 		
 
-		
+		m_Enemy = Wolf::Create(this, { -128, -64 });
+
+
+
+
+
 
 
 		{
@@ -205,7 +210,6 @@ public:
 				AddComponent(m_CrystalScoreText, GUIText{ fontID, "", 32, sf::Color::White });
 			}
 			auto& crystalScript = AddNativeScript<CrystalCollector>(m_Player);
-			crystalScript.SetCrystalMap(m_Crystals);
 			crystalScript.SetScoreText(m_CrystalScoreText);
 			
 
@@ -236,11 +240,6 @@ public:
 
 			AddNativeScript<SmoothFollowPlayer>(m_Camera);
 		}
-
-		
-		m_Enemy = Wolf::Create(this, { -128, -64 });
-		
-		
 
 		Physics::IgnoreCollisions("Player", "Enemies");
 	}
