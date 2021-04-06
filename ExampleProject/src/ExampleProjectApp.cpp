@@ -6,6 +6,8 @@
 #include "MainMenu.h"
 #include "MainScene.h"
 
+#include "levels/LevelFactory.h"
+
 
 using namespace SFMLEngine;
 
@@ -17,6 +19,8 @@ public:
 	{
 		SetClearColor(sf::Color::Black);
 		SetVSync(true);
+
+		LevelFactory::Init();
 
 		LoadScene<MainMenu>(LoadSceneMode::Single);
 	}
