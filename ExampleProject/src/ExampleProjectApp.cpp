@@ -7,6 +7,7 @@
 #include "MainScene.h"
 
 #include "levels/LevelFactory.h"
+#include "levels/AllLevels.h"
 
 
 using namespace SFMLEngine;

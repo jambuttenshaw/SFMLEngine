@@ -116,7 +116,7 @@ public:
 		SetClearColor({ 175, 209, 230 });
 		Tilemap::WarnOnLoadFailure(false);
 
-		LoadScene<MainScene>();
+		LoadScene<MainScene>(LoadSceneMode::Single);
 	}
 };
 

@@ -11,10 +11,6 @@
 
 #include "entities/PlayerHeart.h"
 
-
-#include "levels/Level1.h"
-
-
 using namespace SFMLEngine;
 
 

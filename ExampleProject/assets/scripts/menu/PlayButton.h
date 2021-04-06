@@ -7,7 +7,7 @@ using namespace SFMLEngine;
 
 
 class MainScene;
-class Level1;
+class Tutorial;
 
 
 class PlayButton : public Button
@@ -31,7 +31,7 @@ public:
 			if (m_FadeTimer >= m_FadeTime)
 			{
 				// time to switch scene
-				Application::GetApplicationHandle()->LoadScene<Level1>(LoadSceneMode::Additive);
+				Application::GetApplicationHandle()->LoadScene<Tutorial>(LoadSceneMode::Additive);
 				Application::GetApplicationHandle()->LoadScene<MainScene>(LoadSceneMode::Single);
 			}
 		}
