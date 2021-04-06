@@ -37,9 +37,20 @@ namespace SFMLEngine {
 		}
 
 
+
+		sf::Transform GetTransformMatrix()
+		{
+			sf::Transform t;
+			t.translate(m_ScreenPosition);
+			return t;
+		}
+
+
+
 		void SetPosition(const sf::Vector2f& pos)
 		{
 			m_Position = Math::Clamp(pos, { 0, 0 }, { 1, 1 });
+			m_Modified = true;
 		}
 		const sf::Vector2f& GetPosition() { return m_Position; }
 
@@ -55,6 +66,8 @@ namespace SFMLEngine {
 				return;
 			}
 			m_HorizontalAnchor = a;
+
+			m_Modified = true;
 		}
 		Anchor GetHorizontalAnchor() { return m_HorizontalAnchor; }
 
@@ -67,6 +80,8 @@ namespace SFMLEngine {
 				return;
 			}
 			m_VerticalAnchor = a;
+
+			m_Modified = true;
 		}
 		Anchor GetVerticalAnchor() { return m_VerticalAnchor; }
 
@@ -75,7 +90,9 @@ namespace SFMLEngine {
 
 
 	private:
-		bool m_Modified = false;
+		// it is important that modified is marked at true on startup
+		// so the system recalculates the screen position
+		bool m_Modified = true;
 
 		// the position is always normalized between 0 and 1
 		// where 0,0 is the topleft of the screen and 1,1 is the bottomright

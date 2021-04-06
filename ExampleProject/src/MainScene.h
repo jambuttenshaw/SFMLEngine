@@ -316,14 +316,18 @@ public:
 			AddComponent(m_Enemy, animator);
 		}
 		
-		/*
-		{
-			m_Text = CreateEntity();
 		
-			AddComponent(m_Text, Transform{ });
-			AddComponent(m_Text, Text{ fontID, "This is some example text.", 16, sf::Color::White });
+		{
+			m_PlayerHealth = CreateEntity();
+		
+			GUITransform t{ { 1.0f, 1.0f }, GUIElementType::Image };
+			t.SetHorizontalAnchor(GUITransform::Anchor::Right);
+			t.SetVerticalAnchor(GUITransform::Anchor::Bottom);
+
+			AddComponent(m_PlayerHealth, t);
+			AddComponent(m_PlayerHealth, GUIImage{ Texture::Create("assets/textures/temp.png") });
 		}
-		*/
+		
 
 
 		Physics::IgnoreCollisions("Player", "Enemies");
@@ -344,7 +348,7 @@ private:
 
 	Entity m_Light = INVALID_ENTITY_ID;
 
-	Entity m_Text = INVALID_ENTITY_ID;
+	Entity m_PlayerHealth = INVALID_ENTITY_ID;
 
 };
 

@@ -1,7 +1,7 @@
 #include "GUITextSystem.h"
 
 #include "SFMLEngine/ECS/Components/Transform.h"
-#include "SFMLEngine/ECS/Components/Text.h"
+#include "SFMLEngine/ECS/Components/GUI/Text.h"
 
 namespace SFMLEngine {
 

@@ -106,6 +106,7 @@ namespace SFMLEngine
             m_Coordinator->RegisterComponent<DirectionalLight>();
 
             m_Coordinator->RegisterComponent<GUITransform>();
+            m_Coordinator->RegisterComponent<GUIImage>();
             m_Coordinator->RegisterComponent<Text>();
 
             m_Coordinator->RegisterComponent<Camera>();
@@ -188,16 +189,27 @@ namespace SFMLEngine
 
 
             // GUI systems
+            m_GUIPositionSystem = m_Coordinator->RegisterSystem<GUIPositionSystem>();
+            m_GUIPositionSystem->Init(m_Coordinator, m_Window);
+            {
+                Signature signature;
+                signature.set(m_Coordinator->GetComponentType<GUITransform>());
+                m_Coordinator->SetSystemSignature<GUIPositionSystem>(signature);
+            }
 
-
-            // ADDING IN GUI POSITION SYSTEM
-
-
+            m_GUIImageSystem = m_Coordinator->RegisterSystem<GUIImageSystem>();
+            m_GUIImageSystem->Init(m_Coordinator, m_Window);
+            {
+                Signature signature;
+                signature.set(m_Coordinator->GetComponentType<GUITransform>());
+                signature.set(m_Coordinator->GetComponentType<GUIImage>());
+                m_Coordinator->SetSystemSignature<GUIImageSystem>(signature);
+            }
             m_GUITextSystem = m_Coordinator->RegisterSystem<GUITextSystem>();
             m_GUITextSystem->Init(m_Coordinator, m_Window);
             {
                 Signature signature;
-                signature.set(m_Coordinator->GetComponentType<Transform>());
+                signature.set(m_Coordinator->GetComponentType<GUITransform>());
                 signature.set(m_Coordinator->GetComponentType<Text>());
                 m_Coordinator->SetSystemSignature<GUITextSystem>(signature);
             }
@@ -367,6 +379,7 @@ namespace SFMLEngine
                     else if (event.type == sf::Event::Resized)
                     {
                         m_CameraSystem->WindowResized(sf::Vector2f((float)event.size.width, (float)event.size.height));
+                        m_GUIPositionSystem->RecalculateAll();
 
                         // set the view to fill the window with topleft at 0, 0
                         m_GUIView.reset({ 0, 0, static_cast<float>(event.size.width), static_cast<float>(event.size.height) });
@@ -431,10 +444,15 @@ namespace SFMLEngine
 
                 // apply any changes made to components
                 m_IdentitySystem->Update();
+
                 m_SpriteRenderSystem->Update();
                 m_TilemapRenderSystem->Update();
                 m_TilemapSystem->Update();
+
+                m_GUIPositionSystem->Update();
+                m_GUIImageSystem->Update();
                 m_GUITextSystem->Update();
+
                 m_CameraSystem->Update();
 
 #ifdef SFMLENGINE_DEBUG
@@ -504,6 +522,7 @@ namespace SFMLEngine
                 m_Window->setView(m_GUIView);
 
                 // draw the GUI onto the display
+                m_GUIImageSystem->Render();
                 m_GUITextSystem->Render();
             }
 

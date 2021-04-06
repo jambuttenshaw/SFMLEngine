@@ -18,7 +18,7 @@ public:
 		SetClearColor(sf::Color::Black);
 		SetVSync(true);
 
-		LoadScene<MainMenu>();
+		LoadScene<MainScene>();
 	}
 };
 

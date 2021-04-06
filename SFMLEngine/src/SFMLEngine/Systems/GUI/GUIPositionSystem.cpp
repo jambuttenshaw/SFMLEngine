@@ -10,11 +10,13 @@ namespace SFMLEngine {
 	{
 		m_Coordinator = coordinator;
 		m_Window = window;
+
+		m_WindowSize = static_cast<sf::Vector2f>(m_Window->getSize());
 	}
 
 	void GUIPositionSystem::EntityAddedToSystem(Entity entity)
 	{
-		UpdatePosition(entity, m_Coordinator->GetComponent<GUITransform>(entity));
+		// UpdatePosition(entity, m_Coordinator->GetComponent<GUITransform>(entity));
 	}
 
 	void GUIPositionSystem::EntityRemovedFromSystem(Entity entity)
@@ -36,6 +38,7 @@ namespace SFMLEngine {
 
 	void GUIPositionSystem::RecalculateAll()
 	{
+		m_WindowSize = static_cast<sf::Vector2f>(m_Window->getSize());
 		for (auto const& entity : m_Entities)
 		{
 			UpdatePosition(entity, m_Coordinator->GetComponent<GUITransform>(entity));
@@ -74,11 +77,10 @@ namespace SFMLEngine {
 		
 		// then since the position of a gui element is between 0 and 1, it is effectively a fraction of the window size
 		// with the anchor offset applied
-		sf::Vector2f windowSize{ static_cast<sf::Vector2f>(m_Window->getSize()) };
 		guiTransform.SetScreenPosition(
 			{
-				windowSize.x * guiTransform.GetPosition().x + anchorOffset.x,
-				windowSize.y * guiTransform.GetPosition().y + anchorOffset.y,
+				m_WindowSize.x * guiTransform.GetPosition().x - anchorOffset.x,
+				m_WindowSize.y * guiTransform.GetPosition().y - anchorOffset.y,
 			}
 		);
 	}
