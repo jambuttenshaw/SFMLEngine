@@ -12,11 +12,6 @@ public:
 		m_Health = m_MaxHealth;
 	}
 
-	void Update(Timestep ts) override
-	{
-
-	}
-
 
 	void Damage()
 	{
