@@ -111,6 +111,22 @@ namespace SFMLEngine {
 			}
 		}
 
+		void DeleteScene(Scene* scene)
+		{
+			size_t index = 0;
+			for (Scene* s : m_CurrentScenes)
+			{
+				if (s == scene)
+				{
+					m_ScenesToDelete.push_back(scene);
+					return;
+				}
+				index++;
+			}
+
+			LOG_CORE_WARN("Scene was attempted to be deleted, but it was not loaded!");
+		}
+
 	private:
 		sf::Vector2u GetWindowDimensions() { return m_Window->getSize(); }
 
@@ -144,6 +160,7 @@ namespace SFMLEngine {
 
 		std::vector<Scene*> m_CurrentScenes;
 		std::vector<std::pair<Scene*, LoadSceneMode>> m_ScenesToLoad;
+		std::vector<Scene*> m_ScenesToDelete;
 
 		// VSync enabled by default
 		bool m_VSync = true;

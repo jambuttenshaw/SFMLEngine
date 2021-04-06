@@ -337,10 +337,31 @@ namespace SFMLEngine
         while (m_Window->isOpen())
         {
 
-            ///////////////////
-            // SCENE LOADING //
-            ///////////////////
+            //////////////////////
+            // SCENE MANAGEMENT //
+            //////////////////////
 
+            // check to see if there are any scenes that have been queued for deletion this frame
+            if (m_ScenesToDelete.size())
+            {
+                for (Scene* scene : m_ScenesToDelete)
+                {
+                    // loop backwards through the current scenes
+                    for (int index = m_CurrentScenes.size(); index > 0; index--)
+                    {
+                        // if the scene at this index is to be deleted
+                        if (m_CurrentScenes[index] == scene)
+                        {
+                            // delete the scene and remove it from the vector
+                            scene->Destroy();
+                            delete scene;
+                            m_CurrentScenes.erase(m_CurrentScenes.begin() + index);
+                        }
+                    }
+                }
+                // remove all scenes that were flagged to be deleted
+                m_ScenesToDelete.clear();
+            }
 
             // check if we have to load in a new scene before beginning this frame
             // if there are multiple to load then we want to load them all
