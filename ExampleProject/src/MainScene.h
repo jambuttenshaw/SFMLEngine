@@ -7,13 +7,12 @@
 #include "game/PlayerStatsController.h"
 #include "game/CrystalCollector.h"
 
-#include "game/WolfController.h"
-
 #include "game/SmoothFollowPlayer.h"
 
-
 #include "entities/PlayerHeart.h"
-#include "entities/Wolf.h"
+
+
+#include "levels/Level1.h"
 
 
 using namespace SFMLEngine;
@@ -24,13 +23,13 @@ class MainScene : public Scene
 public:
 	void Create() override
 	{
-		ResourceID tilePaletteID = TilePalette::LoadFromFile("assets/palettes/terrainPalette.json");
-		TilePalette* tilePalette = ResourceManager::GetResourceHandle<TilePalette>(tilePaletteID);
+		// ResourceID tilePaletteID = TilePalette::LoadFromFile("assets/palettes/terrainPalette.json");
+		// TilePalette* tilePalette = ResourceManager::GetResourceHandle<TilePalette>(tilePaletteID);
 
 
 		ResourceID fontID = FontLibrary::LoadNewFont("arcade", "assets/fonts/ARCADECLASSIC.TTF");
 
-
+		/*
 		{
 			m_Ground = CreateEntity();
 			SetEntityLayer(m_Ground, "Ground");
@@ -105,11 +104,7 @@ public:
 
 		m_Enemy = Wolf::Create(this, { -128, -64 });
 
-
-
-
-
-
+		*/
 
 		{
 			// create the player
@@ -245,17 +240,19 @@ public:
 	}
 
 private:
-	Entity m_Ground = INVALID_ENTITY_ID;
-	Entity m_JumpThroughPlatforms = INVALID_ENTITY_ID;
+	// Entity m_Ground = INVALID_ENTITY_ID;
+	// Entity m_JumpThroughPlatforms = INVALID_ENTITY_ID;
+	// 
+	// Entity m_Ladders = INVALID_ENTITY_ID;
+	// Entity m_Crystals = INVALID_ENTITY_ID;
+	// 
+	// Entity m_Enemy = INVALID_ENTITY_ID;
 
-	Entity m_Ladders = INVALID_ENTITY_ID;
-	Entity m_Crystals = INVALID_ENTITY_ID;
 
 	Entity m_Camera = INVALID_ENTITY_ID;
 
 	Entity m_Player = INVALID_ENTITY_ID;
-
-	Entity m_Enemy = INVALID_ENTITY_ID;
+	 
 
 	Entity m_Light = INVALID_ENTITY_ID;
 
