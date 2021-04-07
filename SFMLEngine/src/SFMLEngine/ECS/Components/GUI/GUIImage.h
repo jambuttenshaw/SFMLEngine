@@ -26,6 +26,7 @@ namespace SFMLEngine {
 
 
 		virtual sf::Vector2f GetSize() override { return static_cast<sf::Vector2f>(Sprite.getTexture()->getSize()); }
+		virtual void SetScale(const sf::Vector2f& scale) override { Sprite.setScale(scale); }
 		virtual void SetFrame(const AnimationFrame& frame, bool flipped) override
 		{ 
 			Sprite.setTextureRect(frame.ImageRect);

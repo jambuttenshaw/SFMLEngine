@@ -63,8 +63,12 @@ namespace SFMLEngine {
 
 		virtual sf::Vector2f GetSize() override
 		{
-			auto bounds = m_TextObject.getGlobalBounds();
+			auto bounds = m_TextObject.getLocalBounds();
 			return { bounds.width + m_Padding.x, bounds.height + m_Padding.y };
+		}
+		virtual void SetScale(const sf::Vector2f& scale) override
+		{
+			m_TextObject.setScale(scale);
 		}
 
 

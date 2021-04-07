@@ -13,6 +13,7 @@ namespace SFMLEngine {
 		m_Window = window;
 
 		m_WindowSize = static_cast<sf::Vector2f>(m_Window->getSize());
+		m_InitialWindowSize = m_WindowSize;
 	}
 
 	void GUIPositionSystem::EntityAddedToSystem(Entity entity)
@@ -49,16 +50,25 @@ namespace SFMLEngine {
 	{
 		// calculate the absolute position of a object
 
+		
+		// the object also gets scaled so its relative size stays consistent
+		sf::Vector2f scale = { m_WindowSize.x / m_InitialWindowSize.x,
+							   m_WindowSize.y / m_InitialWindowSize.y };
+
+
 
 		// first of all, we need to get the size of the element
-		sf::Vector2f size;
+		GUIElement* elem;
 		switch (guiTransform.GetElementType())
 		{
-		case GUIElementType::Invalid:		SFMLE_CORE_ASSERT(0, "Invalid element type!");					break;
-		case GUIElementType::Image:			size = m_Coordinator->GetComponent<GUIImage>(entity).GetSize();	break;
-		case GUIElementType::Text:			size = m_Coordinator->GetComponent<GUIText>(entity).GetSize();	break;
+		case GUIElementType::Invalid:		SFMLE_CORE_ASSERT(0, "Invalid element type!");			break;
+		case GUIElementType::Image:			elem = &m_Coordinator->GetComponent<GUIImage>(entity);	break;
+		case GUIElementType::Text:			elem = &m_Coordinator->GetComponent<GUIText>(entity);	break;
 		}
 
+		sf::Vector2f size = elem->GetSize();
+		size.x *= scale.x;
+		size.y *= scale.y;
 
 		// the offset applied to the object by the anchor value
 		sf::Vector2f anchorOffset;
@@ -83,6 +93,9 @@ namespace SFMLEngine {
 				m_WindowSize.y * guiTransform.GetPosition().y - anchorOffset.y,
 			})
 		);
+
+		elem->SetScale(scale);
+
 	}
 
 }

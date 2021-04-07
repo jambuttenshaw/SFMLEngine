@@ -34,7 +34,9 @@ namespace SFMLEngine {
 		Coordinator* m_Coordinator = nullptr;
 		// this system needs to be able to get the side of the window
 		sf::RenderWindow* m_Window = nullptr;
+		
 		sf::Vector2f m_WindowSize;
+		sf::Vector2f m_InitialWindowSize;
 
 	};
 
