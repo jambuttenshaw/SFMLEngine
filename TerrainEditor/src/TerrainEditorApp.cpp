@@ -79,7 +79,7 @@ public:
 			m_Manager = CreateEntity();
 			m_ManagerScript = &AddNativeScript<EditorManager>(m_Manager);
 			
-			std::string levelDir = "D:/dev/SFML/SFMLEngine/ExampleProject/assets/tilemaps/tutorial";
+			std::string levelDir = "D:/dev/SFML/SFMLEngine/ExampleProject/assets/tilemaps/testlevel";
 			m_ManagerScript->Setup(this, m_TilePreview, tilePaletteID, levelDir, opaqueMat, translucentMat);
 		}
 

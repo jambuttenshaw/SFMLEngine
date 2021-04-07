@@ -21,6 +21,11 @@ void PlayerController::Start()
 
 void PlayerController::Update(Timestep ts)
 {
+	if (Input::IsKeyPressed(sf::Keyboard::E))
+	{
+		LOG_TRACE("X: {0}  Y: {1}", 32 * static_cast<int>(m_Transform->Position.x / 32.0f), 32 * static_cast<int>(m_Transform->Position.y / 32.0f));
+	}
+
 	if (!(m_OnJumpThrough && m_CanLandOnPlatform))
 		m_OnGround = Physics::BoxCast({ m_Transform->Position + m_BottomCastPoint, m_HorizontalCastSize }, m_GroundLayerMask).first;
 

@@ -24,7 +24,7 @@ public:
 		{
 			m_PlayButton = CreateEntity();
 
-			AddComponent(m_PlayButton, Transform{ { -160, -160 } });
+			AddComponent(m_PlayButton, Transform{ { 0, -96 } });
 			AddComponent(m_PlayButton, SpriteRenderer{
 					Texture::Create("assets/textures/playButton.png"),
 					Material::Create("Lit"),
@@ -109,7 +109,7 @@ public:
 		m_Light = CreateEntity();
 		SetEntityTag(m_Light, "SceneLight");
 		AddComponent(m_Light, Transform{ });
-		AddComponent(m_Light, PointLight{ 2.5f, 300.0f, sf::Color(219, 113, 114, 255) });
+		AddComponent(m_Light, PointLight{ 3.5f, 400.0f, sf::Color(219, 113, 114, 255) });
 		AddNativeScript<GoToMouse>(m_Light);
 
 

@@ -137,7 +137,7 @@ public:
 
 			// light is a child transform of physics entity
 			AddComponent(m_Light, Transform{ sf::Vector2f(16, 32), &GetComponent<Transform>(m_Player) });
-			AddComponent(m_Light, PointLight{ 3.0f, 350.0f, sf::Color(219, 113, 114, 255) });
+			AddComponent(m_Light, PointLight{ 3.2f, 225.0f, sf::Color(219, 113, 114, 255) });
 		}
 
 		{
@@ -146,7 +146,7 @@ public:
 			AddComponent(m_Camera, Transform{ });
 
 			Camera cam{ };
-			cam.Zoom = 0.75f;
+			cam.Zoom = 0.6f;
 			AddComponent(m_Camera, cam);
 
 			AddNativeScript<SmoothFollowPlayer>(m_Camera);
