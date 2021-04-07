@@ -104,7 +104,7 @@ namespace SFMLEngine {
 				// implicit conversion to Scene* since T inherits from Scene
 				m_CurrentScenes.push_back(newScene);
 
-				newScene->Init(m_Coordinator, m_ScriptableEntitySystem, m_IdentitySystem);
+				newScene->Init(m_Coordinator, m_ScriptableEntitySystem, m_PhysicsSystem, m_IdentitySystem);
 
 				// pure virtual function that will create a scene T
 				newScene->Create();
@@ -127,6 +127,9 @@ namespace SFMLEngine {
 			LOG_CORE_WARN("Scene was attempted to be deleted, but it was not loaded!");
 		}
 
+		const std::vector<Scene*>& GetLoadedScenes() { return m_CurrentScenes; }
+
+
 	private:
 		sf::Vector2u GetWindowDimensions() { return m_Window->getSize(); }
 
@@ -139,13 +142,12 @@ namespace SFMLEngine {
 				delete scene;
 			}
 			m_CurrentScenes.clear();
-			m_ScriptableEntitySystem->Reset();
 		}
 		void CompleteLoadingNewScene(Scene* newScene)
 		{
 			m_CurrentScenes.push_back(newScene);
 
-			newScene->Init(m_Coordinator, m_ScriptableEntitySystem, m_IdentitySystem);
+			newScene->Init(m_Coordinator, m_ScriptableEntitySystem, m_PhysicsSystem, m_IdentitySystem);
 
 			// pure virtual function that will create a scene T
 			newScene->Create();

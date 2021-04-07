@@ -347,7 +347,7 @@ namespace SFMLEngine
                 for (Scene* scene : m_ScenesToDelete)
                 {
                     // loop backwards through the current scenes
-                    for (int index = m_CurrentScenes.size(); index > 0; index--)
+                    for (int index = m_CurrentScenes.size() - 1; index >= 0; index--)
                     {
                         // if the scene at this index is to be deleted
                         if (m_CurrentScenes[index] == scene)
@@ -369,7 +369,7 @@ namespace SFMLEngine
             {
                 // if any of the scenes to be loaded are single scenes, all existing scenes need to be removed
                 int singleScenes = 0;
-                for (auto scene : m_ScenesToLoad)
+                for (auto& scene : m_ScenesToLoad)
                 {
                     if (scene.second == LoadSceneMode::Single)
                     {
@@ -389,22 +389,54 @@ namespace SFMLEngine
                 }
 
 
+                // we need to wait till all the new entities have been loaded
+                // before calling start methods in scripts
+                // to ensure that components the scripts need access to exist in the ecs first
+                // so we stash all scripts and call their starts after loading
+
+                
+                if (m_CurrentScenes.size())
+                {
+                    // there are still some scenes existing in the game
+                    // we do not want to call start on all of their entities,
+                    // we only want to call start on the entities that have been added
+                    m_ScriptableEntitySystem->SetSceneLoading(true);
+                }
+                else
+                {
+                    // if all scenes were removed,
+                    // we can just consider the scriptable entity system as starting afresh
+                    m_ScriptableEntitySystem->Reset();
+                }
+
+
                 // then load in the new ones
                 // if there at multiple scenes at this point,
                 // at least one of them must be additive
-                for (auto scene : m_ScenesToLoad)
+                for (auto& scene : m_ScenesToLoad)
                 {
                     // to complete loading, the mode is now irrelevent
                     // either the existing scenes will be deleted to be replaced,
                     // or the still exist to be added to
                     
                     // so either way the only thing left to do is add in the new entities
+
                     CompleteLoadingNewScene(scene.first);
                 }
                 m_ScenesToLoad.clear();
 
-                // then the scriptable entity system can be restarted
-                m_ScriptableEntitySystem->Start();
+                // if the scriptable entity system wasn't completely reset
+                if (m_ScriptableEntitySystem->GetStarted())
+                {
+                    // we can just call start on the entities added in this scene loading process
+                    m_ScriptableEntitySystem->SetSceneLoading(false);
+                    m_ScriptableEntitySystem->StartAllPending();
+                }
+                else
+                {
+                    // otherwise call start on them all
+                    m_ScriptableEntitySystem->Start();
+                }
             }
 
             ///////////

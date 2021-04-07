@@ -19,8 +19,8 @@ public:
 
 		m_Ground = LevelFactory::CreateGround(this, "assets/tilemaps/level1/layer0.json");
 		m_JumpThroughPlatforms = LevelFactory::CreateJumpThroughPlatforms(this, "assets/tilemaps/level1/layer1.json");
-		m_Ladders = LevelFactory::CreateLadders(this, "assets/tilemaps/level1/layer2.json");
-		m_Crystals = LevelFactory::CreateCrystals(this, "assets/tilemaps/level1/layer3.json");
+		// m_Ladders = LevelFactory::CreateLadders(this, "assets/tilemaps/level1/layer2.json");
+		// m_Crystals = LevelFactory::CreateCrystals(this, "assets/tilemaps/level1/layer3.json");
 
 		m_Enemy = Wolf::Create(this, { -128, -64 });
 	}

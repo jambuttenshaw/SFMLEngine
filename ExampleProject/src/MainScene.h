@@ -8,6 +8,7 @@
 #include "game/CrystalCollector.h"
 
 #include "game/SmoothFollowPlayer.h"
+#include "game/LevelManager.h"
 
 #include "entities/PlayerHeart.h"
 
@@ -151,6 +152,12 @@ public:
 			AddNativeScript<SmoothFollowPlayer>(m_Camera);
 		}
 
+		{
+			m_LevelManager = CreateEntity();
+			auto& script = AddNativeScript<LevelManager>(m_LevelManager);
+			script.SetMainScene(this);
+		}
+
 		Physics::IgnoreCollisions("Player", "Enemies");
 	}
 
@@ -165,5 +172,7 @@ private:
 	std::vector<Entity> m_PlayerHearts;
 	Entity m_CrystalScoreText = INVALID_ENTITY_ID;
 
+
+	Entity m_LevelManager = INVALID_ENTITY_ID;
 };
 

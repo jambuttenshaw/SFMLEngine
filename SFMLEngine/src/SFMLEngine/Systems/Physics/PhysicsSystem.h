@@ -31,6 +31,8 @@ namespace SFMLEngine {
 		void EntityAddedToSystem(Entity entity) override;
 		void EntityRemovedFromSystem(Entity entity) override;
 
+		void EntityDeleted(Entity entity);
+
 		void Update(Timestep ts);
 
 		void CollisionEnterCallback(Entity entity, const Collision& collisionData);

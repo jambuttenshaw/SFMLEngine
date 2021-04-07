@@ -9,6 +9,7 @@
 
 
 #include "SpatialPartition.h"
+#include "PhysicsSystem.h"
 
 
 namespace SFMLEngine {
@@ -94,7 +95,7 @@ namespace SFMLEngine {
 		return GetAllCollidersSharingPartition(rect);
 	}
 
-
+	
 	void CollisionSystem::Init(Coordinator* coordinator)
 	{
 		m_Coordinator = coordinator;

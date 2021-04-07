@@ -57,7 +57,15 @@ namespace SFMLEngine {
 			m_Started = true;
 		}
 
+		bool GetStarted() { return m_Started; }
 		void Reset() { m_Started = false; }
+		void StartAllPending() 
+		{
+			for (ScriptableEntity* script : m_PendingStart)
+				script->Start();
+			m_PendingStart.clear();
+		}
+		void SetSceneLoading(bool loading) { m_SceneLoadInProgress = loading; }
 
 		void Update(Timestep ts)
 		{
@@ -109,7 +117,13 @@ namespace SFMLEngine {
 			nativeScriptComponent.Scripts.insert({ {typeName, scriptableEntity} });
 
 			// if the script is created during the game then call the start immediately after its created
-			if (m_Started) scriptableEntity->Start();
+			if (m_Started)
+			{
+				if (m_SceneLoadInProgress)
+					m_PendingStart.push_back(scriptableEntity);
+				else
+					scriptableEntity->Start();
+			}
 
 			// return the new script in case the user wants to interact with it immediately after its creation,
 			// such as intializing data members of the ScriptableEntity
@@ -151,6 +165,9 @@ namespace SFMLEngine {
 
 		// should probably be migrated to application
 		bool m_Started = false;
+
+		bool m_SceneLoadInProgress = false;
+		std::vector<ScriptableEntity*> m_PendingStart;
 	};
 
 }

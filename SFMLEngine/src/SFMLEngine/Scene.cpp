@@ -18,18 +18,23 @@ namespace SFMLEngine {
 		delete m_EntityRegistry;
 	}
 
-	void Scene::Init(Coordinator* coordinator, std::shared_ptr<ScriptableEntitySystem> scriptableEntitySystem, std::shared_ptr<IdentitySystem> identitySystem)
+	void Scene::Init(Coordinator* coordinator,
+		std::shared_ptr<ScriptableEntitySystem> scriptableEntitySystem,
+		std::shared_ptr<PhysicsSystem> physicsSystem,
+		std::shared_ptr<IdentitySystem> identitySystem)
 	{
 		m_Coordinator = coordinator;
 		m_ScriptableEntitySystem = scriptableEntitySystem;
+		m_PhysicsSystem = physicsSystem;
 		m_IdentitySystem = identitySystem;
 	}
 
 	void Scene::Destroy()
 	{
-		for (auto entity : *m_EntityRegistry)
+		// iterate backwards through the entity registry
+		for (auto& entity : *m_EntityRegistry)
 		{
-			m_Coordinator->DestroyEntity(entity);
+			DeleteEntityData(entity);
 		}
 		m_EntityRegistry->clear();
 	}
@@ -63,8 +68,8 @@ namespace SFMLEngine {
 
 	void Scene::DestroyEntity(Entity entity) 
 	{ 
+		DeleteEntityData(entity);
 		m_EntityRegistry->erase(entity);
-		m_Coordinator->DestroyEntity(entity); 
 	}
 
 
@@ -100,4 +105,15 @@ namespace SFMLEngine {
 		return LayerManager::GetLayerName(GetComponent<Identity>(entity).EntityLayer);
 	}
 
+
+
+	void Scene::DeleteEntityData(Entity entity)
+	{
+		// if this entity is involved in any physics callbacks,
+		// these need to be sent before the entity destruction
+		// to guarantee that the data is valid when the callback is sent
+		m_PhysicsSystem->EntityDeleted(entity);
+
+		m_Coordinator->DestroyEntity(entity);
+	}
 }

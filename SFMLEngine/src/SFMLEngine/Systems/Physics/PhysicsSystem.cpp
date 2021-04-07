@@ -29,7 +29,52 @@ namespace SFMLEngine {
 
 	void PhysicsSystem::EntityRemovedFromSystem(Entity entity)
 	{
+		// make sure this entity isn't present anywhere in the collisions maps
+		if (m_Collisions.find(entity) != m_Collisions.end())
+		{
+			m_Collisions.erase(entity);
+		}
 
+		// also check it isn't the subject of any collisions
+		for (auto& pair : m_Collisions)
+		{
+			std::vector<ColliderID> toRemove;
+			for (auto& collider : pair.second)
+			{
+				if (collider.second.Owner == entity)
+				{
+					toRemove.push_back(collider.first);
+				}
+			}
+			for (auto& collider : toRemove) pair.second.erase(collider);
+		}
+	}
+
+	void PhysicsSystem::EntityDeleted(Entity entity)
+	{
+		// make sure this entity isn't present anywhere in the collisions maps
+		if (m_Collisions.find(entity) != m_Collisions.end())
+		{
+			// no need to send callback to the entity that is just about to be deleted
+			m_Collisions.erase(entity);
+		}
+
+
+		// find out if the entity is the subject of any collisions
+		for (auto& pair : m_Collisions)
+		{
+			std::vector<ColliderID> toRemove;
+			for (auto& collider : pair.second)
+			{
+				if (collider.second.Owner == entity)
+				{
+					// send the collision callback
+					CollisionExitCallback(pair.first, collider.second);
+					toRemove.push_back(collider.first);
+				}
+			}
+			for (auto& collider : toRemove) pair.second.erase(collider);
+		}
 	}
 
 	void PhysicsSystem::Update(Timestep ts)
@@ -38,6 +83,7 @@ namespace SFMLEngine {
 
 		for (auto const& entity : m_Entities)
 		{
+			LOG_CORE_TRACE("Entity in physics: {0}, ColliderType: {1}", entity, m_Coordinator->GetComponent<ColliderInfo>(entity).Type);
 			ZoneScoped;
 			ZoneName("ProcessEntity", 13);
 

@@ -8,6 +8,7 @@ using namespace SFMLEngine;
 
 class MainScene;
 class Tutorial;
+class Level1;
 
 
 class PlayButton : public Button
