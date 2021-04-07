@@ -1,20 +1,22 @@
 #include "CrystalCollector.h"
 
-#include "WolfController.h"
 
 
 void CrystalCollector::Start()
 {
 	m_Transform = &GetComponent<Transform>();
 	FindCrystalMap();
-
-	m_CrystalValues.insert({ m_CrystalMap->PalettePtr->GetTileByName("crystal1"), 5 });
-	m_CrystalValues.insert({ m_CrystalMap->PalettePtr->GetTileByName("crystal4"), 10 });
-	m_CrystalValues.insert({ m_CrystalMap->PalettePtr->GetTileByName("crystal2"), 20 });
-	m_CrystalValues.insert({ m_CrystalMap->PalettePtr->GetTileByName("crystal5"), 30 });
-	m_CrystalValues.insert({ m_CrystalMap->PalettePtr->GetTileByName("crystal3"), 50 });
+	
+	m_CrystalData.insert({ m_CrystalMap->PalettePtr->GetTileByName("crystal1"), { 5 , 2  } });
+	m_CrystalData.insert({ m_CrystalMap->PalettePtr->GetTileByName("crystal4"), { 10, 4  } });
+	m_CrystalData.insert({ m_CrystalMap->PalettePtr->GetTileByName("crystal2"), { 20, 6  } });
+	m_CrystalData.insert({ m_CrystalMap->PalettePtr->GetTileByName("crystal5"), { 30, 8  } });
+	m_CrystalData.insert({ m_CrystalMap->PalettePtr->GetTileByName("crystal3"), { 50, 10 } });
 
 	UpdateText();
+
+
+	m_WolfManager = &GetNativeScript<WolfManager>(GetEntitiesWithTag("WolfManager")[0]);
 }
 
 void CrystalCollector::OnSceneLoaded()
@@ -33,11 +35,32 @@ void CrystalCollector::Update(Timestep ts)
 	{
 		if (m_CollidingWithCrystal)
 		{
-			TileID removedType = m_CrystalMap->RemoveTile(m_CollidingCrystalPos);
-			m_CrystalScore += m_CrystalValues[removedType];
+			// time to make progress in mining a crystal!
+			// check if weve already begun hacking away at this crystal
+			if (m_MiningProgress.find(m_CollidingCrystalPos) != m_MiningProgress.end())
+			{
+				// weve already begun mining this crystal: make progress
+				m_MiningProgress[m_CollidingCrystalPos] -= 1;
+			}
+			else
+			{
+				// this crystal hasn't been touched before, so register as it being mined
+				TileID type = m_CrystalMap->GetTileAtLocation(m_CollidingCrystalPos);
+				// subtract one because this counts as one hit
+				m_MiningProgress.insert({ m_CollidingCrystalPos, m_CrystalData[type].Durability - 1 });
+			}
+
+			// if the crystal has been mined
+			if (m_MiningProgress[m_CollidingCrystalPos] == 0)
+			{
+				// this crystal has been broken and we can now take the points for it
+				TileID removedType = m_CrystalMap->RemoveTile(m_CollidingCrystalPos);
+				m_CrystalScore += m_CrystalData[removedType].Value;
+				m_MiningProgress.erase(m_CollidingCrystalPos);
+			}
 
 			// collecting crystals will awaken wolves
-			AwakenWolves();
+			m_WolfManager->AwakenWolves(m_Transform->Position);
 		}
 	}
 
@@ -76,18 +99,4 @@ void CrystalCollector::UpdateText()
 void CrystalCollector::SetScoreText(Entity scoreText)
 {
 	m_ScoreText = &GetComponent<GUIText>(scoreText);
-}
-
-void CrystalCollector::AwakenWolves()
-{
-	std::vector<Entity> wolves = GetEntitiesWithTag("Wolf");
-	for (auto const& wolf : wolves)
-	{
-		auto& transform = GetComponent<Transform>(wolf);
-		if (Math::SquareMagnitude(transform.Position - m_Transform->Position) < m_WolfTriggerRadius * m_WolfTriggerRadius)
-		{
-			auto& wolfController = GetNativeScript<WolfController>(wolf);
-			wolfController.Wake();
-		}
-	}
 }

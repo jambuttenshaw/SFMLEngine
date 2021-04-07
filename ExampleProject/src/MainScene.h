@@ -8,6 +8,8 @@
 #include "game/CrystalCollector.h"
 
 #include "game/SmoothFollowPlayer.h"
+
+#include "game/WolfManager.h"
 #include "game/LevelManager.h"
 
 #include "entities/PlayerHeart.h"
@@ -153,12 +155,21 @@ public:
 		}
 
 		{
+			m_WolfManager = CreateEntity();
+			SetEntityTag(m_WolfManager, "WolfManager");
+			AddNativeScript<WolfManager>(m_WolfManager);
+		}
+
+		{
 			m_LevelManager = CreateEntity();
 			auto& script = AddNativeScript<LevelManager>(m_LevelManager);
 			script.SetMainScene(this);
 		}
 
+		// players dont collide with enemies in terms of physics
+		// and enemies shouldn't collide with other enemies
 		Physics::IgnoreCollisions("Player", "Enemies");
+		Physics::IgnoreCollisions("Enemies", "Enemies");
 	}
 
 private:
@@ -173,6 +184,7 @@ private:
 	Entity m_CrystalScoreText = INVALID_ENTITY_ID;
 
 
+	Entity m_WolfManager = INVALID_ENTITY_ID;
 	Entity m_LevelManager = INVALID_ENTITY_ID;
 };
 

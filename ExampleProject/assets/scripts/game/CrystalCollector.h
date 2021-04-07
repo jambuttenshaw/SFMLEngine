@@ -1,8 +1,17 @@
 #pragma once
 
 #include <SFMLEngine.h>
+#include "WolfManager.h"
+
 
 using namespace SFMLEngine;
+
+struct CrystalData
+{
+	int Value;
+	int Durability;
+};
+
 
 class CrystalCollector : public ScriptableEntity
 {
@@ -20,22 +29,20 @@ public:
 
 	void SetScoreText(Entity scoreText);
 
-	void AwakenWolves();
-
 private:
 	Transform* m_Transform = nullptr;
 	Tilemap* m_CrystalMap = nullptr;
 
 	GUIText* m_ScoreText = nullptr;
 
+	WolfManager* m_WolfManager = nullptr;
+
 	bool m_CollidingWithCrystal = false;
 	sf::Vector2i m_CollidingCrystalPos;
 
-	std::unordered_map<TileID, int> m_CrystalValues;
+	std::unordered_map<TileID, CrystalData> m_CrystalData;
+	std::unordered_map<sf::Vector2i, int> m_MiningProgress;
 
 	int m_CrystalScore = 0;
 	float m_DisplayCrystalScore = 0;
-
-
-	float m_WolfTriggerRadius = 200.0f;
 };

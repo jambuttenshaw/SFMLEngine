@@ -45,6 +45,8 @@ namespace SFMLEngine {
 		// returns the ID of the type of tile that was removed; null tile id if no tile was removed
 		TileID RemoveTile(const sf::Vector2i& location);
 
+		TileID GetTileAtLocation(const sf::Vector2i& location) { return Tiles[GetTileIndex(location)].TileType; }
+
 		sf::Vector2i WorldToTileCoordinates(const sf::Vector2f& worldCoords);
 
 		void SetTransform(Transform* transform) { m_Transform = transform; }
