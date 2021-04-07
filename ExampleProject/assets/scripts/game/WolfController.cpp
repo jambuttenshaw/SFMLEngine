@@ -21,8 +21,6 @@ void WolfController::Update(Timestep ts)
 {
 	float dist = Math::SquareMagnitude(m_PlayerController->GetCentre() - m_Transform->Position - sf::Vector2f{ 32, 16 });
 
-	if (Input::IsKeyPressed(sf::Keyboard::R)) Wake();
-
 
 	switch (m_State)
 	{

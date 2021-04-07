@@ -13,7 +13,8 @@ public:
 	void Start() override
 	{
 		m_App = Application::GetApplicationHandle();
-		m_PlayerController = &GetNativeScript<PlayerController>(GetEntitiesWithTag("Player")[0]);
+		Entity player = GetEntitiesWithTag("Player")[0];
+		m_PlayerController = &GetNativeScript<PlayerController>(player);
 	}
 
 	void Update(Timestep ts) override

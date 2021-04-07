@@ -6,7 +6,7 @@
 void CrystalCollector::Start()
 {
 	m_Transform = &GetComponent<Transform>();
-	m_CrystalMap = &GetComponent<Tilemap>(GetEntitiesWithTag("Crystals")[0]);
+	FindCrystalMap();
 
 	m_CrystalValues.insert({ m_CrystalMap->PalettePtr->GetTileByName("crystal1"), 5 });
 	m_CrystalValues.insert({ m_CrystalMap->PalettePtr->GetTileByName("crystal4"), 10 });
@@ -15,6 +15,16 @@ void CrystalCollector::Start()
 	m_CrystalValues.insert({ m_CrystalMap->PalettePtr->GetTileByName("crystal3"), 50 });
 
 	UpdateText();
+}
+
+void CrystalCollector::OnSceneLoaded()
+{
+	FindCrystalMap();
+}
+
+void CrystalCollector::FindCrystalMap()
+{
+	m_CrystalMap = &GetComponent<Tilemap>(GetEntitiesWithTag("Crystals")[0]);
 }
 
 void CrystalCollector::Update(Timestep ts)

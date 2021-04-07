@@ -8,6 +8,8 @@ class CrystalCollector : public ScriptableEntity
 {
 public:
 	void Start() override;
+	void OnSceneLoaded() override;
+	void FindCrystalMap();
 
 	void Update(Timestep ts) override;
 

@@ -47,6 +47,8 @@ namespace SFMLEngine {
 		virtual void OnTriggerStay(const Collision& collisionData) {}
 		virtual void OnTriggerExit(Entity other) {}
 
+		// this is called when a new scene has been loaded
+		virtual void OnSceneLoaded() {}
 
 		///////////////////////////////
 		// These functions are not to be overriden by the client

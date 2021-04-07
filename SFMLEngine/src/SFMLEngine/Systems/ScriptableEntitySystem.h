@@ -57,6 +57,16 @@ namespace SFMLEngine {
 			m_Started = true;
 		}
 
+		void NewSceneLoaded()
+		{
+			for (auto const& entity : m_Entities)
+			{
+				auto& scriptComponent = m_Coordinator->GetComponent<NativeScripts>(entity);
+				for (auto script : scriptComponent.Scripts)
+					script.second->OnSceneLoaded();
+			}
+		}
+
 		bool GetStarted() { return m_Started; }
 		void Reset() { m_Started = false; }
 		void StartAllPending() 

@@ -437,6 +437,10 @@ namespace SFMLEngine
                     // otherwise call start on them all
                     m_ScriptableEntitySystem->Start();
                 }
+
+
+                // let entities know that a new scene has been loaded
+                m_ScriptableEntitySystem->NewSceneLoaded();
             }
 
             ///////////
