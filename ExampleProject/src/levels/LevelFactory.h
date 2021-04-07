@@ -88,7 +88,7 @@ public:
 
 		scene->AddComponent(crystals, Transform{ });
 
-		scene->AddComponent(crystals, Tilemap{ s_TilePaletteID,  });
+		scene->AddComponent(crystals, Tilemap{ s_TilePaletteID, path });
 		scene->AddComponent(crystals, TilemapRenderer{ Material::Create("LitTilemap"), 1 });
 
 		// we need every crystal to have a unique collider so we do not optimize at all

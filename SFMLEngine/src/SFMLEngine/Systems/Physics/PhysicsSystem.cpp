@@ -83,7 +83,6 @@ namespace SFMLEngine {
 
 		for (auto const& entity : m_Entities)
 		{
-			LOG_CORE_TRACE("Entity in physics: {0}, ColliderType: {1}", entity, m_Coordinator->GetComponent<ColliderInfo>(entity).Type);
 			ZoneScoped;
 			ZoneName("ProcessEntity", 13);
 
