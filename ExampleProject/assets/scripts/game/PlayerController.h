@@ -27,6 +27,8 @@ public:
 
 	void Hurt(bool toTheRight);
 
+	void Reset();
+
 	sf::Vector2f GetCentre()
 	{
 		if (m_Crawling)

@@ -13,6 +13,7 @@ public:
 	void Start() override
 	{
 		m_App = Application::GetApplicationHandle();
+		m_PlayerController = &GetNativeScript<PlayerController>(GetEntitiesWithTag("Player")[0]);
 	}
 
 	void Update(Timestep ts) override
@@ -29,12 +30,15 @@ public:
 				}
 			}
 			m_App->LoadScene<Level1>(LoadSceneMode::Additive);
+			m_PlayerController->Reset();
 		}
 	}
 
 	void SetMainScene(Scene* s) { m_MainScene = s; }
 
 private:
-	Application* m_App;
-	Scene* m_MainScene;
+	Application* m_App = nullptr;
+	Scene* m_MainScene = nullptr;
+
+	PlayerController* m_PlayerController = nullptr;
 };

@@ -19,7 +19,7 @@ public:
 		: Application("Sandbox", sf::Vector2i(1200, 675))
 	{
 		SetClearColor(sf::Color::Black);
-		SetVSync(false);
+		SetVSync(true);
 
 		LevelFactory::Init();
 

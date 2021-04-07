@@ -310,3 +310,18 @@ void PlayerController::Hurt(bool toTheRight)
 
 	m_StatsController->Damage();
 }
+
+
+
+void PlayerController::Reset()
+{
+	bool m_OnGround = false;
+	bool m_OnJumpThrough = false;
+	int m_JumpThroughContactCount = 0;
+
+	bool m_AgainstWall = false;
+	bool m_CanLandOnPlatform = true;
+	bool m_Crawling = false;
+
+	m_Transform->Position = { 0, -200 };
+}
