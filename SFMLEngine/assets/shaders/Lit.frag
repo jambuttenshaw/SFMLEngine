@@ -101,5 +101,5 @@ void main()
 	}
 
 	// assign the fragment colour as the sample from the texture multiplied by the lighting value
-	gl_FragColor = vec4(lightColor * pixel.rgb, pixel.a);
+	gl_FragColor = vec4(lightColor * pixel.rgb, pixel.a) * gl_Color;
 }

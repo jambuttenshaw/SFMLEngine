@@ -5,16 +5,18 @@
 using namespace SFMLEngine;
 
 
-class MiningRingController : public ScriptableEntity
+class NoiseRingController : public ScriptableEntity
 {
 public:
 	void Start() override
 	{
 		m_Transform = &GetComponent<Transform>();
 		m_Transform->Scale = { 0, 0 };
-	}
 
+		m_Sprite = &GetComponent<SpriteRenderer>();
+	}
 	
+
 	void Update(Timestep ts) override
 	{
 		m_Scale += m_ScaleIncreaseSpeed * ts;
@@ -27,6 +29,10 @@ public:
 			Destroy();
 		}
 
+		float t = std::sqrt(std::max(0.0f, (1 - scaledSize.x / m_MaxScale)));
+		float alpha = 255 * t;
+		m_Sprite->SetColor({ 255, 255, 255, static_cast<sf::Uint8>(alpha) });
+		
 
 		m_Transform->Scale = { m_Scale, m_Scale };
 		m_Transform->Position = m_CentrePos - 0.5f * scaledSize;
@@ -39,11 +45,12 @@ public:
 
 private:
 	Transform* m_Transform;
+	SpriteRenderer* m_Sprite;
 
 	sf::Vector2f m_CentrePos;
 	const sf::Vector2f m_TextureSize{ 64, 64 };
 
 	float m_Scale = 0;
 	float m_ScaleIncreaseSpeed = 6.0f;
-	float m_MaxScale = 300.0f;
+	float m_MaxScale = 400.0f;
 };

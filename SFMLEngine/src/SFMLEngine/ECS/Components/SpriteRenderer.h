@@ -11,78 +11,59 @@
 
 namespace SFMLEngine {
 
-	struct SpriteRenderer : public Animable
+	class SpriteRenderer : public Animable
 	{
+	public:
+
 		friend class System;
 
-		ResourceID TextureHandle;
-		ResourceID MaterialHandle;
-		int RenderLayer;
-		ResourceID NormalMapHandle;
-		sf::Sprite Sprite;
-		sf::Vector2f Offset;
-		bool FlipNormals = false;
 
-		// for speed when rendering
-		Material* MaterialPtr = nullptr;
-		sf::Texture* NormalMapPtr = nullptr;
+		SpriteRenderer();
+		SpriteRenderer(ResourceID texHandle, ResourceID material, int renderLayer);
+		SpriteRenderer(ResourceID texHandle, ResourceID material, int renderLayer, ResourceID normalMap);
 
-		SpriteRenderer()
-			: TextureHandle(NULL_RESOURCE_ID), MaterialHandle(NULL_RESOURCE_ID), RenderLayer(0), NormalMapHandle(NULL_RESOURCE_ID), Sprite(), Offset()
-		{}
-		SpriteRenderer(ResourceID texHandle, ResourceID material, int renderLayer)
-			: TextureHandle(texHandle), MaterialHandle(material), RenderLayer(renderLayer), NormalMapHandle(NULL_RESOURCE_ID), Sprite(), Offset()
-		{
-			MaterialPtr = ResourceManager::GetResourceHandle<Material>(MaterialHandle);
-		}
-		SpriteRenderer(ResourceID texHandle, ResourceID material, int renderLayer, ResourceID normalMap)
-			: TextureHandle(texHandle), MaterialHandle(material), RenderLayer(renderLayer), NormalMapHandle(normalMap), Sprite(), Offset()
-		{
-			MaterialPtr = ResourceManager::GetResourceHandle<Material>(MaterialHandle);
-			NormalMapPtr = ResourceManager::GetResourceHandle<sf::Texture>(NormalMapHandle);
-		}
+		sf::Texture* GetTexture() const;
+		ResourceID GetTextureHandle() const;
 
-		sf::Texture* GetTexture() const
-		{
-			return ResourceManager::GetResourceHandle<sf::Texture>(TextureHandle);
-		}
+		sf::Texture* GetNormalMap() const;
 
-		Material* GetMaterial() const
-		{
-			return ResourceManager::GetResourceHandle<Material>(MaterialHandle);
-		}
+		void SetMaterial(ResourceID newMat);
+		Material* GetMaterial() const;
+		ResourceID GetMaterialHandle() const;
 
-		sf::Texture* GetNormalMap() const
-		{
-			return ResourceManager::GetResourceHandle<sf::Texture>(NormalMapHandle);
-		}
+		int GetRenderLayer() { return m_RenderLayer; }
+		void SetRenderLayer(int newRenderLayer);
 
-		void SetMaterial(ResourceID newMat)
-		{
-			MaterialHandle = newMat;
-			// the pointer to the material also needs updated when the material is changed
-			MaterialPtr = ResourceManager::GetResourceHandle<Material>(newMat);
-			m_Modified = true;
-		}
+		const sf::Sprite& GetSpriteObject() { return m_Sprite; }
 
-		void SetRenderLayer(int newRenderLayer) { RenderLayer = newRenderLayer; m_Modified = true; }
+		virtual void SetFrame(const AnimationFrame& frame, bool flipped) override;
+		const sf::Vector2f& GetOffset() { return m_Offset; }
 
-		virtual void SetFrame(const AnimationFrame& frame, bool flipped) override
-		{ 
-			if (flipped)
-			{
-				Sprite.setTextureRect(Math::FlipRect(frame.ImageRect));
-				Offset = frame.Offset;
-			}
-			else
-			{
-				Sprite.setTextureRect(frame.ImageRect);
-				Offset.y = frame.Offset.y;
-			}
-		}
+		void SetFlippedNormals(bool state) { m_FlipNormals = state; }
+		bool GetFlippedNormals() { return m_FlipNormals; }
+
+		const sf::Color& GetColor() { return m_Color; }
+		void SetColor(const sf::Color& color);
 
 	private:
 		bool m_Modified = true;
+
+		ResourceID m_TextureHandle;
+		ResourceID m_MaterialHandle;
+		ResourceID m_NormalMapHandle;
+
+		sf::Sprite m_Sprite;
+
+		int m_RenderLayer;
+
+		sf::Vector2f m_Offset;
+		bool m_FlipNormals = false;
+
+		// for speed when rendering
+		Material* m_MaterialPtr = nullptr;
+		sf::Texture* m_NormalMapPtr = nullptr;
+
+		sf::Color m_Color = sf::Color::White;
 	};
 
 }

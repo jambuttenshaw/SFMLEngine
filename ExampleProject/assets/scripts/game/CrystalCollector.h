@@ -34,7 +34,7 @@ public:
 	void SetScoreText(Entity scoreText);
 	void SetScenePtr(Scene* scene) { m_Scene = scene; }
 
-	void CreateMiningRing(const sf::Vector2f& position);
+	void CreateNoiseRing(const sf::Vector2f& position);
 private:
 	Scene* m_Scene = nullptr;
 

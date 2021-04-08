@@ -1,5 +1,5 @@
 #include "CrystalCollector.h"
-#include "MiningRingController.h"
+#include "NoiseRingController.h"
 
 
 void CrystalCollector::Start()
@@ -59,7 +59,7 @@ void CrystalCollector::Update(Timestep ts)
 				m_MiningProgress.erase(m_CollidingCrystalPos);
 			}
 
-			CreateMiningRing(m_CrystalMap->TileToWorldCoordinates(m_CollidingCrystalPos));
+			CreateNoiseRing(m_CrystalMap->TileToWorldCoordinates(m_CollidingCrystalPos) + sf::Vector2f{16, 16});
 
 			// collecting crystals will awaken wolves
 			m_WolfManager->AwakenWolves(m_Transform->Position);
@@ -103,17 +103,17 @@ void CrystalCollector::SetScoreText(Entity scoreText)
 	m_ScoreText = &GetComponent<GUIText>(scoreText);
 }
 
-void CrystalCollector::CreateMiningRing(const sf::Vector2f& position)
+void CrystalCollector::CreateNoiseRing(const sf::Vector2f& position)
 {
 	Entity newRing = CreateEntity();
 
 	AddComponent(newRing, Transform{ });
 	AddComponent(newRing, SpriteRenderer{
-			Texture::Create("assets/textures/miningNoiseRing.png"),
+			Texture::Create("assets/textures/noiseRing.png"),
 			Material::Create("Basic"),
 			3
 		});
 
-	auto& script = AddNativeScript<MiningRingController>(newRing);
+	auto& script = AddNativeScript<NoiseRingController>(newRing);
 	script.SetCentrePosition(position);
 }
