@@ -55,12 +55,14 @@ namespace SFMLEngine {
 		// These are for getting and/or modifying entities' data and components
 		///////////////////////////////
 
+		// create a new entity
+		Entity CreateEntity();
 		// destroy the entity
 		void Destroy();
 
 		// components
 		template<typename T>
-		T& AddComponent(T component) { return m_SceneHandle->AddComponent(m_EntityHandle, component); }
+		void AddComponent(T component) { m_SceneHandle->AddComponent(m_EntityHandle, component); }
 		template<typename T>
 		void RemoveComponent() { m_SceneHandle->RemoveComponent<T>(m_EntityHandle); }
 		template<typename T>
@@ -68,7 +70,7 @@ namespace SFMLEngine {
 
 		// components on different entities
 		template<typename T>
-		T& AddComponent(Entity entity, T component) { return m_SceneHandle->AddComponent(entity, component); }
+		void AddComponent(Entity entity, T component) { m_SceneHandle->AddComponent(entity, component); }
 		template<typename T>
 		void RemoveComponent(Entity entity) { m_SceneHandle->RemoveComponent<T>(entity); }
 		template<typename T>

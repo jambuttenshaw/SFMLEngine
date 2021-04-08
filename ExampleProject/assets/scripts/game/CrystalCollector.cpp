@@ -105,15 +105,15 @@ void CrystalCollector::SetScoreText(Entity scoreText)
 
 void CrystalCollector::CreateMiningRing(const sf::Vector2f& position)
 {
-	Entity newRing = m_Scene->CreateEntity();
+	Entity newRing = CreateEntity();
 
-	m_Scene->AddComponent(newRing, Transform{ });
-	m_Scene->AddComponent(newRing, SpriteRenderer{
+	AddComponent(newRing, Transform{ });
+	AddComponent(newRing, SpriteRenderer{
 			Texture::Create("assets/textures/miningNoiseRing.png"),
 			Material::Create("Basic"),
 			3
 		});
 
-	auto& script = m_Scene->AddNativeScript<MiningRingController>(newRing);
+	auto& script = AddNativeScript<MiningRingController>(newRing);
 	script.SetCentrePosition(position);
 }
