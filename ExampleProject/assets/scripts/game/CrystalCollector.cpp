@@ -8,11 +8,11 @@ void CrystalCollector::Start()
 	FindCrystalMap();
 	
 	m_CrystalData.insert({ m_CrystalMap->PalettePtr->GetTileByName("crystal1"), { 5 , 2  } });
-	m_CrystalData.insert({ m_CrystalMap->PalettePtr->GetTileByName("crystal4"), { 10, 4  } });
-	m_CrystalData.insert({ m_CrystalMap->PalettePtr->GetTileByName("crystal2"), { 20, 6  } });
-	m_CrystalData.insert({ m_CrystalMap->PalettePtr->GetTileByName("crystal5"), { 30, 8  } });
-	m_CrystalData.insert({ m_CrystalMap->PalettePtr->GetTileByName("crystal3"), { 50, 10 } });
-
+	m_CrystalData.insert({ m_CrystalMap->PalettePtr->GetTileByName("crystal2"), { 10, 4  } });
+	m_CrystalData.insert({ m_CrystalMap->PalettePtr->GetTileByName("crystal3"), { 20, 6  } });
+	m_CrystalData.insert({ m_CrystalMap->PalettePtr->GetTileByName("crystal4"), { 30, 8  } });
+	m_CrystalData.insert({ m_CrystalMap->PalettePtr->GetTileByName("crystal5"), { 50, 10 } });
+	
 	UpdateText();
 
 
