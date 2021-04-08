@@ -14,6 +14,13 @@ struct CrystalData
 {
 	int Value;
 	int Durability;
+	TileID BrokenTile;
+};
+struct MiningProgress
+{
+	int Progress;
+	CrystalData* Data;
+	bool Broken = false;
 };
 
 
@@ -27,7 +34,7 @@ public:
 	void Update(Timestep ts) override;
 
 	void OnTriggerEnter(const Collision& collision) override;
-	void OnTriggerExit(Entity other) override;
+	void OnTriggerExit(const std::pair<Entity, ColliderID>& other) override;
 
 	void UpdateText();
 
@@ -35,6 +42,12 @@ public:
 	void SetScenePtr(Scene* scene) { m_Scene = scene; }
 
 	void CreateNoiseRing(const sf::Vector2f& position);
+
+
+private:
+
+	bool CollidingWithCrystal(const sf::Vector2i& pos);
+
 private:
 	Scene* m_Scene = nullptr;
 
@@ -45,11 +58,13 @@ private:
 
 	WolfManager* m_WolfManager = nullptr;
 
-	bool m_CollidingWithCrystal = false;
-	sf::Vector2i m_CollidingCrystalPos;
+	std::vector<sf::Vector2i> m_CollidingCrystals;
+	bool m_BrokenCrystal = false;
 
 	std::unordered_map<TileID, CrystalData> m_CrystalData;
-	std::unordered_map<sf::Vector2i, int> m_MiningProgress;
+	std::unordered_map<sf::Vector2i, MiningProgress> m_MiningProgress;
+
+	std::unordered_map<ColliderID, sf::Vector2i> m_CrystalColliders;
 
 	int m_CrystalScore = 0;
 	float m_DisplayCrystalScore = 0;

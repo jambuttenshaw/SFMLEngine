@@ -112,17 +112,6 @@ void PlayerController::Update(Timestep ts)
 }
 
 
-void PlayerController::OnColliderEnter(const Collision& collision)
-{
-
-}
-
-void PlayerController::OnColliderExit(Entity other)
-{
-
-}
-
-
 void PlayerController::OnTriggerEnter(const Collision& collision)
 {					
 	if (GetEntityTag(collision.Other) == "Ladder")
@@ -159,14 +148,14 @@ void PlayerController::OnTriggerStay(const Collision& collision)
 	}
 }
 
-void PlayerController::OnTriggerExit(Entity other)
+void PlayerController::OnTriggerExit(const std::pair<Entity, ColliderID>& other)
 {
-	if (GetEntityTag(other) == "Ladder")
+	if (GetEntityTag(other.first) == "Ladder")
 	{
 		// left ladder
 		m_LadderContacts -= 1;
 	}
-	else if (GetEntityLayer(other) == "JumpThrough")
+	else if (GetEntityLayer(other.first) == "JumpThrough")
 	{
 		m_JumpThroughContactCount--;
 		if (!m_JumpThroughContactCount)

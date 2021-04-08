@@ -12,12 +12,9 @@ public:
 	void Start() override;
 	void Update(Timestep ts) override;
 	
-	void OnColliderEnter(const Collision& collision) override;
-	void OnColliderExit(Entity other) override;
-
 	void OnTriggerEnter(const Collision& collision) override;
 	void OnTriggerStay(const Collision& collision) override;
-	void OnTriggerExit(Entity other) override;
+	void OnTriggerExit(const std::pair<Entity, ColliderID>& other) override;
 
 	void Move(Timestep ts);
 	void Jump(Timestep ts);

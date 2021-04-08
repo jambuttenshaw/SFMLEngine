@@ -36,7 +36,7 @@ namespace SFMLEngine {
 		void Update(Timestep ts);
 
 		void CollisionEnterCallback(Entity entity, const Collision& collisionData);
-		void CollisionExitCallback(Entity entity, const CollisionCache& collision);
+		void CollisionExitCallback(Entity entity, const std::pair<ColliderID, CollisionCache>& collision);
 
 	private:
 		Coordinator* m_Coordinator = nullptr;

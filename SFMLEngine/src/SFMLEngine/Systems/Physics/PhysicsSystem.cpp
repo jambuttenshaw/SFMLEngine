@@ -69,7 +69,7 @@ namespace SFMLEngine {
 				if (collider.second.Owner == entity)
 				{
 					// send the collision callback
-					CollisionExitCallback(pair.first, collider.second);
+					CollisionExitCallback(pair.first, collider);
 					toRemove.push_back(collider.first);
 				}
 			}
@@ -172,7 +172,7 @@ namespace SFMLEngine {
 					// we have previously logged this collision, but it did not occur again this frame
 					// we must have exited the collider
 					// send callback
-					CollisionExitCallback(entity, collision.second);
+					CollisionExitCallback(entity, collision);
 					toRemove.insert(collision.first);
 				}
 			}
@@ -232,7 +232,7 @@ namespace SFMLEngine {
 		}
 	}
 
-	void PhysicsSystem::CollisionExitCallback(Entity entity, const CollisionCache& collision)
+	void PhysicsSystem::CollisionExitCallback(Entity entity, const std::pair<ColliderID, CollisionCache>& collision)
 	{
 		ZoneScoped;
 
@@ -244,10 +244,10 @@ namespace SFMLEngine {
 			auto& scriptsComponent = m_Coordinator->GetComponent<NativeScripts>(entity);
 			for (auto& script : scriptsComponent.Scripts)
 			{
-				if (collision.Trigger)
-					script.second->OnTriggerExit(collision.Owner);
+				if (collision.second.Trigger)
+					script.second->OnTriggerExit({ collision.second.Owner, collision.first });
 				else
-					script.second->OnColliderExit(collision.Owner);
+					script.second->OnColliderExit({ collision.second.Owner, collision.first });
 			}
 		}
 	}

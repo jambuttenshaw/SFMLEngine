@@ -40,12 +40,12 @@ namespace SFMLEngine {
 		virtual void OnColliderEnter(const Collision& collisionData) {}
 		virtual void OnColliderStay(const Collision& collisionData) {}
 		// Exit callbacks unfortunately have less information
-		virtual void OnColliderExit(Entity other) {}
+		virtual void OnColliderExit(const std::pair<Entity, ColliderID>& other) {}
 
 		// the same again, but for Trigger colliders specifically
 		virtual void OnTriggerEnter(const Collision& collisionData) {}
 		virtual void OnTriggerStay(const Collision& collisionData) {}
-		virtual void OnTriggerExit(Entity other) {}
+		virtual void OnTriggerExit(const std::pair<Entity, ColliderID>& other) {}
 
 		// this is called when a new scene has been loaded
 		virtual void OnSceneLoaded() {}
