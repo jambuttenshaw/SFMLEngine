@@ -6,6 +6,10 @@
 
 using namespace SFMLEngine;
 
+
+class MiningNoiseRing;
+
+
 struct CrystalData
 {
 	int Value;
@@ -28,8 +32,12 @@ public:
 	void UpdateText();
 
 	void SetScoreText(Entity scoreText);
+	void SetScenePtr(Scene* scene) { m_Scene = scene; }
 
+	void CreateMiningRing(const sf::Vector2f& position);
 private:
+	Scene* m_Scene = nullptr;
+
 	Transform* m_Transform = nullptr;
 	Tilemap* m_CrystalMap = nullptr;
 

@@ -216,6 +216,20 @@ namespace SFMLEngine {
 		}
 	}
 
+	sf::Vector2f Tilemap::TileToWorldCoordinates(const sf::Vector2i& tileCoords)
+	{
+		sf::Vector2f worldCoords{ tileCoords.x * TileSize.x, tileCoords.y * TileSize.y };
+		if (m_Transform)
+		{
+			// if this tilemap has a transform stored then transform the point from local space into world space
+			return m_Transform->GetLocalToWorldTransformMatrix().transformPoint(worldCoords);
+		}
+		else
+		{
+			return worldCoords;
+		}
+	}
+
 
 	bool Tilemap::Export(const std::string& exportPath)
 	{

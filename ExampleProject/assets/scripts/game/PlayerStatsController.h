@@ -30,7 +30,7 @@ public:
 		}
 
 		// there is 2 health points for each heart
-		m_MaxHealth = m_HeartAnimators.size() * 2;
+		m_MaxHealth = static_cast<int>(m_HeartAnimators.size() * 2);
 		m_Health = m_MaxHealth;
 	}
 

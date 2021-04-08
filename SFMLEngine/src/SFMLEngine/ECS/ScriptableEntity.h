@@ -51,9 +51,12 @@ namespace SFMLEngine {
 		virtual void OnSceneLoaded() {}
 
 		///////////////////////////////
-		// These functions are not to be overriden by the client
+		// These functions are NOT to be overriden by the client
 		// These are for getting and/or modifying entities' data and components
 		///////////////////////////////
+
+		// destroy the entity
+		void Destroy();
 
 		// components
 		template<typename T>
@@ -64,6 +67,10 @@ namespace SFMLEngine {
 		T& GetComponent() { return m_SceneHandle->GetComponent<T>(m_EntityHandle); }
 
 		// components on different entities
+		template<typename T>
+		T& AddComponent(Entity entity, T component) { return m_SceneHandle->AddComponent(entity, component); }
+		template<typename T>
+		void RemoveComponent(Entity entity) { m_SceneHandle->RemoveComponent<T>(entity); }
 		template<typename T>
 		T& GetComponent(Entity entity) { return m_SceneHandle->GetComponent<T>(entity); }
 		
@@ -77,6 +84,10 @@ namespace SFMLEngine {
 		T& GetNativeScript() { return m_SceneHandle->GetNativeScript<T>(m_EntityHandle); }
 
 		// native scripts on other entities
+		template<typename T>
+		T& AddNativeScript(Entity entity) { return m_SceneHandle->AddNativeScript<T>(entity); }
+		template<typename T>
+		void RemoveNativeScript(Entity entity) { m_SceneHandle->RemoveNativeScript<T>(entity); }
 		template<typename T>
 		T& GetNativeScript(Entity entity) { return m_SceneHandle->GetNativeScript<T>(entity); }
 

@@ -36,12 +36,13 @@ namespace SFMLEngine {
 		Scene();
 		~Scene();
 
-		// Scene creation
+		// Scene creation and destruction, only to be used by the application
 		void Init(Coordinator* coordinator,
 			std::shared_ptr<ScriptableEntitySystem> scriptableEntitySystem,
 			std::shared_ptr<PhysicsSystem> physicsSystem,
 			std::shared_ptr<IdentitySystem> identitySystem);
 		void Destroy();
+		void DestroyAllPending();
 
 		// pure virtual function to be overridden in the derived class
 		// that creates the entities and their components
@@ -52,6 +53,7 @@ namespace SFMLEngine {
 		Entity CreateEntity();
 		Entity CreateEntity(const std::string& name, const std::string& tag, const std::string& layerName);
 		void DestroyEntity(Entity entity);
+		void DestroyEntityImmediate(Entity entity);
 
 		// COMPONENT MANAGEMENT
 		template<typename T>
@@ -96,6 +98,7 @@ namespace SFMLEngine {
 
 		// keeps track of all entities registered in this scene
 		std::set<Entity>* m_EntityRegistry;
+		std::vector<Entity> m_EntitiesToDestroy;
 	};
 
 }

@@ -48,6 +48,7 @@ namespace SFMLEngine {
 		TileID GetTileAtLocation(const sf::Vector2i& location) { return Tiles[GetTileIndex(location)].TileType; }
 
 		sf::Vector2i WorldToTileCoordinates(const sf::Vector2f& worldCoords);
+		sf::Vector2f TileToWorldCoordinates(const sf::Vector2i& tileCoords);
 
 		void SetTransform(Transform* transform) { m_Transform = transform; }
 

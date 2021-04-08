@@ -38,6 +38,15 @@ namespace SFMLEngine {
 		}
 		m_EntityRegistry->clear();
 	}
+
+	void Scene::DestroyAllPending()
+	{
+		for (auto const& entity : m_EntitiesToDestroy)
+		{
+			DestroyEntityImmediate(entity);
+		}
+		m_EntitiesToDestroy.clear();
+	}
 	
 
 	Entity Scene::CreateEntity() 
@@ -68,6 +77,11 @@ namespace SFMLEngine {
 
 	void Scene::DestroyEntity(Entity entity) 
 	{ 
+		m_EntitiesToDestroy.push_back(entity);
+	}
+
+	void Scene::DestroyEntityImmediate(Entity entity)
+	{
 		DeleteEntityData(entity);
 		m_EntityRegistry->erase(entity);
 	}

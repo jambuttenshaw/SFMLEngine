@@ -124,6 +124,7 @@ public:
 			}
 			auto& crystalScript = AddNativeScript<CrystalCollector>(m_Player);
 			crystalScript.SetScoreText(m_CrystalScoreText);
+			crystalScript.SetScenePtr(this);
 			
 
 			for (int i = 0; i < 3; i++)

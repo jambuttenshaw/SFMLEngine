@@ -341,6 +341,15 @@ namespace SFMLEngine
             // SCENE MANAGEMENT //
             //////////////////////
 
+
+            // destroy entities that were queued to be deleted last frame
+            for (Scene* scene : m_CurrentScenes)
+            {
+                scene->DestroyAllPending();
+            }
+
+
+
             // check to see if there are any scenes that have been queued for deletion this frame
             if (m_ScenesToDelete.size())
             {
