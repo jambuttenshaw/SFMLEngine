@@ -41,5 +41,5 @@ private:
 	bool m_Following = false;
 
 	float m_SmoothSpeed = 3;
-	float m_FollowRadius = 7500.0f;
+	float m_FollowRadius = 5000.0f;
 };
