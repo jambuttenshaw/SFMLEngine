@@ -76,7 +76,7 @@ private:
 	float m_Friction = 14.0f;
 
 	float m_MoveSpeed = 250.0f;
-	float m_JumpPower = 400.0f;
+	float m_JumpPower = 445.0f;
 
 	float m_FallMultiplier = 0.4f;
 
