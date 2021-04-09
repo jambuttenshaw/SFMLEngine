@@ -21,6 +21,9 @@ public:
 	{
 		if (GetEntityTag(collision.Other) == "LevelEnd")
 		{
+			if (m_LoadedLevel1) return;
+
+
 			// delete the current level scene
 			// very crude method of deleting all scenes that dont contain a player
 			for (Scene* scene : m_App->GetLoadedScenes())
@@ -32,6 +35,8 @@ public:
 			}
 			m_App->LoadScene<Level1>(LoadSceneMode::Additive);
 			m_PlayerController->Reset();
+
+			m_LoadedLevel1 = true;
 		}
 	}
 
@@ -40,6 +45,8 @@ public:
 private:
 	Application* m_App = nullptr;
 	Scene* m_MainScene = nullptr;
+
+	bool m_LoadedLevel1 = false;
 
 	PlayerController* m_PlayerController = nullptr;
 };
