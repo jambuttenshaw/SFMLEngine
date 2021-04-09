@@ -7,6 +7,8 @@
 #include "game/PlayerStatsController.h"
 #include "game/CrystalCollector.h"
 
+#include "game/DepthFinder.h"
+
 #include "game/SmoothFollowPlayer.h"
 
 #include "game/WolfManager.h"
@@ -133,6 +135,10 @@ public:
 			}
 			auto& statScript = AddNativeScript<PlayerStatsController>(m_Player);
 			statScript.SetupHearts(&m_PlayerHearts);
+
+
+			AddNativeScript<DepthFinder>(m_Player);
+
 		}
 
 		{

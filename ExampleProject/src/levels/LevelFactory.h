@@ -24,6 +24,7 @@ public:
 	{
 		Entity ground = scene->CreateEntity();
 		scene->SetEntityLayer(ground, "Ground");
+		scene->SetEntityTag(ground, "Ground");
 
 		scene->AddComponent(ground, Transform{ });
 
