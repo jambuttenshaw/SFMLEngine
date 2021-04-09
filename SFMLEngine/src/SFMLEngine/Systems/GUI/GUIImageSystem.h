@@ -13,8 +13,8 @@ namespace SFMLEngine {
 	public:
 		void Init(Coordinator* coordinator, sf::RenderWindow* window);
 
-		void EntityAddedToSystem(Entity entity) override;
-		void EntityRemovedFromSystem(Entity entity) override;
+		void EntityAddedToSystem(Entity entity) override {}
+		void EntityRemovedFromSystem(Entity entity) override {}
 
 		void Render();
 

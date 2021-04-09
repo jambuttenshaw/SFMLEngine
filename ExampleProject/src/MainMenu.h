@@ -109,8 +109,11 @@ public:
 		m_Light = CreateEntity();
 		SetEntityTag(m_Light, "SceneLight");
 		AddComponent(m_Light, Transform{ });
-		AddComponent(m_Light, PointLight{ 3.5f, 400.0f, sf::Color(219, 113, 114, 255) });
+		AddComponent(m_Light, PointLight{ 3.0f, 400.0f, sf::Color(219, 113, 114, 255) });
 		AddNativeScript<GoToMouse>(m_Light);
+
+		m_Light2 = CreateEntity();
+		AddComponent(m_Light2, DirectionalLight{ -1.5f, 0.7f, 0.7f, sf::Color(147, 111, 152, 255), true });
 
 
 
@@ -133,4 +136,5 @@ private:
 
 	Entity m_Camera = INVALID_ENTITY_ID;
 	Entity m_Light = INVALID_ENTITY_ID;
+	Entity m_Light2 = INVALID_ENTITY_ID;
 };

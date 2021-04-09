@@ -169,6 +169,25 @@ public:
 			AddNativeScript<WolfManager>(m_WolfManager);
 		}
 
+
+		{
+			m_DepthBar = CreateEntity();
+
+
+			GUITransform t{ {0.97f, 0.5f}, GUIElementType::Image };
+			t.SetHorizontalAnchor(GUITransform::Anchor::Middle);
+			t.SetVerticalAnchor(GUITransform::Anchor::Middle);
+			AddComponent(m_DepthBar, t);
+
+
+
+			GUIImage i{ Texture::Create("assets/textures/depthBar.png") };
+			i.SetColor(sf::Color(255, 255, 255, 191));
+			AddComponent(m_DepthBar, i);
+		}
+
+
+
 		// players dont collide with enemies in terms of physics
 		// and enemies shouldn't collide with other enemies
 		Physics::IgnoreCollisions("Player", "Enemies");
@@ -185,6 +204,7 @@ private:
 
 	std::vector<Entity> m_PlayerHearts;
 	Entity m_CrystalScoreText = INVALID_ENTITY_ID;
+	Entity m_DepthBar = INVALID_ENTITY_ID;
 
 
 	Entity m_WolfManager = INVALID_ENTITY_ID;
