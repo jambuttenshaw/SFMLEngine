@@ -136,6 +136,8 @@ public:
 			auto& statScript = AddNativeScript<PlayerStatsController>(m_Player);
 			statScript.SetupHearts(&m_PlayerHearts);
 
+			auto& levelManager = AddNativeScript<LevelManager>(m_Player);
+			levelManager.SetMainScene(this);
 
 			AddNativeScript<DepthFinder>(m_Player);
 
@@ -167,12 +169,6 @@ public:
 			AddNativeScript<WolfManager>(m_WolfManager);
 		}
 
-		{
-			m_LevelManager = CreateEntity();
-			auto& script = AddNativeScript<LevelManager>(m_LevelManager);
-			script.SetMainScene(this);
-		}
-
 		// players dont collide with enemies in terms of physics
 		// and enemies shouldn't collide with other enemies
 		Physics::IgnoreCollisions("Player", "Enemies");
@@ -192,6 +188,5 @@ private:
 
 
 	Entity m_WolfManager = INVALID_ENTITY_ID;
-	Entity m_LevelManager = INVALID_ENTITY_ID;
 };
 

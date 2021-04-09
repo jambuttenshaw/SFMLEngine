@@ -31,6 +31,12 @@ void CrystalCollector::FindCrystalMap()
 
 void CrystalCollector::Update(Timestep ts)
 {
+	if (Input::IsKeyPressed(sf::Keyboard::J))
+	{
+		sf::Vector2f pos = m_CrystalMap->TileToWorldCoordinates(m_CrystalMap->WorldToTileCoordinates(m_Transform->Position));
+		LOG_TRACE("Player head is in tile at: {0}, {1}", pos.x, pos.y);
+	}
+	
 	if (Input::IsKeyPressed(sf::Keyboard::Space))
 	{
 		if (m_CollidingCrystals.size() > 0)

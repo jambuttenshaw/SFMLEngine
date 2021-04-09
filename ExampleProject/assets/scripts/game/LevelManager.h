@@ -17,9 +17,9 @@ public:
 		m_PlayerController = &GetNativeScript<PlayerController>(player);
 	}
 
-	void Update(Timestep ts) override
+	void OnTriggerEnter(const Collision& collision) override
 	{
-		if (Input::IsKeyPressed(sf::Keyboard::H))
+		if (GetEntityTag(collision.Other) == "LevelEnd")
 		{
 			// delete the current level scene
 			// very crude method of deleting all scenes that dont contain a player

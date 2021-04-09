@@ -101,6 +101,22 @@ public:
 		return crystals;
 	}
 
+
+	static Entity CreateLevelEnd(Scene* scene, const sf::Vector2f& position)
+	{
+		Entity levelEnd = scene->CreateEntity();
+		scene->SetEntityTag(levelEnd, "LevelEnd");
+
+		scene->AddComponent(levelEnd, Transform{ position });
+		BoxCollider collider{ { 32, 32 }, { 0, 0 } };
+		collider.IsTrigger = true;
+		scene->AddComponent(levelEnd, collider);
+		scene->AddComponent(levelEnd, ColliderInfo{ ColliderType::Box });
+
+		return levelEnd;
+	}
+
+
 private:
 	static ResourceID s_TilePaletteID;
 };
