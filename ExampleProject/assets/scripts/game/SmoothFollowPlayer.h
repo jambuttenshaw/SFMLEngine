@@ -31,6 +31,8 @@ public:
 		}
 	}
 
+	void ImmediateReset() { m_Transform->Position = m_PlayerTransform->Position; }
+
 	void SetPlayerTransform(Transform* playerTransform) { m_PlayerTransform = playerTransform; }
 
 private:

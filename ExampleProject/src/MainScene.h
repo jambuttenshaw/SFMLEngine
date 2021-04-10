@@ -153,6 +153,7 @@ public:
 
 		{
 			m_Camera = CreateEntity();
+			SetEntityTag(m_Camera, "MainCamera");
 
 			AddComponent(m_Camera, Transform{ });
 

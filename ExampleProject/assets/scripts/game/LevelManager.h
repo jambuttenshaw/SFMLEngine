@@ -13,8 +13,9 @@ public:
 	void Start() override
 	{
 		m_App = Application::GetApplicationHandle();
-		Entity player = GetEntitiesWithTag("Player")[0];
-		m_PlayerController = &GetNativeScript<PlayerController>(player);
+
+		m_PlayerController = &GetNativeScript<PlayerController>(GetEntitiesWithTag("Player")[0]);
+		m_CameraController = &GetNativeScript<SmoothFollowPlayer>(GetEntitiesWithTag("MainCamera")[0]);
 	}
 
 	void OnTriggerEnter(const Collision& collision) override
@@ -35,6 +36,8 @@ public:
 			}
 			m_App->LoadScene<Level1>(LoadSceneMode::Additive);
 			m_PlayerController->Reset();
+			// snaps the camera to the players position
+			m_CameraController->ImmediateReset();
 
 			m_LoadedLevel1 = true;
 		}
@@ -49,4 +52,5 @@ private:
 	bool m_LoadedLevel1 = false;
 
 	PlayerController* m_PlayerController = nullptr;
+	SmoothFollowPlayer* m_CameraController = nullptr;
 };
