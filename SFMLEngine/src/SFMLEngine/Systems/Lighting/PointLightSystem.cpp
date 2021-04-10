@@ -52,7 +52,7 @@ namespace SFMLEngine {
 				// get a reference to the light component on this entity
 				PointLight& light = m_Coordinator->GetComponent<PointLight>(entity);
 				// if it is static we dont want to reupload the light data
-				if (light.Static) continue;
+				if (light.IsStatic()) continue;
 
 				// find out if the light component has been modified since last frame
 				bool modified = ComponentModified(light);
@@ -80,9 +80,9 @@ namespace SFMLEngine {
 					// if the light has been modified then we want to upload the new data
 					if (modified)
 					{
-						mat->SetProperty(lightIndex + ".Intensity", light.Intensity);
-						mat->SetProperty(lightIndex + ".Range", light.Range);
-						mat->SetProperty(lightIndex + ".Color", light.Color);
+						mat->SetProperty(lightIndex + ".Intensity", light.GetIntensity());
+						mat->SetProperty(lightIndex + ".Range", light.GetInverseRange());
+						mat->SetProperty(lightIndex + ".Color", light.GetColor());
 					}
 				}
 				// if the light was flagged as modified we want to reset this now that the lighting is uploaded
@@ -116,7 +116,7 @@ namespace SFMLEngine {
 
 	bool PointLightSystem::IsStatic(Entity entity)
 	{
-		return m_Coordinator->GetComponent<PointLight>(entity).Static;
+		return m_Coordinator->GetComponent<PointLight>(entity).IsStatic();
 	}
 
 	void PointLightSystem::UploadStaticLight(Entity entity, int index)
@@ -135,9 +135,9 @@ namespace SFMLEngine {
 			std::string lightIndex("u_PointLights[" + std::to_string(index) + "]");
 			auto& pos = transform.GetWorldPosition();
 			mat->SetProperty(lightIndex + ".Position", sf::Vector3f(pos.x, pos.y, LIGHT_Z_VALUE));
-			mat->SetProperty(lightIndex + ".Intensity", light.Intensity);
-			mat->SetProperty(lightIndex + ".Range", light.Range);
-			mat->SetProperty(lightIndex + ".Color", light.Color);
+			mat->SetProperty(lightIndex + ".Intensity", light.GetIntensity());
+			mat->SetProperty(lightIndex + ".Range", light.GetInverseRange());
+			mat->SetProperty(lightIndex + ".Color", light.GetColor());
 			
 		}
 	}

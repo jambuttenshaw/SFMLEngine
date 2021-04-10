@@ -64,7 +64,7 @@ namespace SFMLEngine {
 		for (auto const& collider : s_CollisionSystem->GetAllCollidersSharingPartition(sf::FloatRect{ centre.x - radius, centre.y - radius, 2 * radius, 2 * radius }))
 		{
 			// check to make sure this collider is compatible with the layer mask
-			Layer colliderLayer = s_Coordinator->GetComponent<Identity>(collider->Owner).EntityLayer;
+			Layer colliderLayer = s_Coordinator->GetComponent<Identity>(collider->Owner).GetLayer();
 			// we only want to collide with colliders that agree with the layer mask
 			// and that are not triggers
 			if ((colliderLayer & layerMask) == colliderLayer && !collider->ColliderPtr->IsTrigger())
@@ -90,7 +90,7 @@ namespace SFMLEngine {
 		for (auto const& collider : s_CollisionSystem->GetAllCollidersSharingPartition(rect))
 		{
 			// check to make sure this collider is compatible with the layer mask
-			Layer colliderLayer = s_Coordinator->GetComponent<Identity>(collider->Owner).EntityLayer;
+			Layer colliderLayer = s_Coordinator->GetComponent<Identity>(collider->Owner).GetLayer();
 			// we only want to collide with colliders that agree with the layer mask
 			// and that are not triggers
 			if ((colliderLayer & layerMask) == colliderLayer && !collider->ColliderPtr->IsTrigger())

@@ -19,7 +19,7 @@ namespace SFMLEngine {
 	{
 		auto& id = m_Coordinator->GetComponent<Identity>(entity);
 
-		auto& entities = m_TagMap[id.Tag];
+		auto& entities = m_TagMap[id.GetTag()];
 
 		size_t index = 0;
 		for (auto const& e : entities)
@@ -59,15 +59,15 @@ namespace SFMLEngine {
 		auto& id = m_Coordinator->GetComponent<Identity>(entity);
 
 		// check that the entity actually has a tag
-		if (id.Tag == "NULL") return;
+		if (id.GetTag() == "NULL") return;
 
 
 		// check if the tag already exists
-		if (m_TagMap.find(id.Tag) == m_TagMap.end())
+		if (m_TagMap.find(id.GetTag()) == m_TagMap.end())
 		{
 			// this is a new tag
 			std::vector<Entity> entities{ entity };
-			m_TagMap.insert(std::make_pair(id.Tag, entities));
+			m_TagMap.insert(std::make_pair(id.GetTag(), entities));
 		}
 		else
 		{
@@ -75,8 +75,9 @@ namespace SFMLEngine {
 			// add this entity to the vector of entites associated with this tag
 
 			// check this entity hasn't already been registered with this tag
+			const std::string& tag = id.GetTag();
 			bool found = false;
-			for (auto& e : m_TagMap[id.Tag])
+			for (auto& e : m_TagMap[tag])
 			{
 				if (e == entity)
 				{
@@ -84,7 +85,7 @@ namespace SFMLEngine {
 					break;
 				}
 			}
-			if (!found) m_TagMap[id.Tag].push_back(entity);
+			if (!found) m_TagMap[tag].push_back(entity);
 		}
 	}
 

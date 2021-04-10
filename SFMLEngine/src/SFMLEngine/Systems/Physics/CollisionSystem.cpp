@@ -169,8 +169,8 @@ namespace SFMLEngine {
 	const Collision CollisionSystem::TestCollision(Entity entity, const ColliderData* const other)
 	{
 		// make sure entity and other are in layers that can collide
-		Layer entityLayer = m_Coordinator->GetComponent<Identity>(entity).EntityLayer;
-		Layer otherLayer = m_Coordinator->GetComponent<Identity>(other->Owner).EntityLayer;
+		Layer entityLayer = m_Coordinator->GetComponent<Identity>(entity).GetLayer();
+		Layer otherLayer = m_Coordinator->GetComponent<Identity>(other->Owner).GetLayer();
 
 		if ((entityLayer & Physics::GetPhysicsLayerMask(otherLayer)) == entityLayer || (other->ColliderPtr->IsTrigger()))
 		{

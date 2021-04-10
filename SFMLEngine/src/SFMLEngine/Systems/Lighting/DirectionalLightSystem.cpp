@@ -46,7 +46,7 @@ namespace SFMLEngine {
 			for (auto const& entity : m_Entities)
 			{
 				DirectionalLight& light = m_Coordinator->GetComponent<DirectionalLight>(entity);
-				if (!ComponentModified(light) || light.Static) continue;
+				if (!ComponentModified(light) || light.IsStatic()) continue;
 
 				for (const auto& matData : Material::GetAllMaterialsInUse())
 				{
@@ -55,9 +55,9 @@ namespace SFMLEngine {
 					Material* mat = ResourceManager::GetResourceHandle<Material>(matData.MaterialID);
 
 					std::string lightIndex("u_DirectionalLights[" + std::to_string(i) + "]");
-					mat->SetProperty(lightIndex + ".Direction", light.Direction);
-					mat->SetProperty(lightIndex + ".Intensity", light.Intensity);
-					mat->SetProperty(lightIndex + ".Color", light.Color);
+					mat->SetProperty(lightIndex + ".Direction", light.GetDirection());
+					mat->SetProperty(lightIndex + ".Intensity", light.GetIntensity());
+					mat->SetProperty(lightIndex + ".Color", light.GetColor());
 				}
 
 				ResetModified(light);
@@ -90,7 +90,7 @@ namespace SFMLEngine {
 
 	bool DirectionalLightSystem::IsStatic(Entity entity)
 	{
-		return m_Coordinator->GetComponent<DirectionalLight>(entity).Static;
+		return m_Coordinator->GetComponent<DirectionalLight>(entity).IsStatic();
 	}
 
 	void DirectionalLightSystem::UploadStaticLight(Entity entity, int index)
@@ -109,9 +109,9 @@ namespace SFMLEngine {
 			mat->SetProperty("u_NumDirectionalLights", m_LightCount + m_StaticLightCount);
 
 			std::string lightIndex("u_DirectionalLights[" + std::to_string(index) + "]");
-			mat->SetProperty(lightIndex + ".Direction", light.Direction);
-			mat->SetProperty(lightIndex + ".Intensity", light.Intensity);
-			mat->SetProperty(lightIndex + ".Color", light.Color);
+			mat->SetProperty(lightIndex + ".Direction", light.GetDirection());
+			mat->SetProperty(lightIndex + ".Intensity", light.GetIntensity());
+			mat->SetProperty(lightIndex + ".Color", light.GetColor());
 		}
 	}
 }

@@ -7,48 +7,52 @@
 
 namespace SFMLEngine {
 
-	struct PointLight
+	class PointLight
 	{
+	public:
 		friend class System;
 
-		float Intensity;
-		float Range;
-		sf::Color Color;
-		bool Static;
 
 		PointLight()
-			: Range(10.0f), Intensity(1.0f), Color(sf::Color::White), Static(false)
+			: m_Range(10.0f), m_Intensity(1.0f), m_Color(sf::Color::White), m_Static(false)
 		{}
 		PointLight(float intensity, float range, const sf::Color& color, bool staticLight = false)
-			: Intensity(intensity), Range(1.0f / range), Color(color), Static(staticLight)
+			: m_Intensity(intensity), m_Range(1.0f / range), m_Color(color), m_Static(staticLight)
 		{}
 		
-		void SetIntensity(float intensity)
+		inline float GetIntensity() const { return m_Intensity; }
+		inline void SetIntensity(float intensity)
 		{
-			Intensity = intensity;
+			m_Intensity = intensity;
 			m_Modified = true;
 		}
 
-		void SetRange(float range)
+		inline float GetRange() const { return 1.0f / m_Range; }
+		inline float GetInverseRange() const { return m_Range; }
+		inline void SetRange(float range)
 		{
-			if (range < 0) range = 0.0000001f;
-			Range = 1.0f / range;
+			if (range <= 0) range = 0.0000001f;
+			m_Range = 1.0f / range;
 
 			m_Modified = true;
-		}
-		float GetRange()
-		{
-			return 1.0f / Range;
 		}
 		
-		void SetColor(const sf::Color& color)
+		inline const sf::Color& GetColor() const { return m_Color; }
+		inline void SetColor(const sf::Color& color)
 		{
-			Color = color;
+			m_Color = color;
 			m_Modified = true;
 		}
+
+		inline bool IsStatic() const { return m_Static; }
 
 	private:
 		bool m_Modified = true;
+
+		float m_Intensity;
+		float m_Range;
+		sf::Color m_Color;
+		bool m_Static;
 	};
 
 }
