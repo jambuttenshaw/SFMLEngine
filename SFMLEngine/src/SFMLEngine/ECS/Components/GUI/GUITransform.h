@@ -38,7 +38,7 @@ namespace SFMLEngine {
 
 
 
-		sf::Transform GetTransformMatrix()
+		inline sf::Transform GetTransformMatrix() const
 		{
 			sf::Transform t;
 			t.translate(static_cast<sf::Vector2f>(m_ScreenPosition));
@@ -47,18 +47,18 @@ namespace SFMLEngine {
 
 
 
-		void SetPosition(const sf::Vector2f& pos)
+		inline void SetPosition(const sf::Vector2f& pos)
 		{
 			m_Position = Math::Clamp(pos, { 0, 0 }, { 1, 1 });
 			m_Modified = true;
 		}
-		const sf::Vector2f& GetPosition() { return m_Position; }
+		inline const sf::Vector2f& GetPosition() const { return m_Position; }
 
-		void SetScreenPosition(const sf::Vector2i& pos) { m_ScreenPosition = pos; }
-		const sf::Vector2i& GetScreenPosition() { return m_ScreenPosition; }
+		inline void SetScreenPosition(const sf::Vector2i& pos) { m_ScreenPosition = pos; }
+		inline const sf::Vector2i& GetScreenPosition() const { return m_ScreenPosition; }
 
 
-		void SetHorizontalAnchor(Anchor a)
+		inline void SetHorizontalAnchor(Anchor a)
 		{
 			if (a == Anchor::Top || a == Anchor::Bottom)
 			{
@@ -69,10 +69,10 @@ namespace SFMLEngine {
 
 			m_Modified = true;
 		}
-		Anchor GetHorizontalAnchor() { return m_HorizontalAnchor; }
+		inline Anchor GetHorizontalAnchor() const { return m_HorizontalAnchor; }
 
 
-		void SetVerticalAnchor(Anchor a)
+		inline void SetVerticalAnchor(Anchor a)
 		{
 			if (a == Anchor::Left || a == Anchor::Right)
 			{
@@ -83,10 +83,10 @@ namespace SFMLEngine {
 
 			m_Modified = true;
 		}
-		Anchor GetVerticalAnchor() { return m_VerticalAnchor; }
+		inline Anchor GetVerticalAnchor() const { return m_VerticalAnchor; }
 
 
-		GUIElementType GetElementType() { return m_ElementType; }
+		inline GUIElementType GetElementType() const { return m_ElementType; }
 
 
 	private:

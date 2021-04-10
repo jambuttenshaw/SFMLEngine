@@ -33,7 +33,7 @@ public:
 		Animation idle{ "idle", {
 			{ 0, 0, 64, 32 } },
 			0.1f
-		}; idle.Looping = false;
+		}; idle.SetLooping(false);
 
 		Animation sleep{ "sleep", {
 			{ 0,   0, 64, 32 },
@@ -41,7 +41,7 @@ public:
 			{ 128, 0, 64, 32 },
 			{ 192, 0, 64, 32 } },
 			0.1f
-		}; sleep.Looping = false;
+		}; sleep.SetLooping(false);
 
 		Animation wake{ "wake", {
 			{ 192, 0, 64, 32 },
@@ -49,7 +49,7 @@ public:
 			{ 64,  0, 64, 32 },
 			{ 0,   0, 64, 32 } },
 			0.05f
-		}; wake.Looping = false;
+		}; wake.SetLooping(false);
 
 		Animation alert{ "alert", {
 			{ 0,   64, 64, 32,  0,  0 },
@@ -57,7 +57,7 @@ public:
 			{ 128, 55, 64, 41,  0, -9 },
 			{ 192, 55, 64, 41,  0, -9 } },
 			0.1f
-		}; alert.Looping = false;
+		}; alert.SetLooping(false);
 
 		Animation walk{ "walk", {
 			{ 0,   96, 64, 32 },
@@ -84,7 +84,7 @@ public:
 			{ 192, 160, 64, 32 },
 			{ 256, 160, 64, 32 } },
 			0.1f
-		}; bite.Looping = false;
+		}; bite.SetLooping(false);
 
 		Animation climb{ "climb", {
 			{ 320, 256, 32, 64 },

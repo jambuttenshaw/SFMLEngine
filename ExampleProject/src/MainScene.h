@@ -71,7 +71,7 @@ public:
 				{32, 320, 32, 64},
 				{64, 320, 32, 64} },
 				0.1f
-			}; jump.Looping = false;
+			}; jump.SetLooping(false);
 			Animation climb{ "climb", {
 				{0, 510, 32, 64},
 				{29, 510, 32, 64},
@@ -83,7 +83,7 @@ public:
 			Animation idleCrawl{ "idleCrawl", {
 				{0, 288, 64, 32} },
 				0.1f
-			}; idleCrawl.Looping = false;
+			}; idleCrawl.SetLooping(false);
 			Animation crawl{ "crawl", {
 				{0, 288, 64, 32},
 				{61, 288, 64, 32},
@@ -101,7 +101,7 @@ public:
 				{97, 1024, 32, 64},
 				{128, 1024, 32, 64} },
 				0.09f
-			}; hurt.Looping = false;
+			}; hurt.SetLooping(false);
 
 			Animator animator{ AnimableType::Sprite };
 			animator.AddAnimation(idle);
@@ -158,7 +158,7 @@ public:
 			AddComponent(m_Camera, Transform{ });
 
 			Camera cam{ };
-			cam.Zoom = 0.6f;
+			cam.SetZoom(0.6f);
 			AddComponent(m_Camera, cam);
 
 			AddNativeScript<SmoothFollowPlayer>(m_Camera);

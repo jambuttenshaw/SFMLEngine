@@ -11,103 +11,113 @@
 
 namespace SFMLEngine {
 
-	struct AnimationFrame
+	class AnimationFrame
 	{
-		sf::IntRect ImageRect;
-		sf::Vector2f Offset;
+	public:
 
 		AnimationFrame()
-			: ImageRect(), Offset()
+			: m_ImageRect(), m_Offset()
 		{}
 		AnimationFrame(const sf::IntRect& rect)
-			: ImageRect(rect), Offset()
+			: m_ImageRect(rect), m_Offset()
 		{}
 		AnimationFrame(const sf::IntRect& rect, const sf::Vector2f& offset)
-			: ImageRect(rect), Offset(offset)
+			: m_ImageRect(rect), m_Offset(offset)
 		{}
 
 		AnimationFrame(int x, int y, int w, int h)
-			: ImageRect(x, y, w, h), Offset()
+			: m_ImageRect(x, y, w, h), m_Offset()
 		{}
 		AnimationFrame(int x, int y, int w, int h, float oX, float oY)
-			: ImageRect(x, y, w, h), Offset(oX, oY)
+			: m_ImageRect(x, y, w, h), m_Offset(oX, oY)
 		{}
+
+
+		inline const sf::IntRect& GetRect() const { return m_ImageRect; }
+		inline const sf::Vector2f& GetOffset() const { return m_Offset; }
+
+	private:
+		sf::IntRect m_ImageRect;
+		sf::Vector2f m_Offset;
 	};
 
-	struct Animation
+	class Animation
 	{
-		std::string Name;
-
-		AnimationFrame* CurrentFrame = nullptr;
-		size_t FrameIndex = 0;
-		std::vector<AnimationFrame> Frames;
-
-		bool Flipped = false;
-		bool Looping = true;
-		bool Playing = true;
-
-		float AnimationSpeed = 1.0f;
-		float ElapsedTime = 0;
+	public:
 
 		Animation()
 		{}
 		Animation(const std::string& name, std::initializer_list<AnimationFrame> frames, float speed = 1.0f)
-			: Name(name), Frames(frames), AnimationSpeed(speed)
+			: m_Name(name), m_Frames(frames), m_AnimationSpeed(speed)
 		{}
-		Animation(const Animation& other)
+
+		inline void AddFrame(sf::IntRect frame)
 		{
-			Name = other.Name;
-			CurrentFrame = other.CurrentFrame;
-			FrameIndex = other.FrameIndex;
-			Frames = other.Frames;
-
-			Flipped = other.Flipped;
-			Looping = other.Looping;
-			Playing = other.Playing;
-
-			AnimationSpeed = other.AnimationSpeed;
-			ElapsedTime = other.ElapsedTime;
-		}
-
-		void AddFrame(sf::IntRect frame)
-		{
-			Frames.push_back(frame);
+			m_Frames.push_back(frame);
 		}
 
 
 		void Animate(Timestep ts)
 		{
-			if (Playing)
+			if (m_Playing)
 			{
-				ElapsedTime += ts;
-				if (ElapsedTime >= AnimationSpeed)
+				m_ElapsedTime += ts;
+				if (m_ElapsedTime >= m_AnimationSpeed)
 				{
-					FrameIndex++;
-					if (FrameIndex >= Frames.size())
+					m_FrameIndex++;
+					if (m_FrameIndex >= m_Frames.size())
 					{
-						if (Looping)
+						if (m_Looping)
 						{
-							FrameIndex = 0;
+							m_FrameIndex = 0;
 						}
 						else
 						{
-							FrameIndex--;
-							Playing = false;
+							m_FrameIndex--;
+							m_Playing = false;
 						}
 					}
-					CurrentFrame = &Frames[FrameIndex];
-					ElapsedTime = 0;
+					m_CurrentFrame = &m_Frames[m_FrameIndex];
+					m_ElapsedTime = 0;
 				}
 			}
 		}
 
-		void Reset()
+		inline void Reset()
 		{
-			ElapsedTime = 0;
-			FrameIndex = 0;
-			CurrentFrame = &Frames[FrameIndex];
-			Playing = true;
+			m_ElapsedTime = 0;
+			m_FrameIndex = 0;
+			m_CurrentFrame = &m_Frames[m_FrameIndex];
+			m_Playing = true;
 		}
+
+
+		inline const std::string& GetName() const { return m_Name; }
+		inline const AnimationFrame* const GetCurrentFrame() const { return m_CurrentFrame; }
+
+		inline bool IsFlipped() const { return m_Flipped; }
+		inline void SetFlipped(bool flipped) { m_Flipped = flipped; }
+
+		inline bool IsLooping() const { return m_Looping; }
+		inline void SetLooping(bool looping) { m_Looping = looping; }
+
+		inline bool IsPlaying() const { return m_Playing; }
+		inline void SetPlaying(bool playing) { m_Playing = playing; }
+
+	private:
+		std::string m_Name;
+
+		AnimationFrame* m_CurrentFrame = nullptr;
+		size_t m_FrameIndex = 0;
+		std::vector<AnimationFrame> m_Frames;
+
+		bool m_Flipped = false;
+		bool m_Looping = true;
+		bool m_Playing = true;
+
+		float m_AnimationSpeed = 1.0f;
+		float m_ElapsedTime = 0;
+
 
 	};
 
@@ -133,18 +143,18 @@ namespace SFMLEngine {
 		{}
 
 
-		AnimableType GetAnimableType() { return m_ObjectType; }
+		inline AnimableType GetAnimableType() const { return m_ObjectType; }
 		
 
-		bool GetFlipped() { return m_Flip; }
-		void SetFlipped(bool flip) { m_Flip = flip; }
+		inline bool GetFlipped() const { return m_Flip; }
+		inline void SetFlipped(bool flip) { m_Flip = flip; }
 
 
 		void AddAnimation(Animation anim)
 		{
-			SFMLE_CORE_ASSERT(m_Animations.find(anim.Name) == m_Animations.end(), "Animation with that name already exists!");
-			SFMLE_CORE_ASSERT(anim.Name != "null", "Cannot create animation with that name!");
-			m_Animations.insert(std::make_pair(anim.Name, anim));
+			SFMLE_CORE_ASSERT(m_Animations.find(anim.GetName()) == m_Animations.end(), "Animation with that name already exists!");
+			SFMLE_CORE_ASSERT(anim.GetName() != "null", "Cannot create animation with that name!");
+			m_Animations.insert(std::make_pair(anim.GetName(), anim));
 		}
 
 
@@ -158,32 +168,32 @@ namespace SFMLEngine {
 			}
 		}
 
-		void Stop()
+		inline void Stop()
 		{
 			m_CurrentAnimation = "null";
 		}
-		void Pause()
+		inline void Pause()
 		{
-			m_Animations[m_CurrentAnimation].Playing = false;
+			m_Animations[m_CurrentAnimation].SetPlaying(false);
 		}
-		void Resume()
+		inline void Resume()
 		{
-			m_Animations[m_CurrentAnimation].Playing = true;
+			m_Animations[m_CurrentAnimation].SetPlaying(true);
 		}
 
-		const std::string& GetCurrentAnimationName() { return m_CurrentAnimation; }
+		inline const std::string& GetCurrentAnimationName() const { return m_CurrentAnimation; }
 
-		Animation& GetCurrentAnimation()
+		inline Animation& GetCurrentAnimation()
 		{
 			return m_Animations[m_CurrentAnimation];
 		}
-		const AnimationFrame& GetCurrentFrame()
+		inline const AnimationFrame& GetCurrentFrame()
 		{
-			return *m_Animations[m_CurrentAnimation].CurrentFrame;
+			return *m_Animations[m_CurrentAnimation].GetCurrentFrame();
 		}
 
 
-		void Reset()
+		inline void Reset()
 		{
 			for (auto& anim : m_Animations) anim.second.Reset();
 		}

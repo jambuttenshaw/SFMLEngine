@@ -29,7 +29,7 @@ namespace SFMLEngine {
 		}
 		auto& currentAnimation = animator.GetCurrentAnimation();
 
-		animObject->SetFrame(*currentAnimation.CurrentFrame, currentAnimation.Flipped != animator.GetFlipped());
+		animObject->SetFrame(*currentAnimation.GetCurrentFrame(), currentAnimation.IsFlipped() != animator.GetFlipped());
 	}
 
 	void AnimationSystem::EntityRemovedFromSystem(Entity entity)
@@ -57,7 +57,7 @@ namespace SFMLEngine {
 			currentAnimation.Animate(ts);
 
 
-			animObject->SetFrame(*currentAnimation.CurrentFrame, currentAnimation.Flipped != animator.GetFlipped());
+			animObject->SetFrame(*currentAnimation.GetCurrentFrame(), currentAnimation.IsFlipped() != animator.GetFlipped());
 		}
 	}
 }

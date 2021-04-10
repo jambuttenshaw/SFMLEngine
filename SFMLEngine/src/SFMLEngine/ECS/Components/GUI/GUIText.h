@@ -28,51 +28,51 @@ namespace SFMLEngine {
 			m_TextObject.setFillColor(m_TextColor);
 		}
 
-		ResourceID GetFont() { return m_Font; }
-		void SetFont(ResourceID newFont)
+		inline ResourceID GetFont() const { return m_Font; }
+		inline void SetFont(ResourceID newFont)
 		{ 
 			m_Font = newFont;
 			m_TextObject.setFont(*ResourceManager::GetResourceHandle<sf::Font>(m_Font));
 		}
 
-		const std::string& GetString() { return m_String; }
-		void SetString(const std::string& s)
+		inline const std::string& GetString() const { return m_String; }
+		inline void SetString(const std::string& s)
 		{ 
 			m_String = s;
 			m_TextObject.setString(m_String);
 		}
 
-		int GetFontSize() { return m_FontSize; }
-		void SetFontSize(int newFontSize) 
+		inline int GetFontSize() const { return m_FontSize; }
+		inline void SetFontSize(int newFontSize) 
 		{ 
 			m_FontSize = newFontSize;
 			m_TextObject.setCharacterSize(m_FontSize);
 		}
 
-		const sf::Color& GetColor() { return m_TextColor; }
-		void SetColor(const sf::Color& color) 
+		inline const sf::Color& GetColor() const { return m_TextColor; }
+		inline void SetColor(const sf::Color& color) 
 		{ 
 			m_TextColor = color;
 			m_TextObject.setFillColor(m_TextColor);
 		}
 
 		
-		const sf::Vector2f& GetPadding() { return m_Padding; }
-		void SetPadding(const sf::Vector2f& padding) { m_Padding = padding; }
+		inline const sf::Vector2f& GetPadding() const { return m_Padding; }
+		inline void SetPadding(const sf::Vector2f& padding) { m_Padding = padding; }
 
 
-		virtual sf::Vector2f GetSize() override
+		inline virtual sf::Vector2f GetSize() const override
 		{
 			auto bounds = m_TextObject.getLocalBounds();
 			return { bounds.width + m_Padding.x, bounds.height + m_Padding.y };
 		}
-		virtual void SetScale(const sf::Vector2f& scale) override
+		inline virtual void SetScale(const sf::Vector2f& scale) override
 		{
 			m_TextObject.setScale(scale);
 		}
 
 
-		const sf::Text& GetTextObject() { return m_TextObject; }
+		inline const sf::Text& GetTextObject() const { return m_TextObject; }
 
 
 

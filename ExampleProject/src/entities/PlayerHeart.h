@@ -20,15 +20,15 @@ public:
 		Animation full{ "full", {
 			{ 0, 0,   64, 64 } },
 			1.0f
-		}; full.Looping = false;
+		}; full.SetLooping(false);
 		Animation half{ "half", {
 			{ 64, 0,   64, 64 } },
 			1.0f
-		}; half.Looping = false;
+		}; half.SetLooping(false);
 		Animation empty{ "empty", {
 			{ 128, 0,   64, 64 } },
 			1.0f
-		}; empty.Looping = false;
+		}; empty.SetLooping(false);
 
 		Animator animator{ AnimableType::GUIImage };
 		animator.AddAnimation(full);

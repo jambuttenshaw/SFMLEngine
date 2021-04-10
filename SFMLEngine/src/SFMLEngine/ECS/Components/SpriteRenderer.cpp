@@ -72,13 +72,13 @@ namespace SFMLEngine {
 	{
 		if (flipped)
 		{
-			m_Sprite.setTextureRect(Math::FlipRect(frame.ImageRect));
-			m_Offset = frame.Offset;
+			m_Sprite.setTextureRect(Math::FlipRect(frame.GetRect()));
+			m_Offset = frame.GetOffset();
 		}
 		else
 		{
-			m_Sprite.setTextureRect(frame.ImageRect);
-			m_Offset.y = frame.Offset.y;
+			m_Sprite.setTextureRect(frame.GetRect());
+			m_Offset.y = frame.GetOffset().y;
 		}
 	}
 

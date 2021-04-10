@@ -8,6 +8,6 @@
 
 namespace SFMLEngine {
 	Camera::Camera()
-		: Size(Application::GetWindowSize()), Viewport(sf::FloatRect(0.0f, 0.0f, 1.0f, 1.0f)), Zoom(1.0f), Main(true)
+		: m_Size(Application::GetWindowSize()), m_Viewport(sf::FloatRect(0.0f, 0.0f, 1.0f, 1.0f)), m_Zoom(1.0f), m_Main(true)
 	{}
 }

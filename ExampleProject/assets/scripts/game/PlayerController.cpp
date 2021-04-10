@@ -67,7 +67,7 @@ void PlayerController::Update(Timestep ts)
 
 	if (m_Hurting)
 	{
-		if (!m_Animator->GetCurrentAnimation().Playing)
+		if (!m_Animator->GetCurrentAnimation().IsPlaying())
 		{
 			// the attack animation has finished playing
 			m_Hurting = false;

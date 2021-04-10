@@ -23,21 +23,21 @@ namespace SFMLEngine {
 			m_Sprite.setTexture(*ResourceManager::GetResourceHandle<sf::Texture>(m_TextureHandle));
 		}
 
-		const sf::Sprite& GetSpriteObject() { return m_Sprite; }
+		inline const sf::Sprite& GetSpriteObject() const { return m_Sprite; }
 
-		virtual sf::Vector2f GetSize() override { return static_cast<sf::Vector2f>(m_Sprite.getTexture()->getSize()); }
-		virtual void SetScale(const sf::Vector2f& scale) override { m_Sprite.setScale(scale); }
-		virtual void SetFrame(const AnimationFrame& frame, bool flipped) override
+		inline virtual sf::Vector2f GetSize() const override { return static_cast<sf::Vector2f>(m_Sprite.getTexture()->getSize()); }
+		inline virtual void SetScale(const sf::Vector2f& scale) override { m_Sprite.setScale(scale); }
+		inline virtual void SetFrame(const AnimationFrame& frame, bool flipped) override
 		{ 
-			m_Sprite.setTextureRect(frame.ImageRect);
+			m_Sprite.setTextureRect(frame.GetRect());
 		}
 
-		void SetColor(const sf::Color& c)
+		inline void SetColor(const sf::Color& c)
 		{
 			m_Color = c;
 			m_Sprite.setColor(c);
 		}
-		const sf::Color& GetColor() { return m_Color; }
+		inline const sf::Color& GetColor() const { return m_Color; }
 
 	private:
 		bool m_Modified = false;
