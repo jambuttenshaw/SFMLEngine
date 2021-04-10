@@ -31,13 +31,13 @@ namespace SFMLEngine {
 
 
 		// create a quad for each tile in the tilemap
-		for (auto& tile : TilemapHandle->Tiles)
+		for (auto& tile : m_TilemapHandle->Tiles)
 		{
 			// create a quad and add it to our collision geometry
 
 			// get the info about the collider for this tile from the tile palette
-			const sf::Vector2u& colliderSize = TilemapHandle->PalettePtr->GetColliderSize(tile.TileType);
-			const sf::Vector2i& colliderOffset = TilemapHandle->PalettePtr->GetColliderOffset(tile.TileType);
+			const sf::Vector2u& colliderSize = m_TilemapHandle->PalettePtr->GetColliderSize(tile.TileType);
+			const sf::Vector2i& colliderOffset = m_TilemapHandle->PalettePtr->GetColliderOffset(tile.TileType);
 
 			// dont create geometry for colliders that are missing a dimension
 			// this could be due to data input incorrectly, or could be deliberate to disable the collider for some
@@ -48,13 +48,13 @@ namespace SFMLEngine {
 			m_CollisionGeometry.push_back(
 				BoxCollider{
 					static_cast<sf::Vector2f>(colliderSize), // size
-					{ (tile.Position.x * TilemapHandle->TileSize.x) + colliderOffset.x,
-					  (tile.Position.y * TilemapHandle->TileSize.y) + colliderOffset.y }, // offset
+					{ (tile.Position.x * m_TilemapHandle->TileSize.x) + colliderOffset.x,
+					  (tile.Position.y * m_TilemapHandle->TileSize.y) + colliderOffset.y }, // offset
 					false // dont auto assign the id for the box collider, as it might get deleted later
 				});
 		}
 
-		if (Optimization > OptimizationLevel::None) 
+		if (m_OptimizationLevel > OptimizationLevel::None) 
 		{
 			ZoneScoped;
 			ZoneName("Level1", 6);
@@ -80,7 +80,7 @@ namespace SFMLEngine {
 					// some checks to make sure we actually want to attempt to optimize this quad
 					
 					// if this quad has reached the max size then we do not want to add anymore tiles onto it
-					if (quad.Bounds.width >= MAX_TILEMAP_COLLIDER_SIZE * TilemapHandle->TileSize.x) continue;
+					if (quad.GetLocalBounds().width >= MAX_TILEMAP_COLLIDER_SIZE * m_TilemapHandle->TileSize.x) continue;
 
 
 					// we dont want to try to optimize quads that are to be removed this pass
@@ -94,34 +94,34 @@ namespace SFMLEngine {
 
 						// dont try to combine the quad with itself
 						// thats nonsense
-						if (secondQuad.Bounds == quad.Bounds) continue;
+						if (secondQuad.GetLocalBounds() == quad.GetLocalBounds()) continue;
 
 						// some checks to make sure we actually want to attempt to optimize this quad
 
 						// make sure joining these quads will not make them too large
-						if (secondQuad.Bounds.width + quad.Bounds.width > MAX_TILEMAP_COLLIDER_SIZE * TilemapHandle->TileSize.x) continue;
+						if (secondQuad.GetLocalBounds().width + quad.GetLocalBounds().width > MAX_TILEMAP_COLLIDER_SIZE * m_TilemapHandle->TileSize.x) continue;
 						// make sure this quad hasnt already been marked as deleted
 						if (std::find(indicesToDelete.begin(), indicesToDelete.end(), jIndex) != indicesToDelete.end()) continue;
 
 
 						// make sure this quad perfectly shares an edge with the second one
-						if (secondQuad.Bounds.top == quad.Bounds.top && secondQuad.Bounds.height == quad.Bounds.height)
+						if (secondQuad.GetLocalBounds().top == quad.GetLocalBounds().top && secondQuad.GetLocalBounds().height == quad.GetLocalBounds().height)
 						{
 							// we need to know which quad came first
-							bool firstQuadLeftmost = quad.Bounds.left < secondQuad.Bounds.left;
+							bool firstQuadLeftmost = quad.GetLocalBounds().left < secondQuad.GetLocalBounds().left;
 							// check to see if they are adjacent
-							if (fabsf(quad.Bounds.left - secondQuad.Bounds.left) == (firstQuadLeftmost ? quad.Bounds.width : secondQuad.Bounds.width))
+							if (fabsf(quad.GetLocalBounds().left - secondQuad.GetLocalBounds().left) == (firstQuadLeftmost ? quad.GetLocalBounds().width : secondQuad.GetLocalBounds().width))
 							{
 								// they are adjacent!
 								optimal = false;
 
 								// the new quad is as wide as the other 2 combined
-								quad.Bounds.width += secondQuad.Bounds.width;
+								quad.SetWidth(quad.GetLocalBounds().width + secondQuad.GetLocalBounds().width);
 								if (!firstQuadLeftmost)
 								{
 									// second quad is to the left of the first quad
 									// we also need to move the quad to the left by the width of the second quad
-									quad.Bounds.left -= secondQuad.Bounds.width;
+									quad.SetLeft(quad.GetLocalBounds().left - secondQuad.GetLocalBounds().width);
 								}
 
 								// set the second quad to be removed
@@ -129,7 +129,7 @@ namespace SFMLEngine {
 								indicesToDelete.push_back(jIndex);
 
 								// check if this quad has now reached the max size
-								if (quad.Bounds.width >= MAX_TILEMAP_COLLIDER_SIZE * TilemapHandle->TileSize.x) break;
+								if (quad.GetLocalBounds().width >= MAX_TILEMAP_COLLIDER_SIZE * m_TilemapHandle->TileSize.x) break;
 
 							}
 						}
@@ -149,7 +149,7 @@ namespace SFMLEngine {
 		// the process here is identical as before
 		// but optimizing on the y axis instead of the x axis
 		// effectively the same algorithm, but just switching x with y and width with height
-		if (Optimization > OptimizationLevel::Standard)
+		if (m_OptimizationLevel > OptimizationLevel::Standard)
 		{
 			ZoneScoped;
 			ZoneName("Level2", 6);
@@ -168,7 +168,7 @@ namespace SFMLEngine {
 					index++;
 
 					// if this quad has reached the max size then we do not want to add anymore tiles onto it
-					if (quad.Bounds.height >= MAX_TILEMAP_COLLIDER_SIZE * TilemapHandle->TileSize.y) continue;
+					if (quad.GetLocalBounds().height >= MAX_TILEMAP_COLLIDER_SIZE * m_TilemapHandle->TileSize.y) continue;
 
 
 					// we dont want to try to optimize quads that are to be removed this pass
@@ -181,7 +181,7 @@ namespace SFMLEngine {
 						jIndex++;
 
 						// make sure joining these quads will not make them too large
-						if (secondQuad.Bounds.height + quad.Bounds.height > MAX_TILEMAP_COLLIDER_SIZE * TilemapHandle->TileSize.y) continue;
+						if (secondQuad.GetLocalBounds().height + quad.GetLocalBounds().height > MAX_TILEMAP_COLLIDER_SIZE * m_TilemapHandle->TileSize.y) continue;
 
 
 						if (std::find(indicesToDelete.begin(), indicesToDelete.end(), jIndex) != indicesToDelete.end()) continue;
@@ -189,21 +189,21 @@ namespace SFMLEngine {
 						// quads must have the same x coordinate
 						// they must be the same width
 						// and they must not be the same quad
-						if ((secondQuad.Bounds.left == quad.Bounds.left) && (secondQuad.Bounds.width == quad.Bounds.width) && (secondQuad.Bounds != quad.Bounds))
+						if ((secondQuad.GetLocalBounds().left == quad.GetLocalBounds().left) && (secondQuad.GetLocalBounds().width == quad.GetLocalBounds().width) && (secondQuad.GetLocalBounds() != quad.GetLocalBounds()))
 						{
 							// check to see if they are adjacent
-							bool firstQuadAbove = quad.Bounds.top < secondQuad.Bounds.top;
-							if (fabsf(quad.Bounds.top - secondQuad.Bounds.top) == (firstQuadAbove ? quad.Bounds.height : secondQuad.Bounds.height))
+							bool firstQuadAbove = quad.GetLocalBounds().top < secondQuad.GetLocalBounds().top;
+							if (fabsf(quad.GetLocalBounds().top - secondQuad.GetLocalBounds().top) == (firstQuadAbove ? quad.GetLocalBounds().height : secondQuad.GetLocalBounds().height))
 							{
 								// they are adjacent!
 								optimal = false;
 
-								quad.Bounds.height += secondQuad.Bounds.height;
+								quad.SetHeight(quad.GetLocalBounds().height + secondQuad.GetLocalBounds().height);
 								if (!firstQuadAbove)
 								{
 									// second quad is to the left of the first quad
 									// we also need to move the quad to the left by the width of the second quad
-									quad.Bounds.top -= secondQuad.Bounds.height;
+									quad.SetTop(quad.GetLocalBounds().top - secondQuad.GetLocalBounds().height);
 								}
 
 								// set the second quad to be removed
@@ -211,7 +211,7 @@ namespace SFMLEngine {
 								indicesToDelete.push_back(jIndex);
 
 								// check if this quad has now reached the max size
-								if (quad.Bounds.height >= MAX_TILEMAP_COLLIDER_SIZE * TilemapHandle->TileSize.y) break;
+								if (quad.GetLocalBounds().height >= MAX_TILEMAP_COLLIDER_SIZE * m_TilemapHandle->TileSize.y) break;
 							}
 						}
 					}
@@ -241,7 +241,7 @@ namespace SFMLEngine {
 
 				// if the tilemap collider is a trigger,
 				// then so should all of its sub-colliders
-				i.IsTrigger = IsTrigger;
+				i.SetTrigger(IsTrigger());
 			}
 		}
 	}
@@ -262,12 +262,13 @@ namespace SFMLEngine {
 		sf::Vector2f topLeft, bottomRight;
 		for (auto const& quad : m_CollisionGeometry)
 		{
-			topLeft = Math::Min(topLeft, sf::Vector2f(quad.Bounds.left, quad.Bounds.top));
-			bottomRight = Math::Max(bottomRight, sf::Vector2f(quad.Bounds.left + quad.Bounds.width, quad.Bounds.top + quad.Bounds.height));
+			topLeft = Math::Min(topLeft, sf::Vector2f(quad.GetLocalBounds().left, quad.GetLocalBounds().top));
+			bottomRight = Math::Max(bottomRight, sf::Vector2f(quad.GetLocalBounds().left + quad.GetLocalBounds().width,
+															  quad.GetLocalBounds().top + quad.GetLocalBounds().height));
 		}
 
 		// the size is the distance from the very topleft to the very bottomright
-		Size = bottomRight - topLeft;
+		m_Size = bottomRight - topLeft;
 	}
 
 	void TilemapCollider::DrawDebug(const sf::Transform& transform)
@@ -275,10 +276,10 @@ namespace SFMLEngine {
 		// draws every rect in the tilemap collider for debugging purposes
 		for (auto const& rect : m_CollisionGeometry)
 		{
-			auto& transformed = transform.transformRect(rect.Bounds);
+			auto& transformed = transform.transformRect(rect.GetLocalBounds());
 			DEBUG_DRAW_RECT(sf::Vector2f(transformed.left, transformed.top),
 				sf::Vector2f(transformed.width, transformed.height),
-				IsTrigger ? DebugTools::TRIGGER_COLOR : DebugTools::COLLIDER_COLOR);
+				IsTrigger() ? DebugTools::TRIGGER_COLOR : DebugTools::COLLIDER_COLOR);
 		}
 	}
 

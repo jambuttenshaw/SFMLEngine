@@ -27,17 +27,19 @@ namespace SFMLEngine {
 	{
 		friend class System;
 
-		ColliderType Type;
-
 		ColliderInfo()
-			: Type(ColliderType::Invalid)
+			: m_Type(ColliderType::Invalid)
 		{}
 		ColliderInfo(ColliderType type)
-			: Type(type)
+			: m_Type(type)
 		{}
+
+		inline ColliderType GetType() const { return m_Type; }
 
 	private:
 		bool m_Modified = false;
+		
+		ColliderType m_Type;
 	};
 
 
@@ -50,26 +52,27 @@ namespace SFMLEngine {
 	{
 		friend class System;
 
-
-		// whether the collider is just used as an event trigger
-		// or whether it is also used for physics
-		bool IsTrigger = false;
-
-
 		virtual ~Collider() {};
 
 		void Init();
 
-		virtual void SetTransform(Transform* transform) { m_Transform = transform; }
+		inline virtual void SetTransform(Transform* transform) { m_Transform = transform; }
 
 		virtual sf::FloatRect GetLocalBounds() const = 0;
-		sf::FloatRect GetGlobalBounds() const { return m_Transform->GetLocalToWorldTransformMatrix().transformRect(GetLocalBounds()); }
+		inline sf::FloatRect GetGlobalBounds() const { return m_Transform->GetLocalToWorldTransformMatrix().transformRect(GetLocalBounds()); }
 
-		ColliderID GetColliderID() const { return m_ColliderID; }
+		inline ColliderID GetColliderID() const { return m_ColliderID; }
 		void SetNewColliderID();
+
+		inline void SetTrigger(bool trigger) { m_IsTrigger = trigger; }
+		inline bool IsTrigger() const { return m_IsTrigger; }
 
 	protected:
 		bool m_Modified = false;
+		
+		// whether the collider is just used as an event trigger
+		// or whether it is also used for physics
+		bool m_IsTrigger = false;
 
 		Transform* m_Transform = nullptr;
 		ColliderID m_ColliderID = NULL_COLLIDER_ID;

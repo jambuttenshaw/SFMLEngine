@@ -114,7 +114,7 @@ namespace SFMLEngine {
 					collider.GetGlobalBounds(),
 					collisionData.second,
 					other->ID,
-					other->ColliderPtr->IsTrigger
+					other->ColliderPtr->IsTrigger()
 				};
 			}
 			else

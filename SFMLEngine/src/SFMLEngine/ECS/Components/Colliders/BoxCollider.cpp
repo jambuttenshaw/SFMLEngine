@@ -54,9 +54,9 @@ namespace SFMLEngine {
 	{
 		// draw a box showing the shape of the collider
 		// very useful for debugging
-		auto& transformed = transform.transformRect(Bounds);
+		auto& transformed = transform.transformRect(m_Bounds);
 		DEBUG_DRAW_RECT(sf::Vector2f(transformed.left, transformed.top),
 			sf::Vector2f(transformed.width, transformed.height),
-			IsTrigger ? DebugTools::TRIGGER_COLOR : DebugTools::COLLIDER_COLOR);
+			IsTrigger() ? DebugTools::TRIGGER_COLOR : DebugTools::COLLIDER_COLOR);
 	}
 }

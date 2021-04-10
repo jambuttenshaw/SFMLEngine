@@ -25,15 +25,12 @@ namespace SFMLEngine {
 
 	struct CircleCollider : public Collider
 	{
-		float Radius;
-		sf::Vector2f Offset;
-
 		CircleCollider()
-			: Radius(0), Offset()
+			: m_Radius(0), m_Offset()
 		{}
 
 		CircleCollider(float radius, const sf::Vector2f& offset)
-			: Radius(radius), Offset(offset)
+			: m_Radius(radius), m_Offset(offset)
 		{
 			Init();
 		}
@@ -47,9 +44,14 @@ namespace SFMLEngine {
 		std::pair<bool, sf::FloatRect> Colliding(const sf::Vector2f& centre, float radius);
 		std::pair<bool, sf::FloatRect> Colliding(const sf::FloatRect& rect);
 
-		sf::FloatRect GetLocalBounds() const override { return sf::FloatRect{ Offset, 2.0f * sf::Vector2f(Radius, Radius) }; }
+		inline sf::FloatRect GetLocalBounds() const override { return sf::FloatRect{ m_Offset, 2.0f * sf::Vector2f(m_Radius, m_Radius) }; }
 
-		void DrawDebug() {} // cant draw cirlces atm
+		inline void DrawDebug() {} // cant draw cirlces atm
+
+
+	private:
+		float m_Radius;
+		sf::Vector2f m_Offset;
 	};
 
 }

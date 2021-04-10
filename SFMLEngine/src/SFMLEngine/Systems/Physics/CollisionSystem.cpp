@@ -84,7 +84,7 @@ namespace SFMLEngine {
 		sf::FloatRect rect;
 
 		auto& colliderInfo = m_Coordinator->GetComponent<ColliderInfo>(entity);
-		switch (colliderInfo.Type)
+		switch (colliderInfo.GetType())
 		{
 		case ColliderType::Invalid:	SFMLE_CORE_ASSERT(0, "Invalid collider type!"); break;
 		case ColliderType::Box:		rect = m_Coordinator->GetComponent<BoxCollider>(entity).GetGlobalBounds(); break;
@@ -109,7 +109,7 @@ namespace SFMLEngine {
 		auto const& collider = m_Coordinator->GetComponent<ColliderInfo>(entity);
 
 		Collider* newCollider;
-		switch (collider.Type)
+		switch (collider.GetType())
 		{
 		case ColliderType::Invalid:	SFMLE_CORE_ASSERT(0, "Invalid collider type!"); break;
 		case ColliderType::Box:
@@ -172,10 +172,10 @@ namespace SFMLEngine {
 		Layer entityLayer = m_Coordinator->GetComponent<Identity>(entity).EntityLayer;
 		Layer otherLayer = m_Coordinator->GetComponent<Identity>(other->Owner).EntityLayer;
 
-		if ((entityLayer & Physics::GetPhysicsLayerMask(otherLayer)) == entityLayer || (other->ColliderPtr->IsTrigger))
+		if ((entityLayer & Physics::GetPhysicsLayerMask(otherLayer)) == entityLayer || (other->ColliderPtr->IsTrigger()))
 		{
 			auto& colliderInfo = m_Coordinator->GetComponent<ColliderInfo>(entity);
-			switch (colliderInfo.Type)
+			switch (colliderInfo.GetType())
 			{
 			case ColliderType::Invalid:	SFMLE_CORE_ASSERT(0, "Invalid collider type!"); break;
 			case ColliderType::Box:
@@ -222,7 +222,7 @@ namespace SFMLEngine {
 				sf::FloatRect{centre.x - radius, centre.y - radius, 2 * radius, 2 * radius},
 				collisionData.second,
 				other->ID,
-				other->ColliderPtr->IsTrigger
+				other->ColliderPtr->IsTrigger()
 			};
 		}
 		else
@@ -257,7 +257,7 @@ namespace SFMLEngine {
 				rect,
 				collisionData.second,
 				other->ID,
-				other->ColliderPtr->IsTrigger
+				other->ColliderPtr->IsTrigger()
 			};
 		}
 		else

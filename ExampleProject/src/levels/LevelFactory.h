@@ -55,7 +55,7 @@ public:
 		// this object should be solid
 		// add a collider
 		TilemapCollider collider{ TilemapCollider::OptimizationLevel::High };
-		collider.IsTrigger = true;
+		collider.SetTrigger(true);
 		scene->AddComponent(jumpThroughPlatforms, collider);
 		scene->AddComponent(jumpThroughPlatforms, ColliderInfo{ ColliderType::Tilemap });
 
@@ -75,7 +75,7 @@ public:
 
 		// this object should have a trigger collider so that the player knows when its collided with a ladder
 		TilemapCollider collider{ TilemapCollider::OptimizationLevel::High };
-		collider.IsTrigger = true;
+		collider.SetTrigger(true);
 		scene->AddComponent(ladders, collider);
 		scene->AddComponent(ladders, ColliderInfo{ ColliderType::Tilemap });
 
@@ -94,7 +94,7 @@ public:
 
 		// we need every crystal to have a unique collider so we do not optimize at all
 		TilemapCollider collider{ TilemapCollider::OptimizationLevel::None };
-		collider.IsTrigger = true;
+		collider.SetTrigger(true);
 		scene->AddComponent(crystals, collider);
 		scene->AddComponent(crystals, ColliderInfo{ ColliderType::Tilemap });
 
@@ -109,7 +109,7 @@ public:
 
 		scene->AddComponent(levelEnd, Transform{ position });
 		BoxCollider collider{ { 32, 32 }, { 0, 0 } };
-		collider.IsTrigger = true;
+		collider.SetTrigger(true);
 		scene->AddComponent(levelEnd, collider);
 		scene->AddComponent(levelEnd, ColliderInfo{ ColliderType::Box });
 

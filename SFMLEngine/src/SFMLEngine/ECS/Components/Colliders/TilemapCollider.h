@@ -31,37 +31,31 @@ namespace SFMLEngine {
 		{
 			None = 0, Standard = 1, High = 2
 		};
+		
 
-
-		Tilemap* TilemapHandle = nullptr;
-		OptimizationLevel Optimization;
-		sf::Vector2f Size;
-
-		TilemapCollider()
-			: Optimization(OptimizationLevel::None)
-		{}
+		TilemapCollider() = default;
 		TilemapCollider(OptimizationLevel optimize)
-			: Optimization(optimize)
+			: m_OptimizationLevel(optimize)
 		{
 			Init();
 		}
 
-		void Setup(Tilemap* tilemapHandle)
+		inline void Setup(Tilemap* tilemapHandle)
 		{
-			TilemapHandle = tilemapHandle;
+			m_TilemapHandle = tilemapHandle;
 			UpdateGeometry();
 		}
 		void SetTransform(Transform* transform) override;
 
-		void UpdateGeometry()
+		inline void UpdateGeometry()
 		{
 			BuildCollisionGeometry();
 			FindBoundary();
 		}
 
-		std::vector<BoxCollider>& GetCollisionGeometry() { return m_CollisionGeometry; }
-
-		sf::FloatRect GetLocalBounds() const override { return sf::FloatRect(Size, sf::Vector2f{}); }
+		inline std::vector<BoxCollider>& GetCollisionGeometry() { return m_CollisionGeometry; }
+		inline sf::FloatRect GetLocalBounds() const override { return sf::FloatRect(sf::Vector2f{}, m_Size); }
+		inline OptimizationLevel GetOptimizationLevel() { return m_OptimizationLevel; }
 
 		void DrawDebug(const sf::Transform& transform);
 
@@ -71,6 +65,10 @@ namespace SFMLEngine {
 
 	private:
 		std::vector<BoxCollider> m_CollisionGeometry;
+
+		Tilemap* m_TilemapHandle = nullptr;
+		OptimizationLevel m_OptimizationLevel = OptimizationLevel::None;
+		sf::Vector2f m_Size;
 	};
 
 }

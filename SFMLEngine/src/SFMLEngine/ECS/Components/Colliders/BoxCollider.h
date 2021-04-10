@@ -27,21 +27,16 @@ namespace SFMLEngine {
 
 	struct BoxCollider : public Collider
 	{
-		sf::FloatRect Bounds;
-
 		BoxCollider()
-			: Bounds()
+			: m_Bounds()
 		{}
 		BoxCollider(const sf::Vector2f& size, const sf::Vector2f& offset, bool autoAssignID = true)
-			: Bounds(offset, size)
+			: m_Bounds(offset, size)
 		{
 			if (autoAssignID) Init();
 		}
 
-		void Reset(const sf::FloatRect& localBounds)
-		{
-			Bounds = localBounds;
-		}
+
 
 		// collision with other colliders
 		std::pair<bool, sf::FloatRect> Colliding(BoxCollider& other);
@@ -52,9 +47,17 @@ namespace SFMLEngine {
 		std::pair<bool, sf::FloatRect> Colliding(const sf::Vector2f& centre, float radius);
 		std::pair<bool, sf::FloatRect> Colliding(const sf::FloatRect& rect);
 
-		sf::FloatRect GetLocalBounds() const override { return Bounds; }
+		inline void Reset(const sf::FloatRect& localBounds) { m_Bounds = localBounds; }
+		inline void SetLeft(float x) { m_Bounds.left = x; }
+		inline void SetTop(float y) { m_Bounds.top = y; }
+		inline void SetWidth(float w) { m_Bounds.width = w; }
+		inline void SetHeight(float h) { m_Bounds.height = h; }
+		inline sf::FloatRect GetLocalBounds() const override { return m_Bounds; }
 
 		void DrawDebug(const sf::Transform& transform);
+
+	private:
+		sf::FloatRect m_Bounds;
 	};
 
 }
