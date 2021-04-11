@@ -23,16 +23,16 @@ namespace SFMLEngine {
 
 	struct Collision
 	{
-		Math::Direction CollisionDirection;
+		Math::Direction CollisionDirection{ Math::Direction::Up };
 		sf::Vector2f Centroid;
 
-		Entity Other;
+		Entity Other{ INVALID_ENTITY_ID };
 		sf::FloatRect GlobalBounds; // the boundaries of this objects collider
 		sf::FloatRect OtherGlobalBounds; // the boundaries of the object the collision occurred with
 
-		ColliderID OtherColliderID;
+		ColliderID OtherColliderID{ NULL_COLLIDER_ID };
 
-		bool Trigger;
+		bool Trigger{ false };
 
 		Collision() {};
 		Collision(Entity otherEntity, const sf::FloatRect& thisBounds, const sf::FloatRect& otherBounds, ColliderID otherColliderID, bool trigger = false);

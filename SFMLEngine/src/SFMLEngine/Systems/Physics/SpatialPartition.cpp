@@ -49,7 +49,7 @@ namespace SFMLEngine {
 		//  - once a collider is found belonging to this entity, delete all of its entries in the multimap
 		//  - if it belongs to this entity, find all of their entries in the partitioning map and flag for removal
 
-		for (int i = m_Colliders.size() - 1; i >= 0; i--)
+		for (int i = static_cast<int>(m_Colliders.size()) - 1; i >= 0; i--)
 		{
 			if (m_Colliders[i].Owner == entity)
 			{

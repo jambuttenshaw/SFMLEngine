@@ -60,8 +60,7 @@ namespace SFMLEngine {
 		}
 
 		SFMLE_CORE_ASSERT(0, "Failed to retrieve layer name.");
-
-		return std::string();
+		return s_InvalidLayer;
 	}
 
 	std::vector<Layer> LayerManager::GetAllLayers()

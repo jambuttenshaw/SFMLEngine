@@ -356,7 +356,7 @@ namespace SFMLEngine
                 for (Scene* scene : m_ScenesToDelete)
                 {
                     // loop backwards through the current scenes
-                    for (int index = m_CurrentScenes.size() - 1; index >= 0; index--)
+                    for (int index = static_cast<int>(m_CurrentScenes.size()) - 1; index >= 0; index--)
                     {
                         // if the scene at this index is to be deleted
                         if (m_CurrentScenes[index] == scene)

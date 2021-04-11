@@ -32,6 +32,8 @@ namespace SFMLEngine {
 
 		static uint8_t s_LayerCount;
 
+		inline static const std::string& s_InvalidLayer = "INVALID_LAYER";
+
 	};
 
 }

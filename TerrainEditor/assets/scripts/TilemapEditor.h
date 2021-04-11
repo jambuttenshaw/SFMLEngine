@@ -38,7 +38,7 @@ public:
 			{
 				int newTile = static_cast<int>(m_CurrentTile) + wheelDelta;
 
-				if (newTile < 0) newTile = m_Palette->GetTileCount() - 1;
+				if (newTile < 0) newTile = static_cast<int>(m_Palette->GetTileCount()) - 1;
 				if (newTile > m_Palette->GetTileCount() - 1) newTile = 0;
 
 				m_CurrentTile = static_cast<size_t>(newTile);
