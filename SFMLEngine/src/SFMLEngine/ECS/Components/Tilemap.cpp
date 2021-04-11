@@ -251,7 +251,7 @@ namespace SFMLEngine {
 
 		std::string serialized = tilemapJson.dump();
 		std::ofstream outfile(exportPath);
-		outfile << tilemapJson << std::endl;
+		outfile << serialized << std::endl;
 		outfile.close();
 
 		return false;

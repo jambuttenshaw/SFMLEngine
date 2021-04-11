@@ -68,8 +68,13 @@ namespace SFMLEngine {
 		inline void SetTrigger(bool trigger) { m_IsTrigger = trigger; }
 		inline bool IsTrigger() const { return m_IsTrigger; }
 
+		inline bool DisplayDebug() const { return m_DisplayDebug; }
+		inline void SetDisplayDebug(bool state) { m_DisplayDebug = state; }
+
 	protected:
 		bool m_Modified = false;
+
+		bool m_DisplayDebug = true;
 		
 		// whether the collider is just used as an event trigger
 		// or whether it is also used for physics

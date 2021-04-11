@@ -40,6 +40,8 @@ namespace SFMLEngine {
 		{
 			Init();
 		}
+		TilemapCollider(const std::string& jsonFile);
+
 
 		inline void Setup(Tilemap* tilemapHandle)
 		{
@@ -50,8 +52,15 @@ namespace SFMLEngine {
 
 		inline void UpdateGeometry()
 		{
-			BuildCollisionGeometry();
-			FindBoundary();
+			if (m_LoadedFromFile)
+			{
+				m_LoadedFromFile = false;
+			}
+			else
+			{
+				BuildCollisionGeometry();
+				FindBoundary();
+			}
 		}
 
 		inline std::vector<BoxCollider>& GetCollisionGeometry() { return m_CollisionGeometry; }
@@ -59,6 +68,8 @@ namespace SFMLEngine {
 		inline OptimizationLevel GetOptimizationLevel() { return m_OptimizationLevel; }
 
 		void DrawDebug(const sf::Transform& transform);
+
+		void Export(const std::string& filepath);
 
 	private:
 		void BuildCollisionGeometry();
@@ -70,6 +81,8 @@ namespace SFMLEngine {
 		Tilemap* m_TilemapHandle = nullptr;
 		OptimizationLevel m_OptimizationLevel = OptimizationLevel::None;
 		sf::Vector2f m_Size;
+
+		bool m_LoadedFromFile = false;
 	};
 
 }

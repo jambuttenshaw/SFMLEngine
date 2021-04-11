@@ -17,7 +17,7 @@ public:
 	void Create() override
 	{
 
-		m_Ground = LevelFactory::CreateGround(this, "assets/tilemaps/testlevel/layer0.json");
+		m_Ground = LevelFactory::CreateGround(this, "assets/tilemaps/testlevel/layer0.json", "assets/tilemaps/testlevel/layer0_collider.json");
 		m_JumpThroughPlatforms = LevelFactory::CreateJumpThroughPlatforms(this, "assets/tilemaps/testlevel/layer1.json");
 		m_Ladders = LevelFactory::CreateLadders(this, "assets/tilemaps/testlevel/layer2.json");
 		m_Crystals = LevelFactory::CreateCrystals(this, "assets/tilemaps/testlevel/layer3.json");

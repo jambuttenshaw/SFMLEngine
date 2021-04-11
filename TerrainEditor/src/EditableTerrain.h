@@ -10,8 +10,8 @@ using namespace SFMLEngine;
 class EditableTerrain
 {
 public:
-	EditableTerrain(Scene* scene, Entity tilePreviewEntity, ResourceID tilePaletteID, const std::string& terrainPath, ResourceID opaque, ResourceID translucent)
-		: m_TerrainPath(terrainPath), m_TilePreviewEntity(tilePreviewEntity)
+	EditableTerrain(Scene* scene, Entity tilePreviewEntity, ResourceID tilePaletteID, const std::string& levelDir, const std::string& filename, ResourceID opaque, ResourceID translucent)
+		: m_LevelDir(levelDir), m_FileName(filename), m_TilePreviewEntity(tilePreviewEntity)
 	{
 		m_Scene = scene;
 
@@ -21,7 +21,7 @@ public:
 		m_EntityHandle = m_Scene->CreateEntity();
 		m_Scene->AddComponent(m_EntityHandle, Transform{ });
 
-		m_Scene->AddComponent(m_EntityHandle, Tilemap{ tilePaletteID, m_TerrainPath });
+		m_Scene->AddComponent(m_EntityHandle, Tilemap{ tilePaletteID, m_LevelDir + "/" + filename + ".json" });
 
 		// add a tilemap renderer
 		m_Scene->AddComponent(m_EntityHandle, TilemapRenderer{ m_OpaqueMat, 0 });
@@ -29,7 +29,7 @@ public:
 		// add a script to control editing the terrain
 		m_EditorScript = &m_Scene->AddNativeScript<TilemapEditor>(m_EntityHandle);
 		m_EditorScript->SetTilePreviewEntity(m_TilePreviewEntity);
-		m_EditorScript->SetExportPath(m_TerrainPath);
+		m_EditorScript->SetExportPath(m_LevelDir, m_FileName);
 	}
 
 	TilemapEditor* GetEditorScript() { return m_EditorScript; }
@@ -50,7 +50,8 @@ private:
 	TilemapEditor* m_EditorScript = nullptr;
 
 	Entity m_EntityHandle = INVALID_ENTITY_ID;
-	std::string m_TerrainPath;
+	std::string m_LevelDir;
+	std::string m_FileName;
 
 	Entity m_TilePreviewEntity = INVALID_ENTITY_ID;
 

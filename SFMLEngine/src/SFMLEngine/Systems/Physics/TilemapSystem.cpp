@@ -47,7 +47,10 @@ namespace SFMLEngine {
 
 		for (auto& entity : m_Entities)
 		{
-			m_ColliderCache[entity]->DrawDebug(m_TransformCache[entity]->GetLocalToWorldTransformMatrix());
+			if (m_ColliderCache[entity]->DisplayDebug())
+				m_ColliderCache[entity]->DrawDebug(m_TransformCache[entity]->GetLocalToWorldTransformMatrix());
+
+
 			if (ComponentModified(m_TilemapCache[entity]))
 			{
 				m_CollisionSystem->DeleteTilemapColliderData(entity);

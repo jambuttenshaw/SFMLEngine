@@ -20,7 +20,7 @@ public:
 	}
 
 
-	static Entity CreateGround(Scene* scene, const std::string& path)
+	static Entity CreateGround(Scene* scene, const std::string& path, const std::string& colliderPath = "null")
 	{
 		Entity ground = scene->CreateEntity();
 		scene->SetEntityLayer(ground, "Ground");
@@ -36,7 +36,10 @@ public:
 
 		// this object should be solid
 		// add a collider
-		scene->AddComponent(ground, TilemapCollider{ TilemapCollider::OptimizationLevel::High });
+		if (colliderPath != "null")
+			scene->AddComponent(ground, TilemapCollider{ colliderPath });
+		else
+			scene->AddComponent(ground, TilemapCollider{ TilemapCollider::OptimizationLevel::High });
 		scene->AddComponent(ground, ColliderInfo{ ColliderType::Tilemap });
 
 		return ground;

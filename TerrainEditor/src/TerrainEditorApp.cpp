@@ -79,22 +79,23 @@ public:
 			m_Manager = CreateEntity();
 			m_ManagerScript = &AddNativeScript<EditorManager>(m_Manager);
 			
-			std::string levelDir = "D:/dev/SFML/SFMLEngine/ExampleProject/assets/tilemaps/testlevel";
+			std::string levelDir = "D:/dev/SFML/SFMLEngine/ExampleProject/assets/tilemaps/tutorial";
 			m_ManagerScript->Setup(this, m_TilePreview, tilePaletteID, levelDir, opaqueMat, translucentMat);
 		}
 
 
 		// print controls
 		LOG_INFO("----- Terrain Editor Controls -----");
-		LOG_INFO("Place tiles:			LEFT MOUSE BUTTON");
-		LOG_INFO("Remove tiles:			RIGHT MOUSE BUTTON");
-		LOG_INFO("Cycle tiles:			SCROLL WHEEL");
-		LOG_INFO("Pan  camera:			WASD");
-		LOG_INFO("Zoom camera:			LCTRL + SCROLL WHEEL");
-		LOG_INFO("Cycle layers:			UP/DOWN ARROWS");
-		LOG_INFO("Create layer:			LSHIFT + N");
-		LOG_INFO("Export tilemap:		SPACE");
-		LOG_INFO("Export all tilemaps:  LCTRL + SPACE");
+		LOG_INFO("Place tiles:				LEFT MOUSE BUTTON");
+		LOG_INFO("Remove tiles:				RIGHT MOUSE BUTTON");
+		LOG_INFO("Cycle tiles:				SCROLL WHEEL");
+		LOG_INFO("Pan  camera:				WASD");
+		LOG_INFO("Zoom camera:				LCTRL + SCROLL WHEEL");
+		LOG_INFO("Cycle layers:				UP/DOWN ARROWS");
+		LOG_INFO("Create layer:				LSHIFT + N");
+		LOG_INFO("Export tilemap:			SPACE");
+		LOG_INFO("Export all tilemaps:		LCTRL + SPACE");
+		LOG_INFO("Export collision data:	ALT + N");
 		LOG_INFO("-----------------------------------");
 	}
 

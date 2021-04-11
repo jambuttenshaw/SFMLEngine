@@ -8,9 +8,63 @@
 
 #include "SFMLEngine/Systems/Physics/CollisionSystem.h"
 
+#include <nlohmann/json.hpp>
+#include <fstream>
+#include <iomanip>
+
 #include <algorithm>
 
 namespace SFMLEngine {
+
+
+	TilemapCollider::TilemapCollider(const std::string& jsonFile)
+	{
+		Init();
+
+		m_LoadedFromFile = true;
+
+
+		// load data from the file
+		std::ifstream infile(jsonFile);
+		if (!infile.good())
+		{
+			LOG_CORE_WARN("Failed to open file '{0}'. Geometry will be regenerated.", jsonFile);
+			// this will trigger a geometry regeneration
+			m_LoadedFromFile = false;
+		}
+		else
+		{
+			nlohmann::json colliderJson;
+			infile >> colliderJson;
+
+			m_OptimizationLevel = static_cast<OptimizationLevel>(colliderJson["optimizationLevel"]);
+			for (auto& box : colliderJson["geometry"])
+			{
+				m_CollisionGeometry.push_back(
+					BoxCollider{
+						{ box["w"], box["h"] }, // size
+						{ box["x"], box["y"] }, // offset
+						false // dont auto assign the id for the box collider, it will be done manually later
+					});
+			}
+
+			infile.close();
+		}
+
+
+		// give each collider an ID
+		for (auto& i : m_CollisionGeometry)
+		{
+			i.SetNewColliderID();
+			// also gives each sub-collider a pointer to the transform
+			i.SetTransform(m_Transform);
+
+			// if the tilemap collider is a trigger,
+			// then so should all of its sub-colliders
+			i.SetTrigger(IsTrigger());
+		}
+	}
+
 
 	void TilemapCollider::BuildCollisionGeometry()
 	{
@@ -246,6 +300,7 @@ namespace SFMLEngine {
 		}
 	}
 
+
 	void TilemapCollider::SetTransform(Transform* transform)
 	{ 
 		// overload of Collider::SetTransform
@@ -281,6 +336,33 @@ namespace SFMLEngine {
 				sf::Vector2f(transformed.width, transformed.height),
 				IsTrigger() ? DebugTools::TRIGGER_COLOR : DebugTools::COLLIDER_COLOR);
 		}
+	}
+
+	void TilemapCollider::Export(const std::string& filepath)
+	{
+		// write all of the collider data into a json file
+
+		// create an empty json object
+		nlohmann::json colliderJson;
+		colliderJson["optimizationLevel"] = static_cast<int>(m_OptimizationLevel);
+
+		colliderJson["geometry"] = nlohmann::json::array();
+		for (auto const& box : m_CollisionGeometry)
+		{
+			nlohmann::json boxJson;
+			sf::FloatRect rect{ box.GetLocalBounds() };
+			boxJson["x"] = rect.left;
+			boxJson["y"] = rect.top;
+			boxJson["w"] = rect.width;
+			boxJson["h"] = rect.height;
+
+			colliderJson["geometry"].push_back(boxJson);
+		}
+
+		std::string serialized = colliderJson.dump();
+		std::ofstream outfile(filepath);
+		outfile << serialized << std::endl;
+		outfile.close();
 	}
 
 }

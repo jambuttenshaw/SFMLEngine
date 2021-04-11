@@ -48,9 +48,20 @@ public:
 			}
 		}
 
-		if (Input::IsKeyPressed(sf::Keyboard::Space) && !Input::IsKeyPressed(sf::Keyboard::LControl))
+		if (Input::IsKeyPressed(sf::Keyboard::Space))
 		{
-			Export();
+			if (!Input::IsKeyDown(sf::Keyboard::LControl))
+			{
+				Export();
+			}
+		}
+
+		if (Input::IsKeyDown(sf::Keyboard::LAlt) && !Input::IsKeyDown(sf::Keyboard::LShift) && Input::IsKeyPressed(sf::Keyboard::N))
+		{
+			LOG_TRACE("Adding collider.");
+			Application::GetApplicationHandle()->DisplayDebugInfo(true);
+			AddComponent(TilemapCollider{ TilemapCollider::OptimizationLevel::High });
+			m_Collider = &GetComponent<TilemapCollider>();
 		}
 	}
 
@@ -59,28 +70,46 @@ public:
 	{
 		m_TilePreview = &GetComponent<Tilemap>(entity);
 	}
-	void SetExportPath(const std::string& path)
+	void SetExportPath(const std::string& dir, const std::string& filename)
 	{
-		m_ExportPath = path;
+		m_ExportPath = dir;
+		m_FileName = filename;
 	}
 
 
-	void ActivateLayer() { m_Active = true; }
-	void DectivateLayer() { m_Active = false; }
+	void ActivateLayer()
+	{
+		m_Active = true;
+		if (m_Collider)
+			m_Collider->SetDisplayDebug(true);
+	}
+	void DectivateLayer() {
+		m_Active = false;
+		if (m_Collider)
+			m_Collider->SetDisplayDebug(false);
+	}
 
 	void Export() 
 	{
-		m_Tilemap->Export(m_ExportPath);
-		LOG_INFO("Terrain exported to '{0}'.", m_ExportPath);
+		m_Tilemap->Export(m_ExportPath + "/" + m_FileName + ".json");
+		LOG_INFO("Terrain exported for '{0}'.", m_FileName);
+		
+		if (m_Collider)
+		{
+			m_Collider->Export(m_ExportPath + "/" + m_FileName + "_collider.json");
+			LOG_INFO("Collider exported for '{0}'.", m_FileName);
+		}
 	}
 
 
 private:
 	Tilemap* m_Tilemap = nullptr;
+	TilemapCollider* m_Collider = nullptr;
 	TilePalette* m_Palette = nullptr;
 
 	Tilemap* m_TilePreview = nullptr;
 	std::string m_ExportPath;
+	std::string m_FileName;
 
 	size_t m_CurrentTile = 0;
 
