@@ -169,5 +169,14 @@ namespace SFMLEngine {
 		return s_NormamlizedFloatDistribution(*s_RandomNumberGenerator);
 	}
 
+	sf::Vector2f Math::RandomUnitVector()
+	{
+		float angle = RandomFloat(0, PI);
+		return sf::Vector2f{
+			cos(angle),
+			sin(angle)
+		};
+	}
+
 
 }

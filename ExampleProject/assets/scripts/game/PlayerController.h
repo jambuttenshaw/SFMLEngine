@@ -3,6 +3,7 @@
 #include <SFMLEngine.h>
 
 #include "PlayerStatsController.h"
+#include "CameraController.h"
 
 using namespace SFMLEngine;
 
@@ -49,6 +50,7 @@ private:
 	BoxCollider* m_Collider = nullptr;
 
 	PlayerStatsController* m_StatsController = nullptr;
+	CameraController* m_CameraController = nullptr;
 
 	Layer m_GroundLayerMask;
 

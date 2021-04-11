@@ -9,6 +9,8 @@ void PlayerController::Start()
 
 	m_StatsController = &GetNativeScript<PlayerStatsController>();
 
+	m_CameraController = &GetNativeScript<CameraController>(GetEntitiesWithTag("MainCamera")[0]);
+
 	m_GroundLayerMask = LayerManager::GetLayer("Ground") | LayerManager::GetLayer("JumpThrough");
 
 	m_LeftCastPoint = { 7, 16 };
@@ -300,6 +302,8 @@ void PlayerController::Hurt(bool toTheRight)
 		// the player has died :(
 		m_Dead = true;
 		m_Animator->SetCurrentAnimation("die");
+
+		m_CameraController->ShakeCamera(0.5f, 7.5f);
 	}
 	else
 	{
@@ -314,6 +318,7 @@ void PlayerController::Hurt(bool toTheRight)
 			m_Rigidbody->SetVelocity({ toTheRight ? m_HurtBounceVelocity : -m_HurtBounceVelocity, m_Rigidbody->GetVelocity().y });
 			m_Animator->SetCurrentAnimation("hurt");
 		}
+		m_CameraController->ShakeCamera(0.3f, 4.5f);
 	}
 	
 }

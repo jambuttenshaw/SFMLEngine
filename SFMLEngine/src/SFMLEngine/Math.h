@@ -144,6 +144,8 @@ namespace SFMLEngine {
 		static float RandomFloat(float min, float max);
 		static float RandomNormalizedFloat();
 
+		static sf::Vector2f RandomUnitVector();
+
 	private:
 		static std::mt19937* s_RandomNumberGenerator;
 		static std::uniform_real_distribution<float> s_NormamlizedFloatDistribution;
