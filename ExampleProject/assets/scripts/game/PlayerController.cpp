@@ -21,13 +21,13 @@ void PlayerController::Start()
 
 void PlayerController::Update(Timestep ts)
 {
-	if (m_Dead) return;
-	if (Input::IsKeyPressed(sf::Keyboard::H))
-	{
-		m_Animator->SetCurrentAnimation("die");
-		m_Dead = true;
-		return;
-	}
+
+	// friction should ALWAYS be applied to the player
+	sf::Vector2f oldVel{ m_Rigidbody->GetVelocity() };
+	m_Rigidbody->SetVelocity({ Math::Lerp(oldVel.x, 0.0f, m_Friction * ts), oldVel.y });
+
+
+
 
 	if (!(m_OnJumpThrough && m_CanLandOnPlatform))
 		m_OnGround = Physics::BoxCast({ m_Transform->GetPosition() + m_BottomCastPoint, m_HorizontalCastSize }, m_GroundLayerMask).first;
@@ -36,6 +36,12 @@ void PlayerController::Update(Timestep ts)
 		m_AgainstWall = Physics::BoxCast({ m_Transform->GetPosition() + m_RightCastPoint, m_VerticalCastSize }, m_GroundLayerMask).first;
 	else
 		m_AgainstWall = Physics::BoxCast({ m_Transform->GetPosition() + m_LeftCastPoint, m_VerticalCastSize }, m_GroundLayerMask).first;
+
+
+	// all user input response needs to be below this
+	if (m_Dead) return;
+
+
 
 	if (m_CanLandOnPlatform)
 	{
@@ -61,12 +67,6 @@ void PlayerController::Update(Timestep ts)
 		if (m_Crawling)
 			EndCrawl();
 	}
-
-
-	// friction should ALWAYS be applied to the player
-	sf::Vector2f oldVel{ m_Rigidbody->GetVelocity() };
-	m_Rigidbody->SetVelocity({ Math::Lerp(oldVel.x, 0.0f, m_Friction * ts), oldVel.y });
-
 
 
 	if (m_Hurting)
@@ -292,20 +292,30 @@ void PlayerController::Hurt(bool toTheRight)
 	// face towards the threat
 	m_FacingRight = !toTheRight;
 
+	m_StatsController->Damage();
 
-	// if were crawling then just make the player not move
-	if (m_Crawling)
+	// check if the player has now passed
+	if (m_StatsController->IsDead())
 	{
-		m_Rigidbody->SetVelocity({ (toTheRight ? m_HurtBounceVelocity : -m_HurtBounceVelocity) / m_ClimbHorizontalFactor, m_Rigidbody->GetVelocity().y });
-		m_Animator->SetCurrentAnimation("idleCrawl");
+		// the player has died :(
+		m_Dead = true;
+		m_Animator->SetCurrentAnimation("die");
 	}
 	else
 	{
-		m_Rigidbody->SetVelocity({ toTheRight ? m_HurtBounceVelocity : -m_HurtBounceVelocity, m_Rigidbody->GetVelocity().y });
-		m_Animator->SetCurrentAnimation("hurt");
+		// if were crawling then just make the player not move
+		if (m_Crawling)
+		{
+			m_Rigidbody->SetVelocity({ (toTheRight ? m_HurtBounceVelocity : -m_HurtBounceVelocity) / m_ClimbHorizontalFactor, m_Rigidbody->GetVelocity().y });
+			m_Animator->SetCurrentAnimation("idleCrawl");
+		}
+		else
+		{
+			m_Rigidbody->SetVelocity({ toTheRight ? m_HurtBounceVelocity : -m_HurtBounceVelocity, m_Rigidbody->GetVelocity().y });
+			m_Animator->SetCurrentAnimation("hurt");
+		}
 	}
-
-	m_StatsController->Damage();
+	
 }
 
 

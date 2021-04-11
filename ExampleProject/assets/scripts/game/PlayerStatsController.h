@@ -21,6 +21,8 @@ public:
 		UpdateHearts();
 	}
 
+	bool IsDead() const { return m_Health == 0; }
+
 
 	void SetupHearts(const std::vector<Entity>* const heartEntities)
 	{

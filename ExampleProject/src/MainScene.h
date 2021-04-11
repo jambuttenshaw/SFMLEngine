@@ -9,7 +9,7 @@
 
 #include "game/DepthFinder.h"
 
-#include "game/SmoothFollowPlayer.h"
+#include "game/CameraController.h"
 
 #include "game/WolfManager.h"
 #include "game/LevelManager.h"
@@ -172,7 +172,7 @@ public:
 			cam.SetZoom(0.6f);
 			AddComponent(m_Camera, cam);
 
-			AddNativeScript<SmoothFollowPlayer>(m_Camera);
+			AddNativeScript<CameraController>(m_Camera);
 		}
 
 		{

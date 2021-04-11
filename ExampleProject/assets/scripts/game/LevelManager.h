@@ -15,7 +15,7 @@ public:
 		m_App = Application::GetApplicationHandle();
 
 		m_PlayerController = &GetNativeScript<PlayerController>(GetEntitiesWithTag("Player")[0]);
-		m_CameraController = &GetNativeScript<SmoothFollowPlayer>(GetEntitiesWithTag("MainCamera")[0]);
+		m_CameraController = &GetNativeScript<CameraController>(GetEntitiesWithTag("MainCamera")[0]);
 	}
 
 	void OnTriggerEnter(const Collision& collision) override
@@ -52,5 +52,5 @@ private:
 	bool m_LoadedLevel1 = false;
 
 	PlayerController* m_PlayerController = nullptr;
-	SmoothFollowPlayer* m_CameraController = nullptr;
+	CameraController* m_CameraController = nullptr;
 };

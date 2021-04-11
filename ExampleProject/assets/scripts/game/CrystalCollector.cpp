@@ -31,6 +31,12 @@ void CrystalCollector::FindCrystalMap()
 
 void CrystalCollector::Update(Timestep ts)
 {
+	if (Input::IsKeyPressed(sf::Keyboard::J))
+	{
+		sf::Vector2f pos{ m_CrystalMap->TileToWorldCoordinates(m_CrystalMap->WorldToTileCoordinates(m_Transform->GetPosition())) };
+		LOG_TRACE("X: {0}, Y: {1}", pos.x, pos.y);
+	}
+
 	if (Input::IsKeyPressed(sf::Keyboard::Space))
 	{
 		if (m_CollidingCrystals.size() > 0)

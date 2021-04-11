@@ -4,7 +4,7 @@
 
 using namespace SFMLEngine;
 
-class SmoothFollowPlayer : public ScriptableEntity
+class CameraController : public ScriptableEntity
 {
 public:
 	void Start() override
