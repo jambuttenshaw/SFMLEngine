@@ -54,6 +54,18 @@ public:
 		}
 
 
+		if (Input::IsKeyDown(sf::Keyboard::LControl) && Input::IsKeyPressed(sf::Keyboard::Space))
+		{
+			LOG_INFO("Exporting all layers...");
+			for (auto& layer : m_TerrainLayers)
+			{
+				layer->GetEditorScript()->Export();
+			}
+			LOG_INFO("All layers exported.");
+		}
+
+
+
 
 		if (!m_TerrainLayers.size()) return;
 

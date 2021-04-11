@@ -48,12 +48,9 @@ public:
 			}
 		}
 
-		if (Input::IsKeyPressed(sf::Keyboard::Space))
+		if (Input::IsKeyPressed(sf::Keyboard::Space) && !Input::IsKeyPressed(sf::Keyboard::LControl))
 		{
-			LOG_TRACE(m_ExportPath);
-			m_Tilemap->Export(m_ExportPath);
-			LOG_INFO("Terrain exported.");
-			
+			Export();
 		}
 	}
 
@@ -70,6 +67,12 @@ public:
 
 	void ActivateLayer() { m_Active = true; }
 	void DectivateLayer() { m_Active = false; }
+
+	void Export() 
+	{
+		m_Tilemap->Export(m_ExportPath);
+		LOG_INFO("Terrain exported to '{0}'.", m_ExportPath);
+	}
 
 
 private:
