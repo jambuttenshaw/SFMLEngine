@@ -24,6 +24,7 @@ public:
 	void EndCrawl();
 
 	void Hurt(bool toTheRight);
+	bool IsDead() { return m_StatsController->IsDead(); }
 
 	void Reset();
 

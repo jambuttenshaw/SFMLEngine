@@ -31,7 +31,7 @@ public:
 		// add a tilemap
 
 		scene->AddComponent(ground, Tilemap{ s_TilePaletteID, path });
-		scene->AddComponent(ground, TilemapRenderer{ Material::Create("LitTilemap"), 1 });
+		scene->AddComponent(ground, TilemapRenderer{ Material::Create("LitTilemap"), 0 });
 
 
 		// this object should be solid
@@ -53,7 +53,7 @@ public:
 		scene->AddComponent(jumpThroughPlatforms, Transform{ });
 
 		scene->AddComponent(jumpThroughPlatforms, Tilemap{ s_TilePaletteID, path });
-		scene->AddComponent(jumpThroughPlatforms, TilemapRenderer{ Material::Create("LitTilemap"), 1 });
+		scene->AddComponent(jumpThroughPlatforms, TilemapRenderer{ Material::Create("LitTilemap"), 0 });
 
 		// this object should be solid
 		// add a collider
@@ -74,7 +74,7 @@ public:
 		scene->AddComponent(ladders, Transform{ });
 
 		scene->AddComponent(ladders, Tilemap{ s_TilePaletteID, path });
-		scene->AddComponent(ladders, TilemapRenderer{ Material::Create("LitTilemap"), 1 });
+		scene->AddComponent(ladders, TilemapRenderer{ Material::Create("LitTilemap"), 0 });
 
 		// this object should have a trigger collider so that the player knows when its collided with a ladder
 		TilemapCollider collider{ TilemapCollider::OptimizationLevel::High };
@@ -93,7 +93,7 @@ public:
 		scene->AddComponent(crystals, Transform{ });
 
 		scene->AddComponent(crystals, Tilemap{ s_TilePaletteID, path });
-		scene->AddComponent(crystals, TilemapRenderer{ Material::Create("LitTilemap"), 1 });
+		scene->AddComponent(crystals, TilemapRenderer{ Material::Create("LitTilemap"), 0 });
 
 		// we need every crystal to have a unique collider so we do not optimize at all
 		TilemapCollider collider{ TilemapCollider::OptimizationLevel::None };

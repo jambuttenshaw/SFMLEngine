@@ -303,7 +303,7 @@ void PlayerController::Hurt(bool toTheRight)
 		m_Dead = true;
 		m_Animator->SetCurrentAnimation("die");
 
-		m_CameraController->ShakeCamera(0.5f, 7.5f);
+		m_CameraController->ShakeCamera(0.7f, 7.5f);
 	}
 	else
 	{

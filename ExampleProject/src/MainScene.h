@@ -43,7 +43,7 @@ public:
 			AddComponent(m_Player, SpriteRenderer{
 				Texture::Create("assets/textures/characterSheet.png"),
 				Material::Create("Lit"),
-				2,
+				1,
 				Texture::Create("assets/textures/characterSheetNormals.png") });
 
 
@@ -194,7 +194,6 @@ public:
 
 
 			GUIImage i{ Texture::Create("assets/textures/depthBar.png") };
-			i.SetColor(sf::Color(255, 255, 255, 191));
 			AddComponent(m_DepthBar, i);
 		}
 

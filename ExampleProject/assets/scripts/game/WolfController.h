@@ -69,8 +69,8 @@ private:
 
 
 
-	float m_MoveSpeed = 200.0f;
-	float m_ClimbSpeed = 75.0f;
+	float m_MoveSpeed = 240.0f;
+	float m_ClimbSpeed = 100.0f;
 	float m_Friction = 8.0f;
 
 	float m_AttackDist = 27.0f;

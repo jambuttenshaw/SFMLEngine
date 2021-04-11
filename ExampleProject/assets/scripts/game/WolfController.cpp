@@ -148,7 +148,8 @@ void WolfController::Update(Timestep ts)
 					}
 				}
 			}
-			else
+			// if the player isnt already dead the wolf can attack
+			else if (!m_PlayerController->IsDead())
 			{
 				// the player is too close to follow
 				// check if they are close enough to attack
@@ -175,6 +176,10 @@ void WolfController::Update(Timestep ts)
 					m_Animator->SetCurrentAnimation("idle");
 				}
 				m_Rigidbody->SetVelocity({ 0, m_Rigidbody->GetVelocity().y });
+			}
+			else
+			{
+				m_Animator->SetCurrentAnimation("idle");
 			}
 
 

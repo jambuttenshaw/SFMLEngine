@@ -113,7 +113,7 @@ public:
 		AddNativeScript<GoToMouse>(m_Light);
 
 		m_Light2 = CreateEntity();
-		AddComponent(m_Light2, DirectionalLight{ -1.5f, 0.7f, 0.7f, sf::Color(147, 111, 152, 255), true });
+		AddComponent(m_Light2, DirectionalLight{ -1.5f, 0.7f, 0.3f, sf::Color(200, 61, 19, 255), true });
 
 
 
