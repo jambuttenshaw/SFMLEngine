@@ -75,6 +75,8 @@ namespace SFMLEngine {
 		void SetClearColor(const sf::Color& color) { m_ClearColor = color; }
 		const sf::Color& GetClearColor() { return m_ClearColor; }
 
+		void DisplayDebugInfo(bool state) { m_DisplayDebug = state; }
+
 
 		template <typename T>
 		void LoadScene(LoadSceneMode mode)
