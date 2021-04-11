@@ -48,7 +48,7 @@ public:
 		m_Transform->SetPosition(m_FollowPos + m_ShakeMovement);
 	}
 
-	void ImmediateReset() { m_Transform->SetPosition(m_PlayerTransform->GetPosition()); }
+	void ImmediateReset() { m_FollowPos = m_PlayerTransform->GetPosition(); }
 
 	void SetPlayerTransform(Transform* playerTransform) { m_PlayerTransform = playerTransform; }
 

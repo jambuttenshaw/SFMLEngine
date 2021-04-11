@@ -17,6 +17,7 @@ void CrystalCollector::Start()
 
 
 	m_WolfManager = &GetNativeScript<WolfManager>(GetEntitiesWithTag("WolfManager")[0]);
+	m_CameraController = &GetNativeScript<CameraController>(GetEntitiesWithTag("MainCamera")[0]);
 }
 
 void CrystalCollector::OnSceneLoaded()
@@ -79,7 +80,11 @@ void CrystalCollector::Update(Timestep ts)
 				m_CrystalMap->RemoveTile(currentCrystal);
 				m_CrystalScore += crystal.Data->Value;
 				m_MiningProgress.erase(currentCrystal);
+
+				m_CameraController->ShakeCamera(0.2f, 5.0f);
 			}
+			else
+				m_CameraController->ShakeCamera(0.1f, 2.0f);
 
 			CreateNoiseRing(m_CrystalMap->TileToWorldCoordinates(currentCrystal) + sf::Vector2f{16, 16});
 

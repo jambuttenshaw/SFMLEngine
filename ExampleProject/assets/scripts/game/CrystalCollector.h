@@ -2,6 +2,7 @@
 
 #include <SFMLEngine.h>
 #include "WolfManager.h"
+#include "CameraController.h"
 
 
 using namespace SFMLEngine;
@@ -57,6 +58,8 @@ private:
 	GUIText* m_ScoreText = nullptr;
 
 	WolfManager* m_WolfManager = nullptr;
+
+	CameraController* m_CameraController = nullptr;
 
 	std::vector<sf::Vector2i> m_CollidingCrystals;
 	bool m_BrokenCrystal = false;
