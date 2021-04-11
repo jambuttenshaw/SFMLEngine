@@ -18,6 +18,14 @@ public:
 		m_CameraController = &GetNativeScript<CameraController>(GetEntitiesWithTag("MainCamera")[0]);
 	}
 
+	void Update(Timestep ts) override
+	{
+		if (Input::IsKeyPressed(sf::Keyboard::H))
+		{
+			CreateTransitionEntity();
+		}
+	}
+
 	void OnTriggerEnter(const Collision& collision) override
 	{
 		if (GetEntityTag(collision.Other) == "LevelEnd")
@@ -45,6 +53,17 @@ public:
 
 	void SetMainScene(Scene* s) { m_MainScene = s; }
 
+	void CreateTransitionEntity()
+	{
+		m_TransitionEntity = CreateEntity();
+
+		AddComponent(m_TransitionEntity, GUIImage{ Texture::Create("assets/textures/black.png") });
+		GUITransform t{ {0.0f, 0.0f }, GUIElementType::Image };
+		sf::Vector2f windowSize = static_cast<sf::Vector2f>(Application::GetWindowSize());
+		t.SetScale({ windowSize.x / 256.0f, windowSize.y / 256.0f });
+		AddComponent(m_TransitionEntity, t);
+	}
+
 private:
 	Application* m_App = nullptr;
 	Scene* m_MainScene = nullptr;
@@ -53,4 +72,7 @@ private:
 
 	PlayerController* m_PlayerController = nullptr;
 	CameraController* m_CameraController = nullptr;
+
+
+	Entity m_TransitionEntity = INVALID_ENTITY_ID;
 };

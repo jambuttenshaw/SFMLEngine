@@ -58,6 +58,10 @@ namespace SFMLEngine {
 		inline const sf::Vector2i& GetScreenPosition() const { return m_ScreenPosition; }
 
 
+		inline void SetScale(const sf::Vector2f scale) { m_Scale = scale; }
+		inline const sf::Vector2f& GetScale() const { return m_Scale; }
+
+
 		inline void SetHorizontalAnchor(Anchor a)
 		{
 			if (a == Anchor::Top || a == Anchor::Bottom)
@@ -98,6 +102,8 @@ namespace SFMLEngine {
 		// where 0,0 is the topleft of the screen and 1,1 is the bottomright
 		sf::Vector2f m_Position;
 		sf::Vector2i m_ScreenPosition;
+
+		sf::Vector2f m_Scale{ 1, 1 };
 
 		// anchors say which part of the object is positioned at m_Position
 		// for example, anchors of Left, Top will position the topleft at m_Position

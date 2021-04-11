@@ -52,8 +52,8 @@ namespace SFMLEngine {
 
 		
 		// the object also gets scaled so its relative size stays consistent
-		sf::Vector2f scale = { m_WindowSize.x / m_InitialWindowSize.x,
-							   m_WindowSize.y / m_InitialWindowSize.y };
+		sf::Vector2f scale = { m_WindowSize.x * guiTransform.GetScale().x / m_InitialWindowSize.x,
+							   m_WindowSize.y * guiTransform.GetScale().y / m_InitialWindowSize.y };
 
 
 
@@ -89,8 +89,8 @@ namespace SFMLEngine {
 		// with the anchor offset applied
 		guiTransform.SetScreenPosition(
 			static_cast<sf::Vector2i>(sf::Vector2f{
-				m_WindowSize.x * guiTransform.GetPosition().x - anchorOffset.x,
-				m_WindowSize.y * guiTransform.GetPosition().y - anchorOffset.y,
+				(m_WindowSize.x * guiTransform.GetPosition().x) - anchorOffset.x,
+				(m_WindowSize.y * guiTransform.GetPosition().y) - anchorOffset.y,
 			})
 		);
 
