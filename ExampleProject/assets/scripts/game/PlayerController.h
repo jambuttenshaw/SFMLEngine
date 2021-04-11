@@ -80,6 +80,9 @@ private:
 	bool m_FacingRight = true;
 
 
+	bool m_Dead = false;
+
+
 	const sf::FloatRect m_StandingHitbox{ 8, 16, 17, 48 };
 	const sf::FloatRect m_CrawlingHitbox{ 5, 10, 54, 22 };
 };

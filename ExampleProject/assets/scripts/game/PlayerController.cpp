@@ -21,6 +21,14 @@ void PlayerController::Start()
 
 void PlayerController::Update(Timestep ts)
 {
+	if (m_Dead) return;
+	if (Input::IsKeyPressed(sf::Keyboard::H))
+	{
+		m_Animator->SetCurrentAnimation("die");
+		m_Dead = true;
+		return;
+	}
+
 	if (!(m_OnJumpThrough && m_CanLandOnPlatform))
 		m_OnGround = Physics::BoxCast({ m_Transform->GetPosition() + m_BottomCastPoint, m_HorizontalCastSize }, m_GroundLayerMask).first;
 

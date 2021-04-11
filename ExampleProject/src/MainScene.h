@@ -102,6 +102,15 @@ public:
 				{128, 1024, 32, 64} },
 				0.09f
 			}; hurt.SetLooping(false);
+			Animation die{ "die", {
+				{0, 1088, 32, 64},
+				{32, 1088, 32, 64},
+				{64, 1088, 42, 64},
+				{103, 1088, 42, 64},
+				{146, 1088, 42, 64},
+				{196, 1088, 48, 64} },
+				0.1f
+			}; die.SetLooping(false);
 
 			Animator animator{ AnimableType::Sprite };
 			animator.AddAnimation(idle);
@@ -111,6 +120,8 @@ public:
 			animator.AddAnimation(idleCrawl);
 			animator.AddAnimation(crawl);
 			animator.AddAnimation(hurt);
+			animator.AddAnimation(die);
+
 			animator.SetCurrentAnimation("idle");
 
 			AddComponent(m_Player, animator);
