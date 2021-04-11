@@ -18,18 +18,18 @@ public:
 		sf::Vector2f aim = Math::Lerp(m_Target, Input::GetMouseWorldPos(), 0.05f);
 		if (m_MovingToTarget)
 		{
-			m_Transform->Position = Math::Lerp(m_Transform->Position, aim, 10.0f * ts);
+			m_Transform->SetPosition(Math::Lerp(m_Transform->GetPosition(), aim, 10.0f * ts));
 			
-			if (Math::SquareMagnitude(m_Transform->Position - aim) < 1.0f)
+			if (Math::SquareMagnitude(m_Transform->GetPosition() - aim) < 1.0f)
 			{
 				m_MovingToTarget = false;
-				m_Transform->Position = aim;
+				m_Transform->SetPosition(aim);
 			}
 			
 		}
 		else
 		{
-			m_Transform->Position = aim;
+			m_Transform->SetPosition(aim);
 		}
 	}
 

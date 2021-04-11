@@ -21,18 +21,13 @@ void PlayerController::Start()
 
 void PlayerController::Update(Timestep ts)
 {
-	if (Input::IsKeyPressed(sf::Keyboard::E))
-	{
-		LOG_TRACE("X: {0}  Y: {1}", 32 * static_cast<int>(m_Transform->Position.x / 32.0f), 32 * static_cast<int>(m_Transform->Position.y / 32.0f));
-	}
-
 	if (!(m_OnJumpThrough && m_CanLandOnPlatform))
-		m_OnGround = Physics::BoxCast({ m_Transform->Position + m_BottomCastPoint, m_HorizontalCastSize }, m_GroundLayerMask).first;
+		m_OnGround = Physics::BoxCast({ m_Transform->GetPosition() + m_BottomCastPoint, m_HorizontalCastSize }, m_GroundLayerMask).first;
 
 	if (m_FacingRight)
-		m_AgainstWall = Physics::BoxCast({ m_Transform->Position + m_RightCastPoint, m_VerticalCastSize }, m_GroundLayerMask).first;
+		m_AgainstWall = Physics::BoxCast({ m_Transform->GetPosition() + m_RightCastPoint, m_VerticalCastSize }, m_GroundLayerMask).first;
 	else
-		m_AgainstWall = Physics::BoxCast({ m_Transform->Position + m_LeftCastPoint, m_VerticalCastSize }, m_GroundLayerMask).first;
+		m_AgainstWall = Physics::BoxCast({ m_Transform->GetPosition() + m_LeftCastPoint, m_VerticalCastSize }, m_GroundLayerMask).first;
 
 	if (m_CanLandOnPlatform)
 	{
@@ -61,7 +56,8 @@ void PlayerController::Update(Timestep ts)
 
 
 	// friction should ALWAYS be applied to the player
-	m_Rigidbody->Velocity.x = Math::Lerp(m_Rigidbody->Velocity.x, 0.0f, m_Friction * ts);
+	sf::Vector2f oldVel{ m_Rigidbody->GetVelocity() };
+	m_Rigidbody->SetVelocity({ Math::Lerp(oldVel.x, 0.0f, m_Friction * ts), oldVel.y });
 
 
 
@@ -84,7 +80,7 @@ void PlayerController::Update(Timestep ts)
 		{
 			if (m_Crawling)
 			{
-				if (fabsf(m_Rigidbody->Velocity.x) > 50.0f)
+				if (fabsf(m_Rigidbody->GetVelocity().x) > 50.0f)
 					m_Animator->SetCurrentAnimation("crawl");
 				else
 					m_Animator->SetCurrentAnimation("idleCrawl");
@@ -92,7 +88,7 @@ void PlayerController::Update(Timestep ts)
 			}
 			else
 			{
-				if (fabsf(m_Rigidbody->Velocity.x) > 100.0f)
+				if (fabsf(m_Rigidbody->GetVelocity().x) > 100.0f)
 					m_Animator->SetCurrentAnimation("run");
 				else
 					m_Animator->SetCurrentAnimation("idle");
@@ -135,12 +131,13 @@ void PlayerController::OnTriggerStay(const Collision& collision)
 		// it just needs to be "close enough" to count as landing on the platform
 
 		// we also only want to do it when the player is moving down
-		if (collision.GlobalBounds.top + 0.75f * collision.GlobalBounds.height < collision.OtherGlobalBounds.top && m_Rigidbody->Velocity.y > 0)
+		if (collision.GlobalBounds.top + 0.75f * collision.GlobalBounds.height < collision.OtherGlobalBounds.top && m_Rigidbody->GetVelocity().y > 0)
 		{
 			if (m_CanLandOnPlatform)
 			{
-				m_Transform->Position.y = collision.OtherGlobalBounds.top - collision.GlobalBounds.height + m_Transform->Position.y - collision.GlobalBounds.top;
-				m_Rigidbody->Velocity.y = 0;
+				m_Transform->SetPosition({ m_Transform->GetPosition().x,
+					collision.OtherGlobalBounds.top - collision.GlobalBounds.height + m_Transform->GetPosition().y - collision.GlobalBounds.top });
+				m_Rigidbody->SetVelocity({ m_Rigidbody->GetVelocity().x, 0.0f });
 				m_OnGround = true;
 				m_OnJumpThrough = true;
 			}
@@ -170,17 +167,17 @@ void PlayerController::Move(Timestep ts)
 	// dont let the player move right if its against the wall and facing right
 	if (Input::IsKeyDown(sf::Keyboard::D) && !(m_AgainstWall && m_FacingRight))
 	{
-		m_Rigidbody->Velocity.x = m_MoveSpeed;
+		m_Rigidbody->SetVelocity({ m_MoveSpeed, m_Rigidbody->GetVelocity().y });
 		m_FacingRight = true;
 	}
 	// dont let the player move left if it is against the wall and facing left
 	if (Input::IsKeyDown(sf::Keyboard::A) && !(m_AgainstWall && !m_FacingRight))
 	{
-		m_Rigidbody->Velocity.x = -m_MoveSpeed;
+		m_Rigidbody->SetVelocity({ -m_MoveSpeed, m_Rigidbody->GetVelocity().y });
 		m_FacingRight = false;
 	}
 	if ((m_LadderContacts && !m_OnGround) || m_Crawling)
-		m_Rigidbody->Velocity.x *= m_ClimbHorizontalFactor;
+		m_Rigidbody->SetVelocity({ m_Rigidbody->GetVelocity().x * m_ClimbHorizontalFactor, m_Rigidbody->GetVelocity().y });
 }
 
 void PlayerController::Jump(Timestep ts)
@@ -189,7 +186,7 @@ void PlayerController::Jump(Timestep ts)
 	{
 		if (m_LadderContacts)
 		{
-			m_Rigidbody->Velocity.y = -m_ClimbSpeed;
+			m_Rigidbody->SetVelocity({ m_Rigidbody->GetVelocity().x, -m_ClimbSpeed });
 			m_OnGround = false;
 		}
 		else if (m_OnGround)
@@ -201,18 +198,18 @@ void PlayerController::Jump(Timestep ts)
 				{
 					// if standing up was succesful
 					// then jump
-					m_Rigidbody->Velocity.y -= m_JumpPower;
+					m_Rigidbody->ChangeVelocity({ 0.0f, -m_JumpPower });
 					m_OnGround = false;
 				}
 			}
 			else
 			{
-				m_Rigidbody->Velocity.y -= m_JumpPower;
+				m_Rigidbody->ChangeVelocity({ 0.0f, -m_JumpPower });
 				m_OnGround = false;
 			}
 		}
 	}
-	if (m_Rigidbody->Velocity.y > 0)
+	if (m_Rigidbody->GetVelocity().y > 0)
 	{
 		if (m_LadderContacts)
 		{
@@ -220,14 +217,14 @@ void PlayerController::Jump(Timestep ts)
 				m_Sliding = true;
 			else
 			{
-				m_Rigidbody->Velocity.y = m_ClimbSpeed;
+				m_Rigidbody->SetVelocity({ m_Rigidbody->GetVelocity().x, m_ClimbSpeed });
 				m_Sliding = false;
 			}
 		}
 		
 		else
 		{
-			m_Rigidbody->Velocity += Physics::Gravity * m_FallMultiplier * (float)ts;
+			m_Rigidbody->ChangeVelocity(Physics::Gravity * m_FallMultiplier * (float)ts);
 		}
 	}
 }
@@ -237,8 +234,7 @@ void PlayerController::StartCrawl()
 {
 	// the players hitbox needs readjusted
 	m_Collider->Reset(m_CrawlingHitbox);
-	m_Transform->Position.x += m_FacingRight ? -16 : -16;
-	m_Transform->Position.y += 32;
+	m_Transform->Translate({ -16.0f, 32.0f });
 
 	// make sure we can actually fit in the space
 	if (Physics::BoxCast(m_Collider->GetGlobalBounds(), m_GroundLayerMask).first)
@@ -261,8 +257,7 @@ void PlayerController::StartCrawl()
 void PlayerController::EndCrawl()
 {
 	m_Collider->Reset(m_StandingHitbox);
-	m_Transform->Position.x += m_FacingRight ? 16 : 16;
-	m_Transform->Position.y -= 32;
+	m_Transform->Translate({ 16, -32 });
 	
 	// make sure we can actually fit in the space
 	if (Physics::BoxCast(m_Collider->GetGlobalBounds(), m_GroundLayerMask).first)
@@ -293,12 +288,12 @@ void PlayerController::Hurt(bool toTheRight)
 	// if were crawling then just make the player not move
 	if (m_Crawling)
 	{
-		m_Rigidbody->Velocity.x = (toTheRight ? m_HurtBounceVelocity : -m_HurtBounceVelocity) / m_ClimbHorizontalFactor;
+		m_Rigidbody->SetVelocity({ (toTheRight ? m_HurtBounceVelocity : -m_HurtBounceVelocity) / m_ClimbHorizontalFactor, m_Rigidbody->GetVelocity().y });
 		m_Animator->SetCurrentAnimation("idleCrawl");
 	}
 	else
 	{
-		m_Rigidbody->Velocity.x = toTheRight ? m_HurtBounceVelocity : -m_HurtBounceVelocity;
+		m_Rigidbody->SetVelocity({ toTheRight ? m_HurtBounceVelocity : -m_HurtBounceVelocity, m_Rigidbody->GetVelocity().y });
 		m_Animator->SetCurrentAnimation("hurt");
 	}
 
@@ -317,5 +312,5 @@ void PlayerController::Reset()
 	bool m_CanLandOnPlatform = true;
 	bool m_Crawling = false;
 
-	m_Transform->Position = { 0, -200 };
+	m_Transform->SetPosition({ 0, -200 });
 }

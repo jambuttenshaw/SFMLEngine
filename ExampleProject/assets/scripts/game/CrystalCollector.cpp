@@ -7,11 +7,11 @@ void CrystalCollector::Start()
 	m_Transform = &GetComponent<Transform>();
 	FindCrystalMap();
 	
-	m_CrystalData.insert({ m_CrystalMap->PalettePtr->GetTileByName("crystal1"), { 5 , 2 , m_CrystalMap->PalettePtr->GetTileByName("brokenCrystal1") } });
-	m_CrystalData.insert({ m_CrystalMap->PalettePtr->GetTileByName("crystal2"), { 10, 4 , m_CrystalMap->PalettePtr->GetTileByName("brokenCrystal2") } });
-	m_CrystalData.insert({ m_CrystalMap->PalettePtr->GetTileByName("crystal3"), { 20, 6 , m_CrystalMap->PalettePtr->GetTileByName("brokenCrystal3") } });
-	m_CrystalData.insert({ m_CrystalMap->PalettePtr->GetTileByName("crystal4"), { 30, 8 , m_CrystalMap->PalettePtr->GetTileByName("brokenCrystal4") } });
-	m_CrystalData.insert({ m_CrystalMap->PalettePtr->GetTileByName("crystal5"), { 50, 10, m_CrystalMap->PalettePtr->GetTileByName("brokenCrystal5") } });
+	m_CrystalData.insert({ m_CrystalMap->GetPalette()->GetTileByName("crystal1"), { 5 , 2 , m_CrystalMap->GetPalette()->GetTileByName("brokenCrystal1") } });
+	m_CrystalData.insert({ m_CrystalMap->GetPalette()->GetTileByName("crystal2"), { 10, 4 , m_CrystalMap->GetPalette()->GetTileByName("brokenCrystal2") } });
+	m_CrystalData.insert({ m_CrystalMap->GetPalette()->GetTileByName("crystal3"), { 20, 6 , m_CrystalMap->GetPalette()->GetTileByName("brokenCrystal3") } });
+	m_CrystalData.insert({ m_CrystalMap->GetPalette()->GetTileByName("crystal4"), { 30, 8 , m_CrystalMap->GetPalette()->GetTileByName("brokenCrystal4") } });
+	m_CrystalData.insert({ m_CrystalMap->GetPalette()->GetTileByName("crystal5"), { 50, 10, m_CrystalMap->GetPalette()->GetTileByName("brokenCrystal5") } });
 	
 	UpdateText();
 
@@ -31,12 +31,6 @@ void CrystalCollector::FindCrystalMap()
 
 void CrystalCollector::Update(Timestep ts)
 {
-	if (Input::IsKeyPressed(sf::Keyboard::J))
-	{
-		sf::Vector2f pos = m_CrystalMap->TileToWorldCoordinates(m_CrystalMap->WorldToTileCoordinates(m_Transform->Position));
-		LOG_TRACE("Player head is in tile at: {0}, {1}", pos.x, pos.y);
-	}
-	
 	if (Input::IsKeyPressed(sf::Keyboard::Space))
 	{
 		if (m_CollidingCrystals.size() > 0)
@@ -84,7 +78,7 @@ void CrystalCollector::Update(Timestep ts)
 			CreateNoiseRing(m_CrystalMap->TileToWorldCoordinates(currentCrystal) + sf::Vector2f{16, 16});
 
 			// collecting crystals will awaken wolves
-			m_WolfManager->AwakenWolves(m_Transform->Position);
+			m_WolfManager->AwakenWolves(m_Transform->GetPosition());
 		}
 	}
 

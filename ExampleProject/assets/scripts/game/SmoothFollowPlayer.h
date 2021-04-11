@@ -19,19 +19,19 @@ public:
 		
 		if (m_Following)
 		{
-			m_Transform->Position = Math::Lerp(m_Transform->Position, m_PlayerTransform->Position, m_SmoothSpeed * ts);
-			if (Math::SquareMagnitude(m_Transform->Position - m_PlayerTransform->Position) < 10)
+			m_Transform->SetPosition(Math::Lerp(m_Transform->GetPosition(), m_PlayerTransform->GetPosition(), m_SmoothSpeed * ts));
+			if (Math::SquareMagnitude(m_Transform->GetPosition() - m_PlayerTransform->GetPosition()) < 10)
 			{
 				m_Following = false;
 			}
 		}
-		else if (Math::SquareMagnitude(m_Transform->Position - m_PlayerTransform->Position) > m_FollowRadius)
+		else if (Math::SquareMagnitude(m_Transform->GetPosition() - m_PlayerTransform->GetPosition()) > m_FollowRadius)
 		{
 			m_Following = true;
 		}
 	}
 
-	void ImmediateReset() { m_Transform->Position = m_PlayerTransform->Position; }
+	void ImmediateReset() { m_Transform->SetPosition(m_PlayerTransform->GetPosition()); }
 
 	void SetPlayerTransform(Transform* playerTransform) { m_PlayerTransform = playerTransform; }
 

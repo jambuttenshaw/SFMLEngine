@@ -28,12 +28,12 @@ namespace SFMLEngine {
 			for (auto const& entity : m_Entities)
 			{
 				auto& nativeScriptComponent = m_Coordinator->GetComponent<NativeScripts>(entity);
-				for (auto script : nativeScriptComponent.Scripts)
+				for (auto& script : nativeScriptComponent.GetScripts())
 				{
 					// delete the script object that is held in the map
 					delete script.second;
 				}
-				nativeScriptComponent.Scripts.clear();
+				nativeScriptComponent.ClearScripts();
 			}
 		}
 
@@ -50,7 +50,7 @@ namespace SFMLEngine {
 			for (auto const& entity : m_Entities)
 			{
 				auto& scriptComponent = m_Coordinator->GetComponent<NativeScripts>(entity);
-				for (auto script : scriptComponent.Scripts)
+				for (auto& script : scriptComponent.GetScripts())
 					script.second->Start();
 			}
 
@@ -62,7 +62,7 @@ namespace SFMLEngine {
 			for (auto const& entity : m_Entities)
 			{
 				auto& scriptComponent = m_Coordinator->GetComponent<NativeScripts>(entity);
-				for (auto script : scriptComponent.Scripts)
+				for (auto& script : scriptComponent.GetScripts())
 					script.second->OnSceneLoaded();
 			}
 		}
@@ -84,7 +84,7 @@ namespace SFMLEngine {
 			for (auto const& entity : m_Entities)
 			{
 				auto& scriptComponent = m_Coordinator->GetComponent<NativeScripts>(entity);
-				for (auto script : scriptComponent.Scripts)
+				for (auto& script : scriptComponent.GetScripts())
 					script.second->Update(ts);
 			}
 		}
@@ -110,7 +110,7 @@ namespace SFMLEngine {
 
 
 			// make sure that this type of script hasn't already been added
-			SFMLE_CORE_ASSERT(nativeScriptComponent.Scripts.find(typeName) == nativeScriptComponent.Scripts.end(), "Entity already contains script of this type!");
+			SFMLE_CORE_ASSERT(!nativeScriptComponent.HasScript(typeName), "Entity already contains script of this type!");
 
 
 			// instantiate a new script
@@ -124,7 +124,7 @@ namespace SFMLEngine {
 			scriptableEntity->SetEntityHandle(entity);
 
 			// add this script into the map
-			nativeScriptComponent.Scripts.insert({ {typeName, scriptableEntity} });
+			nativeScriptComponent.AddScript(std::make_pair(typeName, scriptableEntity));
 
 			// if the script is created during the game then call the start immediately after its created
 			if (m_Started)
@@ -146,13 +146,13 @@ namespace SFMLEngine {
 			// get the unique id for this script
 			const char* typeName = typeid(T).name();
 			// get the scripts component
-			auto& scripts = m_Coordinator->GetComponent<NativeScripts>(entity).Scripts;
+			auto& scripts = m_Coordinator->GetComponent<NativeScripts>(entity);
 
 			// make sure the entity contains a script of this type
-			SFMLE_CORE_ASSERT(scripts.find(typeName) != scripts.end(),  "Entity did not have script attatched!");
+			SFMLE_CORE_ASSERT(scripts.HasScript(typeName),  "Entity did not have script attatched!");
 
 			// then erase this script form the map
-			scripts.erase(typeName);
+			scripts.DeleteScript(typeName);
 		}
 
 		template<typename T>
@@ -161,13 +161,13 @@ namespace SFMLEngine {
 			// get the unique id for this script
 			const char* typeName = typeid(T).name();
 			// get the scripts component
-			auto& scripts = m_Coordinator->GetComponent<NativeScripts>(entity).Scripts;
+			auto& scripts = m_Coordinator->GetComponent<NativeScripts>(entity);
 
 			// make sure the entity actually has this script attached
-			SFMLE_CORE_ASSERT(scripts.find(typeName) != scripts.end(), "Entity did not have script attatched!");
+			SFMLE_CORE_ASSERT(scripts.HasScript(typeName), "Entity did not have script attatched!");
 
 			// return a reference to the script, casted to its derived type
-			return *static_cast<T*>(scripts.at(typeName));
+			return *static_cast<T*>(scripts.GetScript(typeName));
 		}
 
 	private:

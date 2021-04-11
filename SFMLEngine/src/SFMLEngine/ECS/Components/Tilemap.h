@@ -21,21 +21,13 @@ namespace SFMLEngine {
 		{}
 	};
 
-	struct Tilemap
+	class Tilemap
 	{
 	public:
 		friend class System;
 
-		sf::Vector2f TileSize;
 		
-		ResourceID PaletteHandle;
-		TilePalette* PalettePtr = nullptr;
 
-		std::vector<Tile> Tiles;
-
-		sf::VertexArray Geometry;
-
-	public:
 		Tilemap();
 		Tilemap(ResourceID tilePalette);
 		Tilemap(ResourceID tilePalette, std::initializer_list<Tile> tiles);
@@ -45,17 +37,26 @@ namespace SFMLEngine {
 		// returns the ID of the type of tile that was removed; null tile id if no tile was removed
 		TileID RemoveTile(const sf::Vector2i& location);
 
-		TileID GetTileAtLocation(const sf::Vector2i& location) { return Tiles[GetTileIndex(location)].TileType; }
+		inline TileID GetTileAtLocation(const sf::Vector2i& location) { return m_Tiles[GetTileIndex(location)].TileType; }
 
 		sf::Vector2i WorldToTileCoordinates(const sf::Vector2f& worldCoords);
 		sf::Vector2f TileToWorldCoordinates(const sf::Vector2i& tileCoords);
 
-		void SetTransform(Transform* transform) { m_Transform = transform; }
+		inline void SetTransform(Transform* transform) { m_Transform = transform; }
 
 		bool Export(const std::string& exportPath);
 
+
+		inline const sf::Vector2f& GetTileSize() const { return m_TileSize; }
+
+		inline ResourceID GetPaletteHandle() const { return m_PaletteHandle; }
+		inline TilePalette* GetPalette() const { return m_PalettePtr; }
+
+		inline const std::vector<Tile>& GetTiles() const { return m_Tiles; }
+		inline const sf::VertexArray& GetGeometry() const { return m_Geometry; }
+
 	public:
-		static void WarnOnLoadFailure(bool flag) { s_WarnOnLoadFailure = flag; }
+		inline static void WarnOnLoadFailure(bool flag) { s_WarnOnLoadFailure = flag; }
 	private:
 		static bool s_WarnOnLoadFailure;
 
@@ -68,6 +69,15 @@ namespace SFMLEngine {
 
 	private:
 		bool m_Modified = false;
+
+		sf::Vector2f m_TileSize;
+
+		ResourceID m_PaletteHandle;
+		TilePalette* m_PalettePtr = nullptr;
+
+		std::vector<Tile> m_Tiles;
+
+		sf::VertexArray m_Geometry;
 
 		size_t m_TriangleIndex = 0;
 		Transform* m_Transform = nullptr;

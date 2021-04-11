@@ -6,8 +6,8 @@
 
 namespace SFMLEngine {
 
-	struct Transform;
-	struct BoxCollider;
+	class Transform;
+	class BoxCollider;
 
 	class BoxColliderDebugSystem : public System
 	{

@@ -20,11 +20,12 @@ which detects if this CircleCollider is intersecting with the geometry described
 
 namespace SFMLEngine {
 
-	struct BoxCollider;
-	struct TilemapCollider;
+	class BoxCollider;
+	class TilemapCollider;
 
-	struct CircleCollider : public Collider
+	class CircleCollider : public Collider
 	{
+	public:
 		CircleCollider()
 			: m_Radius(0), m_Offset()
 		{}

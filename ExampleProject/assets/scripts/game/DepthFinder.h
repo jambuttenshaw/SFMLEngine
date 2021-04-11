@@ -14,10 +14,10 @@ public:
 		// remember y-axis is flipped
 		m_LowestPoint = std::numeric_limits<float>::min();
 		m_HighestPoint = std::numeric_limits<float>::max();
-		for (auto const& tile : m_GroundTilemap->Tiles)
+		for (auto const& tile : m_GroundTilemap->GetTiles())
 		{
-			m_LowestPoint = std::max(m_GroundTilemap->TileSize.y * tile.Position.y, m_LowestPoint);
-			m_HighestPoint = std::min(m_GroundTilemap->TileSize.y * tile.Position.y, m_HighestPoint);
+			m_LowestPoint = std::max(m_GroundTilemap->GetTileSize().y * tile.Position.y, m_LowestPoint);
+			m_HighestPoint = std::min(m_GroundTilemap->GetTileSize().y * tile.Position.y, m_HighestPoint);
 		}
 	}
 

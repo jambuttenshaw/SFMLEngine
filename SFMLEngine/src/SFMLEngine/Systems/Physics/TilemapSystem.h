@@ -6,9 +6,9 @@
 
 namespace SFMLEngine {
 
-	struct Transform;
-	struct Tilemap;
-	struct TilemapCollider;
+	class Transform;
+	class Tilemap;
+	class TilemapCollider;
 
 	class CollisionSystem;
 

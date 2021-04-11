@@ -19,7 +19,7 @@ void WolfController::Start()
 
 void WolfController::Update(Timestep ts)
 {
-	float dist = Math::SquareMagnitude(m_PlayerController->GetCentre() - m_Transform->Position - sf::Vector2f{ 32, 16 });
+	float dist = Math::SquareMagnitude(m_PlayerController->GetCentre() - m_Transform->GetPosition() - sf::Vector2f{ 32, 16 });
 
 
 	switch (m_State)
@@ -32,7 +32,7 @@ void WolfController::Update(Timestep ts)
 
 	case WolfState::Wake:
 		// check to see if the wolf has woken up
-		if (!m_Animator->GetCurrentAnimation().Playing)
+		if (!m_Animator->GetCurrentAnimation().IsPlaying())
 		{
 			// if the animation has stopped playing the wolf is awake
 			m_State = WolfState::Alert;
@@ -78,18 +78,19 @@ void WolfController::Update(Timestep ts)
 			// the player is now too far away, so the wolf should go on alert instead
 			m_State = WolfState::Alert;
 			m_Animator->SetCurrentAnimation("alert");
-			m_Rigidbody->Velocity.x = 0;
+			m_Rigidbody->SetVelocity({ 0, m_Rigidbody->GetVelocity().y });
 
 		}
 		else
 		{
 			// the player is close; the wolf should move towards it
-			float diff = m_PlayerController->GetCentre().x - m_Transform->Position.x - 32;
+			float diff = m_PlayerController->GetCentre().x - m_Transform->GetPosition().x - 32;
 			m_FacingRight = diff > 0;
 
-			m_AgainstWall = Physics::BoxCast({ m_Transform->Position + (m_FacingRight ? m_RightCastPoint : m_LeftCastPoint), m_CastSize }, m_GroundLayerMask).first;
+			m_AgainstWall = Physics::BoxCast({ m_Transform->GetPosition() + (m_FacingRight ? m_RightCastPoint : m_LeftCastPoint), m_CastSize }, m_GroundLayerMask).first;
 
-			m_Rigidbody->Velocity.x = Math::Lerp(m_Rigidbody->Velocity.x, 0.0f, m_Friction * ts);
+			sf::Vector2f oldVel{ m_Rigidbody->GetVelocity() };
+			m_Rigidbody->SetVelocity({ Math::Lerp(oldVel.x, 0.0f, m_Friction * ts), oldVel.y });
 
 
 			if (fabsf(diff) > m_MinPlayerFollowDistance)
@@ -101,14 +102,14 @@ void WolfController::Update(Timestep ts)
 					m_Animator->SetCurrentAnimation("idle");
 
 					// it can do that by jumping or climbing
-					if (fabsf(m_Rigidbody->Velocity.y) < 0.001f)
+					if (fabsf(m_Rigidbody->GetVelocity().y) < 0.001f)
 					{
 						// the wolf is on the ground
 						// test 1 tile above the wolfs current position
-						bool tooTallToJump = Physics::BoxCast({ m_Transform->Position + (m_FacingRight ? m_RightCastPoint : m_LeftCastPoint) - sf::Vector2f{0, 32}, m_CastSize }, m_GroundLayerMask).first;
+						bool tooTallToJump = Physics::BoxCast({ m_Transform->GetPosition() + (m_FacingRight ? m_RightCastPoint : m_LeftCastPoint) - sf::Vector2f{0, 32}, m_CastSize }, m_GroundLayerMask).first;
 
 						// make sure we dont start climbing a 2-block high wall with a roof above it, cause this will look glitchy
-						bool tooShortToClimb = Physics::BoxCast({ m_Transform->Position + (m_FacingRight ? m_RightCanClimbCastPoint : m_LeftCanClimbCastPoint), m_ClimbRoofCastSize }, m_GroundLayerMask).first;
+						bool tooShortToClimb = Physics::BoxCast({ m_Transform->GetPosition() + (m_FacingRight ? m_RightCanClimbCastPoint : m_LeftCanClimbCastPoint), m_ClimbRoofCastSize }, m_GroundLayerMask).first;
 
 						if (tooTallToJump)
 						{
@@ -124,7 +125,7 @@ void WolfController::Update(Timestep ts)
 						else
 						{
 							// the wall is short enough for the wolf to jump over
-							m_Rigidbody->Velocity.y = -250.0f;
+							m_Rigidbody->ChangeVelocity({ 0.0f, -250.0f });
 						}
 
 					}
@@ -134,14 +135,14 @@ void WolfController::Update(Timestep ts)
 					// ts is not a factor in the velocity
 					// as it is not a change of velocity over time; it is being set to a constant value
 					// then the delta time will be taken into account when the velocity is applied in the physics system
-					m_Rigidbody->Velocity.x = m_MoveSpeed * (m_FacingRight ? 1 : -1);
+					m_Rigidbody->SetVelocity({ m_MoveSpeed * (m_FacingRight ? 1 : -1), m_Rigidbody->GetVelocity().y });
 
 					// set the animation of the wolf according to how fast its moving
-					if (fabsf(m_Rigidbody->Velocity.x) > 100)
+					if (fabsf(m_Rigidbody->GetVelocity().x) > 100)
 					{
 						m_Animator->SetCurrentAnimation("run");
 					}
-					else if (fabsf(m_Rigidbody->Velocity.x) > 50)
+					else if (fabsf(m_Rigidbody->GetVelocity().x) > 50)
 					{
 						m_Animator->SetCurrentAnimation("walk");
 					}
@@ -173,7 +174,7 @@ void WolfController::Update(Timestep ts)
 				{
 					m_Animator->SetCurrentAnimation("idle");
 				}
-				m_Rigidbody->Velocity.x = 0;
+				m_Rigidbody->SetVelocity({ 0, m_Rigidbody->GetVelocity().y });
 			}
 
 
@@ -186,7 +187,7 @@ void WolfController::Update(Timestep ts)
 
 	case WolfState::Attack:
 		// the wolf should be attacking the player
-		if (!m_Animator->GetCurrentAnimation().Playing)
+		if (!m_Animator->GetCurrentAnimation().IsPlaying())
 		{
 			// if the animation has stopped playing the wolf has finished biting
 			// we go back to chasing the player
@@ -199,13 +200,13 @@ void WolfController::Update(Timestep ts)
 
 		// the wolf will always climb up
 		// it can just jump off the top to get down
-		m_Rigidbody->Velocity.y = -m_ClimbSpeed;
+		m_Rigidbody->SetVelocity({ m_Rigidbody->GetVelocity().x, -m_ClimbSpeed });
 
 
 		// decide when to stop climbing
 		// cast in front of the climbing wolf
 		// if there is no collision then we can do back to walking
-		bool stopClimb = !Physics::BoxCast({ m_Transform->Position + (m_FacingRight ? m_ClimbRightCastPoint : m_ClimbLeftCastPoint), m_ClimbCastSize }, m_GroundLayerMask).first;
+		bool stopClimb = !Physics::BoxCast({ m_Transform->GetPosition() + (m_FacingRight ? m_ClimbRightCastPoint : m_ClimbLeftCastPoint), m_ClimbCastSize }, m_GroundLayerMask).first;
 		if (stopClimb)
 		{
 			// stop climbing and return to follow state
@@ -216,7 +217,7 @@ void WolfController::Update(Timestep ts)
 		{
 			// we do not want a wolf to get stuck against the ceiling, so we need to check that it hasn't hit the roof
 			// do another cast to see if theres a roof above us
-			bool hitRoof = Physics::BoxCast({ m_Transform->Position + m_ClimbRoofCastPoint, m_ClimbRoofCastSize }, m_GroundLayerMask).first;
+			bool hitRoof = Physics::BoxCast({ m_Transform->GetPosition() + m_ClimbRoofCastPoint, m_ClimbRoofCastSize }, m_GroundLayerMask).first;
 			if (hitRoof)
 			{
 				EndClimbFromRoof();
@@ -253,12 +254,12 @@ void WolfController::StartClimb()
 	if (m_FacingRight)
 	{
 		// move it one tile to the right and one tile up
-		m_Transform->Position += sf::Vector2f{ 32, -32 };
+		m_Transform->Translate({ 32, -32 });
 	}
 	else
 	{
 		// if its facing left we only need to move it 1 tile up
-		m_Transform->Position.y -= 32;
+		m_Transform->Translate({ 0, -32 });
 	}
 }
 
@@ -271,7 +272,7 @@ void WolfController::EndClimb()
 	if (!m_FacingRight)
 	{
 		// the wolf needs moved 1 tile left
-		m_Transform->Position.x -= 32;
+		m_Transform->Translate({ -32, 0 });
 	}
 }
 
@@ -284,7 +285,7 @@ void WolfController::EndClimbFromRoof()
 	// so we need to help it get out of the roof
 	if (m_FacingRight)
 	{
-		m_Transform->Position.x -= 32;
+		m_Transform->Translate({ -32, 0 });
 
 		// the wolf should then face away from the wall it just got stuck in
 		m_FacingRight = false;

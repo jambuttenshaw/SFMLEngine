@@ -17,17 +17,17 @@ public:
 	void Update(Timestep ts) override
 	{
 		if (Input::IsKeyDown(sf::Keyboard::D))
-			m_Transform->Position += ts * m_MoveSpeed * sf::Vector2f(1, 0);
+			m_Transform->Translate(ts * m_MoveSpeed * sf::Vector2f(1, 0));
 		if (Input::IsKeyDown(sf::Keyboard::A))
-			m_Transform->Position += ts * m_MoveSpeed * sf::Vector2f(-1, 0);
+			m_Transform->Translate(ts * m_MoveSpeed * sf::Vector2f(-1, 0));
 		if (Input::IsKeyDown(sf::Keyboard::S))
-			m_Transform->Position += ts * m_MoveSpeed * sf::Vector2f(0, 1);
+			m_Transform->Translate(ts * m_MoveSpeed * sf::Vector2f(0, 1));
 		if (Input::IsKeyDown(sf::Keyboard::W))
-			m_Transform->Position += ts * m_MoveSpeed * sf::Vector2f(0, -1);
+			m_Transform->Translate(ts * m_MoveSpeed * sf::Vector2f(0, -1));
 
 		
 		if (Input::IsKeyDown(sf::Keyboard::LControl))
-			m_Camera->Zoom -= m_ScrollSpeed * Input::GetMouseWheelDelta() * ts;
+			m_Camera->SetZoom( m_Camera->GetZoom() - m_ScrollSpeed * Input::GetMouseWheelDelta() * ts);
 	}
 
 private:

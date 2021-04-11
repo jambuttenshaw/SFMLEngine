@@ -22,11 +22,12 @@ which detects if this BoxCollider is intersecting with the geometry described th
 namespace SFMLEngine {
 
 	// forward-declare other types of collider, as to avoid circular includes
-	struct CircleCollider;
-	struct TilemapCollider;
+	class CircleCollider;
+	class TilemapCollider;
 
-	struct BoxCollider : public Collider
+	class BoxCollider : public Collider
 	{
+	public:
 		BoxCollider()
 			: m_Bounds()
 		{}

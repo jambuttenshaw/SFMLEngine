@@ -15,7 +15,7 @@ public:
 
 	void Update(Timestep ts) override
 	{
-		m_Transform->Position = Input::GetMouseWorldPos();
+		m_Transform->SetPosition(Input::GetMouseWorldPos());
 	}
 
 

@@ -11,7 +11,7 @@ public:
 	{
 		// do something when the game starts
 		m_Tilemap = &GetComponent<Tilemap>();
-		m_Palette = m_Tilemap->PalettePtr;
+		m_Palette = m_Tilemap->GetPalette();
 	}
 
 	void Update(Timestep ts) override

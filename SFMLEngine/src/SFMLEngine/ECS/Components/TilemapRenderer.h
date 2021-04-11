@@ -5,38 +5,42 @@
 
 namespace SFMLEngine {
 
-	struct TilemapRenderer
+	class TilemapRenderer
 	{
+	public:
 		friend class System;
-
-		ResourceID MaterialHandle;
-		int RenderLayer;
-
-		// for speed when rendering
-		Material* MaterialPtr = nullptr;
 
 
 		TilemapRenderer()
-			: MaterialHandle(NULL_RESOURCE_ID), RenderLayer(0)
+			: m_MaterialHandle(NULL_RESOURCE_ID), m_RenderLayer(0)
 		{}
 
 		TilemapRenderer(ResourceID mat, int renderLayer)
-			: MaterialHandle(mat), RenderLayer(renderLayer)
+			: m_MaterialHandle(mat), m_RenderLayer(renderLayer)
 		{
-			MaterialPtr = ResourceManager::GetResourceHandle<Material>(MaterialHandle);
+			m_MaterialPtr = ResourceManager::GetResourceHandle<Material>(m_MaterialHandle);
 		}
 
-		void ChangeMaterial(ResourceID newMat)
+		inline ResourceID GetMaterialHandle() const { return m_MaterialHandle; }
+		inline Material* GetMaterial() const { return m_MaterialPtr; }
+		inline void ChangeMaterial(ResourceID newMat)
 		{
-			MaterialHandle = newMat;
-			MaterialPtr = ResourceManager::GetResourceHandle<Material>(newMat);
+			m_MaterialHandle = newMat;
+			m_MaterialPtr = ResourceManager::GetResourceHandle<Material>(newMat);
 			m_Modified = true;
 		}
 
-		void SetRenderLayer(int newRenderLayer) { RenderLayer = newRenderLayer; m_Modified = true; }
+		inline int GetRenderLayer() const { return m_RenderLayer; }
+		inline void SetRenderLayer(int newRenderLayer) { m_RenderLayer = newRenderLayer; m_Modified = true; }
 
 	private:
 		bool m_Modified = true;
+
+		ResourceID m_MaterialHandle;
+		int m_RenderLayer;
+
+		// for speed when rendering
+		Material* m_MaterialPtr = nullptr;
 	};
 
 }

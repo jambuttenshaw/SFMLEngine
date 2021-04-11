@@ -29,9 +29,9 @@ public:
 	sf::Vector2f GetCentre()
 	{
 		if (m_Crawling)
-			return m_Transform->Position + sf::Vector2f{32, 16}; 
+			return m_Transform->GetPosition() + sf::Vector2f{32, 16}; 
 		else
-			return m_Transform->Position + sf::Vector2f{16, 32}; 
+			return m_Transform->GetPosition() + sf::Vector2f{16, 32};
 	}
 
 private:

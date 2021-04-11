@@ -23,8 +23,9 @@ namespace SFMLEngine {
 
 	// this is done with a ColliderInfo component
 	// it tells the collision system the type of the collider attached to an entity
-	struct ColliderInfo
+	class ColliderInfo
 	{
+	public:
 		friend class System;
 
 		ColliderInfo()

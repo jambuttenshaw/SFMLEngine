@@ -21,11 +21,12 @@ If you know the tilemap geometry will be edited infrequently then a high optimiz
 
 namespace SFMLEngine {
 
-	struct BoxCollider;
-	struct CircleCollider;
+	class BoxCollider;
+	class CircleCollider;
 
-	struct TilemapCollider : public Collider
+	class TilemapCollider : public Collider
 	{
+	public:
 		// Specifies the level of optimization that should be applied to the collider
 		enum class OptimizationLevel 
 		{

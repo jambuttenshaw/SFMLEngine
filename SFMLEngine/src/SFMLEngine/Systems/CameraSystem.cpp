@@ -50,10 +50,10 @@ namespace SFMLEngine {
 		auto& cam = m_Coordinator->GetComponent<Camera>(m_MainCamera);
 		auto& transform = m_Coordinator->GetComponent<Transform>(m_MainCamera);
 
-		sf::View view(transform.Position, cam.GetSize());
+		sf::View view(transform.GetPosition(), cam.GetSize());
 		view.setViewport(cam.GetViewport());
 
-		view.setRotation(transform.Rotation);
+		view.setRotation(transform.GetRotation());
 		view.zoom(cam.GetZoom());
 
 		return view;

@@ -29,7 +29,7 @@ public:
 	{
 		for (size_t i = 0; i < m_WolfTransforms.size(); i++)
 		{
-			if (Math::SquareMagnitude(m_WolfTransforms[i]->Position - pos) < m_WolfTriggerRadius * m_WolfTriggerRadius)
+			if (Math::SquareMagnitude(m_WolfTransforms[i]->GetPosition() - pos) < m_WolfTriggerRadius * m_WolfTriggerRadius)
 			{
 				m_WolfControllers[i]->Wake();
 			}

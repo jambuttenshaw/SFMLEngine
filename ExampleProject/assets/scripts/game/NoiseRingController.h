@@ -11,7 +11,7 @@ public:
 	void Start() override
 	{
 		m_Transform = &GetComponent<Transform>();
-		m_Transform->Scale = { 0, 0 };
+		m_Transform->SetScale({ 0, 0 });
 
 		m_Sprite = &GetComponent<SpriteRenderer>();
 	}
@@ -34,8 +34,8 @@ public:
 		m_Sprite->SetColor({ 255, 255, 255, static_cast<sf::Uint8>(alpha) });
 		
 
-		m_Transform->Scale = { m_Scale, m_Scale };
-		m_Transform->Position = m_CentrePos - 0.5f * scaledSize;
+		m_Transform->SetScale({ m_Scale, m_Scale });
+		m_Transform->SetPosition({ m_CentrePos - 0.5f * scaledSize });
 	}
 
 	void SetCentrePosition(const sf::Vector2f& centre)

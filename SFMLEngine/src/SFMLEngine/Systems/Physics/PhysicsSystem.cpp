@@ -19,8 +19,8 @@ namespace SFMLEngine {
 		auto& transform = m_Coordinator->GetComponent<Transform>(entity);
 
 		// set up the rigidbody
-		rigidbody.Position = transform.Position;
-		rigidbody.OldPosition = transform.Position;
+		rigidbody.SetPosition(transform.GetPosition());
+		rigidbody.SetOldPosition(transform.GetPosition());
 
 		// create an entry in the collisions map
 		// just now it maps to an empty set
@@ -90,19 +90,19 @@ namespace SFMLEngine {
 			auto& transform = m_Coordinator->GetComponent<Transform>(entity);
 
 			// add the entities weight onto the resultant force
-			rigidbody.Force += rigidbody.Mass * Physics::Gravity;
-			rigidbody.Acceleration = rigidbody.Force / rigidbody.Mass;
+			rigidbody.ChangeForce(rigidbody.GetMass() * Physics::Gravity);
+			rigidbody.SetAcceleration(rigidbody.GetForce() / rigidbody.GetMass());
 
-			rigidbody.Velocity += rigidbody.Acceleration * (float)ts;
-			rigidbody.Position += rigidbody.Velocity * (float)ts;
+			rigidbody.ChangeVelocity(rigidbody.GetAcceleration() * (float)ts);
+			rigidbody.ChangePosition(rigidbody.GetVelocity() * (float)ts);
 
 
 			// once the final movement has been calculated, reset the force to 0
 			// each force only lasts for one frame, to apply a bigger impulse the force should be reapplied for many frames
-			rigidbody.Force *= 0.0f;
+			rigidbody.SetForce({ 0.0f, 0.0f });
 
 			// the final amount the entity will move this frame
-			transform.Position += rigidbody.Position - rigidbody.OldPosition;
+			transform.Translate(rigidbody.GetPosition() - rigidbody.GetOldPosition());
 
 
 			// test for collisions against each collider in the same or adjacent (if required) partitions
@@ -129,32 +129,36 @@ namespace SFMLEngine {
 						// the offset is the difference between the transforms position and the colliders position
 						// when we are correcting the position of the entity, we are adjusting the transform's position
 						// so we need to know the difference between the colliders pos and the transforms pos to adjust properly
-						sf::Vector2f offset = transform.Position - sf::Vector2f{ collisionTest.GlobalBounds.left, collisionTest.GlobalBounds.top };
+						sf::Vector2f offset = transform.GetPosition() - sf::Vector2f{ collisionTest.GlobalBounds.left, collisionTest.GlobalBounds.top };
+						
+						
+						sf::Vector2f newPos{ transform.GetPosition() };
 
 						// respond to the collision based off of the direction
 						switch (collisionTest.CollisionDirection)
 						{
 						case Math::Direction::Right:
 							// set the right of this entity to the left of the other entity
-							transform.Position.x = collisionTest.OtherGlobalBounds.left - collisionTest.GlobalBounds.width + offset.x;
-							rigidbody.Velocity.x = 0;
+							newPos.x = collisionTest.OtherGlobalBounds.left - collisionTest.GlobalBounds.width + offset.x;
+							rigidbody.SetVelocity({ 0.0f, rigidbody.GetVelocity().y });
 							break;
 						case Math::Direction::Left:
 							// set the left of this entity to the right of the other entity
-							transform.Position.x = collisionTest.OtherGlobalBounds.left + collisionTest.OtherGlobalBounds.width + offset.x;
-							rigidbody.Velocity.x = 0;
+							newPos.x = collisionTest.OtherGlobalBounds.left + collisionTest.OtherGlobalBounds.width + offset.x;
+							rigidbody.SetVelocity({ 0.0f, rigidbody.GetVelocity().y });
 							break;
 						case Math::Direction::Down:
 							// set the bottom of this entity to the top of the other entity
-							transform.Position.y = collisionTest.OtherGlobalBounds.top - collisionTest.GlobalBounds.height + offset.y;
-							rigidbody.Velocity.y = 0;
+							newPos.y = collisionTest.OtherGlobalBounds.top - collisionTest.GlobalBounds.height + offset.y;
+							rigidbody.SetVelocity({ rigidbody.GetVelocity().x, 0.0f });
 							break;
 						case Math::Direction::Up:
 							// set the top of this entity to the bottom of the other entity
-							transform.Position.y = collisionTest.OtherGlobalBounds.top + collisionTest.OtherGlobalBounds.height + offset.y;
-							rigidbody.Velocity.y = 0;
+							newPos.y = collisionTest.OtherGlobalBounds.top + collisionTest.OtherGlobalBounds.height + offset.y;
+							rigidbody.SetVelocity({ rigidbody.GetVelocity().x, 0.0f });
 							break;
 						}
+						transform.SetPosition(newPos);
 					}
 
 
@@ -181,8 +185,8 @@ namespace SFMLEngine {
 
 
 			// apply any collision detection changes to the rigidbody
-			rigidbody.Position = transform.Position;
-			rigidbody.OldPosition = transform.Position;
+			rigidbody.SetPosition(transform.GetPosition());
+			rigidbody.SetOldPosition(transform.GetPosition());
 		}
 	}
 
@@ -205,7 +209,7 @@ namespace SFMLEngine {
 			if (m_Coordinator->HasComponent<NativeScripts>(entity))
 			{
 				auto& scriptsComponent = m_Coordinator->GetComponent<NativeScripts>(entity);
-				for (auto& script : scriptsComponent.Scripts)
+				for (auto& script : scriptsComponent.GetScripts())
 				{
 					if (collisionData.Trigger)
 						script.second->OnTriggerEnter(collisionData);
@@ -221,7 +225,7 @@ namespace SFMLEngine {
 			if (m_Coordinator->HasComponent<NativeScripts>(entity))
 			{
 				auto& scriptsComponent = m_Coordinator->GetComponent<NativeScripts>(entity);
-				for (auto& script : scriptsComponent.Scripts)
+				for (auto& script : scriptsComponent.GetScripts())
 				{
 					if (collisionData.Trigger)
 						script.second->OnTriggerStay(collisionData);
@@ -242,7 +246,7 @@ namespace SFMLEngine {
 		if (m_Coordinator->HasComponent<NativeScripts>(entity))
 		{
 			auto& scriptsComponent = m_Coordinator->GetComponent<NativeScripts>(entity);
-			for (auto& script : scriptsComponent.Scripts)
+			for (auto& script : scriptsComponent.GetScripts())
 			{
 				if (collision.second.Trigger)
 					script.second->OnTriggerExit({ collision.second.Owner, collision.first });

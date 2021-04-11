@@ -68,7 +68,7 @@ namespace SFMLEngine {
 		TileID CreateTile(const std::string& name, ResourceID tileTextureID, ResourceID tileNormalsID);
 
 		// gets information about each type of tile
-		const sf::Vector2u& GetTileSize() { return m_TileSize; }
+		const sf::Vector2u& GetTileSize() const { return m_TileSize; }
 		const TileData& GetTileData(TileID tile);
 		const sf::Vector2u& GetTileSize(TileID tile);
 		const sf::Vector2u& GetTexCoords(TileID tile);

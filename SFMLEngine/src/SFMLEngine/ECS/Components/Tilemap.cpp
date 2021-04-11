@@ -10,28 +10,28 @@ namespace SFMLEngine {
 	bool Tilemap::s_WarnOnLoadFailure = true;
 
 	Tilemap::Tilemap()
-		: TileSize(), PaletteHandle(NULL_RESOURCE_ID), Tiles(), Geometry(sf::Triangles)
+		: m_TileSize(), m_PaletteHandle(NULL_RESOURCE_ID), m_Tiles(), m_Geometry(sf::Triangles)
 	{}
 
 	Tilemap::Tilemap(ResourceID tilePalette)
-		: PaletteHandle(tilePalette), Tiles(), Geometry(sf::Triangles)
+		: m_PaletteHandle(tilePalette), m_Tiles(), m_Geometry(sf::Triangles)
 	{
-		PalettePtr = ResourceManager::GetResourceHandle<TilePalette>(PaletteHandle);
-		TileSize = (sf::Vector2f)PalettePtr->GetTileSize();
+		m_PalettePtr = ResourceManager::GetResourceHandle<TilePalette>(m_PaletteHandle);
+		m_TileSize = (sf::Vector2f)m_PalettePtr->GetTileSize();
 	}
 
 	Tilemap::Tilemap(ResourceID tilePalette, std::initializer_list<Tile> tiles)
-		: PaletteHandle(tilePalette), Tiles(tiles), Geometry(sf::Triangles)
+		: m_PaletteHandle(tilePalette), m_Tiles(tiles), m_Geometry(sf::Triangles)
 	{
-		PalettePtr = ResourceManager::GetResourceHandle<TilePalette>(PaletteHandle);
-		TileSize = (sf::Vector2f)PalettePtr->GetTileSize();
+		m_PalettePtr = ResourceManager::GetResourceHandle<TilePalette>(m_PaletteHandle);
+		m_TileSize = (sf::Vector2f)m_PalettePtr->GetTileSize();
 
 		// set up the geometry to the correct size
-		Geometry.clear();
-		Geometry.resize(6 * Tiles.size());
+		m_Geometry.clear();
+		m_Geometry.resize(6 * m_Tiles.size());
 
 		// add any tiles specified from the constructor
-		for (Tile& tile : Tiles)
+		for (Tile& tile : m_Tiles)
 		{
 			AddTileToGeometry(tile);
 		}
@@ -42,13 +42,13 @@ namespace SFMLEngine {
 
 
 	Tilemap::Tilemap(ResourceID tilePalette, const std::string& dataPath)
-		: PaletteHandle(tilePalette), Tiles(), Geometry(sf::Triangles)
+		: m_PaletteHandle(tilePalette), m_Tiles(), m_Geometry(sf::Triangles)
 	{
-		PalettePtr = ResourceManager::GetResourceHandle<TilePalette>(PaletteHandle);
-		TileSize = (sf::Vector2f)PalettePtr->GetTileSize();
+		m_PalettePtr = ResourceManager::GetResourceHandle<TilePalette>(m_PaletteHandle);
+		m_TileSize = (sf::Vector2f)m_PalettePtr->GetTileSize();
 
 		// set up the geometry
-		Geometry.clear();
+		m_Geometry.clear();
 
 
 		// load tilemap data from the file
@@ -87,40 +87,40 @@ namespace SFMLEngine {
 				size_t index = GetTileIndex(location);
 
 				// get the new tile dimensions
-				sf::Vector2f tileDimensions = (sf::Vector2f)PalettePtr->GetTileSize(tileType);
+				sf::Vector2f tileDimensions = (sf::Vector2f)m_PalettePtr->GetTileSize(tileType);
 				// check if the old tile is the same size as this tile
-				bool same_size = tileDimensions == (sf::Vector2f)PalettePtr->GetTileSize(Tiles[index].TileType);
+				bool same_size = tileDimensions == (sf::Vector2f)m_PalettePtr->GetTileSize(m_Tiles[index].TileType);
 
 				// get the position of the tile in world space
-				sf::Vector2f pos = sf::Vector2f(Tiles[index].Position.x * TileSize.x, Tiles[index].Position.y * TileSize.y);
+				sf::Vector2f pos = sf::Vector2f(m_Tiles[index].Position.x * m_TileSize.x, m_Tiles[index].Position.y * m_TileSize.y);
 
 				// set the new tile type
-				Tiles[index].TileType = tileType;
+				m_Tiles[index].TileType = tileType;
 
 				// update the texture coordinates in the geometry
-				size_t geomIndex = Tiles[index].GeometryIndex;
-				sf::Vector2f texCoords = (sf::Vector2f)PalettePtr->GetTexCoords(tileType);
+				size_t geomIndex = m_Tiles[index].GeometryIndex;
+				sf::Vector2f texCoords = (sf::Vector2f)m_PalettePtr->GetTexCoords(tileType);
 
 				if (!same_size)
 				{
 
 					// vertices need adjusting as the new tile is not the same size as the old one
-					Geometry[geomIndex].position = pos;
-					Geometry[geomIndex + 1].position = pos + sf::Vector2f(tileDimensions.x, 0);
-					Geometry[geomIndex + 2].position = pos + tileDimensions;
+					m_Geometry[geomIndex].position = pos;
+					m_Geometry[geomIndex + 1].position = pos + sf::Vector2f(tileDimensions.x, 0);
+					m_Geometry[geomIndex + 2].position = pos + tileDimensions;
 
-					Geometry[geomIndex + 3].position = pos;
-					Geometry[geomIndex + 4].position = pos + sf::Vector2f(0, tileDimensions.y);
-					Geometry[geomIndex + 5].position = pos + tileDimensions;
+					m_Geometry[geomIndex + 3].position = pos;
+					m_Geometry[geomIndex + 4].position = pos + sf::Vector2f(0, tileDimensions.y);
+					m_Geometry[geomIndex + 5].position = pos + tileDimensions;
 				}
 
-				Geometry[geomIndex].texCoords = texCoords;
-				Geometry[geomIndex + 1].texCoords = texCoords + sf::Vector2f(tileDimensions.x, 0);
-				Geometry[geomIndex + 2].texCoords = texCoords + tileDimensions;
+				m_Geometry[geomIndex].texCoords = texCoords;
+				m_Geometry[geomIndex + 1].texCoords = texCoords + sf::Vector2f(tileDimensions.x, 0);
+				m_Geometry[geomIndex + 2].texCoords = texCoords + tileDimensions;
 
-				Geometry[geomIndex + 3].texCoords = texCoords;
-				Geometry[geomIndex + 4].texCoords = texCoords + sf::Vector2f(0, tileDimensions.y);
-				Geometry[geomIndex + 5].texCoords = texCoords + tileDimensions;
+				m_Geometry[geomIndex + 3].texCoords = texCoords;
+				m_Geometry[geomIndex + 4].texCoords = texCoords + sf::Vector2f(0, tileDimensions.y);
+				m_Geometry[geomIndex + 5].texCoords = texCoords + tileDimensions;
 			}
 			else
 			{
@@ -131,11 +131,11 @@ namespace SFMLEngine {
 		else
 		{
 			// add 6 more vertices into the geometry
-			Geometry.resize(Geometry.getVertexCount() + 6);
+			m_Geometry.resize(m_Geometry.getVertexCount() + 6);
 
 			// create a tile object and add it into the tile map
 			Tile tile{ tileType, location };
-			Tiles.push_back(tile);
+			m_Tiles.push_back(tile);
 
 			// create new vertices for this tile
 			AddTileToGeometry(tile);
@@ -152,13 +152,13 @@ namespace SFMLEngine {
 		// find out where the tile to be removed is in the array
 		size_t tileIndex = GetTileIndex(location);
 
-		TileID tiletype = Tiles[tileIndex].TileType;
+		TileID tiletype = m_Tiles[tileIndex].TileType;
 
 		// we dont need to move any data about if were deleting the last tile in the array
-		if (tileIndex != Tiles.size() - 1)
+		if (tileIndex != m_Tiles.size() - 1)
 		{
 			// we need to move the last tile in the array into the empty gap left by the deleted one
-			size_t geometryLocation = Tiles[tileIndex].GeometryIndex;
+			size_t geometryLocation = m_Tiles[tileIndex].GeometryIndex;
 
 			// we want to replace the deleted tile with the last tile in the geometry
 			// since all tiles are in the same order in the Tiles vector as in the geometry
@@ -166,31 +166,31 @@ namespace SFMLEngine {
 			// newly freed space
 
 			// copy the last item into the empty space
-			Tiles[tileIndex] = Tiles[Tiles.size() - 1];
+			m_Tiles[tileIndex] = m_Tiles[m_Tiles.size() - 1];
 			// remove the last item in the tiles array
-			Tiles.pop_back();
+			m_Tiles.pop_back();
 
 			// now we want to copy the geometry data over to the new location
-			size_t oldGeometryLocation = Tiles[tileIndex].GeometryIndex;
+			size_t oldGeometryLocation = m_Tiles[tileIndex].GeometryIndex;
 
-			Geometry[geometryLocation] = Geometry[oldGeometryLocation];
-			Geometry[geometryLocation + 1] = Geometry[oldGeometryLocation + 1];
-			Geometry[geometryLocation + 2] = Geometry[oldGeometryLocation + 2];
-			Geometry[geometryLocation + 3] = Geometry[oldGeometryLocation + 3];
-			Geometry[geometryLocation + 4] = Geometry[oldGeometryLocation + 4];
-			Geometry[geometryLocation + 5] = Geometry[oldGeometryLocation + 5];
+			m_Geometry[geometryLocation] = m_Geometry[oldGeometryLocation];
+			m_Geometry[geometryLocation + 1] = m_Geometry[oldGeometryLocation + 1];
+			m_Geometry[geometryLocation + 2] = m_Geometry[oldGeometryLocation + 2];
+			m_Geometry[geometryLocation + 3] = m_Geometry[oldGeometryLocation + 3];
+			m_Geometry[geometryLocation + 4] = m_Geometry[oldGeometryLocation + 4];
+			m_Geometry[geometryLocation + 5] = m_Geometry[oldGeometryLocation + 5];
 
 			// update the geometry location of the moved tile
-			Tiles[tileIndex].GeometryIndex = geometryLocation;
+			m_Tiles[tileIndex].GeometryIndex = geometryLocation;
 		}
 		else
 		{
 			// we have to remove the last tile from the tiles vector
-			Tiles.pop_back();
+			m_Tiles.pop_back();
 		}
 
 		// finally resize the geometry vertex array
-		Geometry.resize(6 * Tiles.size());
+		m_Geometry.resize(6 * m_Tiles.size());
 		// decrement the triangle index since the array has been shrunk
 		m_TriangleIndex -= 6;
 
@@ -206,19 +206,19 @@ namespace SFMLEngine {
 		if (m_Transform)
 		{
 			auto pos = m_Transform->GetWorldToLocalTransformMatrix().transformPoint(worldCoords);
-			return sf::Vector2i((int)floorf(pos.x / (float)TileSize.x),
-								(int)floorf(pos.y / (float)TileSize.y));
+			return sf::Vector2i((int)floorf(pos.x / (float)m_TileSize.x),
+								(int)floorf(pos.y / (float)m_TileSize.y));
 		}
 		else
 		{
-			return sf::Vector2i((int)floorf(worldCoords.x / (float)TileSize.x),
-								(int)floorf(worldCoords.y / (float)TileSize.y));
+			return sf::Vector2i((int)floorf(worldCoords.x / (float)m_TileSize.x),
+								(int)floorf(worldCoords.y / (float)m_TileSize.y));
 		}
 	}
 
 	sf::Vector2f Tilemap::TileToWorldCoordinates(const sf::Vector2i& tileCoords)
 	{
-		sf::Vector2f worldCoords{ tileCoords.x * TileSize.x, tileCoords.y * TileSize.y };
+		sf::Vector2f worldCoords{ tileCoords.x * m_TileSize.x, tileCoords.y * m_TileSize.y };
 		if (m_Transform)
 		{
 			// if this tilemap has a transform stored then transform the point from local space into world space
@@ -239,7 +239,7 @@ namespace SFMLEngine {
 		nlohmann::json tilemapJson;
 
 		
-		for (auto const& tile : Tiles)
+		for (auto const& tile : m_Tiles)
 		{
 			nlohmann::json tileJson;
 			tileJson["type"] = tile.TileType;
@@ -261,44 +261,44 @@ namespace SFMLEngine {
 	void Tilemap::AddTileToGeometry(Tile& tile)
 	{
 		// update the tile with the location in the geometry it has been inserted
-		Tiles[Tiles.size() - 1].GeometryIndex = m_TriangleIndex;
+		m_Tiles[m_Tiles.size() - 1].GeometryIndex = m_TriangleIndex;
 
 		// place a tile into the geometry
 		// this can be done by inserting 2 triangles
 
-		sf::Vector2f pos = sf::Vector2f(tile.Position.x * TileSize.x, tile.Position.y * TileSize.y);
+		sf::Vector2f pos = sf::Vector2f(tile.Position.x * m_TileSize.x, tile.Position.y * m_TileSize.y);
 
 		// get the dimensions of the tile
 		// the tile can have different dimensions than the tile size of the tile map
 		// but we still need the original TileSize for the whole tilemap for placing tiles into the grid at the correct location
-		sf::Vector2f tileDimensions = (sf::Vector2f)PalettePtr->GetTileSize(tile.TileType);
+		sf::Vector2f tileDimensions = (sf::Vector2f)m_PalettePtr->GetTileSize(tile.TileType);
 
 		// first set the position of each vertex
-		Geometry[m_TriangleIndex].position = pos;
-		Geometry[m_TriangleIndex + 1].position = pos + sf::Vector2f(tileDimensions.x, 0);
-		Geometry[m_TriangleIndex + 2].position = pos + tileDimensions;
+		m_Geometry[m_TriangleIndex].position = pos;
+		m_Geometry[m_TriangleIndex + 1].position = pos + sf::Vector2f(tileDimensions.x, 0);
+		m_Geometry[m_TriangleIndex + 2].position = pos + tileDimensions;
 
-		Geometry[m_TriangleIndex + 3].position = pos;
-		Geometry[m_TriangleIndex + 4].position = pos + sf::Vector2f(0, tileDimensions.y);
-		Geometry[m_TriangleIndex + 5].position = pos + tileDimensions;
+		m_Geometry[m_TriangleIndex + 3].position = pos;
+		m_Geometry[m_TriangleIndex + 4].position = pos + sf::Vector2f(0, tileDimensions.y);
+		m_Geometry[m_TriangleIndex + 5].position = pos + tileDimensions;
 
 		// then set the texture coordinates
 		// we retrieve the location of the texture coordinates in the texture sheet from the tile palette
-		sf::Vector2f texCoords = (sf::Vector2f)PalettePtr->GetTexCoords(tile.TileType);
-		Geometry[m_TriangleIndex].texCoords = texCoords;
-		Geometry[m_TriangleIndex + 1].texCoords = texCoords + sf::Vector2f(tileDimensions.x, 0);
-		Geometry[m_TriangleIndex + 2].texCoords = texCoords + tileDimensions;
+		sf::Vector2f texCoords = (sf::Vector2f)m_PalettePtr->GetTexCoords(tile.TileType);
+		m_Geometry[m_TriangleIndex].texCoords = texCoords;
+		m_Geometry[m_TriangleIndex + 1].texCoords = texCoords + sf::Vector2f(tileDimensions.x, 0);
+		m_Geometry[m_TriangleIndex + 2].texCoords = texCoords + tileDimensions;
 
-		Geometry[m_TriangleIndex + 3].texCoords = texCoords;
-		Geometry[m_TriangleIndex + 4].texCoords = texCoords + sf::Vector2f(0, tileDimensions.y);
-		Geometry[m_TriangleIndex + 5].texCoords = texCoords + tileDimensions;
+		m_Geometry[m_TriangleIndex + 3].texCoords = texCoords;
+		m_Geometry[m_TriangleIndex + 4].texCoords = texCoords + sf::Vector2f(0, tileDimensions.y);
+		m_Geometry[m_TriangleIndex + 5].texCoords = texCoords + tileDimensions;
 
 		m_TriangleIndex += 6;
 	}
 
 	bool Tilemap::TileAtLocation(const sf::Vector2i& pos)
 	{
-		for (auto const& tile : Tiles)
+		for (auto const& tile : m_Tiles)
 		{
 			if (tile.Position == pos) return true;
 		}
@@ -308,7 +308,7 @@ namespace SFMLEngine {
 	size_t Tilemap::GetTileIndex(const sf::Vector2i& pos)
 	{
 		int index = 0;
-		for (auto const& tile : Tiles)
+		for (auto const& tile : m_Tiles)
 		{
 			if (tile.Position == pos) return index;
 			index++;

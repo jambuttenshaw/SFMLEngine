@@ -22,16 +22,18 @@ namespace SFMLEngine {
 		m_Tilemaps.insert(std::make_pair(entity, tilemap));
 		m_Transforms.insert(std::make_pair(entity, transform));
 
-		m_RenderLayers.insert(tRenderer->RenderLayer);
+
+
+		m_RenderLayers.insert(tRenderer->GetRenderLayer());
 
 		// insert into materials map
-		if (m_MaterialsMap.find(tRenderer->MaterialHandle) == m_MaterialsMap.end())
+		if (m_MaterialsMap.find(tRenderer->GetMaterialHandle()) == m_MaterialsMap.end())
 		{
-			m_MaterialsMap.insert(std::make_pair(tRenderer->MaterialHandle, std::set<Entity>{ entity }));
+			m_MaterialsMap.insert(std::make_pair(tRenderer->GetMaterialHandle(), std::set<Entity>{ entity }));
 		}
 		else
 		{
-			m_MaterialsMap[tRenderer->MaterialHandle].insert(entity);
+			m_MaterialsMap[tRenderer->GetMaterialHandle()].insert(entity);
 		}
 	}
 
@@ -43,7 +45,7 @@ namespace SFMLEngine {
 			if (ComponentModified(renderer))
 			{
 				// check to see if the material has been changed
-				auto mat = renderer->MaterialHandle;
+				auto mat = renderer->GetMaterialHandle();
 				if (m_MaterialsMap[mat].find(entity) == m_MaterialsMap[mat].end())
 				{
 					// the material has been changed
@@ -75,7 +77,7 @@ namespace SFMLEngine {
 
 	void TilemapRenderSystem::EntityRemovedFromSystem(Entity entity)
 	{
-		auto mat = m_TilemapRenderers[entity]->MaterialHandle;
+		auto mat = m_TilemapRenderers[entity]->GetMaterialHandle();
 		m_MaterialsMap[mat].erase(entity);
 		if (m_MaterialsMap[mat].empty())
 			m_MaterialsMap.erase(mat);
@@ -97,43 +99,43 @@ namespace SFMLEngine {
 			ZoneName("DrawTilemap", 11);
 
 			TilemapRenderer* tilemapRenderer = m_TilemapRenderers[entity];
-			if (tilemapRenderer->RenderLayer != renderLayer) continue;
+			if (tilemapRenderer->GetRenderLayer() != renderLayer) continue;
 
 			Tilemap* tilemap = m_Tilemaps[entity];
 			Transform* transform = m_Transforms[entity];
 
 			// get a pointer to the shader
-			sf::Shader* shader = tilemapRenderer->MaterialPtr->GetShaderPtr();
+			sf::Shader* shader = tilemapRenderer->GetMaterial()->GetShaderPtr();
 
 
 			// set shader uniforms
 			// if its a lit material set the normal map and rotation to be applied to normals
-			if (tilemapRenderer->MaterialPtr->IsLit())
+			if (tilemapRenderer->GetMaterial()->IsLit())
 			{
 				ZoneScoped;
 				ZoneName("SetLighting", 11);
 
 				// set the normal map to the normal map texture in the tile palette object
-				shader->setUniform("u_NormalMap", *ResourceManager::GetResourceHandle<sf::Texture>(tilemap->PalettePtr->GetNormalMap()));
+				shader->setUniform("u_NormalMap", *ResourceManager::GetResourceHandle<sf::Texture>(tilemap->GetPalette()->GetNormalMap()));
 
-				shader->setUniform("u_PosOffset", transform->Position);
+				shader->setUniform("u_PosOffset", transform->GetPosition());
 
 				// rotation value is used to compute transformed normals so lighting is correct for rotated sprites
 				// requires negated because of the y axis being flipped
-				shader->setUniform("u_Rotation", fmodf(-transform->Rotation, 360) * Math::DEG_TO_RAD);
+				shader->setUniform("u_Rotation", fmodf(-transform->GetRotation(), 360) * Math::DEG_TO_RAD);
 
 			}
 
 			// set up the render state
 			// use the texture from the tile palette object
-			m_RenderState.texture = ResourceManager::GetResourceHandle<sf::Texture>(tilemap->PalettePtr->GetTexture());
+			m_RenderState.texture = ResourceManager::GetResourceHandle<sf::Texture>(tilemap->GetPalette()->GetTexture());
 			m_RenderState.transform = transform->GetLocalToWorldTransformMatrix();
 			m_RenderState.shader = shader;
 
 			{
 				ZoneScoped;
 				ZoneName("Draw", 4);
-				m_RenderWindow->draw(tilemap->Geometry, m_RenderState);
+				m_RenderWindow->draw(tilemap->GetGeometry(), m_RenderState);
 			}
 		}
 	}
