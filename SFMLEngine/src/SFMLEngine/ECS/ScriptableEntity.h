@@ -59,6 +59,7 @@ namespace SFMLEngine {
 		Entity CreateEntity();
 		// destroy the entity
 		void Destroy();
+		void Destroy(Entity entity);
 
 		// components
 		template<typename T>

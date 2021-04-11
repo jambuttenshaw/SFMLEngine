@@ -626,8 +626,8 @@ namespace SFMLEngine
                 m_Window->setView(m_GUIView);
 
                 // draw the GUI onto the display
-                m_GUIImageSystem->Render();
                 m_GUITextSystem->Render();
+                m_GUIImageSystem->Render();
             }
 
 

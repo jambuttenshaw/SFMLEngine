@@ -7,6 +7,7 @@ namespace SFMLEngine {
 
 	Entity ScriptableEntity::CreateEntity() { return m_SceneHandle->CreateEntity(); }
 	void ScriptableEntity::Destroy() { m_SceneHandle->DestroyEntity(m_EntityHandle); }
+	void ScriptableEntity::Destroy(Entity entity) { m_SceneHandle->DestroyEntity(entity); }
 
 	const std::vector<Entity>& ScriptableEntity::GetEntitiesWithTag(const std::string& tag)
 	{ 

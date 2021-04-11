@@ -20,9 +20,38 @@ public:
 
 	void Update(Timestep ts) override
 	{
-		if (Input::IsKeyPressed(sf::Keyboard::H))
+		if (m_FadingIn)
 		{
-			CreateTransitionEntity();
+			// set the opacity of the fade in image
+			m_FadeProgress += ts * m_FadeSpeed;
+			if (m_FadeProgress >= 1)
+			{
+				// the image has fully faded in
+				// load the level
+				LoadLevel();
+
+				m_FadingIn = false;
+				m_FadingOut = true;
+			}
+			else
+			{
+				m_TransitionImage->SetColor({ 255, 255, 255, sf::Uint8(m_FadeProgress * 255) });
+			}
+		}
+		else if (m_FadingOut)
+		{
+			m_FadeProgress -= ts * m_FadeSpeed;
+			if (m_FadeProgress <= 0)
+			{
+				Destroy(m_TransitionEntity);
+				m_TransitionImage = nullptr;
+
+				m_FadingOut = false;
+			}
+			else
+			{
+				m_TransitionImage->SetColor({ 255, 255, 255, sf::Uint8(m_FadeProgress * 255) });
+			}
 		}
 	}
 
@@ -32,41 +61,63 @@ public:
 		{
 			if (m_LoadedLevel1) return;
 
-
-			// delete the current level scene
-			// very crude method of deleting all scenes that dont contain a player
-			for (Scene* scene : m_App->GetLoadedScenes())
-			{
-				if (scene != m_MainScene)
-				{
-					m_App->DeleteScene(scene);
-				}
-			}
-			m_App->LoadScene<Level1>(LoadSceneMode::Additive);
-			m_PlayerController->Reset();
-			// snaps the camera to the players position
-			m_CameraController->ImmediateReset();
-
-			m_LoadedLevel1 = true;
+			m_FadingIn = true;
+			float m_FadeProgress = 0.0f;
+		
+			CreateTransitionEntity();
 		}
 	}
 
 	void SetMainScene(Scene* s) { m_MainScene = s; }
 
+
+	void LoadLevel()
+	{
+		// delete the current level scene
+		// very crude method of deleting all scenes that dont contain a player
+		for (Scene* scene : m_App->GetLoadedScenes())
+		{
+			if (scene != m_MainScene)
+			{
+				m_App->DeleteScene(scene);
+			}
+		}
+		m_App->LoadScene<Level1>(LoadSceneMode::Additive);
+		m_PlayerController->Reset();
+		// snaps the camera to the players position
+		m_CameraController->ImmediateReset();
+
+		m_LoadedLevel1 = true;
+	}
+
+
 	void CreateTransitionEntity()
 	{
 		m_TransitionEntity = CreateEntity();
 
-		AddComponent(m_TransitionEntity, GUIImage{ Texture::Create("assets/textures/black.png") });
+
+		GUIImage i{ Texture::Create("assets/textures/black.png") };
+		i.SetColor({ 255, 255, 255, 0 });
+		AddComponent(m_TransitionEntity, i);
+
+
 		GUITransform t{ {0.0f, 0.0f }, GUIElementType::Image };
 		sf::Vector2f windowSize = static_cast<sf::Vector2f>(Application::GetWindowSize());
 		t.SetScale({ windowSize.x / 256.0f, windowSize.y / 256.0f });
 		AddComponent(m_TransitionEntity, t);
+
+
+		m_TransitionImage = &GetComponent<GUIImage>(m_TransitionEntity);
 	}
 
 private:
 	Application* m_App = nullptr;
 	Scene* m_MainScene = nullptr;
+
+	bool m_FadingIn = false;
+	bool m_FadingOut = false;
+	float m_FadeProgress = 0.0f;
+	float m_FadeSpeed = 3.0f;
 
 	bool m_LoadedLevel1 = false;
 
@@ -75,4 +126,5 @@ private:
 
 
 	Entity m_TransitionEntity = INVALID_ENTITY_ID;
+	GUIImage* m_TransitionImage = nullptr;
 };
