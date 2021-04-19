@@ -302,6 +302,7 @@ void PlayerController::Hurt(bool toTheRight)
 		// the player has died :(
 		m_Dead = true;
 		m_Animator->SetCurrentAnimation("die");
+		m_Rigidbody->SetVelocity({ 0, 0 });
 
 		m_CameraController->ShakeCamera(0.7f, 7.5f);
 	}
@@ -310,12 +311,12 @@ void PlayerController::Hurt(bool toTheRight)
 		// if were crawling then just make the player not move
 		if (m_Crawling)
 		{
-			m_Rigidbody->SetVelocity({ (toTheRight ? m_HurtBounceVelocity : -m_HurtBounceVelocity) / m_ClimbHorizontalFactor, m_Rigidbody->GetVelocity().y });
+			m_Rigidbody->SetVelocity({ (toTheRight ? m_HurtBounceVelocity : -m_HurtBounceVelocity) / m_ClimbHorizontalFactor, 0 });
 			m_Animator->SetCurrentAnimation("idleCrawl");
 		}
 		else
 		{
-			m_Rigidbody->SetVelocity({ toTheRight ? m_HurtBounceVelocity : -m_HurtBounceVelocity, m_Rigidbody->GetVelocity().y });
+			m_Rigidbody->SetVelocity({ toTheRight ? m_HurtBounceVelocity : -m_HurtBounceVelocity, 0 });
 			m_Animator->SetCurrentAnimation("hurt");
 		}
 		m_CameraController->ShakeCamera(0.3f, 4.5f);

@@ -72,6 +72,8 @@ void CrystalCollector::Update(Timestep ts)
 					// overwrite the current tile, replace it with the broken appearing one
 					m_CrystalMap->PlaceTile(currentCrystal, crystal.Data->BrokenTile, true);
 					m_BrokenCrystal = true;
+
+					m_CameraController->ShakeCamera(0.1f, 3.0f);
 				}
 			}
 			// if the crystal has been mined
@@ -82,10 +84,8 @@ void CrystalCollector::Update(Timestep ts)
 				m_CrystalScore += crystal.Data->Value;
 				m_MiningProgress.erase(currentCrystal);
 
-				m_CameraController->ShakeCamera(0.2f, 5.0f);
+				m_CameraController->ShakeCamera(0.25f, 5.0f);
 			}
-			else
-				m_CameraController->ShakeCamera(0.1f, 2.0f);
 
 			CreateNoiseRing(m_CrystalMap->TileToWorldCoordinates(currentCrystal) + sf::Vector2f{16, 16});
 
