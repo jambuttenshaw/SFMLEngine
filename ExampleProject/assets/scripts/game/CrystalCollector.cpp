@@ -15,6 +15,7 @@ void CrystalCollector::Start()
 	
 	UpdateText();
 
+	m_PlayerController = &GetNativeScript<PlayerController>();
 
 	m_WolfManager = &GetNativeScript<WolfManager>(GetEntitiesWithTag("WolfManager")[0]);
 	m_CameraController = &GetNativeScript<CameraController>(GetEntitiesWithTag("MainCamera")[0]);
@@ -89,7 +90,8 @@ void CrystalCollector::Update(Timestep ts)
 			CreateNoiseRing(m_CrystalMap->TileToWorldCoordinates(currentCrystal) + sf::Vector2f{16, 16});
 
 			// collecting crystals will awaken wolves
-			m_WolfManager->AwakenWolves(m_Transform->GetPosition());
+			// use the centre of the player as the point they are awoken from
+			m_WolfManager->AwakenWolves(m_PlayerController->GetCentre());
 		}
 	}
 

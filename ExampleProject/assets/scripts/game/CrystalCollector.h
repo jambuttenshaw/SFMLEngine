@@ -59,6 +59,7 @@ private:
 
 	WolfManager* m_WolfManager = nullptr;
 
+	PlayerController* m_PlayerController = nullptr;
 	CameraController* m_CameraController = nullptr;
 
 	std::vector<sf::Vector2i> m_CollidingCrystals;

@@ -110,7 +110,7 @@ void WolfController::Update(Timestep ts)
 
 						// make sure we dont start climbing a 2-block high wall with a roof above it, cause this will look glitchy
 						bool tooShortToClimb = Physics::BoxCast({ m_Transform->GetPosition() + (m_FacingRight ? m_RightCanClimbCastPoint : m_LeftCanClimbCastPoint), m_ClimbRoofCastSize }, m_GroundLayerMask).first;
-
+						
 						if (tooTallToJump)
 						{
 							if (!tooShortToClimb)
@@ -300,4 +300,12 @@ void WolfController::EndClimbFromRoof()
 		m_FacingRight = true;
 	}
 
+}
+
+sf::Vector2f WolfController::GetCentre()
+{
+	if (m_State == WolfState::Climb)
+		return m_Transform->GetPosition() + sf::Vector2f{ 16, 32 };
+	else
+		return m_Transform->GetPosition() + sf::Vector2f{ 32, 16 };
 }

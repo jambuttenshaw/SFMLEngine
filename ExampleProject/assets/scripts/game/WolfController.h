@@ -31,6 +31,7 @@ public:
 	void EndClimb();
 	void EndClimbFromRoof();
 
+	sf::Vector2f GetCentre();
 
 private:
 	Rigidbody* m_Rigidbody;
