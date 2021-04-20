@@ -3,6 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 
+#include "SplashScreen.h"
 #include "MainMenu.h"
 #include "MainScene.h"
 
@@ -23,7 +24,7 @@ public:
 
 		LevelFactory::Init();
 
-		LoadScene<MainMenu>(LoadSceneMode::Single);
+		LoadScene<SplashScreen>(LoadSceneMode::Single);
 	}
 };
 

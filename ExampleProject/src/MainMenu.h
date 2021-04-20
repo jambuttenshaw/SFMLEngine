@@ -9,6 +9,7 @@
 
 #include "menu/GoToMouse.h"
 #include "menu/MenuCameraController.h"
+#include "menu/FadeInController.h"
 
 using namespace SFMLEngine;
 
@@ -122,6 +123,10 @@ public:
 		AddComponent(m_Camera, Transform{ });
 		AddComponent(m_Camera, Camera{ });
 		AddNativeScript<MenuCameraController>(m_Camera);
+
+
+		m_FadeInController = CreateEntity();
+		AddNativeScript<FadeInController>(m_FadeInController);
 	}
 
 private:
@@ -135,4 +140,6 @@ private:
 
 	Entity m_Camera = INVALID_ENTITY_ID;
 	Entity m_Light = INVALID_ENTITY_ID;
+
+	Entity m_FadeInController = INVALID_ENTITY_ID;
 };

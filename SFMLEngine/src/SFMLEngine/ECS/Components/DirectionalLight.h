@@ -29,13 +29,14 @@ namespace SFMLEngine {
 		inline void SetDirection(float xAngle, float yAngle)
 		{
 			m_Direction = Math::Normalize({ sinf(xAngle), sinf(yAngle), cosf(xAngle) * cosf(yAngle) });
+			m_Modified = true;
 		}
 
 		inline float GetIntensity() const { return m_Intensity; }
-		inline void SetIntensity(float intensity) { m_Intensity = intensity; }
+		inline void SetIntensity(float intensity) { m_Intensity = intensity; m_Modified = true; }
 
 		inline const sf::Color& GetColor() const { return m_Color; }
-		inline void SetColor(const sf::Color& color) { m_Color = color; }
+		inline void SetColor(const sf::Color& color) { m_Color = color; m_Modified = true; }
 
 		inline bool IsStatic() const { return m_Static; }
 
