@@ -2,6 +2,9 @@
 
 #include <SFMLEngine.h>
 
+#include "Fader.h"
+
+
 using namespace SFMLEngine;
 
 class Tutorial;
@@ -16,41 +19,41 @@ public:
 
 		m_PlayerController = &GetNativeScript<PlayerController>(GetEntitiesWithTag("Player")[0]);
 		m_CameraController = &GetNativeScript<CameraController>(GetEntitiesWithTag("MainCamera")[0]);
+
+		m_Fader = CreateEntity();
+		m_FaderScript = &AddNativeScript<Fader>(m_Fader);
+		m_FaderScript->SetFadeState(Fader::State::FadeOut);
+		m_FaderScript->SetFadeSpeed(1);
 	}
 
 	void Update(Timestep ts) override
 	{
 		if (m_FadingIn)
 		{
-			// set the opacity of the fade in image
-			m_FadeProgress += ts * m_FadeSpeed;
-			if (m_FadeProgress >= 1)
+			// check if the fade in has complete
+			m_FadingIn = !m_FaderScript->FadeComplete();
+
+			// if it has finished
+			if (!m_FadingIn)
 			{
 				// the image has fully faded in
 				// load the level
 				LoadLevel();
 
+				// fade back out
 				m_FadingIn = false;
 				m_FadingOut = true;
-			}
-			else
-			{
-				m_TransitionImage->SetColor({ 255, 255, 255, sf::Uint8(m_FadeProgress * 255) });
+				m_FaderScript->SetFadeState(Fader::State::FadeOut);
 			}
 		}
 		else if (m_FadingOut)
 		{
-			m_FadeProgress -= ts * m_FadeSpeed;
-			if (m_FadeProgress <= 0)
-			{
-				Destroy(m_TransitionEntity);
-				m_TransitionImage = nullptr;
+			m_FadingOut = !m_FaderScript->FadeComplete();
 
-				m_FadingOut = false;
-			}
-			else
+			if (!m_FadingOut)
 			{
-				m_TransitionImage->SetColor({ 255, 255, 255, sf::Uint8(m_FadeProgress * 255) });
+				Destroy(m_Fader);
+				m_FadingOut = false;
 			}
 		}
 	}
@@ -62,9 +65,10 @@ public:
 			if (m_LoadedLevel1) return;
 
 			m_FadingIn = true;
-			float m_FadeProgress = 0.0f;
-		
-			CreateTransitionEntity();
+
+			m_Fader = CreateEntity();
+			m_FaderScript = &AddNativeScript<Fader>(m_Fader);
+			m_FaderScript->SetFadeState(Fader::State::FadeIn);
 		}
 	}
 
@@ -90,41 +94,20 @@ public:
 		m_LoadedLevel1 = true;
 	}
 
-
-	void CreateTransitionEntity()
-	{
-		m_TransitionEntity = CreateEntity();
-
-
-		GUIImage i{ Texture::Create("assets/textures/black.png") };
-		i.SetColor({ 255, 255, 255, 0 });
-		AddComponent(m_TransitionEntity, i);
-
-
-		GUITransform t{ {0.0f, 0.0f }, GUIElementType::Image };
-		sf::Vector2f windowSize = static_cast<sf::Vector2f>(Application::GetWindowSize());
-		t.SetScale({ windowSize.x / 256.0f, windowSize.y / 256.0f });
-		AddComponent(m_TransitionEntity, t);
-
-
-		m_TransitionImage = &GetComponent<GUIImage>(m_TransitionEntity);
-	}
-
 private:
 	Application* m_App = nullptr;
 	Scene* m_MainScene = nullptr;
 
+	bool m_LoadedLevel1 = false;
+
 	bool m_FadingIn = false;
 	bool m_FadingOut = false;
-	float m_FadeProgress = 0.0f;
-	float m_FadeSpeed = 3.0f;
-
-	bool m_LoadedLevel1 = false;
 
 	PlayerController* m_PlayerController = nullptr;
 	CameraController* m_CameraController = nullptr;
 
 
-	Entity m_TransitionEntity = INVALID_ENTITY_ID;
-	GUIImage* m_TransitionImage = nullptr;
+	Entity m_Fader = INVALID_ENTITY_ID;
+	Fader* m_FaderScript = nullptr;
+
 };

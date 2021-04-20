@@ -111,9 +111,8 @@ public:
 		AddComponent(m_Light, Transform{ });
 		AddComponent(m_Light, PointLight{ 3.0f, 400.0f, sf::Color(219, 113, 114, 255) });
 		AddNativeScript<GoToMouse>(m_Light);
-
-		m_Light2 = CreateEntity();
-		AddComponent(m_Light2, DirectionalLight{ -1.5f, 0.7f, 0.3f, sf::Color(200, 61, 19, 255), true });
+		// place both lights onto the same entity
+		AddComponent(m_Light, DirectionalLight{ -1.5f, 0.7f, 0.3f, sf::Color(200, 61, 19, 255) });
 
 
 
@@ -136,5 +135,4 @@ private:
 
 	Entity m_Camera = INVALID_ENTITY_ID;
 	Entity m_Light = INVALID_ENTITY_ID;
-	Entity m_Light2 = INVALID_ENTITY_ID;
 };
