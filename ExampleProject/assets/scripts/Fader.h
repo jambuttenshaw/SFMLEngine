@@ -17,20 +17,26 @@ public:
 		FadeOut
 	};
 
-	void Start() override
+	void CreateBlackScreen()
 	{
-
-		GUIImage i{ Texture::Create("assets/textures/black.png") };
-		i.SetColor({ 255, 255, 255, 0 });
-		AddComponent(i);
-
+		AddComponent(GUIImage{ Texture::Create("assets/textures/black.png") });
 
 		GUITransform t{ {0.0f, 0.0f }, GUIElementType::Image };
 		sf::Vector2f windowSize = static_cast<sf::Vector2f>(Application::GetWindowSize());
 		t.SetScale({ windowSize.x / 256.0f, windowSize.y / 256.0f });
 		AddComponent(t);
+	}
 
+	void CreateDeathScreen()
+	{
+		AddComponent(GUIImage{ Texture::Create("assets/textures/deathScreen_lit.png") });
+		AddComponent(GUITransform{ {0.0f, 0.0f }, GUIElementType::Image });
+	}
+
+	void Start() override
+	{
 		m_Image = &GetComponent<GUIImage>();
+		m_Image->SetColor({ 255, 255, 255, 0 });
 	}
 
 	void Update(Timestep ts) override

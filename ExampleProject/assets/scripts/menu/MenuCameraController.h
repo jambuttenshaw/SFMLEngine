@@ -15,7 +15,7 @@ public:
 
 	void Update(Timestep ts) override
 	{
-		sf::Vector2f aim = Math::Lerp(m_Target, Input::GetMouseWorldPos(), 0.05f);
+		sf::Vector2f aim = Math::Lerp(m_Target, Input::GetMouseWorldPos(), 0.03f);
 		if (m_MovingToTarget)
 		{
 			m_Transform->SetPosition(Math::Lerp(m_Transform->GetPosition(), aim, 10.0f * ts));

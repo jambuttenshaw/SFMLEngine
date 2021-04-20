@@ -22,8 +22,9 @@ public:
 
 		m_Fader = CreateEntity();
 		m_FaderScript = &AddNativeScript<Fader>(m_Fader);
+		m_FaderScript->CreateBlackScreen();
 		m_FaderScript->SetFadeState(Fader::State::FadeOut);
-		m_FaderScript->SetFadeSpeed(1);
+		m_FaderScript->SetFadeSpeed(1.0f);
 	}
 
 	void Update(Timestep ts) override
@@ -65,9 +66,6 @@ public:
 			if (m_LoadedLevel1) return;
 
 			m_FadingIn = true;
-
-			m_Fader = CreateEntity();
-			m_FaderScript = &AddNativeScript<Fader>(m_Fader);
 			m_FaderScript->SetFadeState(Fader::State::FadeIn);
 		}
 	}
