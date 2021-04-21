@@ -22,8 +22,20 @@ public:
 		AddComponent(m_DepthMarker, t);
 		AddComponent(m_DepthMarker, GUIImage{ Texture::Create("assets/textures/depthMarker.png") });
 
-		// get the size of the depth meter so we can correctly position the markers
 		m_DepthMarkerTransform = &GetComponent<GUITransform>(m_DepthMarker);
+
+
+
+		m_BestDepthMarker = CreateEntity();
+
+		GUITransform t2{ { 0.957f, m_GUIMinY }, GUIElementType::Image };
+		t2.SetHorizontalAnchor(GUITransform::Anchor::Right);
+		t2.SetVerticalAnchor(GUITransform::Anchor::Middle);
+		AddComponent(m_BestDepthMarker, t2);
+		AddComponent(m_BestDepthMarker, GUIImage{ Texture::Create("assets/textures/bestDepthMarker.png") });
+
+		// get the size of the depth meter so we can correctly position the markers
+		m_BestDepthMarkerTransform = &GetComponent<GUITransform>(m_BestDepthMarker);
 	}
 
 
@@ -54,7 +66,11 @@ public:
 
 	void Update(Timestep ts) override
 	{
-		m_DepthMarkerTransform->SetPosition({ 0.957f, Math::Lerp(m_GUIMinY, m_GUIMaxY, (m_PlayerTransform->GetPosition().y - m_HighestPoint) / (m_LowestPoint - m_HighestPoint)) });
+		float y = Math::Lerp(m_GUIMinY, m_GUIMaxY, (m_PlayerTransform->GetPosition().y - m_HighestPoint) / (m_LowestPoint - m_HighestPoint));
+		m_BestDepth = std::max(m_BestDepth, y);
+
+		m_DepthMarkerTransform->SetPosition({ 0.957f, y });
+		m_BestDepthMarkerTransform->SetPosition({ 0.957f, m_BestDepth });
 	}
 
 private:
@@ -72,5 +88,9 @@ private:
 
 	Entity m_DepthMarker = INVALID_ENTITY_ID;
 	GUITransform* m_DepthMarkerTransform = nullptr;
+	
+	Entity m_BestDepthMarker = INVALID_ENTITY_ID;
+	GUITransform* m_BestDepthMarkerTransform = nullptr;
+	float m_BestDepth = std::numeric_limits<float>::min();
 };
 
