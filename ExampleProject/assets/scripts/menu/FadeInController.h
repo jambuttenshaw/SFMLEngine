@@ -14,7 +14,6 @@ public:
 	{
 		m_FaderEntity = CreateEntity();
 		m_Fader = &AddNativeScript<Fader>(m_FaderEntity);
-		m_Fader->CreateBlackScreen();
 		m_Fader->SetFadeState(Fader::State::FadeOut);
 	}
 

@@ -14,42 +14,10 @@ class Level1;
 class PlayButton : public Button
 {
 public:
-	void Start() override
-	{
-		Entity lightEntity = GetEntitiesWithTag("SceneLight")[0];
+	void Start() override;
+	void Update(Timestep ts) override;
 
-		m_SceneLight = &GetComponent<PointLight>(lightEntity);
-		m_DirLight = &GetComponent<DirectionalLight>(lightEntity);
-
-		m_InitialRange = m_SceneLight->GetRange();
-		m_InitialIntensity = m_DirLight->GetIntensity();
-	}
-
-	void Update(Timestep ts) override
-	{
-		Button::Update(ts);
-
-		if (m_Fading)
-		{
-			m_FadeTimer += ts;
-
-			m_SceneLight->SetRange(Math::Lerp(m_InitialRange, 0.0f, m_FadeTimer / m_FadeTime));
-			m_DirLight->SetIntensity(Math::Lerp(m_InitialIntensity, 0.0f, m_FadeTimer / m_FadeTime));
-
-			if (m_FadeTimer >= m_FadeTime)
-			{
-				// time to switch scene
-				Application::GetApplicationHandle()->LoadScene<Tutorial>(LoadSceneMode::Additive);
-				Application::GetApplicationHandle()->LoadScene<MainScene>(LoadSceneMode::Single);
-			}
-		}
-		
-	}
-
-	void OnClick() override
-	{
-		m_Fading = true;
-	}
+	void OnClick() override;
 
 private:
 	PointLight* m_SceneLight;

@@ -10,6 +10,8 @@
 #include "levels/LevelFactory.h"
 #include "levels/AllLevels.h"
 
+#include "DeathScreen.h"
+
 
 using namespace SFMLEngine;
 

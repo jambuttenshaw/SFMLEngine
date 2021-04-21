@@ -35,7 +35,7 @@ public:
 		SetEntityTag(m_Light, "SceneLight");
 		AddComponent(m_Light, Transform{ { 0, 10000 } });
 		AddComponent(m_Light, PointLight{ 1.0f, 75.0f, sf::Color::White });
-		AddComponent(m_Light, DirectionalLight{ 0.0f, -1.0f, 0.0f, { 255, 220, 220 } });
+		AddComponent(m_Light, DirectionalLight{ 0.0f, -1.5f, 0.0f, sf::Color::White });
 		AddNativeScript<SplashScreenAnimator>(m_Light);
 	}
 
