@@ -57,36 +57,20 @@ namespace SFMLEngine {
 		inline void SetScreenPosition(const sf::Vector2i& pos) { m_ScreenPosition = pos; }
 		inline const sf::Vector2i& GetScreenPosition() const { return m_ScreenPosition; }
 
-
-		inline void SetScale(const sf::Vector2f scale) { m_Scale = scale; }
+		inline void SetScale(const sf::Vector2f& scale) { m_Scale = scale; }
 		inline const sf::Vector2f& GetScale() const { return m_Scale; }
 
 
-		inline void SetHorizontalAnchor(Anchor a)
-		{
-			if (a == Anchor::Top || a == Anchor::Bottom)
-			{
-				LOG_CORE_WARN("Cannot set horizontal anchor to Top or Bottom!");
-				return;
-			}
-			m_HorizontalAnchor = a;
+		sf::Vector2f GetTopLeft(const sf::Vector2f& elemSize) const;
+		sf::Vector2f GetTopRight(const sf::Vector2f& elemSize) const;
+		sf::Vector2f GetBottomLeft(const sf::Vector2f& elemSize) const;
+		sf::Vector2f GetBottomRight(const sf::Vector2f& elemSize) const;
 
-			m_Modified = true;
-		}
+		void SetHorizontalAnchor(Anchor a);
 		inline Anchor GetHorizontalAnchor() const { return m_HorizontalAnchor; }
 
 
-		inline void SetVerticalAnchor(Anchor a)
-		{
-			if (a == Anchor::Left || a == Anchor::Right)
-			{
-				LOG_CORE_WARN("Cannot set Vertical anchor to Left or Right!");
-				return;
-			}
-			m_VerticalAnchor = a;
-
-			m_Modified = true;
-		}
+		void SetVerticalAnchor(Anchor a);
 		inline Anchor GetVerticalAnchor() const { return m_VerticalAnchor; }
 
 

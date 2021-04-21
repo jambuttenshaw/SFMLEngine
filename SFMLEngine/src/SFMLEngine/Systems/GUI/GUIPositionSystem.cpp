@@ -58,7 +58,7 @@ namespace SFMLEngine {
 
 
 		// first of all, we need to get the size of the element
-		GUIElement* elem;
+		GUIElement* elem = nullptr;
 		switch (guiTransform.GetElementType())
 		{
 		case GUIElementType::Invalid:		SFMLE_CORE_ASSERT(0, "Invalid element type!");			break;
@@ -67,6 +67,7 @@ namespace SFMLEngine {
 		}
 
 		sf::Vector2f size = elem->GetSize();
+
 		size.x *= scale.x;
 		size.y *= scale.y;
 

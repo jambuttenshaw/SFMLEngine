@@ -149,9 +149,6 @@ public:
 
 			auto& levelManager = AddNativeScript<LevelManager>(m_Player);
 			levelManager.SetMainScene(this);
-
-			AddNativeScript<DepthFinder>(m_Player);
-
 		}
 
 		{
@@ -195,6 +192,9 @@ public:
 
 			GUIImage i{ Texture::Create("assets/textures/depthBar.png") };
 			AddComponent(m_DepthBar, i);
+
+
+			AddNativeScript<DepthFinder>(m_DepthBar);
 		}
 
 
