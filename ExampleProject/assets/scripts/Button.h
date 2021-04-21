@@ -9,7 +9,7 @@ class Button : public ScriptableEntity
 {
 public:
 
-	void Update(Timestep ts) override
+	void Update(float ts) override
 	{
 		auto [m_CollidingWithMouse, collision] = Physics::CircleCast(Input::GetMouseWorldPos(), 0.1f, Physics::AllMask);
 		if (m_CollidingWithMouse)

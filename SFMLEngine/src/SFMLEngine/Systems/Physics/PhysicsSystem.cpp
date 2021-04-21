@@ -77,7 +77,7 @@ namespace SFMLEngine {
 		}
 	}
 
-	void PhysicsSystem::Update(Timestep ts)
+	void PhysicsSystem::Update(float ts)
 	{
 		ZoneScoped;
 

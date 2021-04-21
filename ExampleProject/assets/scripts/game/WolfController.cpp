@@ -17,7 +17,7 @@ void WolfController::Start()
 	m_GroundLayerMask = LayerManager::GetLayer("Ground");
 }
 
-void WolfController::Update(Timestep ts)
+void WolfController::Update(float ts)
 {
 	float dist = Math::SquareMagnitude(m_PlayerController->GetCentre() - m_Transform->GetPosition() - sf::Vector2f{ 32, 16 });
 

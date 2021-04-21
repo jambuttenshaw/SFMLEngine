@@ -1,7 +1,6 @@
 #include "Application.h"
 
 #include "ECS/Components.h"
-#include "Timestep.h"
 
 #include "Math.h"
 
@@ -456,8 +455,9 @@ namespace SFMLEngine
             // CLOCK //
             ///////////
 
-            Timestep ts(m_Clock.restart().asSeconds());
+            float ts(m_Clock.restart().asSeconds());
             if (ts > m_DeltaTimeLimit) ts = m_DeltaTimeLimit;
+            ts *= m_DeltaTimeMultiplier;
 
 #ifdef SFMLENGINE_DEBUG
             if (m_DisplayDebug)

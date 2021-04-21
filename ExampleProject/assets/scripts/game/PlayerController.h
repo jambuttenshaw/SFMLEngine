@@ -11,14 +11,14 @@ class PlayerController : public ScriptableEntity
 {
 public:
 	void Start() override;
-	void Update(Timestep ts) override;
+	void Update(float ts) override;
 	
 	void OnTriggerEnter(const Collision& collision) override;
 	void OnTriggerStay(const Collision& collision) override;
 	void OnTriggerExit(const std::pair<Entity, ColliderID>& other) override;
 
-	void Move(Timestep ts);
-	void Jump(Timestep ts);
+	void Move(float ts);
+	void Jump(float ts);
 
 	void StartCrawl();
 	void EndCrawl();

@@ -31,7 +31,7 @@ void CrystalCollector::FindCrystalMap()
 	m_CrystalMap = &GetComponent<Tilemap>(GetEntitiesWithTag("Crystals")[0]);
 }
 
-void CrystalCollector::Update(Timestep ts)
+void CrystalCollector::Update(float ts)
 {
 	if (Input::IsKeyPressed(sf::Keyboard::J))
 	{

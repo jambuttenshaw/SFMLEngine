@@ -72,6 +72,8 @@ namespace SFMLEngine {
 		void SetFPSLimit(unsigned int limit);
 		unsigned int GetFPSLimit() { return m_FPSLimit; }
 
+		void SetDeltaTimeMultiplier(float mult) { m_DeltaTimeMultiplier = mult; }
+
 		void SetClearColor(const sf::Color& color) { m_ClearColor = color; }
 		const sf::Color& GetClearColor() { return m_ClearColor; }
 
@@ -170,6 +172,7 @@ namespace SFMLEngine {
 		bool m_VSync = true;
 		unsigned int m_FPSLimit = 0;
 		const float m_DeltaTimeLimit = 1.0f / 20.0f;
+		float m_DeltaTimeMultiplier = 1.0f;
 
 		sf::Color m_ClearColor{ sf::Color::Black };
 

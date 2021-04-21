@@ -15,7 +15,7 @@ public:
 		m_PlayerTransform = &GetComponent<Transform>(GetEntitiesWithTag("Player")[0]);
 	}
 
-	void Update(Timestep ts) override
+	void Update(float ts) override
 	{
 		if (m_Shaking)
 		{

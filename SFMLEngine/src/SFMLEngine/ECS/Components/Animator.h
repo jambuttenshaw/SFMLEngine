@@ -3,7 +3,6 @@
 #include "SFMLEngine/ECS/System.h"
 
 #include "SFMLEngine/Core.h"
-#include "SFMLEngine/Timestep.h"
 
 #include <SFML/Graphics.hpp>
 #include <unordered_map>
@@ -57,7 +56,7 @@ namespace SFMLEngine {
 		}
 
 
-		void Animate(Timestep ts)
+		void Animate(float ts)
 		{
 			if (m_Playing)
 			{

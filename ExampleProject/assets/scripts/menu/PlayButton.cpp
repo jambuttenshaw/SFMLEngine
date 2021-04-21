@@ -15,7 +15,7 @@ void PlayButton::Start()
 	m_InitialIntensity = m_DirLight->GetIntensity();
 }
 
-void PlayButton::Update(Timestep ts)
+void PlayButton::Update(float ts)
 {
 	Button::Update(ts);
 

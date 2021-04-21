@@ -1,7 +1,6 @@
 #pragma once
 
 #include "SFMLEngine/Constants.h"
-#include "SFMLEngine/Timestep.h"
 #include "SFMLEngine/Systems/Physics/CollisionSystem.h"
 
 #include <SFML/System.hpp>
@@ -33,7 +32,7 @@ namespace SFMLEngine {
 		virtual void Start() {}
 
 		// Update is called once per frame
-		virtual void Update(Timestep ts) {}
+		virtual void Update(float ts) {}
 
 		// Collision callbacks
 		// the Collision struct has lots of juicy information about the collision

@@ -18,7 +18,7 @@ void LevelManager::Start()
 	m_FaderScript->SetFadeSpeed(1.0f);
 }
 
-void LevelManager::Update(Timestep ts)
+void LevelManager::Update(float ts)
 {
 	if (m_FadingIn)
 	{

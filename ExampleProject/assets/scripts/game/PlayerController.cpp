@@ -21,7 +21,7 @@ void PlayerController::Start()
 	m_VerticalCastSize = { 0.5f, 48 };
 }
 
-void PlayerController::Update(Timestep ts)
+void PlayerController::Update(float ts)
 {
 
 	// friction should ALWAYS be applied to the player
@@ -172,7 +172,7 @@ void PlayerController::OnTriggerExit(const std::pair<Entity, ColliderID>& other)
 
 
 
-void PlayerController::Move(Timestep ts)
+void PlayerController::Move(float ts)
 {
 	// dont let the player move right if its against the wall and facing right
 	if (Input::IsKeyDown(sf::Keyboard::D) && !(m_AgainstWall && m_FacingRight))
@@ -190,7 +190,7 @@ void PlayerController::Move(Timestep ts)
 		m_Rigidbody->SetVelocity({ m_Rigidbody->GetVelocity().x * m_ClimbHorizontalFactor, m_Rigidbody->GetVelocity().y });
 }
 
-void PlayerController::Jump(Timestep ts)
+void PlayerController::Jump(float ts)
 {
 	if (Input::IsKeyDown(sf::Keyboard::W))
 	{

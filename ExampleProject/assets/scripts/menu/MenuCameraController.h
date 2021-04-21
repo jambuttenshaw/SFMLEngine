@@ -13,7 +13,7 @@ public:
 		m_Transform = &GetComponent<Transform>();
 	}
 
-	void Update(Timestep ts) override
+	void Update(float ts) override
 	{
 		sf::Vector2f aim = Math::Lerp(m_Target, Input::GetMouseWorldPos(), 0.03f);
 		if (m_MovingToTarget)

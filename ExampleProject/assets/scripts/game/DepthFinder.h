@@ -66,7 +66,7 @@ public:
 	}
 
 
-	void Update(Timestep ts) override
+	void Update(float ts) override
 	{
 		float y = Math::Lerp(m_GUIMinY, m_GUIMaxY, (m_PlayerTransform->GetPosition().y - m_HighestPoint) / (m_LowestPoint - m_HighestPoint));
 		m_BestDepth = std::max(m_BestDepth, y);

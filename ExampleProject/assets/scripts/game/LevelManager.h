@@ -20,7 +20,7 @@ class LevelManager : public ScriptableEntity
 
 public:
 	void Start() override;
-	void Update(Timestep ts) override;
+	void Update(float ts) override;
 
 	void OnPlayerDeath();
 	void OnTriggerEnter(const Collision& collision) override;

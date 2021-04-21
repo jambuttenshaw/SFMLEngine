@@ -8,8 +8,6 @@
 #include "SFMLEngine/Application.h"
 #include "SFMLEngine/Input.h"
 
-#include "SFMLEngine/Timestep.h"
-
 #include "SFMLEngine/Scene.h"
 
 #include "SFMLEngine/LayerManager.h"

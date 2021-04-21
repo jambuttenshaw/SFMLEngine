@@ -43,7 +43,7 @@ public:
 		}
 	}
 
-	void Update(Timestep ts) override
+	void Update(float ts) override
 	{
 		// creating more layers
 		if (Input::IsKeyDown(sf::Keyboard::LShift) && !Input::IsKeyDown(sf::Keyboard::LAlt) && Input::IsKeyPressed(sf::Keyboard::N))

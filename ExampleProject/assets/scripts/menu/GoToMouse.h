@@ -13,7 +13,7 @@ public:
 		m_Transform = &GetComponent<Transform>();
 	}
 
-	void Update(Timestep ts) override
+	void Update(float ts) override
 	{
 		m_Transform->SetPosition(Input::GetMouseWorldPos());
 	}

@@ -37,7 +37,7 @@ namespace SFMLEngine {
 
 	}
 
-	void AnimationSystem::Update(Timestep ts)
+	void AnimationSystem::Update(float ts)
 	{
 		for (auto entity : m_Entities)
 		{

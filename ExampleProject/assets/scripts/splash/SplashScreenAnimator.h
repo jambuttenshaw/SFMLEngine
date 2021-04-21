@@ -30,7 +30,7 @@ public:
 		WaitThenDo(0, PointLightMove, m_PointLightMoveTime);
 	}
 
-	void Update(Timestep ts) override
+	void Update(float ts) override
 	{
 		m_Timer -= ts;
 

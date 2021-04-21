@@ -3,7 +3,6 @@
 #include "SFMLEngine/ECS/Coordinator.h"
 #include "SFMLEngine/ECS/Components/NativeScripts.h"
 #include "SFMLEngine/ECS/System.h"
-#include "SFMLEngine/Timestep.h"
 
 #include <type_traits>
 
@@ -77,7 +76,7 @@ namespace SFMLEngine {
 		}
 		void SetSceneLoading(bool loading) { m_SceneLoadInProgress = loading; }
 
-		void Update(Timestep ts)
+		void Update(float ts)
 		{
 			ZoneScoped;
 

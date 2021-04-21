@@ -23,7 +23,7 @@ public:
 public:
 	void Start() override;
 
-	void Update(Timestep ts) override;
+	void Update(float ts) override;
 
 	void Wake();
 

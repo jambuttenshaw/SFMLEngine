@@ -17,7 +17,7 @@ public:
 	}
 	
 
-	void Update(Timestep ts) override
+	void Update(float ts) override
 	{
 		m_Scale += m_ScaleIncreaseSpeed * ts;
 		m_ScaleIncreaseSpeed += m_ScaleIncreaseSpeed * ts;

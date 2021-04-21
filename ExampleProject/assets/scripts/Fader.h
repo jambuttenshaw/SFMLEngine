@@ -30,7 +30,7 @@ public:
 		m_Image->SetColor({ 255, 255, 255, 0 });
 	}
 
-	void Update(Timestep ts) override
+	void Update(float ts) override
 	{
 		switch (m_State)
 		{

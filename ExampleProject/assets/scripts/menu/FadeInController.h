@@ -17,7 +17,7 @@ public:
 		m_Fader->SetFadeState(Fader::State::FadeOut);
 	}
 
-	void Update(Timestep ts) override
+	void Update(float ts) override
 	{
 		if (m_Fader->FadeComplete())
 		{

@@ -4,8 +4,6 @@
 
 #include "SFMLEngine/ECS/Coordinator.h"
 
-#include "SFMLEngine/Timestep.h"
-
 
 namespace SFMLEngine {
 
@@ -18,7 +16,7 @@ namespace SFMLEngine {
 		void EntityAddedToSystem(Entity entity) override;
 		void EntityRemovedFromSystem(Entity entity) override;
 
-		void Update(Timestep ts);
+		void Update(float ts);
 
 	private:
 		Coordinator* m_Coordinator = nullptr;

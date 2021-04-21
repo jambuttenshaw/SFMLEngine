@@ -32,7 +32,7 @@ public:
 	void OnSceneLoaded() override;
 	void FindCrystalMap();
 
-	void Update(Timestep ts) override;
+	void Update(float ts) override;
 
 	void OnTriggerEnter(const Collision& collision) override;
 	void OnTriggerExit(const std::pair<Entity, ColliderID>& other) override;

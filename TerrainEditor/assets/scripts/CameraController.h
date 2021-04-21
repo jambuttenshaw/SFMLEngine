@@ -14,7 +14,7 @@ public:
 		m_Camera = &GetComponent<Camera>();
 	}
 
-	void Update(Timestep ts) override
+	void Update(float ts) override
 	{
 		if (Input::IsKeyDown(sf::Keyboard::D))
 			m_Transform->Translate(ts * m_MoveSpeed * sf::Vector2f(1, 0));

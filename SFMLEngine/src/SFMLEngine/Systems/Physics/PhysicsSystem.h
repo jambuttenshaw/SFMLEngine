@@ -4,7 +4,6 @@
 #include "SFMLEngine/ECS/Coordinator.h"
 #include "SFMLEngine/ECS/Components/Rigidbody.h"
 #include "SFMLEngine/ECS/Components/Transform.h"
-#include "SFMLEngine/Timestep.h"
 
 #include "CollisionSystem.h"
 #include "Physics.h"
@@ -33,7 +32,7 @@ namespace SFMLEngine {
 
 		void EntityDeleted(Entity entity);
 
-		void Update(Timestep ts);
+		void Update(float ts);
 
 		void CollisionEnterCallback(Entity entity, const Collision& collisionData);
 		void CollisionExitCallback(Entity entity, const std::pair<ColliderID, CollisionCache>& collision);
