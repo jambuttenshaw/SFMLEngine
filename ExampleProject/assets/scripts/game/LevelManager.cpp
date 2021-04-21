@@ -49,7 +49,6 @@ void LevelManager::Update(Timestep ts)
 
 		if (!m_FadingOut)
 		{
-			Destroy(m_Fader);
 			m_FadingOut = false;
 		}
 	}
