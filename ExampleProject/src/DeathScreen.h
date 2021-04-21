@@ -2,6 +2,7 @@
 
 #include <SFMLEngine.h>
 #include "menu/FadeInController.h"
+#include "menu/GoToMouse.h"
 #include "deathScreen/DeathScreenButtons.h"
 
 using namespace SFMLEngine;
@@ -16,14 +17,15 @@ public:
 		{
 			m_ReplayButton = CreateEntity();
 
-			AddComponent(m_ReplayButton, Transform{ { -200, 300 } });
+			AddComponent(m_ReplayButton, Transform{ { -180, 113 } });
 			AddComponent(m_ReplayButton, SpriteRenderer{
-					Texture::Create("assets/textures/buttons/replay_temp.png"),
-					Material::Create("Basic"),
-					0
+					Texture::Create("assets/textures/buttons/replayButton.png"),
+					Material::Create("Lit"),
+					0,
+					Texture::Create("assets/textures/buttons/replayButton_n.png"),
 				});
 
-			AddComponent(m_ReplayButton, BoxCollider{ {128, 64}, {0, 0} });
+			AddComponent(m_ReplayButton, BoxCollider{ {160, 64}, {0, 0} });
 			AddComponent(m_ReplayButton, ColliderInfo{ ColliderType::Box });
 
 			AddNativeScript<ReplayButton>(m_ReplayButton);
@@ -31,11 +33,12 @@ public:
 		{
 			m_MenuButton = CreateEntity();
 
-			AddComponent(m_MenuButton, Transform{ { 200, 300 } });
+			AddComponent(m_MenuButton, Transform{ { 20, 113 } });
 			AddComponent(m_MenuButton, SpriteRenderer{
-					Texture::Create("assets/textures/buttons/menu_temp.png"),
-					Material::Create("Basic"),
-					0
+					Texture::Create("assets/textures/buttons/menuButton.png"),
+					Material::Create("Lit"),
+					0,
+					Texture::Create("assets/textures/buttons/menuButton_n.png"),
 				});
 
 			AddComponent(m_MenuButton, BoxCollider{ {128, 64}, {0, 0} });
@@ -48,9 +51,10 @@ public:
 		m_MainText = CreateEntity();
 		AddComponent(m_MainText, Transform{ { -140, -52 } });
 		AddComponent(m_MainText, SpriteRenderer{
-			Texture::Create("assets/textures/deathScreen_lit.png"),
-			Material::Create("Basic"),
-			0
+			Texture::Create("assets/textures/deathScreen.png"),
+			Material::Create("Lit"),
+			0,
+			Texture::Create("assets/textures/deathScreen_n.png"),
 			});
 
 
@@ -62,6 +66,15 @@ public:
 
 		m_FadeInController = CreateEntity();
 		AddNativeScript<FadeInController>(m_FadeInController);
+
+
+		m_Light = CreateEntity();
+		SetEntityTag(m_Light, "SceneLight");
+		AddComponent(m_Light, Transform{ });
+		AddComponent(m_Light, PointLight{ 3.0f, 400.0f, sf::Color(219, 113, 114, 255) });
+		AddNativeScript<GoToMouse>(m_Light);
+		// place both lights onto the same entity
+		AddComponent(m_Light, DirectionalLight{ 0.0f, -1.7f, 0.3f, sf::Color(200, 61, 19, 255) });
 	}
 
 private:
@@ -71,4 +84,6 @@ private:
 
 	Entity m_ReplayButton = INVALID_ENTITY_ID;
 	Entity m_MenuButton = INVALID_ENTITY_ID;
+
+	Entity m_Light = INVALID_ENTITY_ID;
 };
