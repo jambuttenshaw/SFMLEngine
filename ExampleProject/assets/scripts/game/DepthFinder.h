@@ -20,19 +20,19 @@ public:
 		t.SetHorizontalAnchor(GUITransform::Anchor::Right);
 		t.SetVerticalAnchor(GUITransform::Anchor::Middle);
 		AddComponent(m_DepthMarker, t);
-		AddComponent(m_DepthMarker, GUIImage{ Texture::Create("assets/textures/depthMarker.png") });
+		AddComponent(m_DepthMarker, GUIImage{ Texture::Create("assets/textures/depthMarker.png"), 0 });
 
 		m_DepthMarkerTransform = &GetComponent<GUITransform>(m_DepthMarker);
 
 
 
 		m_BestDepthMarker = CreateEntity();
-
+		
 		GUITransform t2{ { 0.957f, m_GUIMinY }, GUIElementType::Image };
 		t2.SetHorizontalAnchor(GUITransform::Anchor::Right);
 		t2.SetVerticalAnchor(GUITransform::Anchor::Middle);
 		AddComponent(m_BestDepthMarker, t2);
-		AddComponent(m_BestDepthMarker, GUIImage{ Texture::Create("assets/textures/bestDepthMarker.png") });
+		AddComponent(m_BestDepthMarker, GUIImage{ Texture::Create("assets/textures/bestDepthMarker.png"), 1 });
 
 		// get the size of the depth meter so we can correctly position the markers
 		m_BestDepthMarkerTransform = &GetComponent<GUITransform>(m_BestDepthMarker);
@@ -41,6 +41,8 @@ public:
 
 	void OnSceneLoaded() override
 	{
+		m_BestDepth = std::numeric_limits<float>::min();
+
 		m_GroundTilemap = &GetComponent<Tilemap>(GetEntitiesWithTag("Ground")[0]);
 
 		// remember y-axis is flipped

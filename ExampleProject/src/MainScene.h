@@ -190,7 +190,7 @@ public:
 
 
 
-			GUIImage i{ Texture::Create("assets/textures/depthBar.png") };
+			GUIImage i{ Texture::Create("assets/textures/depthBar.png"), 0 };
 			AddComponent(m_DepthBar, i);
 
 

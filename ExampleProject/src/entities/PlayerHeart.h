@@ -14,7 +14,7 @@ public:
 
 
 		scene->AddComponent(newHeart, GUITransform{ position, GUIElementType::Image });
-		scene->AddComponent(newHeart, GUIImage{ Texture::Create("assets/textures/heart.png") });
+		scene->AddComponent(newHeart, GUIImage{ Texture::Create("assets/textures/heart.png"), 0 });
 
 
 		Animation full{ "full", {

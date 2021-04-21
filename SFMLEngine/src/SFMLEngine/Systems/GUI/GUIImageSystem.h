@@ -13,14 +13,18 @@ namespace SFMLEngine {
 	public:
 		void Init(Coordinator* coordinator, sf::RenderWindow* window);
 
-		void EntityAddedToSystem(Entity entity) override {}
-		void EntityRemovedFromSystem(Entity entity) override {}
+		void EntityAddedToSystem(Entity entity) override;
+		void EntityRemovedFromSystem(Entity entity) override;
+
+		void SortEntities();
 
 		void Render();
 
 	private:
 		Coordinator* m_Coordinator;
 		sf::RenderWindow* m_RenderWindow;
+
+		std::vector<Entity> m_SortedEntities;
 	};
 
 }

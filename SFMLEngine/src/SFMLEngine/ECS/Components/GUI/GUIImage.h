@@ -15,13 +15,15 @@ namespace SFMLEngine {
 		friend class System;
 
 		GUIImage()
-			: m_TextureHandle(NULL_RESOURCE_ID), m_Sprite()
+			: m_TextureHandle(NULL_RESOURCE_ID), m_RenderLayer(0), m_Sprite()
 		{}
-		GUIImage(ResourceID texture)
-			: m_TextureHandle(texture), m_Sprite()
+		GUIImage(ResourceID texture, int renderLayer)
+			: m_TextureHandle(texture), m_RenderLayer(renderLayer), m_Sprite()
 		{
 			m_Sprite.setTexture(*ResourceManager::GetResourceHandle<sf::Texture>(m_TextureHandle));
 		}
+
+		inline int GetRenderLayer() const { return m_RenderLayer; }
 
 		inline const sf::Sprite& GetSpriteObject() const { return m_Sprite; }
 
@@ -43,6 +45,9 @@ namespace SFMLEngine {
 		bool m_Modified = false;
 
 		ResourceID m_TextureHandle;
+
+		int m_RenderLayer;
+
 		sf::Sprite m_Sprite;
 		sf::Color m_Color;
 	};

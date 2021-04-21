@@ -19,7 +19,7 @@ public:
 
 	void Start() override
 	{
-		AddComponent(GUIImage{ Texture::Create("assets/textures/black.png") });
+		AddComponent(GUIImage{ Texture::Create("assets/textures/black.png"), 99 });
 
 		GUITransform t{ {0.0f, 0.0f }, GUIElementType::Image };
 		sf::Vector2f windowSize = static_cast<sf::Vector2f>(Application::GetWindowSize());
