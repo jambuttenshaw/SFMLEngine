@@ -1,6 +1,7 @@
 #include "LevelManager.h"
 
 #include "../../ExampleProject/src/DeathScreen.h"
+#include "../../ExampleProject/src/WinScreen.h"
 #include "../../ExampleProject/src/levels/Level1.h"
 #include "../../ExampleProject/src/levels/Tutorial.h"
 
@@ -35,6 +36,7 @@ void LevelManager::Update(float ts)
 			case Action::None: break;
 			case Action::LoadLevel1: LoadLevel(); break;
 			case Action::ToDeathScreen: LoadDeathScreen(); break;
+			case Action::ToWinScreen: LoadWinScreen(); break;
 			}
 
 			// fade back out
@@ -65,13 +67,22 @@ void LevelManager::OnTriggerEnter(const Collision& collision)
 {
 	if (GetEntityTag(collision.Other) == "LevelEnd")
 	{
-		if (m_LoadedLevel1) return;
-
-		m_FadingIn = true;
-		m_Action = Action::LoadLevel1;
-		m_FaderScript->SetFadeState(Fader::State::FadeIn);
+		if (m_LoadedLevel1)
+		{
+			m_FadingIn = true;
+			m_Action = Action::ToWinScreen;
+			m_FaderScript->SetFadeState(Fader::State::FadeIn);
+		}
+		else
+		{
+			m_FadingIn = true;
+			m_Action = Action::LoadLevel1;
+			m_FaderScript->SetFadeState(Fader::State::FadeIn);
+		}
 	}
 }
+
+
 
 void LevelManager::LoadLevel()
 {
@@ -99,4 +110,11 @@ void LevelManager::LoadDeathScreen()
 	// load the death screen
 	// use single load scene mode so that the game scene gets deleted
 	m_App->LoadScene<DeathScreen>(LoadSceneMode::Single);
+}
+
+void LevelManager::LoadWinScreen()
+{
+	// load the death screen
+	// use single load scene mode so that the game scene gets deleted
+	m_App->LoadScene<WinScreen>(LoadSceneMode::Single);
 }

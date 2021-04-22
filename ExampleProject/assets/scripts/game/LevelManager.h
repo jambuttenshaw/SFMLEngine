@@ -15,7 +15,8 @@ class LevelManager : public ScriptableEntity
 	{
 		None,
 		LoadLevel1,
-		ToDeathScreen
+		ToDeathScreen,
+		ToWinScreen
 	};
 
 public:
@@ -31,6 +32,7 @@ private:
 
 	void LoadLevel();
 	void LoadDeathScreen();
+	void LoadWinScreen();
 
 private:
 	Application* m_App = nullptr;

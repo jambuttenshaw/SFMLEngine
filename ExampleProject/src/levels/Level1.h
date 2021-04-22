@@ -22,9 +22,11 @@ public:
 		m_Ladders = LevelFactory::CreateLadders(this, "assets/tilemaps/testlevel/layer2.json");
 		m_Crystals = LevelFactory::CreateCrystals(this, "assets/tilemaps/testlevel/layer3.json");
 
-		m_Enemy = Wolf::Create(this, { -1344, 96 });
-		m_Enemy = Wolf::Create(this, { -1504, 64 });
-		m_Enemy = Wolf::Create(this, { -1600, 32 });
+		LevelFactory::CreateLevelEnd(this, { 0, -300 });
+
+		Wolf::Create(this, { -1344, 96 });
+		Wolf::Create(this, { -1504, 64 });
+		Wolf::Create(this, { -1600, 32 });
 	}
 
 private:
@@ -33,7 +35,5 @@ private:
 
 	Entity m_Ladders = INVALID_ENTITY_ID;
 	Entity m_Crystals = INVALID_ENTITY_ID;
-
-	Entity m_Enemy = INVALID_ENTITY_ID;
 };
 
