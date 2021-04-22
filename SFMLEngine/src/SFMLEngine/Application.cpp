@@ -13,6 +13,8 @@
 #include "Renderer/Texture.h"
 #include "Renderer/TilePalette.h"
 
+#include "Audio/AudioSystem.h"
+
 #include "ResourceManagement/DataStore.h"
 
 #include "FontLibrary.h"
@@ -674,6 +676,7 @@ namespace SFMLEngine
 
         // shutdown the renderer
         Renderer::Shutdown();
+        AudioSystem::Shutdown();
 
 #ifdef SFMLENGINE_DEBUG
         DebugTools::Shutdown();
