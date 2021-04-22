@@ -90,6 +90,23 @@ public:
 
 		// load the player data
 		PlayerData* data = DataStore::RetrieveData<PlayerData>("playerData");
+		int healthBonus = 25 * data->Health;
+		int depthBonus = static_cast<int>(data->Score * (1 + data->DepthPercent));
+		int totalScore = data->Score + healthBonus + depthBonus;
+		CreateScoreText(data->Score, { 0.574f, 0.446f });
+		CreateScoreText(depthBonus, { 0.574f, 0.493f });
+		CreateScoreText(healthBonus, { 0.574f, 0.541f });
+		CreateScoreText(totalScore, { 0.574f, 0.588f });
+	}
+
+	Entity CreateScoreText(int score, const sf::Vector2f& pos)
+	{
+		Entity newScoreText = CreateEntity();
+
+		AddComponent(newScoreText, GUITransform{ pos, GUIElementType::Text });
+		AddComponent(newScoreText, GUIText{ FontLibrary::GetFont("arcade"), std::to_string(score), 24, sf::Color::White });
+
+		return newScoreText;
 	}
 
 private:
