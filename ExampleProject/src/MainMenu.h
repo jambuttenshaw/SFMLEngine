@@ -20,8 +20,6 @@ public:
 
 	void Create() override
 	{
-
-		
 		{
 			m_PlayButton = CreateEntity();
 

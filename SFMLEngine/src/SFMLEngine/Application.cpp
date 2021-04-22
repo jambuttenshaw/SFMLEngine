@@ -461,6 +461,7 @@ namespace SFMLEngine
 
             float ts(m_Clock.restart().asSeconds());
             if (ts > m_DeltaTimeLimit) ts = m_DeltaTimeLimit;
+            ts *= m_TimeScale;
 
 #ifdef SFMLENGINE_DEBUG
             if (m_DisplayDebug)

@@ -122,9 +122,8 @@ void LevelManager::LoadDeathScreen()
 void LevelManager::LoadWinScreen()
 {
 	// first of all retrieve all the players score info from its scripts
-	Entity player = GetEntitiesWithTag("Player")[0];
-	GetNativeScript<CrystalCollector>(player).AssignPlayerData();
-	GetNativeScript<PlayerStatsController>(player).AssignPlayerData();
+	GetNativeScript<CrystalCollector>().AssignPlayerData();
+	GetNativeScript<PlayerStatsController>().AssignPlayerData();
 	
 	GetNativeScript<DepthFinder>(GetEntitiesWithTag("DepthBar")[0]).AssignPlayerData();
 

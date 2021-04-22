@@ -12,7 +12,9 @@
 #include "game/CameraController.h"
 
 #include "game/WolfManager.h"
+
 #include "game/LevelManager.h"
+#include "game/PauseScript.h"
 
 #include "entities/PlayerHeart.h"
 
@@ -149,6 +151,9 @@ public:
 
 			auto& levelManager = AddNativeScript<LevelManager>(m_Player);
 			levelManager.SetMainScene(this);
+
+
+			AddNativeScript<PauseScript>(m_Player);
 		}
 
 		{

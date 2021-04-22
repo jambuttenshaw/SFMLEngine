@@ -1,5 +1,8 @@
 #include "PlayerController.h"
 
+#include "PauseScript.h"
+
+
 void PlayerController::Start()
 {
 	m_Transform = &GetComponent<Transform>();
@@ -23,6 +26,10 @@ void PlayerController::Start()
 
 void PlayerController::Update(float ts)
 {
+
+	// if the game is paused: the player does nothing
+	if (PauseScript::IsGamePaused()) return;
+
 
 	// friction should ALWAYS be applied to the player
 	sf::Vector2f oldVel{ m_Rigidbody->GetVelocity() };
