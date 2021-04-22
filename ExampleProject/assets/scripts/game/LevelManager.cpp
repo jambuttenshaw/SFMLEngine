@@ -6,6 +6,11 @@
 #include "../../ExampleProject/src/levels/Tutorial.h"
 
 
+#include "DepthFinder.h"
+#include "CrystalCollector.h"
+#include "PlayerStatsController.h"
+
+
 void LevelManager::Start()
 {
 	m_App = Application::GetApplicationHandle();
@@ -116,7 +121,15 @@ void LevelManager::LoadDeathScreen()
 
 void LevelManager::LoadWinScreen()
 {
-	// load the death screen
+	// first of all retrieve all the players score info from its scripts
+	Entity player = GetEntitiesWithTag("Player")[0];
+	GetNativeScript<CrystalCollector>(player).AssignPlayerData();
+	GetNativeScript<PlayerStatsController>(player).AssignPlayerData();
+	
+	GetNativeScript<DepthFinder>(GetEntitiesWithTag("DepthBar")[0]).AssignPlayerData();
+
+
+	// load the win screen
 	// use single load scene mode so that the game scene gets deleted
 	m_App->LoadScene<WinScreen>(LoadSceneMode::Single);
 }

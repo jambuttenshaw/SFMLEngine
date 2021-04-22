@@ -27,6 +27,7 @@ public:
 		
 		// set up the data that should exist between scenes
 		DataStore::CreatePersistentData("loadedLevel1", false);
+		DataStore::CreatePersistentData("playerData", PlayerData{ });
 
 
 		LevelFactory::Init();
@@ -39,6 +40,7 @@ public:
 		// contents of the data store should be destroyed manually
 		// so they can be cast to the correct type before deletion
 		DataStore::DeleteData<bool>("loadedLevel1");
+		DataStore::DeleteData<PlayerData>("playerData");
 	}
 };
 

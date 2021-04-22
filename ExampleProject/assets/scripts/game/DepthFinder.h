@@ -3,6 +3,8 @@
 #include <SFMLEngine.h>
 using namespace SFMLEngine;
 
+#include "PlayerData.h"
+
 
 class DepthFinder : public ScriptableEntity
 {
@@ -20,7 +22,7 @@ public:
 		t.SetHorizontalAnchor(GUITransform::Anchor::Right);
 		t.SetVerticalAnchor(GUITransform::Anchor::Middle);
 		AddComponent(m_DepthMarker, t);
-		AddComponent(m_DepthMarker, GUIImage{ Texture::Create("assets/textures/depthMarker.png"), 0 });
+		AddComponent(m_DepthMarker, GUIImage{ Texture::Create("assets/textures/depthMarker.png"), 1 });
 
 		m_DepthMarkerTransform = &GetComponent<GUITransform>(m_DepthMarker);
 
@@ -32,7 +34,7 @@ public:
 		t2.SetHorizontalAnchor(GUITransform::Anchor::Right);
 		t2.SetVerticalAnchor(GUITransform::Anchor::Middle);
 		AddComponent(m_BestDepthMarker, t2);
-		AddComponent(m_BestDepthMarker, GUIImage{ Texture::Create("assets/textures/bestDepthMarker.png"), 1 });
+		AddComponent(m_BestDepthMarker, GUIImage{ Texture::Create("assets/textures/bestDepthMarker.png"), 0 });
 
 		// get the size of the depth meter so we can correctly position the markers
 		m_BestDepthMarkerTransform = &GetComponent<GUITransform>(m_BestDepthMarker);
@@ -73,6 +75,12 @@ public:
 
 		m_DepthMarkerTransform->SetPosition({ 0.957f, y });
 		m_BestDepthMarkerTransform->SetPosition({ 0.957f, m_BestDepth });
+	}
+
+	void AssignPlayerData()
+	{
+		float* depth = &DataStore::RetrieveData<PlayerData>("playerData")->DepthPercent;
+		*depth = (m_BestDepth - m_GUIMinY) / (m_GUIMaxY - m_GUIMinY);
 	}
 
 private:

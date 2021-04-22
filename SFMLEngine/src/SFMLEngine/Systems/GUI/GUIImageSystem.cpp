@@ -36,7 +36,7 @@ namespace SFMLEngine {
 		std::sort(m_SortedEntities.begin(), m_SortedEntities.end(),
 			[this](const Entity& a, const Entity& b) -> bool
 			{
-				return m_Coordinator->GetComponent<GUIImage>(a).GetRenderLayer() > m_Coordinator->GetComponent<GUIImage>(b).GetRenderLayer();
+				return m_Coordinator->GetComponent<GUIImage>(a).GetRenderLayer() < m_Coordinator->GetComponent<GUIImage>(b).GetRenderLayer();
 			});
 	}
 

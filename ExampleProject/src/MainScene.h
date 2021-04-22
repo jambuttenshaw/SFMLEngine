@@ -181,6 +181,7 @@ public:
 
 		{
 			m_DepthBar = CreateEntity();
+			SetEntityTag(m_DepthBar, "DepthBar");
 
 
 			GUITransform t{ {0.97f, 0.5f}, GUIElementType::Image };

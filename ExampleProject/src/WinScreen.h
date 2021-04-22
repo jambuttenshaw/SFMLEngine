@@ -5,6 +5,10 @@
 #include "menu/GoToMouse.h"
 #include "deathScreen/DeathScreenButtons.h"
 
+
+#include "PlayerData.h"
+
+
 using namespace SFMLEngine;
 
 
@@ -49,13 +53,19 @@ public:
 
 
 		m_MainText = CreateEntity();
-		AddComponent(m_MainText, Transform{ { -190, -70 } });
+		AddComponent(m_MainText, Transform{ { -189, -200 } });
 		AddComponent(m_MainText, SpriteRenderer{
 			Texture::Create("assets/textures/winText.png"),
 			Material::Create("Lit"),
 			0,
 			Texture::Create("assets/textures/winText_n.png"),
 			});
+
+
+		m_ScoreText = CreateEntity();
+		AddComponent(m_ScoreText, Transform{ { -189.0f, -36.5f } });
+		AddComponent(m_ScoreText, SpriteRenderer{
+			Texture::Create("assets/textures/scoreText.png"), Material::Create("Basic"), 0 });
 
 
 		m_Camera = CreateEntity();
@@ -75,10 +85,16 @@ public:
 		AddNativeScript<GoToMouse>(m_Light);
 		// place both lights onto the same entity
 		AddComponent(m_Light, DirectionalLight{ 0.0f, -1.7f, 0.3f, sf::Color(200, 61, 19, 255) });
+
+
+
+		// load the player data
+		PlayerData* data = DataStore::RetrieveData<PlayerData>("playerData");
 	}
 
 private:
 	Entity m_MainText = INVALID_ENTITY_ID;
+	Entity m_ScoreText = INVALID_ENTITY_ID;
 	Entity m_Camera = INVALID_ENTITY_ID;
 	Entity m_FadeInController = INVALID_ENTITY_ID;
 

@@ -60,6 +60,9 @@ namespace SFMLEngine {
 		inline void SetScale(const sf::Vector2f& scale) { m_Scale = scale; }
 		inline const sf::Vector2f& GetScale() const { return m_Scale; }
 
+		inline void SetScaleWithScreen(bool flag) { m_ScaleWithScreen = flag; }
+		inline bool GetScaleWithScreen() const { return m_ScaleWithScreen; }
+
 
 		sf::Vector2f GetTopLeft(const sf::Vector2f& elemSize) const;
 		sf::Vector2f GetTopRight(const sf::Vector2f& elemSize) const;
@@ -88,6 +91,7 @@ namespace SFMLEngine {
 		sf::Vector2i m_ScreenPosition;
 
 		sf::Vector2f m_Scale{ 1, 1 };
+		bool m_ScaleWithScreen = true;
 
 		// anchors say which part of the object is positioned at m_Position
 		// for example, anchors of Left, Top will position the topleft at m_Position

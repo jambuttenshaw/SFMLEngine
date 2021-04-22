@@ -3,6 +3,7 @@
 #include <SFMLEngine.h>
 #include "WolfManager.h"
 #include "CameraController.h"
+#include "PlayerData.h"
 
 
 using namespace SFMLEngine;
@@ -44,6 +45,8 @@ public:
 
 	void CreateNoiseRing(const sf::Vector2f& position);
 
+
+	void AssignPlayerData();
 
 private:
 

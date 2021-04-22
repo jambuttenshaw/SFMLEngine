@@ -12,6 +12,7 @@ void PlayerStatsController::Start()
 void PlayerStatsController::Damage()
 {
 	m_Health -= 1;
+
 	if (m_Health <= 0)
 	{
 		m_Health = 0;
@@ -60,4 +61,10 @@ void PlayerStatsController::UpdateHearts()
 		}
 		fullValue += 2;
 	}
+}
+
+void PlayerStatsController::AssignPlayerData()
+{
+	int* health = &DataStore::RetrieveData<PlayerData>("playerData")->Health;
+	*health = m_Health;
 }

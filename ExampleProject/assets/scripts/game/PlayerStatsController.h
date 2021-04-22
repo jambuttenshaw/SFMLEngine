@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SFMLEngine.h>
+#include "PlayerData.h"
 
 using namespace SFMLEngine;
 
@@ -15,6 +16,9 @@ public:
 
 	void SetupHearts(const std::vector<Entity>* const heartEntities);
 	void UpdateHearts();
+
+
+	void AssignPlayerData();
 
 private:
 	int m_MaxHealth = 0;

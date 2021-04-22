@@ -180,6 +180,12 @@ void CrystalCollector::CreateNoiseRing(const sf::Vector2f& position)
 	script.SetCentrePosition(position);
 }
 
+void CrystalCollector::AssignPlayerData()
+{
+	int* score = &DataStore::RetrieveData<PlayerData>("playerData")->Score;
+	*score = m_CrystalScore;
+}
+
 bool CrystalCollector::CollidingWithCrystal(const sf::Vector2i& pos)
 {
 	for (auto const& p : m_CollidingCrystals)

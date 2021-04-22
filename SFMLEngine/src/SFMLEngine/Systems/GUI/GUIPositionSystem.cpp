@@ -51,13 +51,23 @@ namespace SFMLEngine {
 		// calculate the absolute position of a object
 
 		
-		// the object also gets scaled so its relative size stays consistent
+		// the object also gets scaled so its relative size stays consistent if so desired
 		sf::Vector2f scale = { m_WindowSize.x * guiTransform.GetScale().x / m_InitialWindowSize.x,
 							   m_WindowSize.y * guiTransform.GetScale().y / m_InitialWindowSize.y };
+		/*
+		if (guiTransform.GetScaleWithScreen())
+		{
+			scale = { m_WindowSize.x * guiTransform.GetScale().x / m_InitialWindowSize.x,
+				  m_WindowSize.y * guiTransform.GetScale().y / m_InitialWindowSize.y };
+		}
+		else
+		{
+			scale = guiTransform.GetScale();
+		}
+		*/
 
 
-
-		// first of all, we need to get the size of the element
+		// we need to get the size of the element
 		GUIElement* elem = nullptr;
 		switch (guiTransform.GetElementType())
 		{
@@ -95,7 +105,8 @@ namespace SFMLEngine {
 			})
 		);
 
-		elem->SetScale(scale);
+		if (guiTransform.GetScaleWithScreen())
+			elem->SetScale(scale);
 
 	}
 
