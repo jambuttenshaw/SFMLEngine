@@ -13,6 +13,8 @@
 #include "Renderer/Texture.h"
 #include "Renderer/TilePalette.h"
 
+#include "ResourceManagement/DataStore.h"
+
 #include "FontLibrary.h"
 
 #ifdef SFMLENGINE_DEBUG
@@ -301,6 +303,8 @@ namespace SFMLEngine
 
     Application::~Application()
     {
+        DataStore::Shutdown();
+
         delete m_Window;
         delete m_Coordinator;
     }

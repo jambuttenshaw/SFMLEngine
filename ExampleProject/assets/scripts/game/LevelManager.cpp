@@ -17,6 +17,8 @@ void LevelManager::Start()
 	m_FaderScript = &AddNativeScript<Fader>(m_Fader);
 	m_FaderScript->SetFadeState(Fader::State::FadeOut);
 	m_FaderScript->SetFadeSpeed(1.0f);
+
+	m_LoadedLevel1 = DataStore::RetrieveData<bool>("loadedLevel1");
 }
 
 void LevelManager::Update(float ts)
@@ -67,7 +69,7 @@ void LevelManager::OnTriggerEnter(const Collision& collision)
 {
 	if (GetEntityTag(collision.Other) == "LevelEnd")
 	{
-		if (m_LoadedLevel1)
+		if (*m_LoadedLevel1)
 		{
 			m_FadingIn = true;
 			m_Action = Action::ToWinScreen;
@@ -102,7 +104,7 @@ void LevelManager::LoadLevel()
 	// snaps the camera to the players position
 	m_CameraController->ImmediateReset();
 
-	m_LoadedLevel1 = true;
+	*m_LoadedLevel1 = true;
 }
 
 void LevelManager::LoadDeathScreen()

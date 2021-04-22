@@ -16,6 +16,7 @@
 
 // Resource Management
 #include "SFMLEngine/ResourceManagement/ResourceManager.h"
+#include "SFMLEngine/ResourceManagement/DataStore.h"
 
 // ECS
 #include "SFMLEngine/ECS/Components.h"

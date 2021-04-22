@@ -22,6 +22,13 @@ public:
 		m_LevelEnd = LevelFactory::CreateLevelEnd(this, { 1696, 32 });
 
 		m_Wolf = Wolf::Create(this, { 224, 64 });
+
+
+		// flag that we are entering the tutorial
+		// level 1 should follow
+		// so flag that level 1 has not been loaded
+		bool* loadedLevel1 = DataStore::RetrieveData<bool>("loadedLevel1");
+		*loadedLevel1 = false;
 	}
 
 private:

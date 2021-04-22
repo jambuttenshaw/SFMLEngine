@@ -24,9 +24,21 @@ public:
 		SetClearColor(sf::Color::Black);
 		SetVSync(true);
 
+		
+		// set up the data that should exist between scenes
+		DataStore::CreatePersistentData("loadedLevel1", false);
+
+
 		LevelFactory::Init();
 
 		LoadScene<SplashScreen>(LoadSceneMode::Single);
+	}
+
+	~SandboxApp()
+	{
+		// contents of the data store should be destroyed manually
+		// so they can be cast to the correct type before deletion
+		DataStore::DeleteData<bool>("loadedLevel1");
 	}
 };
 
