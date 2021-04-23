@@ -12,6 +12,7 @@ namespace SFMLEngine {
 	{
 	public:
 		SoundResource(const std::string& filename);
+		~SoundResource();
 
 
 		inline const std::string& GetFilepath() const { return m_Filepath; }

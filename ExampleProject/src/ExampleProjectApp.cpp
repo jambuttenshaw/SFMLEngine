@@ -32,6 +32,10 @@ public:
 
 		LevelFactory::Init();
 
+
+		AudioSystem::LoadSound("buttonClick", "assets/audio/click.ogg");
+
+
 		LoadScene<SplashScreen>(LoadSceneMode::Single);
 	}
 

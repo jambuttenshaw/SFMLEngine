@@ -17,6 +17,11 @@ namespace SFMLEngine {
 		m_SoundObject.setBuffer(*ResourceManager::GetResourceHandle<sf::SoundBuffer>(m_BufferID));
 	}
 
+	SoundResource::~SoundResource()
+	{
+		ResourceManager::DeleteResource<sf::SoundBuffer>(m_BufferID);
+	}
+
 
 	std::unordered_map<std::string, ResourceID> AudioSystem::s_Sounds;
 
@@ -38,6 +43,8 @@ namespace SFMLEngine {
 		ResourceID newID = ResourceManager::ManageResource(newSound);
 
 		s_Sounds.insert({ soundHandle, newID });
+
+		return newID;
 	}
 
 	void AudioSystem::DeleteSound(const std::string& soundHandle)

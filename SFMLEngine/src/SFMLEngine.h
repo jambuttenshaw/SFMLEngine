@@ -26,5 +26,8 @@
 #include "SFMLEngine/Renderer/Texture.h"
 #include "SFMLEngine/FontLibrary.h"
 
+// Audio
+#include "SFMLEngine/Audio/AudioSystem.h"
+
 // Physics
 #include "SFMLEngine/Systems/Physics/Physics.h"
