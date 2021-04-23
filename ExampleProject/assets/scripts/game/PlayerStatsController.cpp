@@ -6,6 +6,9 @@
 void PlayerStatsController::Start()
 {
 	m_Health = m_MaxHealth;
+
+	AudioSystem::LoadSound("hurt", "assets/audio/hurt.ogg");
+	AudioSystem::LoadSound("die", "assets/audio/die.ogg");
 }
 
 
@@ -18,9 +21,15 @@ void PlayerStatsController::Damage()
 		m_Health = 0;
 
 		// player has died!
+		AudioSystem::PlaySound("die");
+
 		// move to the death screen
 		GetNativeScript<LevelManager>().OnPlayerDeath();
 
+	}
+	else
+	{
+		AudioSystem::PlaySound("hurt");
 	}
 
 	UpdateHearts();

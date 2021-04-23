@@ -22,6 +22,15 @@ void PlayerController::Start()
 
 	m_HorizontalCastSize = { 17, 0.5f };
 	m_VerticalCastSize = { 0.5f, 48 };
+
+
+
+	// load in the players sounds
+	AudioSystem::LoadSound("ladderCreak", "assets/audio/ladderCreak.ogg");
+	AudioSystem::SetLooping("ladderCreak", true);
+	
+	AudioSystem::LoadSound("footsteps", "assets/audio/footsteps.ogg");
+	AudioSystem::SetLooping("footsteps", true);
 }
 
 void PlayerController::Update(float ts)
@@ -168,6 +177,7 @@ void PlayerController::OnTriggerExit(const std::pair<Entity, ColliderID>& other)
 	{
 		// left ladder
 		m_LadderContacts -= 1;
+
 	}
 	else if (GetEntityLayer(other.first) == "JumpThrough")
 	{

@@ -14,6 +14,7 @@ public:
 	{
 		if (Input::IsKeyPressed(sf::Keyboard::Escape))
 		{
+			AudioSystem::PlaySound("buttonClick");
 			if (s_IsPaused)
 			{
 				Resume();

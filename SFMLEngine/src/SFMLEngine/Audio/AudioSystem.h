@@ -33,20 +33,22 @@ namespace SFMLEngine {
 
 
 		// load a sound from a file
-		static ResourceID LoadSound(const std::string& soundHandle, const std::string& filepath);
+		static void LoadSound(const std::string& soundHandle, const std::string& filepath);
 
 		// delete a sound from memory
 		static void DeleteSound(const std::string& soundHandle);
 
 
 
-		static void PlaySound(const std::string& soundHandle);
+		static void PlaySound(const std::string& soundHandle, bool forceReplay = true);
 		static void StopSound(const std::string& soundHandle);
 		static void StopAllSounds();
 
+		static void SetLooping(const std::string& soundHandle, bool flag);
+		static bool IsLooping(const std::string& soundHandle);
 
 	private:
-		static std::unordered_map<std::string, ResourceID> s_Sounds;
+		static std::unordered_map<std::string, SoundResource*> s_Sounds;
 
 	};
 

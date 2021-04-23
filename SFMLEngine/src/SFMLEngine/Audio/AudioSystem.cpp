@@ -23,56 +23,74 @@ namespace SFMLEngine {
 	}
 
 
-	std::unordered_map<std::string, ResourceID> AudioSystem::s_Sounds;
+	std::unordered_map<std::string, SoundResource*> AudioSystem::s_Sounds;
 
 	void AudioSystem::Shutdown()
 	{
 		for (auto& sound : s_Sounds)
 		{
-			ResourceManager::DeleteResource<SoundResource>(sound.second);
+			delete sound.second;
 		}
 		s_Sounds.clear();
 	}
 
-	ResourceID AudioSystem::LoadSound(const std::string& soundHandle, const std::string& filepath)
+	void AudioSystem::LoadSound(const std::string& soundHandle, const std::string& filepath)
 	{
-		SFMLE_CORE_ASSERT(s_Sounds.find(soundHandle) == s_Sounds.end(), "A sound already exists with that handle!");
+		// dont attempt to load a sound if its already in memory
+		// we can safely silently ignore the request to load the sound
+		if (s_Sounds.find(soundHandle) == s_Sounds.end())
+		{
+			SoundResource* newSound = new SoundResource(filepath);
 
-
-		SoundResource* newSound = new SoundResource(filepath);
-		ResourceID newID = ResourceManager::ManageResource(newSound);
-
-		s_Sounds.insert({ soundHandle, newID });
-
-		return newID;
+			s_Sounds.insert({ soundHandle, newSound });
+		}
 	}
 
 	void AudioSystem::DeleteSound(const std::string& soundHandle)
 	{
 		SFMLE_CORE_ASSERT(s_Sounds.find(soundHandle) != s_Sounds.end(), "No sound exists with that handle!");
 
-		ResourceManager::DeleteResource<SoundResource>(s_Sounds[soundHandle]);
+		delete s_Sounds[soundHandle];
 		s_Sounds.erase(soundHandle);
 	}
 
-	void AudioSystem::PlaySound(const std::string& soundHandle)
+	void AudioSystem::PlaySound(const std::string& soundHandle, bool forceReplay)
 	{
 		SFMLE_CORE_ASSERT(s_Sounds.find(soundHandle) != s_Sounds.end(), "No sound exists with that handle!");
-		ResourceManager::GetResourceHandle<SoundResource>(s_Sounds[soundHandle])->GetSoundObject().play();
+		auto& sound = s_Sounds[soundHandle]->GetSoundObject();
+		if (forceReplay)
+			sound.play();
+		else
+		{
+			if (sound.getStatus() != sound.Playing)
+				sound.play();
+		}
 	}
 
 	void AudioSystem::StopSound(const std::string& soundHandle)
 	{
 		SFMLE_CORE_ASSERT(s_Sounds.find(soundHandle) != s_Sounds.end(), "No sound exists with that handle!");
-		ResourceManager::GetResourceHandle<SoundResource>(s_Sounds[soundHandle])->GetSoundObject().stop();
+		s_Sounds[soundHandle]->GetSoundObject().stop();
 	}
 
 	void AudioSystem::StopAllSounds()
 	{
 		for (auto& sound : s_Sounds)
 		{
-			ResourceManager::GetResourceHandle<SoundResource>(sound.second)->GetSoundObject().stop();
+			sound.second->GetSoundObject().stop();
 		}
+	}
+
+	void AudioSystem::SetLooping(const std::string& soundHandle, bool flag)
+	{
+		SFMLE_CORE_ASSERT(s_Sounds.find(soundHandle) != s_Sounds.end(), "No sound exists with that handle!");
+		s_Sounds[soundHandle]->GetSoundObject().setLoop(flag);
+	}
+
+	bool AudioSystem::IsLooping(const std::string& soundHandle)
+	{
+		SFMLE_CORE_ASSERT(s_Sounds.find(soundHandle) != s_Sounds.end(), "No sound exists with that handle!");
+		return s_Sounds[soundHandle]->GetSoundObject().getLoop();
 	}
 
 }

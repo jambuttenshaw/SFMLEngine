@@ -19,6 +19,12 @@ void CrystalCollector::Start()
 
 	m_WolfManager = &GetNativeScript<WolfManager>(GetEntitiesWithTag("WolfManager")[0]);
 	m_CameraController = &GetNativeScript<CameraController>(GetEntitiesWithTag("MainCamera")[0]);
+
+
+	// load sounds used for mining
+	AudioSystem::LoadSound("mining", "assets/audio/mining.ogg");
+	AudioSystem::LoadSound("crack", "assets/audio/crack.ogg");
+	AudioSystem::LoadSound("break", "assets/audio/break.ogg");
 }
 
 void CrystalCollector::OnSceneLoaded()
@@ -74,6 +80,7 @@ void CrystalCollector::Update(float ts)
 					m_BrokenCrystal = true;
 
 					m_CameraController->ShakeCamera(0.1f, 3.0f);
+					AudioSystem::PlaySound("crack");
 				}
 			}
 			// if the crystal has been mined
@@ -85,9 +92,11 @@ void CrystalCollector::Update(float ts)
 				m_MiningProgress.erase(currentCrystal);
 
 				m_CameraController->ShakeCamera(0.25f, 5.0f);
+				AudioSystem::PlaySound("break");
 			}
 
 			CreateNoiseRing(m_CrystalMap->TileToWorldCoordinates(currentCrystal) + sf::Vector2f{16, 16});
+			AudioSystem::PlaySound("mining");
 
 			// collecting crystals will awaken wolves
 			// use the centre of the player as the point they are awoken from

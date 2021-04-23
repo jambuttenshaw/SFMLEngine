@@ -26,7 +26,10 @@ class PauseMenuButton : public ScriptableEntity
 		else if (m_Holding)
 		{
 			if (m_CollidingWithMouse)
+			{
+				AudioSystem::PlaySound("buttonClick");
 				OnClick();
+			}
 
 			m_Holding = false;
 		}
