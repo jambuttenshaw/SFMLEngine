@@ -61,9 +61,9 @@ namespace SFMLEngine {
 		sf::Listener::setPosition(pos.x, 0.0f, pos.y);
 	}
 
-	void AudioSystem::SetListenerDirection(const sf::Vector2f& dir)
+	void AudioSystem::SetListenerDirection(const sf::Vector3f& dir)
 	{
-		sf::Listener::setDirection(dir.x, 0.0f, dir.y);
+		sf::Listener::setDirection(dir.x, dir.y, dir.z);
 	}
 
 	void AudioSystem::LoadSound(const std::string& soundHandle, const std::string& filepath, float volume)
@@ -99,20 +99,6 @@ namespace SFMLEngine {
 		}
 	}
 
-	void AudioSystem::PlaySound(const std::string& soundHandle, const sf::Vector2f& position, bool forceReplay)
-	{
-		SFMLE_CORE_ASSERT(s_Sounds.find(soundHandle) != s_Sounds.end(), "No sound exists with that handle!");
-		auto& sound = s_Sounds[soundHandle]->GetSoundObject();
-		sound.setPosition(position.x, 0.0f, position.y);
-
-		if (forceReplay)
-			sound.play();
-		else
-		{
-			if (sound.getStatus() != sound.Playing)
-				sound.play();
-		}
-	}
 
 	void AudioSystem::StopSound(const std::string& soundHandle)
 	{
@@ -140,10 +126,28 @@ namespace SFMLEngine {
 		return s_Sounds[soundHandle]->GetSoundObject().getLoop();
 	}
 
+	void AudioSystem::SetPosition(const std::string& soundHandle, const sf::Vector2f& pos)
+	{
+		SFMLE_CORE_ASSERT(s_Sounds.find(soundHandle) != s_Sounds.end(), "No sound exists with that handle!");
+		s_Sounds[soundHandle]->GetSoundObject().setPosition(pos.x, 0.0f, pos.y);
+	}
+
 	void AudioSystem::SetRelativeToListener(const std::string& soundHandle, bool flag)
 	{
 		SFMLE_CORE_ASSERT(s_Sounds.find(soundHandle) != s_Sounds.end(), "No sound exists with that handle!");
 		s_Sounds[soundHandle]->GetSoundObject().setRelativeToListener(flag);
+	}
+
+	void AudioSystem::SetMinimumDistance(const std::string& soundHandle, float dist)
+	{
+		SFMLE_CORE_ASSERT(s_Sounds.find(soundHandle) != s_Sounds.end(), "No sound exists with that handle!");
+		s_Sounds[soundHandle]->GetSoundObject().setMinDistance(dist);
+	}
+
+	void AudioSystem::SetAttenuation(const std::string& soundHandle, float att)
+	{
+		SFMLE_CORE_ASSERT(s_Sounds.find(soundHandle) != s_Sounds.end(), "No sound exists with that handle!");
+		s_Sounds[soundHandle]->GetSoundObject().setAttenuation(att);
 	}
 
 }

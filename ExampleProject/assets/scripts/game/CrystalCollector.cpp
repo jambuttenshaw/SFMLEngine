@@ -191,7 +191,8 @@ void CrystalCollector::CreateNoiseRing(const sf::Vector2f& position)
 
 void CrystalCollector::PlayBreakSound(const std::string& sound, const sf::Vector2i& currentCrystal)
 {
-	AudioSystem::PlaySound(sound, m_CrystalMap->TileToWorldCoordinates(currentCrystal) + sf::Vector2f{ 16, 16 });
+	AudioSystem::SetPosition(sound, m_CrystalMap->TileToWorldCoordinates(currentCrystal) + sf::Vector2f{ 16, 16 });
+	AudioSystem::PlaySound(sound);
 }
 
 void CrystalCollector::AssignPlayerData()

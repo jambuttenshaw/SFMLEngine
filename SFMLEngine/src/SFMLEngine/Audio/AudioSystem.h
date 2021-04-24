@@ -49,7 +49,7 @@ namespace SFMLEngine {
 
 
 		static void SetListenerPosition(const sf::Vector2f& pos);
-		static void SetListenerDirection(const sf::Vector2f& dir);
+		static void SetListenerDirection(const sf::Vector3f& dir);
 
 
 		////////////
@@ -63,14 +63,17 @@ namespace SFMLEngine {
 		static void DeleteSound(const std::string& soundHandle);
 
 		static void PlaySound(const std::string& soundHandle, bool forceReplay = true);
-		static void PlaySound(const std::string& soundHandle, const sf::Vector2f& position, bool forceReplay = true);
 		static void StopSound(const std::string& soundHandle);
 		static void StopAllSounds();
 
 		static void SetLooping(const std::string& soundHandle, bool flag);
 		static bool IsLooping(const std::string& soundHandle);
 
+		// Spacial audio settings
+		static void SetPosition(const std::string& soundHandle, const sf::Vector2f& pos);
 		static void SetRelativeToListener(const std::string& soundHandle, bool flag);
+		static void SetMinimumDistance(const std::string& soundHandle, float dist);
+		static void SetAttenuation(const std::string& soundHandle, float att);
 
 	private:
 		static std::unordered_map<std::string, SoundResource*> s_Sounds;

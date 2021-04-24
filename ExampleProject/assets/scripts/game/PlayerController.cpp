@@ -25,6 +25,9 @@ void PlayerController::Start()
 
 
 
+	AudioSystem::SetListenerDirection({0.0f, 0.0f, -1.0f});
+
+
 	// load in the players sounds
 	AudioSystem::LoadSound("ladderCreak", "assets/audio/ladderCreak.ogg");
 	AudioSystem::SetLooping("ladderCreak", true);
@@ -76,13 +79,14 @@ void PlayerController::Update(float ts)
 		{
 			m_CanLandOnPlatform = false;
 
+			if (m_State != PlayerState::Climb)
+			{// the player should move to jump state after falling down through a platform
+				if (m_State == PlayerState::Crawl)
+					EndCrawl();
 
-			// the player should move to jump state after falling down through a platform
-			if (m_State == PlayerState::Crawl)
-				EndCrawl();
-
-			m_Animator->SetCurrentAnimation("jump");
-			m_State = PlayerState::Jump;
+				m_Animator->SetCurrentAnimation("jump");
+				m_State = PlayerState::Jump;
+			}
 		}
 	}
 	else

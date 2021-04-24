@@ -21,6 +21,7 @@ public:
 	};
 
 public:
+
 	void Start() override;
 
 	void Update(float ts) override;
@@ -80,5 +81,10 @@ private:
 
 	float m_InitialAttackCooldown = 1.0f;
 	float m_AttackCooldown = 0.0f;
+
+
+	std::string m_GrowlSound;
+	std::string m_AngrySound;
+
 
 };

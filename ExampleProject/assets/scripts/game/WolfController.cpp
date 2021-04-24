@@ -15,6 +15,30 @@ void WolfController::Start()
 	m_PlayerController = &GetNativeScript<PlayerController>(player);
 
 	m_GroundLayerMask = LayerManager::GetLayer("Ground");
+
+
+
+	// set up the wolf's audio
+
+	m_GrowlSound = "Growl" + std::to_string(GetEntityHandle());
+	AudioSystem::LoadSound(m_GrowlSound, "assets/audio/growl.ogg");
+	AudioSystem::SetLooping(m_GrowlSound, true);
+	AudioSystem::SetMinimumDistance(m_GrowlSound, 96);
+
+
+	m_AngrySound = "Angry" + std::to_string(GetEntityHandle());
+	AudioSystem::LoadSound(m_AngrySound, "assets/audio/wolfChase.ogg");
+	AudioSystem::SetLooping(m_AngrySound, true);
+	AudioSystem::SetMinimumDistance(m_GrowlSound, 96);
+	AudioSystem::SetAttenuation(m_GrowlSound, 0.75f);
+
+
+	AudioSystem::SetPosition(m_GrowlSound, GetCentre());
+	AudioSystem::SetPosition(m_AngrySound, GetCentre());
+
+	// wolfs are asleep by default
+	// so they should growl by default
+	AudioSystem::PlaySound(m_GrowlSound);
 }
 
 void WolfController::Update(float ts)
@@ -57,6 +81,8 @@ void WolfController::Update(float ts)
 				// the wolf has lost interest and is going to sleep
 				m_State = WolfState::Sleep;
 				m_Animator->SetCurrentAnimation("sleep");
+				// play growling while wolf sleeps
+				AudioSystem::PlaySound(m_GrowlSound);
 			}
 		}
 		else
@@ -65,6 +91,7 @@ void WolfController::Update(float ts)
 			m_State = WolfState::Follow;
 			// the wolf becomes interested
 			m_Interest = m_InitialInterest;
+			AudioSystem::PlaySound(m_AngrySound);
 		}
 		break;
 
@@ -80,6 +107,7 @@ void WolfController::Update(float ts)
 			m_Animator->SetCurrentAnimation("alert");
 			m_Rigidbody->SetVelocity({ 0, m_Rigidbody->GetVelocity().y });
 
+			AudioSystem::StopSound(m_AngrySound);
 		}
 		else
 		{
@@ -181,8 +209,6 @@ void WolfController::Update(float ts)
 			{
 				m_Animator->SetCurrentAnimation("idle");
 			}
-
-
 			// make the attack cool down
 			m_AttackCooldown -= ts;
 		}
@@ -236,6 +262,9 @@ void WolfController::Update(float ts)
 	}
 
 
+	// move the sounds to reflect the wolfs current position
+	AudioSystem::SetPosition(m_GrowlSound, GetCentre());
+	AudioSystem::SetPosition(m_AngrySound, GetCentre());
 
 	m_Animator->SetFlipped(!m_FacingRight);
 }
@@ -247,6 +276,7 @@ void WolfController::Wake()
 	{
 		m_State = WolfState::Wake;
 		m_Animator->SetCurrentAnimation("wake");
+		AudioSystem::StopSound(m_GrowlSound);
 	}
 }
 
