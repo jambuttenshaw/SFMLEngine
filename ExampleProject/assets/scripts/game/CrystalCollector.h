@@ -45,6 +45,7 @@ public:
 
 	void CreateNoiseRing(const sf::Vector2f& position);
 
+	void PlayBreakSound(const std::string& sound, const sf::Vector2i& currentCrystal);
 
 	void AssignPlayerData();
 

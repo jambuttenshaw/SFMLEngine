@@ -34,6 +34,7 @@ public:
 
 
 		AudioSystem::LoadSound("buttonClick", "assets/audio/click.ogg");
+		AudioSystem::SetRelativeToListener("buttonClick", true);
 
 
 		LoadScene<SplashScreen>(LoadSceneMode::Single);

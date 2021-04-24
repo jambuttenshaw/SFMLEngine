@@ -3,6 +3,9 @@
 #include "SFMLEngine/ECS/Components/Transform.h"
 #include "SFMLEngine/ECS/Components/Camera.h"
 
+#include "SFMLEngine/Audio/AudioSystem.h"
+
+
 namespace SFMLEngine {
 
 	void CameraSystem::Init(Coordinator* coordinator)
@@ -13,7 +16,10 @@ namespace SFMLEngine {
 	void CameraSystem::EntityAddedToSystem(Entity entity)
 	{
 		Camera& camera = m_Coordinator->GetComponent<Camera>(entity);
-		if (camera.IsMain()) m_MainCamera = entity;
+		if (camera.IsMain())
+		{
+			m_MainCamera = entity;
+		}
 	}
 
 	void CameraSystem::Update()
@@ -25,6 +31,7 @@ namespace SFMLEngine {
 			if (ComponentModified(cam))
 			{
 				ResetModified(cam);
+
 				if (cam.IsMain())
 				{
 					m_MainCamera = entity;

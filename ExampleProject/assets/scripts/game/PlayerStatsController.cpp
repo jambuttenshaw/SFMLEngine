@@ -7,8 +7,10 @@ void PlayerStatsController::Start()
 {
 	m_Health = m_MaxHealth;
 
-	AudioSystem::LoadSound("hurt", "assets/audio/hurt.ogg");
-	AudioSystem::LoadSound("die", "assets/audio/die.ogg");
+	AudioSystem::LoadSound("hurt", "assets/audio/hurt.ogg", 50);
+	AudioSystem::SetRelativeToListener("hurt", true);
+	AudioSystem::LoadSound("die", "assets/audio/die.ogg", 50);
+	AudioSystem::SetRelativeToListener("die", true);
 }
 
 

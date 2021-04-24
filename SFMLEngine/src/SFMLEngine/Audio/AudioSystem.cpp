@@ -6,20 +6,42 @@
 namespace SFMLEngine {
 
 
+	std::unordered_map<std::string, SoundResource::CacheData> SoundResource::s_BufferCache;
 
 	SoundResource::SoundResource(const std::string& filename)
 		: m_Filepath(filename)
 	{
+		if (s_BufferCache.find(filename) != s_BufferCache.end())
+		{
+			m_BufferID = s_BufferCache[filename].ID;
+			s_BufferCache[filename].Uses++;
+		}
+		else
+		{
+			m_BufferID = ResourceManager::LoadFromFile<sf::SoundBuffer>(m_Filepath);
+			s_BufferCache.insert({ filename, {m_BufferID, 1} });
+		}
 		// manage the sound buffer through the resource manager
-		m_BufferID = ResourceManager::LoadFromFile<sf::SoundBuffer>(m_Filepath);
 
 		// setup the sound object
 		m_SoundObject.setBuffer(*ResourceManager::GetResourceHandle<sf::SoundBuffer>(m_BufferID));
+
+		m_SoundObject.setMinDistance(32);
 	}
 
 	SoundResource::~SoundResource()
 	{
-		ResourceManager::DeleteResource<sf::SoundBuffer>(m_BufferID);
+		s_BufferCache[m_Filepath].Uses--;
+		if (s_BufferCache[m_Filepath].Uses == 0)
+		{
+			ResourceManager::DeleteResource<sf::SoundBuffer>(m_BufferID);
+			s_BufferCache.erase(m_Filepath);
+		}
+	}
+
+	void SoundResource::SetVolume(float volume)
+	{
+		m_SoundObject.setVolume(volume);
 	}
 
 
@@ -34,7 +56,17 @@ namespace SFMLEngine {
 		s_Sounds.clear();
 	}
 
-	void AudioSystem::LoadSound(const std::string& soundHandle, const std::string& filepath)
+	void AudioSystem::SetListenerPosition(const sf::Vector2f& pos)
+	{
+		sf::Listener::setPosition(pos.x, 0.0f, pos.y);
+	}
+
+	void AudioSystem::SetListenerDirection(const sf::Vector2f& dir)
+	{
+		sf::Listener::setDirection(dir.x, 0.0f, dir.y);
+	}
+
+	void AudioSystem::LoadSound(const std::string& soundHandle, const std::string& filepath, float volume)
 	{
 		// dont attempt to load a sound if its already in memory
 		// we can safely silently ignore the request to load the sound
@@ -58,6 +90,21 @@ namespace SFMLEngine {
 	{
 		SFMLE_CORE_ASSERT(s_Sounds.find(soundHandle) != s_Sounds.end(), "No sound exists with that handle!");
 		auto& sound = s_Sounds[soundHandle]->GetSoundObject();
+		if (forceReplay)
+			sound.play();
+		else
+		{
+			if (sound.getStatus() != sound.Playing)
+				sound.play();
+		}
+	}
+
+	void AudioSystem::PlaySound(const std::string& soundHandle, const sf::Vector2f& position, bool forceReplay)
+	{
+		SFMLE_CORE_ASSERT(s_Sounds.find(soundHandle) != s_Sounds.end(), "No sound exists with that handle!");
+		auto& sound = s_Sounds[soundHandle]->GetSoundObject();
+		sound.setPosition(position.x, 0.0f, position.y);
+
 		if (forceReplay)
 			sound.play();
 		else
@@ -91,6 +138,12 @@ namespace SFMLEngine {
 	{
 		SFMLE_CORE_ASSERT(s_Sounds.find(soundHandle) != s_Sounds.end(), "No sound exists with that handle!");
 		return s_Sounds[soundHandle]->GetSoundObject().getLoop();
+	}
+
+	void AudioSystem::SetRelativeToListener(const std::string& soundHandle, bool flag)
+	{
+		SFMLE_CORE_ASSERT(s_Sounds.find(soundHandle) != s_Sounds.end(), "No sound exists with that handle!");
+		s_Sounds[soundHandle]->GetSoundObject().setRelativeToListener(flag);
 	}
 
 }

@@ -80,7 +80,7 @@ void CrystalCollector::Update(float ts)
 					m_BrokenCrystal = true;
 
 					m_CameraController->ShakeCamera(0.1f, 3.0f);
-					AudioSystem::PlaySound("crack");
+					PlayBreakSound("crack", currentCrystal);
 				}
 			}
 			// if the crystal has been mined
@@ -92,11 +92,11 @@ void CrystalCollector::Update(float ts)
 				m_MiningProgress.erase(currentCrystal);
 
 				m_CameraController->ShakeCamera(0.25f, 5.0f);
-				AudioSystem::PlaySound("break");
+				PlayBreakSound("break", currentCrystal);
 			}
 
 			CreateNoiseRing(m_CrystalMap->TileToWorldCoordinates(currentCrystal) + sf::Vector2f{16, 16});
-			AudioSystem::PlaySound("mining");
+			PlayBreakSound("mining", currentCrystal);
 
 			// collecting crystals will awaken wolves
 			// use the centre of the player as the point they are awoken from
@@ -187,6 +187,11 @@ void CrystalCollector::CreateNoiseRing(const sf::Vector2f& position)
 
 	auto& script = AddNativeScript<NoiseRingController>(newRing);
 	script.SetCentrePosition(position);
+}
+
+void CrystalCollector::PlayBreakSound(const std::string& sound, const sf::Vector2i& currentCrystal)
+{
+	AudioSystem::PlaySound(sound, m_CrystalMap->TileToWorldCoordinates(currentCrystal) + sf::Vector2f{ 16, 16 });
 }
 
 void CrystalCollector::AssignPlayerData()

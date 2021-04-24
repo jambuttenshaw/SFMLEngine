@@ -28,12 +28,16 @@ void PlayerController::Start()
 	// load in the players sounds
 	AudioSystem::LoadSound("ladderCreak", "assets/audio/ladderCreak.ogg");
 	AudioSystem::SetLooping("ladderCreak", true);
+	AudioSystem::SetRelativeToListener("ladderCreak", true);
 	
 	AudioSystem::LoadSound("footsteps", "assets/audio/footsteps.ogg");
 	AudioSystem::SetLooping("footsteps", true);
+	AudioSystem::SetRelativeToListener("footsteps", true);
 
-	AudioSystem::LoadSound("jump", "assets/audio/jump.ogg");
-	AudioSystem::LoadSound("jumpImpact", "assets/audio/jumpImpact.ogg");
+	AudioSystem::LoadSound("jump", "assets/audio/jump.ogg", 50);
+	AudioSystem::SetRelativeToListener("jump", true);
+	AudioSystem::LoadSound("jumpImpact", "assets/audio/jumpImpact.ogg", 50);
+	AudioSystem::SetRelativeToListener("jumpImpact", true);
 }
 
 void PlayerController::Update(float ts)
@@ -41,6 +45,10 @@ void PlayerController::Update(float ts)
 
 	// if the game is paused: the player does nothing
 	if (PauseScript::IsGamePaused()) return;
+
+
+	// all sounds are heard from the perspective of the player
+	AudioSystem::SetListenerPosition(GetCentre());
 
 
 	// friction should ALWAYS be applied to the player
