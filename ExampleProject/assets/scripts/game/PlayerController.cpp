@@ -34,9 +34,13 @@ void PlayerController::Start()
 	AudioSystem::SetLooping("footsteps", true);
 	AudioSystem::SetRelativeToListener("footsteps", true);
 
-	AudioSystem::LoadSound("jump", "assets/audio/jump.ogg", 50);
+	AudioSystem::LoadSound("crawlingFootsteps", "assets/audio/crawlingSteps.ogg", 30);
+	AudioSystem::SetLooping("crawlingFootsteps", true);
+	AudioSystem::SetRelativeToListener("crawlingFootsteps", true);
+
+	AudioSystem::LoadSound("jump", "assets/audio/jump.ogg", 25);
 	AudioSystem::SetRelativeToListener("jump", true);
-	AudioSystem::LoadSound("jumpImpact", "assets/audio/jumpImpact.ogg", 50);
+	AudioSystem::LoadSound("jumpImpact", "assets/audio/jumpImpact.ogg", 10);
 	AudioSystem::SetRelativeToListener("jumpImpact", true);
 }
 
@@ -197,6 +201,7 @@ void PlayerController::Update(float ts)
 			if (m_State != PlayerState::Crawl)
 			{
 				m_Animator->SetCurrentAnimation("idle");
+				AudioSystem::StopSound("crawlingFootsteps");
 				break;
 			}
 		}
@@ -205,9 +210,15 @@ void PlayerController::Update(float ts)
 		// the player moves slower while crawling
 		m_Rigidbody->SetVelocity({ m_Rigidbody->GetVelocity().x * m_ClimbHorizontalFactor, m_Rigidbody->GetVelocity().y });
 		if (fabsf(m_Rigidbody->GetVelocity().x) > 50.0f)
+		{
 			m_Animator->SetCurrentAnimation("crawl");
+			AudioSystem::PlaySound("crawlingFootsteps", false);
+		}
 		else
+		{
 			m_Animator->SetCurrentAnimation("idleCrawl");
+			AudioSystem::StopSound("crawlingFootsteps");
+		}
 
 
 		// the player can jump from crawing position
@@ -219,6 +230,7 @@ void PlayerController::Update(float ts)
 				// if standing up was succesful
 				// then jump
 				Jump(ts);
+				AudioSystem::StopSound("crawlingFootsteps");
 			}
 		}
 
@@ -270,8 +282,16 @@ void PlayerController::Update(float ts)
 		{
 			// the attack animation has finished playing
 			// move back to idle state
-			m_State = PlayerState::Grounded;
-			m_Animator->SetCurrentAnimation("idle");
+			if (m_Crawling)
+			{
+				m_State = PlayerState::Crawl;
+				m_Animator->SetCurrentAnimation("idleCrawl");
+			}
+			else
+			{
+				m_State = PlayerState::Grounded;
+				m_Animator->SetCurrentAnimation("idle");
+			}
 		}
 
 
@@ -414,6 +434,7 @@ void PlayerController::StartCrawl()
 		m_VerticalCastSize = { 0.5f, 22 };
 
 		m_State = PlayerState::Crawl;
+		m_Crawling = true;
 	}
 }
 
@@ -437,6 +458,7 @@ void PlayerController::EndCrawl()
 		m_VerticalCastSize = { 0.5f, 48 };
 
 		m_State = PlayerState::Grounded;
+		m_Crawling = false;
 	}
 }
 

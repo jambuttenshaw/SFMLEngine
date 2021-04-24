@@ -23,7 +23,11 @@ void WolfController::Start()
 	m_GrowlSound = "Growl" + std::to_string(GetEntityHandle());
 	AudioSystem::LoadSound(m_GrowlSound, "assets/audio/growl.ogg");
 	AudioSystem::SetLooping(m_GrowlSound, true);
-	AudioSystem::SetMinimumDistance(m_GrowlSound, 96);
+
+
+	m_FootstepsSound = "WolfFootsteps" + std::to_string(GetEntityHandle());
+	AudioSystem::LoadSound(m_FootstepsSound, "assets/audio/wolfFootsteps.ogg");
+	AudioSystem::SetLooping(m_FootstepsSound, true);
 
 
 	m_AngrySound = "Angry" + std::to_string(GetEntityHandle());
@@ -32,10 +36,15 @@ void WolfController::Start()
 	AudioSystem::SetMinimumDistance(m_GrowlSound, 96);
 	AudioSystem::SetAttenuation(m_GrowlSound, 0.75f);
 
+	m_BiteSound = "Bite" + std::to_string(GetEntityHandle());
+	AudioSystem::LoadSound(m_BiteSound, "assets/audio/bite.ogg");
+	AudioSystem::SetRelativeToListener(m_BiteSound, true);
+
 
 	AudioSystem::SetPosition(m_GrowlSound, GetCentre());
+	AudioSystem::SetPosition(m_FootstepsSound, GetCentre());
 	AudioSystem::SetPosition(m_AngrySound, GetCentre());
-
+	
 	// wolfs are asleep by default
 	// so they should growl by default
 	AudioSystem::PlaySound(m_GrowlSound);
@@ -108,6 +117,7 @@ void WolfController::Update(float ts)
 			m_Rigidbody->SetVelocity({ 0, m_Rigidbody->GetVelocity().y });
 
 			AudioSystem::StopSound(m_AngrySound);
+			AudioSystem::StopSound(m_FootstepsSound);
 		}
 		else
 		{
@@ -128,6 +138,7 @@ void WolfController::Update(float ts)
 					// the wolf has hit a wall!
 					// it needs to get over it
 					m_Animator->SetCurrentAnimation("idle");
+					AudioSystem::StopSound(m_FootstepsSound);
 
 					// it can do that by jumping or climbing
 					if (fabsf(m_Rigidbody->GetVelocity().y) < 0.001f)
@@ -147,6 +158,7 @@ void WolfController::Update(float ts)
 								// it should climb it instead
 								m_State = WolfState::Climb;
 								m_Animator->SetCurrentAnimation("climb");
+								
 								StartClimb();
 							}
 						}
@@ -169,6 +181,7 @@ void WolfController::Update(float ts)
 					if (fabsf(m_Rigidbody->GetVelocity().x) > 100)
 					{
 						m_Animator->SetCurrentAnimation("run");
+						AudioSystem::PlaySound(m_FootstepsSound, false);
 					}
 					else if (fabsf(m_Rigidbody->GetVelocity().x) > 50)
 					{
@@ -190,6 +203,10 @@ void WolfController::Update(float ts)
 						m_Animator->SetCurrentAnimation("bite");
 						m_Animator->Reset();
 
+						AudioSystem::StopSound(m_FootstepsSound);
+						AudioSystem::PlaySound(m_BiteSound);
+
+
 						m_AttackCooldown = m_InitialAttackCooldown;
 
 						m_PlayerController->Hurt(diff > 0);
@@ -197,17 +214,20 @@ void WolfController::Update(float ts)
 					else
 					{
 						m_Animator->SetCurrentAnimation("idle");
+						AudioSystem::StopSound(m_FootstepsSound);
 					}
 				}
 				else
 				{
 					m_Animator->SetCurrentAnimation("idle");
+					AudioSystem::StopSound(m_FootstepsSound);
 				}
 				m_Rigidbody->SetVelocity({ 0, m_Rigidbody->GetVelocity().y });
 			}
 			else
 			{
 				m_Animator->SetCurrentAnimation("idle");
+				AudioSystem::StopSound(m_FootstepsSound);
 			}
 			// make the attack cool down
 			m_AttackCooldown -= ts;
@@ -264,6 +284,7 @@ void WolfController::Update(float ts)
 
 	// move the sounds to reflect the wolfs current position
 	AudioSystem::SetPosition(m_GrowlSound, GetCentre());
+	AudioSystem::SetPosition(m_FootstepsSound, GetCentre());
 	AudioSystem::SetPosition(m_AngrySound, GetCentre());
 
 	m_Animator->SetFlipped(!m_FacingRight);

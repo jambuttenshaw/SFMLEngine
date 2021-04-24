@@ -79,14 +79,12 @@ private:
 	bool m_AgainstWall = false;
 	bool m_CanLandOnPlatform = true;
 
-	// bool m_Crawling = false;
+	bool m_Crawling = false;
 
 	int m_LadderContacts = 0;
-	// bool m_Sliding = false;
 	float m_ClimbSpeed = 100.0f;
 	float m_ClimbHorizontalFactor = 0.3f;
 
-	// bool m_Hurting = false;
 	float m_HurtBounceVelocity = 175.0f;
 
 	bool m_InJumpThroughPlatform = false;
@@ -99,9 +97,6 @@ private:
 	float m_FallMultiplier = 0.4f;
 
 	bool m_FacingRight = true;
-
-
-	// bool m_Dead = false;
 
 
 	const sf::FloatRect m_StandingHitbox{ 8, 16, 17, 48 };

@@ -85,6 +85,8 @@ private:
 
 	std::string m_GrowlSound;
 	std::string m_AngrySound;
+	std::string m_FootstepsSound;
+	std::string m_BiteSound;
 
 
 };
