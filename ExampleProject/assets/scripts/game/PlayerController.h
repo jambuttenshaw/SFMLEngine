@@ -9,6 +9,18 @@ using namespace SFMLEngine;
 
 class PlayerController : public ScriptableEntity
 {
+private:
+
+	enum class PlayerState
+	{
+		Grounded,
+		Jump,
+		Crawl,
+		Climb,
+		Hurting,
+		Dead
+	};
+
 public:
 	void Start() override;
 	void Update(float ts) override;
@@ -30,13 +42,18 @@ public:
 
 	sf::Vector2f GetCentre()
 	{
-		if (m_Crawling)
+		if (m_State == PlayerState::Crawl)
 			return m_Transform->GetPosition() + sf::Vector2f{32, 16}; 
 		else
 			return m_Transform->GetPosition() + sf::Vector2f{16, 32};
 	}
 
 private:
+
+	std::string GetStringFromCurrentState();
+
+private:
+	PlayerState m_State;
 
 	sf::Vector2f m_LeftCastPoint;
 	sf::Vector2f m_RightCastPoint;
@@ -61,14 +78,15 @@ private:
 
 	bool m_AgainstWall = false;
 	bool m_CanLandOnPlatform = true;
-	bool m_Crawling = false;
+
+	// bool m_Crawling = false;
 
 	int m_LadderContacts = 0;
-	bool m_Sliding = false;
+	// bool m_Sliding = false;
 	float m_ClimbSpeed = 100.0f;
 	float m_ClimbHorizontalFactor = 0.3f;
 
-	bool m_Hurting = false;
+	// bool m_Hurting = false;
 	float m_HurtBounceVelocity = 175.0f;
 
 	bool m_InJumpThroughPlatform = false;
@@ -83,7 +101,7 @@ private:
 	bool m_FacingRight = true;
 
 
-	bool m_Dead = false;
+	// bool m_Dead = false;
 
 
 	const sf::FloatRect m_StandingHitbox{ 8, 16, 17, 48 };
