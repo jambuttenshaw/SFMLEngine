@@ -106,6 +106,24 @@ namespace SFMLEngine {
 		s_Sounds[soundHandle]->GetSoundObject().stop();
 	}
 
+	void AudioSystem::PauseAllSounds()
+	{
+		for (auto& sound : s_Sounds)
+		{
+			auto& object = sound.second->GetSoundObject();
+			if (object.getStatus() == object.Playing) object.pause();
+		}
+	}
+
+	void AudioSystem::ResumeAllSounds()
+	{
+		for (auto& sound : s_Sounds)
+		{
+			auto& object = sound.second->GetSoundObject();
+			if (object.getStatus() == object.Paused) object.play();
+		}
+	}
+
 	void AudioSystem::StopAllSounds()
 	{
 		for (auto& sound : s_Sounds)

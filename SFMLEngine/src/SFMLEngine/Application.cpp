@@ -394,6 +394,8 @@ namespace SFMLEngine
                 // there exists 1 single scene to be loaded, so we must delete all scenes currently loaded
                 if (singleScenes == 1)
                 {
+                    // When all scenes are deleted, all audio should be stopped
+                    AudioSystem::StopAllSounds();
                     DeleteAllCurrentScenes();
                 }
                 else if (singleScenes > 1)

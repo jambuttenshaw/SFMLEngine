@@ -64,6 +64,9 @@ namespace SFMLEngine {
 
 		static void PlaySound(const std::string& soundHandle, bool forceReplay = true);
 		static void StopSound(const std::string& soundHandle);
+		
+		static void PauseAllSounds();
+		static void ResumeAllSounds();
 		static void StopAllSounds();
 
 		static void SetLooping(const std::string& soundHandle, bool flag);

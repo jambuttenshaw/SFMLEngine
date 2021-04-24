@@ -25,9 +25,6 @@ void PlayerController::Start()
 
 
 
-	AudioSystem::SetListenerDirection({0.0f, 0.0f, -1.0f});
-
-
 	// load in the players sounds
 	AudioSystem::LoadSound("ladderCreak", "assets/audio/ladderCreak.ogg");
 	AudioSystem::SetLooping("ladderCreak", true);
