@@ -108,8 +108,17 @@ void PlayerController::Update(float ts)
 		if (!(m_OnGround || m_OnJumpThrough))
 		{
 			AudioSystem::StopSound("footsteps");
-			m_Animator->SetCurrentAnimation("jump");
-			m_State = PlayerState::Jump;
+			if (m_LadderContacts)
+			{
+				m_Animator->SetCurrentAnimation("climb");
+				m_State = PlayerState::Climb;
+				AudioSystem::PlaySound("ladderCreak");
+			}
+			else
+			{
+				m_Animator->SetCurrentAnimation("jump");
+				m_State = PlayerState::Jump;
+			}
 
 			// the player should do no more 'grounded' activities
 			break;

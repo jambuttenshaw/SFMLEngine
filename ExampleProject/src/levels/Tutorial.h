@@ -20,12 +20,19 @@ public:
 		m_Ladders = LevelFactory::CreateLadders(this, "assets/tilemaps/tutorial/layer2.json");
 		m_Crystals = LevelFactory::CreateCrystals(this, "assets/tilemaps/tutorial/layer3.json");
 		
-		m_LevelEnd = LevelFactory::CreateLevelEnd(this, { 1696, 32 });
+		m_LevelEnd = LevelFactory::CreateLevelEnd(this, { 2240, 736 });
 
-		// m_Wolf = Wolf::Create(this, { 224, 64 });
-
-		CreateTutorialText(1, { 100, 0 });
-
+		CreateTutorialText(1, { 62, 44 });
+		CreateTutorialText(2, { 240, -20 });
+		CreateTutorialText(3, { 480, -165 });
+		CreateTutorialText(4, { 540, 65 });
+		CreateTutorialText(5, { 950, 10 });
+		CreateTutorialText(6, { 1140, -60 });
+		CreateTutorialText(7, { 1445, -20 });
+		CreateTutorialText(8, { 1645, 510 });
+		CreateTutorialText(9, { 1900, 560 });
+		CreateTutorialText(10, { 2155, 555 });
+		
 
 		// flag that we are entering the tutorial
 		// level 1 should follow

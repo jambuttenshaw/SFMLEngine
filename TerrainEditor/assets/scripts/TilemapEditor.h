@@ -14,7 +14,7 @@ public:
 		m_Palette = m_Tilemap->GetPalette();
 	}
 
-	void Update(Timestep ts) override
+	void Update(float ts) override
 	{
 		if (!m_Active) return;
 
