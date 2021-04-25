@@ -4,6 +4,7 @@
 
 #include "LevelFactory.h"
 #include "../entities/Wolf.h"
+#include "tutorial/TutorialText.h"
 
 
 using namespace SFMLEngine;
@@ -21,7 +22,9 @@ public:
 		
 		m_LevelEnd = LevelFactory::CreateLevelEnd(this, { 1696, 32 });
 
-		m_Wolf = Wolf::Create(this, { 224, 64 });
+		// m_Wolf = Wolf::Create(this, { 224, 64 });
+
+		CreateTutorialText(1, { 100, 0 });
 
 
 		// flag that we are entering the tutorial
@@ -29,6 +32,14 @@ public:
 		// so flag that level 1 has not been loaded
 		bool* loadedLevel1 = DataStore::RetrieveData<bool>("loadedLevel1");
 		*loadedLevel1 = false;
+	}
+
+
+	void CreateTutorialText(int textID, const sf::Vector2f& position)
+	{
+		Entity newText = CreateEntity();
+		auto& script = AddNativeScript<TutorialText>(newText);
+		script.Init(textID, position);
 	}
 
 private:
