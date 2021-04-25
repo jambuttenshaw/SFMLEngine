@@ -26,7 +26,7 @@ void PlayerController::Start()
 
 
 	// load in the players sounds
-	AudioSystem::LoadSound("ladderCreak", "assets/audio/ladderCreak.ogg");
+	AudioSystem::LoadSound("ladderCreak", "assets/audio/ladderCreak.ogg", 30);
 	AudioSystem::SetLooping("ladderCreak", true);
 	AudioSystem::SetRelativeToListener("ladderCreak", true);
 	
@@ -34,13 +34,13 @@ void PlayerController::Start()
 	AudioSystem::SetLooping("footsteps", true);
 	AudioSystem::SetRelativeToListener("footsteps", true);
 
-	AudioSystem::LoadSound("crawlingFootsteps", "assets/audio/crawlingSteps.ogg", 30);
+	AudioSystem::LoadSound("crawlingFootsteps", "assets/audio/crawlingSteps.ogg", 45);
 	AudioSystem::SetLooping("crawlingFootsteps", true);
 	AudioSystem::SetRelativeToListener("crawlingFootsteps", true);
 
-	AudioSystem::LoadSound("jump", "assets/audio/jump.ogg", 25);
+	AudioSystem::LoadSound("jump", "assets/audio/jump.ogg", 50);
 	AudioSystem::SetRelativeToListener("jump", true);
-	AudioSystem::LoadSound("jumpImpact", "assets/audio/jumpImpact.ogg", 10);
+	AudioSystem::LoadSound("jumpImpact", "assets/audio/jumpImpact.ogg", 30);
 	AudioSystem::SetRelativeToListener("jumpImpact", true);
 }
 

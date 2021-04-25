@@ -171,7 +171,7 @@ namespace SFMLEngine {
 		{
 			m_CurrentAnimation = "null";
 		}
-		inline void Pause()
+		inline void PauseMusic()
 		{
 			m_Animations[m_CurrentAnimation].SetPlaying(false);
 		}

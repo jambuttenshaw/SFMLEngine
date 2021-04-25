@@ -32,10 +32,15 @@ public:
 
 		LevelFactory::Init();
 
-
+		// button click is used by so many different entities that its easier just to make sure it exists in memory
+		// right from the start
 		AudioSystem::LoadSound("buttonClick", "assets/audio/click.ogg");
 		AudioSystem::SetRelativeToListener("buttonClick", true);
 
+		// load the music
+		AudioSystem::LoadMusic("assets/audio/music.ogg");
+		AudioSystem::SetMusicLooping(true);
+		AudioSystem::SetMusicVolume(30);
 
 		LoadScene<SplashScreen>(LoadSceneMode::Single);
 	}

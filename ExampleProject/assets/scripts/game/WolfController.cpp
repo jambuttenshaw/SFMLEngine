@@ -23,6 +23,8 @@ void WolfController::Start()
 	m_GrowlSound = "Growl" + std::to_string(GetEntityHandle());
 	AudioSystem::LoadSound(m_GrowlSound, "assets/audio/growl.ogg");
 	AudioSystem::SetLooping(m_GrowlSound, true);
+	AudioSystem::SetMinimumDistance(m_GrowlSound, 96);
+	AudioSystem::SetAttenuation(m_GrowlSound, 0.75f);
 
 
 	m_FootstepsSound = "WolfFootsteps" + std::to_string(GetEntityHandle());
@@ -33,8 +35,8 @@ void WolfController::Start()
 	m_AngrySound = "Angry" + std::to_string(GetEntityHandle());
 	AudioSystem::LoadSound(m_AngrySound, "assets/audio/wolfChase.ogg");
 	AudioSystem::SetLooping(m_AngrySound, true);
-	AudioSystem::SetMinimumDistance(m_GrowlSound, 96);
-	AudioSystem::SetAttenuation(m_GrowlSound, 0.75f);
+	AudioSystem::SetMinimumDistance(m_AngrySound, 96);
+	AudioSystem::SetAttenuation(m_AngrySound, 0.75f);
 
 	m_BiteSound = "Bite" + std::to_string(GetEntityHandle());
 	AudioSystem::LoadSound(m_BiteSound, "assets/audio/bite.ogg");

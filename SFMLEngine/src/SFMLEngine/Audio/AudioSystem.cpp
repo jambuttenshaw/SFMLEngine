@@ -66,6 +66,11 @@ namespace SFMLEngine {
 		sf::Listener::setDirection(dir.x, dir.y, dir.z);
 	}
 
+	void AudioSystem::SetListenerVolume(float volume)
+	{
+		sf::Listener::setGlobalVolume(volume);
+	}
+
 	void AudioSystem::LoadSound(const std::string& soundHandle, const std::string& filepath, float volume)
 	{
 		// dont attempt to load a sound if its already in memory
@@ -73,6 +78,7 @@ namespace SFMLEngine {
 		if (s_Sounds.find(soundHandle) == s_Sounds.end())
 		{
 			SoundResource* newSound = new SoundResource(filepath);
+			newSound->SetVolume(volume);
 
 			s_Sounds.insert({ soundHandle, newSound });
 		}
@@ -166,6 +172,53 @@ namespace SFMLEngine {
 	{
 		SFMLE_CORE_ASSERT(s_Sounds.find(soundHandle) != s_Sounds.end(), "No sound exists with that handle!");
 		s_Sounds[soundHandle]->GetSoundObject().setAttenuation(att);
+	}
+
+	void AudioSystem::LoadMusic(const std::string& filename)
+	{
+		MusicObject()->openFromFile(filename);
+	}
+
+	void AudioSystem::PlayMusic()
+	{
+		MusicObject()->play();
+	}
+
+	void AudioSystem::PauseMusic()
+	{
+		if (MusicObject()->getStatus() == MusicObject()->Playing)
+		{
+			MusicObject()->pause();
+		}
+	}
+
+	void AudioSystem::ResumeMusic()
+	{
+		if (MusicObject()->getStatus() == MusicObject()->Paused)
+		{
+			MusicObject()->play();
+		}
+	}
+
+	void AudioSystem::StopMusic()
+	{
+		MusicObject()->stop();
+	}
+
+	void AudioSystem::SetMusicVolume(float volume)
+	{
+		MusicObject()->setVolume(volume);
+	}
+
+	void AudioSystem::SetMusicLooping(bool loop)
+	{
+		MusicObject()->setLoop(loop);
+	}
+
+	sf::Music* AudioSystem::MusicObject()
+	{
+		static sf::Music musicObj;
+		return &musicObj;
 	}
 
 }

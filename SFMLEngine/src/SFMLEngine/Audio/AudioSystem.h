@@ -50,6 +50,7 @@ namespace SFMLEngine {
 
 		static void SetListenerPosition(const sf::Vector2f& pos);
 		static void SetListenerDirection(const sf::Vector3f& dir);
+		static void SetListenerVolume(float volume);
 
 
 		////////////
@@ -77,6 +78,29 @@ namespace SFMLEngine {
 		static void SetRelativeToListener(const std::string& soundHandle, bool flag);
 		static void SetMinimumDistance(const std::string& soundHandle, float dist);
 		static void SetAttenuation(const std::string& soundHandle, float att);
+
+
+		///////////
+		// MUSIC //
+		///////////
+
+		static void LoadMusic(const std::string& filename);
+		static void PlayMusic();
+		static void PauseMusic();
+		static void ResumeMusic();
+		static void StopMusic();
+
+		static void SetMusicVolume(float volume);
+		static void SetMusicLooping(bool loop);
+
+	private:
+		// due to the unpredictable nature of the intialization order of static variables,
+		// this causes crashes when I try to make a static instance of sf::Music
+
+		// solution: make it a function static instead of a class static
+		// the music object is then instantiated the first time it is used
+		// which is definitely late enough that it wont cause problems
+		static sf::Music* MusicObject();
 
 	private:
 		static std::unordered_map<std::string, SoundResource*> s_Sounds;
