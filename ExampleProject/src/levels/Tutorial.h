@@ -4,7 +4,6 @@
 
 #include "LevelFactory.h"
 #include "../entities/Wolf.h"
-#include "tutorial/TutorialText.h"
 
 
 using namespace SFMLEngine;
@@ -15,23 +14,24 @@ public:
 	void Create() override
 	{
 		
-		m_Ground = LevelFactory::CreateGround(this, "assets/tilemaps/tutorial/layer0.json", "assets/tilemaps/tutorial/layer0_collider.json");
-		m_JumpThroughPlatforms = LevelFactory::CreateJumpThroughPlatforms(this, "assets/tilemaps/tutorial/layer1.json");
-		m_Ladders = LevelFactory::CreateLadders(this, "assets/tilemaps/tutorial/layer2.json");
-		m_Crystals = LevelFactory::CreateCrystals(this, "assets/tilemaps/tutorial/layer3.json");
+		LevelFactory::CreateGround(this, "assets/tilemaps/tutorial/layer0.json", "assets/tilemaps/tutorial/layer0_collider.json");
+		LevelFactory::CreateJumpThroughPlatforms(this, "assets/tilemaps/tutorial/layer1.json");
+		LevelFactory::CreateLadders(this, "assets/tilemaps/tutorial/layer2.json");
+		LevelFactory::CreateCrystals(this, "assets/tilemaps/tutorial/layer3.json");
 		
-		m_LevelEnd = LevelFactory::CreateLevelEnd(this, { 2240, 736 });
+		// LevelFactory::CreateLevelEnd(this, { 2240, 736 });
+		LevelFactory::CreateLevelEnd(this, { 0, 0 });
 
-		CreateTutorialText(1, { 62, 44 });
-		CreateTutorialText(2, { 240, -20 });
-		CreateTutorialText(3, { 480, -165 });
-		CreateTutorialText(4, { 540, 65 });
-		CreateTutorialText(5, { 950, 10 });
-		CreateTutorialText(6, { 1140, -60 });
-		CreateTutorialText(7, { 1445, -20 });
-		CreateTutorialText(8, { 1645, 510 });
-		CreateTutorialText(9, { 1900, 560 });
-		CreateTutorialText(10, { 2155, 555 });
+		LevelFactory::CreateTutorialText(this, 1, { 62, 44 });
+		LevelFactory::CreateTutorialText(this, 2, { 240, -20 });
+		LevelFactory::CreateTutorialText(this, 3, { 480, -165 });
+		LevelFactory::CreateTutorialText(this, 4, { 540, 65 });
+		LevelFactory::CreateTutorialText(this, 5, { 950, 10 });
+		LevelFactory::CreateTutorialText(this, 6, { 1140, -60 });
+		LevelFactory::CreateTutorialText(this, 7, { 1445, -20 });
+		LevelFactory::CreateTutorialText(this, 8, { 1645, 510 });
+		LevelFactory::CreateTutorialText(this, 9, { 1900, 560 });
+		LevelFactory::CreateTutorialText(this, 10, { 2155, 555 });
 		
 
 		// flag that we are entering the tutorial
@@ -40,23 +40,5 @@ public:
 		bool* loadedLevel1 = DataStore::RetrieveData<bool>("loadedLevel1");
 		*loadedLevel1 = false;
 	}
-
-
-	void CreateTutorialText(int textID, const sf::Vector2f& position)
-	{
-		Entity newText = CreateEntity();
-		auto& script = AddNativeScript<TutorialText>(newText);
-		script.Init(textID, position);
-	}
-
-private:
-	Entity m_Ground = INVALID_ENTITY_ID;
-	Entity m_JumpThroughPlatforms = INVALID_ENTITY_ID;
-
-	Entity m_Ladders = INVALID_ENTITY_ID;
-	Entity m_Crystals = INVALID_ENTITY_ID;
-
-	Entity m_LevelEnd = INVALID_ENTITY_ID;
-	Entity m_Wolf = INVALID_ENTITY_ID;
 };
 

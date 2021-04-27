@@ -13,6 +13,9 @@ void PauseScript::Pause()
 
 	// pause all currently playing sounds
 	AudioSystem::PauseAllSounds();
+	// because pausing all the sounds will stop the click being heard,
+	// we make it click again
+	AudioSystem::PlaySound("buttonClick");
 
 	// open the pause menu
 	Application::GetApplicationHandle()->LoadScene<PauseMenu>(LoadSceneMode::Additive);

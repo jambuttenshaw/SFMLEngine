@@ -6,6 +6,7 @@
 // scripts
 #include "../entities/Wolf.h"
 #include "game/WolfController.h"
+#include "tutorial/TutorialText.h"
 
 
 using namespace SFMLEngine;
@@ -117,6 +118,16 @@ public:
 		scene->AddComponent(levelEnd, ColliderInfo{ ColliderType::Box });
 
 		return levelEnd;
+	}
+
+
+	static Entity CreateTutorialText(Scene* scene, int textID, const sf::Vector2f& position)
+	{
+		Entity newText = scene->CreateEntity();
+		auto& script = scene->AddNativeScript<TutorialText>(newText);
+		script.Init(textID, position);
+
+		return newText;
 	}
 
 

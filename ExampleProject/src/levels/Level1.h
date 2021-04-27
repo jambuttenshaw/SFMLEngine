@@ -17,23 +17,34 @@ public:
 	void Create() override
 	{
 
-		m_Ground = LevelFactory::CreateGround(this, "assets/tilemaps/testlevel/layer0.json", "assets/tilemaps/testlevel/layer0_collider.json");
-		m_JumpThroughPlatforms = LevelFactory::CreateJumpThroughPlatforms(this, "assets/tilemaps/testlevel/layer1.json");
-		m_Ladders = LevelFactory::CreateLadders(this, "assets/tilemaps/testlevel/layer2.json");
-		m_Crystals = LevelFactory::CreateCrystals(this, "assets/tilemaps/testlevel/layer3.json");
+		LevelFactory::CreateGround(this, "assets/tilemaps/level1/layer0.json", "assets/tilemaps/level1/layer0_collider.json");
+		LevelFactory::CreateJumpThroughPlatforms(this, "assets/tilemaps/level1/layer1.json");
+		LevelFactory::CreateLadders(this, "assets/tilemaps/level1/layer2.json");
+		LevelFactory::CreateCrystals(this, "assets/tilemaps/level1/layer3.json");
 
 		LevelFactory::CreateLevelEnd(this, { 0, -300 });
 
-		Wolf::Create(this, { -1344, 96 });
-		Wolf::Create(this, { -1504, 64 });
-		Wolf::Create(this, { -1600, 32 });
+		LevelFactory::CreateTutorialText(this, 11, { 50, -100 });
+
+
+
+		// WOLVES
+
+		std::vector<sf::Vector2f> wolfPositions{
+			{  1088,  288 },
+			{  1504,  448 },
+			{   992,  864 },
+			{  2016,  992 },
+			{  1536,  960 },
+			{ - 224, 1120 },
+			{ - 864, 1088 },
+			{ -1184, 1152 },
+			{ -1504, 1312 },
+			{ -1184,  704 }
+		};
+
+		for (auto& pos : wolfPositions)
+			Wolf::Create(this, pos);
 	}
-
-private:
-	Entity m_Ground = INVALID_ENTITY_ID;
-	Entity m_JumpThroughPlatforms = INVALID_ENTITY_ID;
-
-	Entity m_Ladders = INVALID_ENTITY_ID;
-	Entity m_Crystals = INVALID_ENTITY_ID;
 };
 

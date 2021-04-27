@@ -79,6 +79,6 @@ private:
 
 
 	const float m_PlayerPassThreshold = 20.0f;
-	const float m_DeleteAfterPassThreshold = 200.f;
+	const float m_DeleteAfterPassThreshold = 150.0f;
 
 };
