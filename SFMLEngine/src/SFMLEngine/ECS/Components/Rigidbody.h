@@ -48,6 +48,9 @@ namespace SFMLEngine {
 		inline void SetMass(float mass) { m_Mass = mass; }
 		inline float GetMass() const { return m_Mass; }
 
+		inline void SetSleeping(bool state) { m_Sleeping = state; }
+		inline bool GetSleeping() const { return m_Sleeping; }
+
 	private:
 		bool m_Modified = false;
 
@@ -57,6 +60,11 @@ namespace SFMLEngine {
 		sf::Vector2f m_Acceleration;
 		sf::Vector2f m_Force;
 		float m_Mass;
+
+		// a rigidbody can be put to sleep
+		// where the physics system no longer updates it or processes collisions
+		// until it is set to awake again
+		bool m_Sleeping = false;
 	};
 
 

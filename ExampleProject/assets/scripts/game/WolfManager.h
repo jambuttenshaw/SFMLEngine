@@ -1,7 +1,7 @@
 #pragma once
 
 #include <SFMLEngine.h>
-
+#include "Constants.h"
 #include "WolfController.h"
 
 
@@ -27,7 +27,7 @@ public:
 	{
 		for (size_t i = 0; i < m_WolfControllers.size(); i++)
 		{
-			if (Math::SquareMagnitude(m_WolfControllers[i]->GetCentre() - pos) < m_WolfTriggerRadius * m_WolfTriggerRadius)
+			if (Math::SquareMagnitude(m_WolfControllers[i]->GetCentre() - pos) < WOLF_WAKE_DISTANCE * WOLF_WAKE_DISTANCE)
 			{
 				m_WolfControllers[i]->Wake();
 			}
@@ -67,8 +67,6 @@ public:
 	}
 
 private:
-	float m_WolfTriggerRadius = 300;
-
 	float m_WolfSeperationRadius = 32;
 
 	std::vector<WolfController*> m_WolfControllers;

@@ -53,7 +53,7 @@ private:
 
 	WolfState m_State = WolfState::Sleep;
 
-	float m_InitialInterest = 5.0f;
+	float m_InitialInterest = 15.0f;
 	float m_Interest = m_InitialInterest;
 
 	sf::FloatRect m_StandHitbox{0, 3, 64, 29};
@@ -76,6 +76,7 @@ private:
 
 
 	float m_MoveSpeed = 240.0f;
+	float m_PaceSpeed = 80.0f;
 	float m_ClimbSpeed = 100.0f;
 	float m_Friction = 8.0f;
 

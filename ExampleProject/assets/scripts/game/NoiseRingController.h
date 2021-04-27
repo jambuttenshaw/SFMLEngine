@@ -2,6 +2,8 @@
 
 #include <SFMLEngine.h>
 
+#include "Constants.h"
+
 using namespace SFMLEngine;
 
 
@@ -24,12 +26,12 @@ public:
 		
 
 		sf::Vector2f scaledSize{ m_Scale * m_TextureSize };
-		if (scaledSize.x > m_MaxScale)
+		if (scaledSize.x > WOLF_WAKE_DISTANCE)
 		{
 			Destroy();
 		}
 
-		float t = std::sqrt(std::max(0.0f, (1 - scaledSize.x / m_MaxScale)));
+		float t = std::sqrt(std::max(0.0f, (1 - scaledSize.x / WOLF_WAKE_DISTANCE)));
 		float alpha = 255 * t;
 		m_Sprite->SetColor({ 255, 255, 255, static_cast<sf::Uint8>(alpha) });
 		
@@ -52,5 +54,4 @@ private:
 
 	float m_Scale = 0;
 	float m_ScaleIncreaseSpeed = 6.0f;
-	float m_MaxScale = 400.0f;
 };

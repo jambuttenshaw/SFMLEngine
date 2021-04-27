@@ -87,6 +87,9 @@ namespace SFMLEngine {
 			ZoneName("ProcessEntity", 13);
 
 			auto& rigidbody = m_Coordinator->GetComponent<Rigidbody>(entity);
+			// if this rigidbody is asleep we do not update physics
+			if (rigidbody.GetSleeping()) continue;
+
 			auto& transform = m_Coordinator->GetComponent<Transform>(entity);
 
 			// add the entities weight onto the resultant force

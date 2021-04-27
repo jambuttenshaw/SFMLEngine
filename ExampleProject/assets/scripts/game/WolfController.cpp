@@ -4,6 +4,12 @@
 void WolfController::Start()
 {
 	m_Rigidbody = &GetComponent<Rigidbody>();
+	// the wolf is asleep by default
+	// and therefore doesn't need to have its physics updated
+	// as it does not move
+	m_Rigidbody->SetSleeping(true);
+
+
 	m_Transform = &GetComponent<Transform>();
 
 	m_Collider = &GetComponent<BoxCollider>();
@@ -75,6 +81,9 @@ void WolfController::Update(float ts)
 
 			// the wolfs interest is reset when it wakes up
 			m_Interest = m_InitialInterest;
+
+			// let the wolf be affected by physics again
+			m_Rigidbody->SetSleeping(false);
 		}
 		break;
 
@@ -93,7 +102,54 @@ void WolfController::Update(float ts)
 				m_State = WolfState::Sleep;
 				m_Animator->SetCurrentAnimation("sleep");
 				// play growling while wolf sleeps
+				AudioSystem::StopSound(m_FootstepsSound);
 				AudioSystem::PlaySound(m_GrowlSound);
+
+				// the wolf is no longer going to be moving,
+				// so we can disable its physics until it needs to move again
+				m_Rigidbody->SetSleeping(true);
+			}
+			else
+			{
+				// let the wolf pace backwards and forwards
+				// it moves at a constant speed
+				
+				// check if it runs against a wall
+				m_AgainstWall = Physics::BoxCast({ m_Transform->GetPosition() + (m_FacingRight ? m_RightCastPoint : m_LeftCastPoint), m_CastSize }, m_GroundLayerMask).first;
+
+				if (m_AgainstWall)
+				{
+					// the wolf has hit a wall!
+					// it needs to get over it
+					m_Animator->SetCurrentAnimation("idle");
+					AudioSystem::StopSound(m_FootstepsSound);
+
+					// it can do that by jumping or climbing
+					if (fabsf(m_Rigidbody->GetVelocity().y) < 0.001f)
+					{
+						// the wolf is on the ground
+						// test 1 tile above the wolfs current position
+						bool tooTallToJump = Physics::BoxCast({ m_Transform->GetPosition() + (m_FacingRight ? m_RightCastPoint : m_LeftCastPoint) - sf::Vector2f{0, 32}, m_CastSize }, m_GroundLayerMask).first;
+
+						if (tooTallToJump)
+						{
+							// if the wolf cant jump over the wall then change direction and pace back the way it came
+							m_FacingRight = !m_FacingRight;
+						}
+						else
+						{
+							// the wall is short enough for the wolf to jump over
+							m_Rigidbody->ChangeVelocity({ 0.0f, -250.0f });
+						}
+					}
+				}
+				else
+				{
+					m_Rigidbody->SetVelocity({ m_PaceSpeed * (m_FacingRight ? 1 : -1), m_Rigidbody->GetVelocity().y });
+					m_Animator->SetCurrentAnimation("walk");
+					AudioSystem::PlaySound(m_FootstepsSound, false);
+				}
+
 			}
 		}
 		else
@@ -103,6 +159,8 @@ void WolfController::Update(float ts)
 			// the wolf becomes interested
 			m_Interest = m_InitialInterest;
 			AudioSystem::PlaySound(m_AngrySound);
+
+			
 		}
 		break;
 
@@ -116,10 +174,11 @@ void WolfController::Update(float ts)
 			// the player is now too far away, so the wolf should go on alert instead
 			m_State = WolfState::Alert;
 			m_Animator->SetCurrentAnimation("alert");
-			m_Rigidbody->SetVelocity({ 0, m_Rigidbody->GetVelocity().y });
 
 			AudioSystem::StopSound(m_AngrySound);
 			AudioSystem::StopSound(m_FootstepsSound);
+
+			
 		}
 		else
 		{
@@ -129,8 +188,8 @@ void WolfController::Update(float ts)
 
 			m_AgainstWall = Physics::BoxCast({ m_Transform->GetPosition() + (m_FacingRight ? m_RightCastPoint : m_LeftCastPoint), m_CastSize }, m_GroundLayerMask).first;
 
-			sf::Vector2f oldVel{ m_Rigidbody->GetVelocity() };
-			m_Rigidbody->SetVelocity({ Math::Lerp(oldVel.x, 0.0f, m_Friction * ts), oldVel.y });
+			// sf::Vector2f oldVel{ m_Rigidbody->GetVelocity() };
+			// m_Rigidbody->SetVelocity({ Math::Lerp(oldVel.x, 0.0f, m_Friction * ts), oldVel.y });
 
 
 			if (fabsf(diff) > m_MinPlayerFollowDistance)

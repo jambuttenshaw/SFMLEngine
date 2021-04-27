@@ -1,5 +1,7 @@
 #pragma once
 
+#define ENABLE_PROFILER
+
 #ifdef ENABLE_PROFILER
 	#include <Tracy.hpp>
 #else
