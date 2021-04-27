@@ -30,7 +30,6 @@ class MainScene : public Scene
 public:
 	void Create() override
 	{
-		ResourceID fontID = FontLibrary::LoadNewFont("arcade", "assets/fonts/ARCADECLASSIC.TTF");
 
 		{
 			// create the player
@@ -139,7 +138,7 @@ public:
 			{
 				m_CrystalScoreText = CreateEntity();
 				AddComponent(m_CrystalScoreText, GUITransform{ { 0.01f, 0.1f }, GUIElementType::Text });
-				AddComponent(m_CrystalScoreText, GUIText{ fontID, "", 32, sf::Color::White });
+				AddComponent(m_CrystalScoreText, GUIText{ FontLibrary::GetFont("arcade"), "", 32, sf::Color::White });
 			}
 			auto& crystalScript = AddNativeScript<CrystalCollector>(m_Player);
 			crystalScript.SetScoreText(m_CrystalScoreText);

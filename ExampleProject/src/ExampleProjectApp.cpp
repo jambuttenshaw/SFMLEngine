@@ -32,6 +32,12 @@ public:
 
 		LevelFactory::Init();
 
+
+		// load the font
+		FontLibrary::LoadNewFont("arcade", "assets/fonts/ARCADECLASSIC.TTF");
+
+
+
 		// button click is used by so many different entities that its easier just to make sure it exists in memory
 		// right from the start
 		AudioSystem::LoadSound("buttonClick", "assets/audio/click.ogg");
