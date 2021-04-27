@@ -26,6 +26,9 @@ public:
 
 	void Update(float ts) override;
 
+	void OnTriggerEnter(const Collision& collision) override;
+	void OnTriggerExit(const std::pair<Entity, ColliderID>& other) override;
+
 	void Wake();
 
 	void StartClimb();
@@ -50,6 +53,8 @@ private:
 
 	bool m_FacingRight = true;
 	bool m_AgainstWall = false;
+
+	int m_DirectionBlock = 0;
 
 	WolfState m_State = WolfState::Sleep;
 
@@ -83,6 +88,7 @@ private:
 	float m_AttackDist = 27.0f;
 	float m_MinPlayerFollowDistance = 20.0f;
 	float m_MaxPlayerFollowDistance = 300.0f;
+	float m_VerticalThresholdForDirectionChange = 128.0f;
 
 	float m_InitialAttackCooldown = 1.0f;
 	float m_AttackCooldown = 0.0f;

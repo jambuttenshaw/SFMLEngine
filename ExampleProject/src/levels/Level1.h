@@ -45,6 +45,29 @@ public:
 
 		for (auto& pos : wolfPositions)
 			Wolf::Create(this, pos);
+
+
+		std::vector<sf::Vector2f> wolfBlockers
+		{
+			{ - 640,  608 }
+		};
+
+		for (auto& pos : wolfBlockers)
+			CreateWolfBlocker(pos);
 	}
+
+
+	void CreateWolfBlocker(const sf::Vector2f& pos)
+	{
+		Entity wolfBlocker = CreateEntity();
+		SetEntityTag(wolfBlocker, "WolfBlocker");
+		AddComponent(wolfBlocker, Transform{ pos });
+
+		BoxCollider collider{ { 32, 32 }, { 0, 0 } };
+		collider.SetTrigger(true);
+		AddComponent(wolfBlocker, collider);
+		AddComponent(wolfBlocker, ColliderInfo{ ColliderType::Box });
+	}
+
 };
 

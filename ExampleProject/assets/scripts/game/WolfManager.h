@@ -45,6 +45,7 @@ public:
 		// compare every wolf to each other to make sure theyre not too close together
 		for (auto& wolf : m_WolfControllers)
 		{
+			if (wolf->GetState() != WolfController::WolfState::Follow) continue;
 
 			// if this wolf is really close to another wolf, we dont want them to run together right next to each other
 			// we need to make one wolf wait and the other(s) run on ahead to stop them from bunching up

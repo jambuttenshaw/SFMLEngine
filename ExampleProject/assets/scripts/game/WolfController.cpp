@@ -183,8 +183,9 @@ void WolfController::Update(float ts)
 		else
 		{
 			// the player is close; the wolf should move towards it
-			float diff = m_PlayerController->GetCentre().x - m_Transform->GetPosition().x - 32;
-			m_FacingRight = diff > 0;
+			sf::Vector2f diff = m_PlayerController->GetCentre() - GetCentre();
+			if (fabsf(diff.y) < m_VerticalThresholdForDirectionChange)
+				m_FacingRight = diff.x > 0;
 
 			m_AgainstWall = Physics::BoxCast({ m_Transform->GetPosition() + (m_FacingRight ? m_RightCastPoint : m_LeftCastPoint), m_CastSize }, m_GroundLayerMask).first;
 
@@ -192,7 +193,7 @@ void WolfController::Update(float ts)
 			// m_Rigidbody->SetVelocity({ Math::Lerp(oldVel.x, 0.0f, m_Friction * ts), oldVel.y });
 
 
-			if (fabsf(diff) > m_MinPlayerFollowDistance)
+			if (fabsf(diff.x) > m_MinPlayerFollowDistance)
 			{
 				if (m_AgainstWall)
 				{
@@ -244,7 +245,18 @@ void WolfController::Update(float ts)
 						// ts is not a factor in the velocity
 						// as it is not a change of velocity over time; it is being set to a constant value
 						// then the delta time will be taken into account when the velocity is applied to the position in the physics system
-						m_Rigidbody->SetVelocity({ m_MoveSpeed * (m_FacingRight ? 1 : -1), m_Rigidbody->GetVelocity().y });
+
+						// check first of all if we can actually move in the direction we want
+						if ((m_DirectionBlock == 1 && m_FacingRight) || (m_DirectionBlock == -1 && !m_FacingRight))
+						{
+							m_Rigidbody->SetVelocity({ 0, m_Rigidbody->GetVelocity().y });
+							m_Animator->SetCurrentAnimation("idle");
+							AudioSystem::StopSound(m_FootstepsSound);
+						}
+						else
+						{
+							m_Rigidbody->SetVelocity({ m_MoveSpeed * (m_FacingRight ? 1 : -1), m_Rigidbody->GetVelocity().y });
+						}
 
 						// set the animation of the wolf according to how fast its moving
 						if (fabsf(m_Rigidbody->GetVelocity().x) > 100)
@@ -280,7 +292,7 @@ void WolfController::Update(float ts)
 
 						m_AttackCooldown = m_InitialAttackCooldown;
 
-						m_PlayerController->Hurt(diff > 0);
+						m_PlayerController->Hurt(diff.x > 0);
 					}
 					else
 					{
@@ -359,6 +371,31 @@ void WolfController::Update(float ts)
 	AudioSystem::SetPosition(m_AngrySound, GetCentre());
 
 	m_Animator->SetFlipped(!m_FacingRight);
+}
+
+void WolfController::OnTriggerEnter(const Collision& collision)
+{
+	if (GetEntityTag(collision.Other) == "WolfBlocker")
+	{
+		if (Math::Centroid(collision.OtherGlobalBounds).x > GetCentre().x)
+		{
+			// we cannot move to the right at the moment
+			m_DirectionBlock = 1;
+		}
+		else
+		{
+			// we cannot move left
+			m_DirectionBlock = -1;
+		}
+	}
+}
+
+void WolfController::OnTriggerExit(const std::pair<Entity, ColliderID>& other)
+{
+	if (GetEntityTag(other.first) == "WolfBlocker")
+	{
+		m_DirectionBlock = 0;
+	}
 }
 
 
