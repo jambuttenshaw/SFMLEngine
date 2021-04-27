@@ -34,6 +34,10 @@ public:
 
 	sf::Vector2f GetCentre();
 
+	WolfState GetState() { return m_State; }
+
+	void SetStalling(bool state) { m_Stalling = state; }
+
 private:
 	Rigidbody* m_Rigidbody;
 	Transform* m_Transform;
@@ -88,5 +92,5 @@ private:
 	std::string m_FootstepsSound;
 	std::string m_BiteSound;
 
-
+	bool m_Stalling = false;
 };

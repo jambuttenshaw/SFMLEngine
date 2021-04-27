@@ -174,20 +174,30 @@ void WolfController::Update(float ts)
 				}
 				else
 				{
-					// ts is not a factor in the velocity
-					// as it is not a change of velocity over time; it is being set to a constant value
-					// then the delta time will be taken into account when the velocity is applied in the physics system
-					m_Rigidbody->SetVelocity({ m_MoveSpeed * (m_FacingRight ? 1 : -1), m_Rigidbody->GetVelocity().y });
-
-					// set the animation of the wolf according to how fast its moving
-					if (fabsf(m_Rigidbody->GetVelocity().x) > 100)
+					if (m_Stalling)
 					{
-						m_Animator->SetCurrentAnimation("run");
-						AudioSystem::PlaySound(m_FootstepsSound, false);
+						m_Rigidbody->SetVelocity({ 0, m_Rigidbody->GetVelocity().y });
+						m_Animator->SetCurrentAnimation("idle");
+						AudioSystem::StopSound(m_FootstepsSound);
 					}
-					else if (fabsf(m_Rigidbody->GetVelocity().x) > 50)
+					else
 					{
-						m_Animator->SetCurrentAnimation("walk");
+						// ts is not a factor in the velocity
+						// as it is not a change of velocity over time; it is being set to a constant value
+						// then the delta time will be taken into account when the velocity is applied to the position in the physics system
+						m_Rigidbody->SetVelocity({ m_MoveSpeed * (m_FacingRight ? 1 : -1), m_Rigidbody->GetVelocity().y });
+
+						// set the animation of the wolf according to how fast its moving
+						if (fabsf(m_Rigidbody->GetVelocity().x) > 100)
+						{
+							m_Animator->SetCurrentAnimation("run");
+							AudioSystem::PlaySound(m_FootstepsSound, false);
+						}
+						else if (fabsf(m_Rigidbody->GetVelocity().x) > 50)
+						{
+							m_Animator->SetCurrentAnimation("walk");
+							AudioSystem::PlaySound(m_FootstepsSound, false);
+						}
 					}
 				}
 			}
