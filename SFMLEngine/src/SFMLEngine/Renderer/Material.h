@@ -93,9 +93,10 @@ namespace SFMLEngine {
 			if (!UniformExists(uniformName))
 			{
 				// warn that the uniform doesnt exist if desired
+#ifdef SFMLENGINE_DEBUG
 				if (s_WarnOnUnknownUniform)
 					LOG_CORE_WARN("Uniform {0} does not exist.", uniformName);
-
+#endif
 				return;
 			}
 

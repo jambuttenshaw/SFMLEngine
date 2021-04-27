@@ -35,6 +35,11 @@ namespace SFMLEngine {
 		void SetRenderLayer(int newRenderLayer);
 
 		const sf::Sprite& GetSpriteObject() { return m_Sprite; }
+		sf::Vector2f GetDimensions()
+		{
+			sf::FloatRect bounds = m_Sprite.getLocalBounds();
+			return { bounds.width, bounds.height };
+		}
 
 		virtual void SetFrame(const AnimationFrame& frame, bool flipped) override;
 		const sf::Vector2f& GetOffset() { return m_Offset; }

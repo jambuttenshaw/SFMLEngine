@@ -14,7 +14,9 @@ public:
 	{
 		m_Transform = &GetComponent<Transform>();
 		m_Sprite = &GetComponent<SpriteRenderer>();
-		m_Player = &GetComponent<Transform>(GetEntitiesWithTag("Player")[0]);
+		m_Player = &GetNativeScript<PlayerController>(GetEntitiesWithTag("Player")[0]);
+
+		m_Centre = m_Transform->GetPosition() + 0.5f * m_Sprite->GetDimensions();
 	}
 
 
@@ -36,14 +38,14 @@ public:
 		{
 			if (!m_PlayerPassed)
 			{
-				if (fabsf(m_Transform->GetPosition().x - m_Player->GetPosition().x) < m_PlayerPassThreshold)
+				if (fabsf(m_Centre.x - m_Player->GetCentre().x) < m_PlayerPassThreshold)
 				{
 					m_PlayerPassed = true;
 				}
 			}
 			else
 			{
-				if (fabsf(m_Transform->GetPosition().x - m_Player->GetPosition().x) > m_DeleteAfterPassThreshold)
+				if (Math::SquareMagnitude(m_Centre - m_Player->GetCentre()) > m_DeleteAfterPassThreshold * m_DeleteAfterPassThreshold)
 				{
 					m_Fading = true;
 				}
@@ -67,7 +69,9 @@ private:
 	Transform* m_Transform = nullptr;
 	SpriteRenderer* m_Sprite = nullptr;
 
-	Transform* m_Player = nullptr;
+	sf::Vector2f m_Centre;
+
+	PlayerController* m_Player = nullptr;
 	bool m_PlayerPassed = false;
 
 	bool m_Fading = false;
@@ -75,6 +79,6 @@ private:
 
 
 	const float m_PlayerPassThreshold = 20.0f;
-	const float m_DeleteAfterPassThreshold = 150.f;
+	const float m_DeleteAfterPassThreshold = 200.f;
 
 };
