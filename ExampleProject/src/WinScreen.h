@@ -93,18 +93,21 @@ public:
 		int healthBonus = 25 * data->Health;
 		int depthBonus = static_cast<int>(data->Score * (1 + data->DepthPercent));
 		int totalScore = data->Score + healthBonus + depthBonus;
-		CreateScoreText(data->Score, { 0.574f, 0.446f });
-		CreateScoreText(depthBonus, { 0.574f, 0.493f });
-		CreateScoreText(healthBonus, { 0.574f, 0.541f });
-		CreateScoreText(totalScore, { 0.574f, 0.588f });
+		
+		CreateScoreText(data->Score, { 90.0f, -30.5f });
+		CreateScoreText(depthBonus, { 90.0f, 1.5f });
+		CreateScoreText(healthBonus, { 90.0f, 33.5f });
+		CreateScoreText(totalScore, { 90.0f, 65.5f });
+		
 	}
 
 	Entity CreateScoreText(int score, const sf::Vector2f& pos)
 	{
 		Entity newScoreText = CreateEntity();
 
-		AddComponent(newScoreText, GUITransform{ pos, GUIElementType::Text });
-		AddComponent(newScoreText, GUIText{ FontLibrary::GetFont("arcade"), std::to_string(score), 24, sf::Color::White });
+		AddComponent(newScoreText, Transform{ pos });
+		AddComponent(newScoreText, SpriteRenderer{
+			Texture::Create(FontLibrary::GetFont("arcade"), std::to_string(score), 24, sf::Color::White), Material::Create("Basic"), 0 });
 
 		return newScoreText;
 	}

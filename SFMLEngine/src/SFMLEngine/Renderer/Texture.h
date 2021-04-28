@@ -19,6 +19,7 @@ namespace SFMLEngine {
 	public:
 		static ResourceID Create(const std::string& path, bool shared = true);
 		static ResourceID Create(const sf::Vector2u& dimensions);
+		static ResourceID Create(ResourceID font, const std::string& text, int fontSize, const sf::Color& color);
 
 		static ResourceID Resize(ResourceID texture, const sf::Vector2u& newSize);
 

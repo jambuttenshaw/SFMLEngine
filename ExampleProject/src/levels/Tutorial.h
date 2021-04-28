@@ -19,8 +19,8 @@ public:
 		LevelFactory::CreateLadders(this, "assets/tilemaps/tutorial/layer2.json");
 		LevelFactory::CreateCrystals(this, "assets/tilemaps/tutorial/layer3.json");
 		
-		// LevelFactory::CreateLevelEnd(this, { 2240, 736 });
-		LevelFactory::CreateLevelEnd(this, { 0, 0 });
+		LevelFactory::CreateLevelEnd(this, { 2240, 736 });
+		// LevelFactory::CreateLevelEnd(this, { 0, 0 });
 
 		LevelFactory::CreateTutorialText(this, 1, { 62, 44 });
 		LevelFactory::CreateTutorialText(this, 2, { 240, -20 });

@@ -46,6 +46,49 @@ namespace SFMLEngine {
 		return newID;
 	}
 
+	ResourceID Texture::Create(ResourceID font, const std::string& text, int fontSize, const sf::Color& color)
+	{
+		// create a texture containing rendered text
+		// first step is to render the text
+		sf::Text textObj;
+		textObj.setFont(*ResourceManager::GetResourceHandle<sf::Font>(font));
+		textObj.setCharacterSize(fontSize);
+		textObj.setFillColor(color);
+		textObj.setString(text);
+
+		sf::FloatRect textBounds{ textObj.getGlobalBounds() };
+		textObj.setPosition(0, - 5 * textBounds.height / 6);
+
+		// then create a render texture the size of the text
+		sf::RenderTexture renderTexture;
+		if (!renderTexture.create(
+			static_cast<unsigned int>(textBounds.width),
+			static_cast<unsigned int>(textBounds.height),
+			sf::ContextSettings()
+		))
+		{
+			SFMLE_CORE_ASSERT(0, "Unable to create texture!");
+			return NULL_RESOURCE_ID;
+		}
+
+		// draw the text onto the render texture
+		renderTexture.draw(textObj);
+		renderTexture.display();
+
+		// then we can create a regular texture from the render texture
+		sf::Texture* newTexture = new sf::Texture(renderTexture.getTexture());
+
+		// submit it to the resource manager for safekeeping
+		ResourceID newID = ResourceManager::ManageResource(newTexture);
+
+		// register this texture into the cache so it can be deleted automatically safely at shutdown
+		// textures not loaded from files cannot be shared as there is no way to tell
+		// that the textures are identical
+		s_TextureCache.push_back(TextureCacheEntry{ "", newID, false });
+
+		return newID;
+	}
+
 	ResourceID Texture::Resize(ResourceID texture, const sf::Vector2u& newSize)
 	{
 		// to resize the image, we want to create a new image of the desired size,
