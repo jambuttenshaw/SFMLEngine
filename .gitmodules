@@ -1,3 +1,0 @@
-[submodule "SFMLEngine/vendor/json"]
-	path = SFMLEngine/vendor/json
-	url = https://github.com/nlohmann/json
