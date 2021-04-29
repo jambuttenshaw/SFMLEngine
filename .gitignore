@@ -7,3 +7,4 @@ profiler-traces/
 **.vcxproj.filters
 **.vcxproj.user
 **.lnk
+!vendor/premake/bin
