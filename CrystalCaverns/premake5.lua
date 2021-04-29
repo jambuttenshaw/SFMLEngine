@@ -1,4 +1,4 @@
-project "ExampleProject"
+project "CrystalCaverns"
 	kind "ConsoleApp"
 	language "C++"
 	cppdialect "C++17"
@@ -6,7 +6,9 @@ project "ExampleProject"
 	files
 	{
 		"src/**.h",
-		"src/**.cpp"
+		"src/**.cpp",
+		"assets/scripts/**.h",
+		"assets/scripts/**.cpp"
 	}
 
 	includedirs

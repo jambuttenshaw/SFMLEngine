@@ -1,9 +1,9 @@
 #include "LevelManager.h"
 
-#include "../../ExampleProject/src/DeathScreen.h"
-#include "../../ExampleProject/src/WinScreen.h"
-#include "../../ExampleProject/src/levels/Level1.h"
-#include "../../ExampleProject/src/levels/Tutorial.h"
+#include "../../src/DeathScreen.h"
+#include "../../src/WinScreen.h"
+#include "../../src/levels/Level1.h"
+#include "../../src/levels/Tutorial.h"
 
 
 #include "DepthFinder.h"

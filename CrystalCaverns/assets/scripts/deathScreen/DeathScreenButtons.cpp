@@ -1,8 +1,8 @@
 #include "DeathScreenButtons.h"
 
-#include "../../ExampleProject/src/MainMenu.h"
-#include "../../ExampleProject/src/MainScene.h"
-#include "../../ExampleProject/src/levels/Level1.h"
+#include "../../src/MainMenu.h"
+#include "../../src/MainScene.h"
+#include "../../src/levels/Level1.h"
 
 
 void ReplayButton::OnClick()

@@ -1,6 +1,6 @@
 workspace "SFMLEngine"
     architecture "x86_64"
-		startproject "ExampleProject"
+		startproject "CrystalCaverns"
 
     configurations
     {
@@ -35,5 +35,5 @@ LibraryDir["glew"] = "%{wks.location}/SFMLEngine/vendor/glew/lib/Release/x64"
 
 
 include "SFMLEngine"
-include "ExampleProject"
+include "CrystalCaverns"
 include "TerrainEditor"

@@ -19,7 +19,7 @@ class SandboxApp : public Application
 {
 public:
 	SandboxApp()
-		: Application("Sandbox", sf::Vector2i(1200, 675))
+		: Application("Crystal Caverns", sf::Vector2i(1200, 675))
 	{
 		SetClearColor(sf::Color::Black);
 		SetVSync(true);

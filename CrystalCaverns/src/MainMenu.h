@@ -25,7 +25,7 @@ public:
 		{
 			m_PlayButton = CreateEntity();
 
-			AddComponent(m_PlayButton, Transform{ { 0, -96 } });
+			AddComponent(m_PlayButton, Transform{ { 0, -64 } });
 			AddComponent(m_PlayButton, SpriteRenderer{
 					Texture::Create("assets/textures/playButton.png"),
 					Material::Create("Lit"),
