@@ -40,7 +40,8 @@ public:
 			{ - 864, 1088 },
 			{ -1184, 1152 },
 			{ -1504, 1312 },
-			{ -1184,  704 }
+			{ -1184,  704 },
+			{   160,  512 }
 		};
 
 		for (auto& pos : wolfPositions)
@@ -49,7 +50,10 @@ public:
 
 		std::vector<sf::Vector2f> wolfBlockers
 		{
-			{ - 640,  608 }
+			{ - 640,  608 },
+			{   832,  256 },
+			{   608,  512 },
+			{    32,  544 }
 		};
 
 		for (auto& pos : wolfBlockers)
