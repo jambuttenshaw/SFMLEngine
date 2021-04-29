@@ -21,10 +21,12 @@ public:
 
 private:
 	PointLight* m_SceneLight;
+	PointLight* m_TitleLight;
 	DirectionalLight* m_DirLight;
 
 	float m_InitialRange = 0.0f;
-	float m_InitialIntensity = 0.0f;
+	float m_InitialIntensity1 = 0.0f;
+	float m_InitialIntensity2 = 0.0f;
 
 	bool m_Fading = false;
 	float m_FadeTime = 0.5f;

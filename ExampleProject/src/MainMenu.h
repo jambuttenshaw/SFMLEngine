@@ -131,8 +131,24 @@ public:
 			// add a tilemap
 
 			AddComponent(m_Ground, Tilemap{ TilePalette::LoadFromFile("assets/palettes/terrainPalette.json"), "assets/tilemaps/menu/layer0.json" });
-			AddComponent(m_Ground, TilemapRenderer{ Material::Create("LitTilemap"), 0 });
+			AddComponent(m_Ground, TilemapRenderer{ Material::Create("LitTilemap"), -1 });
 		}
+
+
+		m_TitleText = CreateEntity();
+		AddComponent(m_TitleText, Transform{ { -239.0f, -293.5f } });
+		AddComponent(m_TitleText, SpriteRenderer{
+			Texture::Create("assets/textures/titleText.png"),
+			Material::Create("Lit"),
+			0,
+			Texture::Create("assets/textures/titleText_n.png") });
+
+
+		m_TitleTextLight = CreateEntity();
+		SetEntityTag(m_TitleTextLight, "TitleLight");
+		AddComponent(m_TitleTextLight, Transform{ { 240, 86 }, &GetComponent<Transform>(m_TitleText) });
+		AddComponent(m_TitleTextLight, PointLight{ 1.5f, 150.0f, sf::Color(17, 32, 255, 255) });
+
 
 
 		m_Light = CreateEntity();
@@ -141,7 +157,7 @@ public:
 		AddComponent(m_Light, PointLight{ 3.0f, 400.0f, sf::Color(219, 113, 114, 255) });
 		AddNativeScript<GoToMouse>(m_Light);
 		// place both lights onto the same entity
-		AddComponent(m_Light, DirectionalLight{ -1.5f, 0.7f, 0.3f, sf::Color(200, 61, 19, 255) });
+		AddComponent(m_Light, DirectionalLight{ -1.5f, 0.7f, 0.5f, sf::Color(240, 61, 19, 255) });
 
 
 
@@ -173,4 +189,7 @@ private:
 	Entity m_Light = INVALID_ENTITY_ID;
 
 	Entity m_FadeInController = INVALID_ENTITY_ID;
+
+	Entity m_TitleText = INVALID_ENTITY_ID;
+	Entity m_TitleTextLight = INVALID_ENTITY_ID;
 };
