@@ -11,6 +11,8 @@
 #include "menu/MenuCameraController.h"
 #include "menu/FadeInController.h"
 
+#include "menu/OptionsSlider.h"
+
 using namespace SFMLEngine;
 
 
@@ -91,6 +93,34 @@ public:
 
 			AddNativeScript<QuitButton>(m_QuitButton);
 		}
+
+
+		{
+			m_SoundsVolumeSlider = CreateEntity();
+
+			AddComponent(m_SoundsVolumeSlider, Transform{ { -128, 800 } });
+			AddComponent(m_SoundsVolumeSlider, SpriteRenderer{
+					Texture::Create("assets/textures/buttons/soundsOptionsSlider.png"),
+					Material::Create("Lit"),
+					0,
+					Texture::Create("assets/textures/buttons/soundsOptionsSlider_n.png")
+				});
+			auto& script = AddNativeScript<OptionsSlider>(m_SoundsVolumeSlider);
+			script.SetSliderFunction([](float val) { AudioSystem::SetListenerVolume(val); }, 0, 100);
+		}
+		{
+			m_MusicVolumeSlider = CreateEntity();
+
+			AddComponent(m_MusicVolumeSlider, Transform{ { -128, 928 } });
+			AddComponent(m_MusicVolumeSlider, SpriteRenderer{
+					Texture::Create("assets/textures/buttons/musicOptionsSlider.png"),
+					Material::Create("Lit"),
+					0,
+					Texture::Create("assets/textures/buttons/musicOptionsSlider_n.png")
+				});
+			auto& script = AddNativeScript<OptionsSlider>(m_MusicVolumeSlider);
+			script.SetSliderFunction([](float val) { AudioSystem::SetMusicVolume(val); }, 0, 100);
+		}
 		
 
 		{
@@ -133,6 +163,9 @@ private:
 	
 	Entity m_OptionsButton = INVALID_ENTITY_ID;
 	Entity m_OptionsBackButton = INVALID_ENTITY_ID;
+
+	Entity m_SoundsVolumeSlider = INVALID_ENTITY_ID;
+	Entity m_MusicVolumeSlider = INVALID_ENTITY_ID;
 
 	Entity m_Ground = INVALID_ENTITY_ID;
 
