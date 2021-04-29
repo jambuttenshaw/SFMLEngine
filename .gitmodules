@@ -1,6 +1,3 @@
-[submodule "SFMLEngine/vendor/spdlog"]
-	path = SFMLEngine/vendor/spdlog
-	url = https://github.com/gabime/spdlog
 [submodule "SFMLEngine/vendor/tracy"]
 	path = SFMLEngine/vendor/tracy
 	url = https://github.com/wolfpld/tracy
