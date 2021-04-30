@@ -169,11 +169,19 @@ SFMLEngine provides a camera system to allow for easy and dynamic viewing of com
 
 
 ### Entity layers and tagging
+It is often very helpful to sort and uniquely identify entities. To achieve this, entities can be assigned names, tags, and layers.
 
+Names are symbolic only and do not perform any role in the engines operation only, but they may be helpful for debugging.
+
+Tags, however, are extremely useful for allowing one entity to get a reference to another. The ECS can be queried through the `FindAllEntitiesWithTag` function in either a Scene or ScriptableEntity, which returns a vector of all entities assigned with that tag. If you know the tag you are searching for is unique, then your desired entity is always the first item in that vector. 
+
+Layers are also used within the engine. The physics system makes use of layers. The client can define choose to ignore collisions between layers, either for game design purposes or optimisations. For example, only the player will ever be looking to collide with a collectible object, so collisions between all entities in the Enemy layer and the Collectible layer can be safely ignored.
 
 
 ### Spacial Audio System
+SFMLEngine doesn't provide any additional functionality on top of SFML's spacial audio system, but instead wraps around it and loads all sound resources through the resource manager. This assures that no audio data is duplicated in memory. Multiple sounds can easily be created that use the same audio data but with different world positions, volumes, etc, but only 1 instance of that audio data will be loaded into memory.
 
+The audio system has a 'Listener', which defines where all sounds are percieved to have come from. Each individual sound can have a position, and other properties to define how they are heard. Of course, sounds can optionally be set to be produced relative to the listener, and therefore do not produce spacial audio effects.
 
 
 ### GUI System
