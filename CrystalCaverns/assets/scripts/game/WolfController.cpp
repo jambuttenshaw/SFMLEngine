@@ -145,9 +145,19 @@ void WolfController::Update(float ts)
 				}
 				else
 				{
-					m_Rigidbody->SetVelocity({ m_PaceSpeed * (m_FacingRight ? 1 : -1), m_Rigidbody->GetVelocity().y });
-					m_Animator->SetCurrentAnimation("walk");
-					AudioSystem::PlaySound(m_FootstepsSound, false);
+					// check first of all if we can actually move in the direction we want
+					if ((m_DirectionBlock == 1 && m_FacingRight) || (m_DirectionBlock == -1 && !m_FacingRight))
+					{
+						m_Rigidbody->SetVelocity({ 0, m_Rigidbody->GetVelocity().y });
+						m_Animator->SetCurrentAnimation("idle");
+						AudioSystem::StopSound(m_FootstepsSound);
+					}
+					else
+					{
+						m_Rigidbody->SetVelocity({ m_PaceSpeed * (m_FacingRight ? 1 : -1), m_Rigidbody->GetVelocity().y });
+						m_Animator->SetCurrentAnimation("walk");
+						AudioSystem::PlaySound(m_FootstepsSound, false);
+					}
 				}
 
 			}

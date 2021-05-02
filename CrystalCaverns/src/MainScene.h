@@ -20,8 +20,6 @@
 #include "entities/PlayerHeart.h"
 
 
-#include "game/ClickForPos.h"
-
 using namespace SFMLEngine;
 
 
@@ -157,7 +155,6 @@ public:
 
 
 			AddNativeScript<PauseScript>(m_Player);
-			AddNativeScript<ClickForPos>(m_Player);
 		}
 
 		{
