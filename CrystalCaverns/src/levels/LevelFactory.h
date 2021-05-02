@@ -130,6 +130,18 @@ public:
 		return newText;
 	}
 
+	static Entity CreateFill(Scene* scene, const std::string& path)
+	{
+		Entity fill = scene->CreateEntity();
+
+		scene->AddComponent(fill, Transform{ });
+
+		scene->AddComponent(fill, Tilemap{ s_TilePaletteID, path });
+		scene->AddComponent(fill, TilemapRenderer{ Material::Create("LitTilemap"), 0 });
+
+		return fill;
+	}
+
 
 private:
 	static ResourceID s_TilePaletteID;

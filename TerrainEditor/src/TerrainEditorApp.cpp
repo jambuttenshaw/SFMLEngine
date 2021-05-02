@@ -15,7 +15,7 @@ class MainScene : public Scene
 public:
 	void Create() override
 	{
-		ResourceID tilePaletteID = TilePalette::LoadFromFile("D:/dev/SFML/SFMLEngine/ExampleProject/assets/palettes/terrainPalette.json");
+		ResourceID tilePaletteID = TilePalette::LoadFromFile("D:/dev/SFML/SFMLEngine/CrystalCaverns/assets/palettes/terrainPalette.json");
 		TilePalette* tilePalette = ResourceManager::GetResourceHandle<TilePalette>(tilePaletteID);
 
 		ResourceID opaqueMat = Material::CreateInstance("Basic");
@@ -79,7 +79,7 @@ public:
 			m_Manager = CreateEntity();
 			m_ManagerScript = &AddNativeScript<EditorManager>(m_Manager);
 			
-			std::string levelDir = "D:/dev/SFML/SFMLEngine/ExampleProject/assets/tilemaps/level1";
+			std::string levelDir = "D:/dev/SFML/SFMLEngine/CrystalCaverns/assets/tilemaps/tutorial";
 			m_ManagerScript->Setup(this, m_TilePreview, tilePaletteID, levelDir, opaqueMat, translucentMat);
 		}
 

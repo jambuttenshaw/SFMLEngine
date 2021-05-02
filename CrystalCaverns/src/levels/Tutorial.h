@@ -18,6 +18,7 @@ public:
 		LevelFactory::CreateJumpThroughPlatforms(this, "assets/tilemaps/tutorial/layer1.json");
 		LevelFactory::CreateLadders(this, "assets/tilemaps/tutorial/layer2.json");
 		LevelFactory::CreateCrystals(this, "assets/tilemaps/tutorial/layer3.json");
+		LevelFactory::CreateFill(this, "assets/tilemaps/tutorial/layer4.json");
 		
 		LevelFactory::CreateLevelEnd(this, { 2240, 736 });
 		// LevelFactory::CreateLevelEnd(this, { 0, 0 });

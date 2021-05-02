@@ -10,6 +10,7 @@
 #include "game/DepthFinder.h"
 
 #include "game/CameraController.h"
+#include "game/BackgroundScript.h"
 
 #include "game/WolfManager.h"
 
@@ -17,7 +18,6 @@
 #include "game/PauseScript.h"
 
 #include "entities/PlayerHeart.h"
-
 
 
 #include "game/ClickForPos.h"
@@ -182,6 +182,12 @@ public:
 		}
 
 		{
+			m_Background = CreateEntity();
+			AddNativeScript<BackgroundScript>(m_Background);
+			
+		}
+
+		{
 			m_WolfManager = CreateEntity();
 			SetEntityTag(m_WolfManager, "WolfManager");
 			AddNativeScript<WolfManager>(m_WolfManager);
@@ -217,6 +223,7 @@ public:
 
 private:
 	Entity m_Camera = INVALID_ENTITY_ID;
+	Entity m_Background = INVALID_ENTITY_ID;
 
 	Entity m_Player = INVALID_ENTITY_ID;
 	 
