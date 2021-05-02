@@ -20,7 +20,7 @@ public:
 		m_Transform->SetPosition(pos + m_Offset);
 
 		// work out if this tile has gone off screen
-		// if it has then wrap it round to the other side
+		// if it has then wrap it round to the other side 
 		// we can work this out by transforming its position into the cameras local space
 		pos = m_CameraTransform->GetWorldToLocalTransformMatrix().transformPoint(m_Transform->GetPosition());
 		// if the right of the object is off the left of the screen

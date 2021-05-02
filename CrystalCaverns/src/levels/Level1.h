@@ -21,6 +21,7 @@ public:
 		LevelFactory::CreateJumpThroughPlatforms(this, "assets/tilemaps/level1/layer1.json");
 		LevelFactory::CreateLadders(this, "assets/tilemaps/level1/layer2.json");
 		LevelFactory::CreateCrystals(this, "assets/tilemaps/level1/layer3.json");
+		LevelFactory::CreateFill(this, "assets/tilemaps/level1/layer4.json");
 
 		LevelFactory::CreateLevelEnd(this, { 0, -300 });
 
