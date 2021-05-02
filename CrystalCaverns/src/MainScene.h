@@ -6,6 +6,7 @@
 #include "game/PlayerController.h"
 #include "game/PlayerStatsController.h"
 #include "game/CrystalCollector.h"
+#include "game/PlayerLightAnimator.h"
 
 #include "game/DepthFinder.h"
 
@@ -155,10 +156,13 @@ public:
 
 
 			AddNativeScript<PauseScript>(m_Player);
+
+			AddNativeScript<PlayerLightAnimator>(m_Player);
 		}
 
 		{
 			m_Light = CreateEntity();
+			SetEntityTag(m_Light, "PlayerLight");
 
 			// light is a child transform of physics entity
 			AddComponent(m_Light, Transform{ sf::Vector2f(16, 32), &GetComponent<Transform>(m_Player) });

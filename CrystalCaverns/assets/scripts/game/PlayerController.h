@@ -4,6 +4,8 @@
 
 #include "PlayerStatsController.h"
 #include "CameraController.h"
+#include "PlayerLightAnimator.h"
+
 
 using namespace SFMLEngine;
 
@@ -69,6 +71,7 @@ private:
 
 	PlayerStatsController* m_StatsController = nullptr;
 	CameraController* m_CameraController = nullptr;
+	PlayerLightAnimator* m_LightAnimator = nullptr;
 
 	Layer m_GroundLayerMask;
 

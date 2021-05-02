@@ -16,6 +16,7 @@ void CrystalCollector::Start()
 	UpdateText();
 
 	m_PlayerController = &GetNativeScript<PlayerController>();
+	m_LightAnimator = &GetNativeScript<PlayerLightAnimator>();
 
 	m_WolfManager = &GetNativeScript<WolfManager>(GetEntitiesWithTag("WolfManager")[0]);
 	m_CameraController = &GetNativeScript<CameraController>(GetEntitiesWithTag("MainCamera")[0]);
@@ -96,6 +97,7 @@ void CrystalCollector::Update(float ts)
 			}
 
 			CreateNoiseRing(m_CrystalMap->TileToWorldCoordinates(currentCrystal) + sf::Vector2f{16, 16});
+			m_LightAnimator->BeginAnimate(sf::Color::Blue, 0.4f);
 			PlayBreakSound("mining", currentCrystal);
 
 			// collecting crystals will awaken wolves

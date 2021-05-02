@@ -117,7 +117,7 @@ namespace SFMLEngine {
 		static float Magnitude(const sf::Vector3f& a);
 
 		template<typename T>
-		static T Lerp(const T& a, const T& b, float t) { return (1 - t) * a + t * b; }
+		static T Lerp(const T& a, const T& b, float t) { return static_cast<T>((1 - t) * a + t * b); }
 
 		// get direction not implemented for vector3
 		static Direction GetDirection(const sf::Vector2f& a);
@@ -132,6 +132,12 @@ namespace SFMLEngine {
 
 		static sf::FloatRect FlipRect(const sf::FloatRect& rect);
 		static sf::IntRect FlipRect(const sf::IntRect& rect);
+
+
+		/*
+		COLORS
+		*/
+		static sf::Color ColorLerpComponents(const sf::Color& a, const sf::Color& b, float t);
 
 
 		/*

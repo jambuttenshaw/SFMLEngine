@@ -4,6 +4,7 @@
 #include "WolfManager.h"
 #include "CameraController.h"
 #include "PlayerData.h"
+#include "PlayerLightAnimator.h"
 
 
 using namespace SFMLEngine;
@@ -65,6 +66,7 @@ private:
 
 	PlayerController* m_PlayerController = nullptr;
 	CameraController* m_CameraController = nullptr;
+	PlayerLightAnimator* m_LightAnimator = nullptr;
 
 	std::vector<sf::Vector2i> m_CollidingCrystals;
 	bool m_BrokenCrystal = false;

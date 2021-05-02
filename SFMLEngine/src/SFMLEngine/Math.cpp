@@ -143,6 +143,14 @@ namespace SFMLEngine {
 		return { rect.left + rect.width, rect.top, -rect.width, rect.height };
 	}
 
+	sf::Color Math::ColorLerpComponents(const sf::Color& a, const sf::Color& b, float t)
+	{
+		sf::Vector3f aComponents{ (float)a.r, (float)a.g, (float)a.b };
+		sf::Vector3f bComponents{ (float)b.r, (float)b.g, (float)b.b };
+		sf::Vector3<sf::Uint8> lerped{Math::Lerp(aComponents, bComponents, t)};
+		return sf::Color{ lerped.x, lerped.y, lerped.z, Math::Lerp(a.a, b.a, t) };
+	}
+
 
 
 	int Math::RandomInt(int max)

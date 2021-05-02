@@ -11,6 +11,7 @@ void PlayerController::Start()
 	m_Collider = &GetComponent<BoxCollider>();
 
 	m_StatsController = &GetNativeScript<PlayerStatsController>();
+	m_LightAnimator = &GetNativeScript<PlayerLightAnimator>();
 
 	m_CameraController = &GetNativeScript<CameraController>(GetEntitiesWithTag("MainCamera")[0]);
 
@@ -480,6 +481,7 @@ void PlayerController::Hurt(bool toTheRight)
 	m_FacingRight = !toTheRight;
 
 	m_StatsController->Damage();
+	m_LightAnimator->BeginAnimate(sf::Color::Red, 0.8f);
 
 	// check if the player has now passed
 	if (m_StatsController->IsDead())
