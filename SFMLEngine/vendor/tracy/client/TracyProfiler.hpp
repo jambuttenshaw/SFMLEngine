@@ -43,8 +43,8 @@
 namespace tracy
 {
 #if defined(TRACY_DELAYED_INIT) && defined(TRACY_MANUAL_LIFETIME)
-void StartupProfiler();
-void ShutdownProfiler();
+TRACY_API void StartupProfiler();
+TRACY_API void ShutdownProfiler();
 #endif
 
 class GpuCtx;
@@ -213,11 +213,12 @@ public:
 
     static tracy_force_inline void SendFrameImage( const void* image, uint16_t w, uint16_t h, uint8_t offset, bool flip )
     {
+#ifndef TRACY_NO_FRAME_IMAGE
         auto& profiler = GetProfiler();
         assert( profiler.m_frameCount.load( std::memory_order_relaxed ) < std::numeric_limits<uint32_t>::max() );
-#ifdef TRACY_ON_DEMAND
+#  ifdef TRACY_ON_DEMAND
         if( !profiler.IsConnected() ) return;
-#endif
+#  endif
         const auto sz = size_t( w ) * size_t( h ) * 4;
         auto ptr = (char*)tracy_malloc( sz );
         memcpy( ptr, image, sz );
@@ -231,6 +232,7 @@ public:
         fi->flip = flip;
         profiler.m_fiQueue.commit_next();
         profiler.m_fiLock.unlock();
+#endif
     }
 
     static tracy_force_inline void PlotData( const char* name, int64_t val )
@@ -642,8 +644,10 @@ private:
     static void LaunchWorker( void* ptr ) { ((Profiler*)ptr)->Worker(); }
     void Worker();
 
+#ifndef TRACY_NO_FRAME_IMAGE
     static void LaunchCompressWorker( void* ptr ) { ((Profiler*)ptr)->CompressWorker(); }
     void CompressWorker();
+#endif
 
     void ClearQueues( tracy::moodycamel::ConsumerToken& token );
     void ClearSerial();
@@ -692,6 +696,9 @@ private:
     void HandleSymbolQuery( uint64_t symbol );
     void HandleSymbolCodeQuery( uint64_t symbol, uint32_t size );
     void HandleSourceCodeQuery();
+
+    void AckServerQuery();
+    void AckSourceCodeNotAvailable();
 
     void CalibrateTimer();
     void CalibrateDelay();
@@ -787,8 +794,10 @@ private:
     FastVector<QueueItem> m_serialQueue, m_serialDequeue;
     TracyMutex m_serialLock;
 
+#ifndef TRACY_NO_FRAME_IMAGE
     FastVector<FrameImageQueueItem> m_fiQueue, m_fiDequeue;
     TracyMutex m_fiLock;
+#endif
 
     std::atomic<uint64_t> m_frameCount;
     std::atomic<bool> m_isConnected;

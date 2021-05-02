@@ -86,7 +86,7 @@
 \vfill \includegraphics[height=40mm]{../icon/icon}
 
 \vfill
-\large\textbf{Bartosz Taudul} \href{mailto:wolf.pld@gmail.com}{<wolf.pld@gmail.com>}
+\large\textbf{Bartosz Taudul} \href{mailto:wolf@nereid.pl}{<wolf@nereid.pl>}
 
 \vspace{10pt}
 \today
@@ -137,7 +137,9 @@ There's much more Tracy can do, which can be explored by carefully reading this 
 \section{A quick look at Tracy Profiler}
 \label{quicklook}
 
-Tracy is a real-time, nanosecond resolution \emph{hybrid frame and sampling profiler} that can be used for remote or embedded telemetry of games and other applications. It can profile CPU (C, C++11, Lua), GPU (OpenGL, Vulkan, Direct3D 12, OpenCL) and memory. It also can monitor locks held by threads and show where contention does happen.
+Tracy is a real-time, nanosecond resolution \emph{hybrid frame and sampling profiler} that can be used for remote or
+embedded telemetry of games and other applications. It can profile CPU (C, C++11, Lua), GPU (OpenGL, Vulkan, Direct3D
+11/12, OpenCL) and memory. It also can monitor locks held by threads and show where contention does happen.
 
 While Tracy can perform statistical analysis of sampled call stack data, just like other \emph{statistical profilers} (such as VTune, perf or Very Sleepy), it mainly focuses on manual markup of the source code, which allows frame-by-frame inspection of the program execution. You will be able to see exactly which functions are called, how much time is spent in them, and how do they interact with each other in a multi-threaded environment. In contrast, the statistical analysis may show you the hot spots in your code, but it is unable to accurately pinpoint the underlying cause for semi-random frame stutter that may occur every couple of seconds.
 
@@ -914,6 +916,7 @@ logo=\bcattention
 ]{Caveats}
 \begin{itemize}
 \item Frame images are compressed on a second client profiler thread\footnote{Small part of compression task is performed on the server.}, to reduce memory usage of queued images. This might have impact on the performance of the profiled application.
+\item This second thread will be periodically woken up, even if there are no frame images to compress\footnote{This way of doing things is required to prevent a deadlock in specific circumstances.}. If you are not using the frame image capture functionality and you don't wish this thread to be running, you can define the \texttt{TRACY\_NO\_FRAME\_IMAGE} macro.
 \item Due to implementation details of the network buffer, single frame image cannot be greater than 256 KB after compression. Note that a $960\times540$ image fits in this limit.
 \end{itemize}
 \end{bclogo}
@@ -1048,7 +1051,7 @@ $2560\times1440$ & 23~FPS & 3300~FPS & 1600~FPS
 
 To record a zone's\footnote{A \texttt{zone} represents the lifetime of a special on-stack profiler variable. Typically it would exist for the duration of a whole scope of the profiled function, but you also can measure time spent in scopes of a for-loop, or an if-branch.} execution time add the \texttt{ZoneScoped} macro at the beginning of the scope you want to measure. This will automatically record function name, source file name and location. Optionally you may use the \texttt{ZoneScopedC(color)} macro to set a custom color for the zone. Note that the color value will be constant in the recording (don't try to parametrize it). You may also set a custom name for the zone, using the \texttt{ZoneScopedN(name)} macro. Color and name may be combined by using the \texttt{ZoneScopedNC(name, color)} macro.
 
-Use the \texttt{ZoneText(text, size)} macro to add a custom text string that will be displayed along the zone information (for example, name of the file you are opening). Multiple text strings can be attached to any single zone. The dynamic color of a zone can be specified with the \texttt{ZoneColor(uint32\_t)} macro to override the source location color. If you want to send a numeric value and don't want to pay the cost of converting it to a string, you may use the \texttt{ZoneValue(uint64\_t)} macro.
+Use the \texttt{ZoneText(text, size)} macro to add a custom text string that will be displayed along the zone information (for example, name of the file you are opening). Multiple text strings can be attached to any single zone. The dynamic color of a zone can be specified with the \texttt{ZoneColor(uint32\_t)} macro to override the source location color. If you want to send a numeric value and don't want to pay the cost of converting it to a string, you may use the \texttt{ZoneValue(uint64\_t)} macro. You can check if the current zone is active with the \texttt{ZoneIsActive} macro.
 
 If you want to set zone name on a per-call basis, you may do so using the \texttt{ZoneName(text, size)} macro. This name won't be used in the process of grouping the zones for statistical purposes (sections~\ref{statistics} and~\ref{findzone}).
 
@@ -1071,7 +1074,7 @@ The zone markup macros automatically report when they end, through the RAII mech
 
 Using the \texttt{ZoneScoped} family of macros creates a stack variable named \texttt{\_\_\_tracy\_scoped\_zone}. If you want to measure more than one zone in the same scope, you will need to use the \texttt{ZoneNamed} macros, which require that you provide a name for the created variable. For example, instead of \texttt{ZoneScopedN("Zone name")}, you would use \texttt{ZoneNamedN(variableName, "Zone name", true)}\footnote{The last parameter is explained in section~\ref{filteringzones}.}.
 
-The \texttt{ZoneText}, \texttt{ZoneColor}, \texttt{ZoneValue}, and \texttt{ZoneName} macros apply to the zones created using the \texttt{ZoneScoped} macros. For zones created using the \texttt{ZoneNamed} macros, you can use the \texttt{ZoneTextV(variableName, text, size)}, \texttt{ZoneColorV(variableName, uint32\_t)}, \texttt{ZoneValueV(variableName, uint64\_t)}, or \texttt{ZoneNameV(variableName, text, size)} macros, or invoke the methods \texttt{Text}, \texttt{Color}, \texttt{Value}, or \texttt{Name} directly on the variable you have created.
+The \texttt{ZoneText}, \texttt{ZoneColor}, \texttt{ZoneValue}, \texttt{ZoneIsActive}, and \texttt{ZoneName} macros apply to the zones created using the \texttt{ZoneScoped} macros. For zones created using the \texttt{ZoneNamed} macros, you can use the \texttt{ZoneTextV(variableName, text, size)}, \texttt{ZoneColorV(variableName, uint32\_t)}, \texttt{ZoneValueV(variableName, uint64\_t)}, \texttt{ZoneIsActiveV(variableName)}, or \texttt{ZoneNameV(variableName, text, size)} macros, or invoke the methods \texttt{Text}, \texttt{Color}, \texttt{Value}, \texttt{IsActive}, or \texttt{Name} directly on the variable you have created.
 
 Zone objects can't be moved or copied.
 
@@ -1313,7 +1316,7 @@ To mark that a separate memory pool is to be tracked you should use the named ve
 \subsection{GPU profiling}
 \label{gpuprofiling}
 
-Tracy provides bindings for profiling OpenGL, Vulkan, Direct3D 12 and OpenCL execution time on GPU.
+Tracy provides bindings for profiling OpenGL, Vulkan, Direct3D 11, Direct3D 12 and OpenCL execution time on GPU.
 
 Note that the CPU and GPU timers may be not synchronized, unless a calibrated context is created. Since availability of calibrated contexts is limited, you can correct the desynchronization of uncalibrated contexts in the profiler's options (section~\ref{options}).
 
@@ -1372,6 +1375,14 @@ In order to maintain synchronization between CPU and GPU time domains, you will 
 
 To enable calibrated context, replace the macro \texttt{TracyVkContext} with \texttt{TracyVkContextCalibrated} and pass the two functions as additional parameters, in the order specified above.
 
+\subsubsection{Direct3D 11}
+
+To enable Direct3D 11 support, include the \texttt{tracy/TracyD3D11.hpp} header file, and create a \texttt{TracyD3D11Ctx} object with the \texttt{TracyD3D11Context(device, devicecontext)} macro. The object should later be cleaned up with the \texttt{TracyD3D11Destroy} macro. Tracy does not support D3D11 command lists. To set a custom name for the context, use the \texttt{TracyGpuContextName(name, size)} macro.
+
+To mark a GPU zone, use the \texttt{TracyD3D11Zone(name)} macro, where \texttt{name} is a string literal name of the zone. Alternatively you may use \texttt{TracyD3D11ZoneC(name, color)} to specify zone color.
+
+You also need to periodically collect the GPU events using the \texttt{TracyD3D11Collect} macro. A good place to do it is after the swap chain present function.
+
 \subsubsection{Direct3D 12}
 
 To enable Direct3D 12 support, include the \texttt{tracy/TracyD3D12.hpp} header file. Tracing Direct3D 12 queues is nearly on par with the Vulkan implementation, where a \texttt{TracyD3D12Ctx} is returned from a call to \texttt{TracyD3D12Context(device, queue)}, which should be later cleaned up with the \texttt{TracyD3D12Destroy(ctx)} macro. Multiple contexts can be created, each with any queue type. To set a custom name for the context, use the \texttt{TracyD3D12ContextName(ctx, name, size)} macro.
@@ -1400,13 +1411,13 @@ Similarly to Vulkan and OpenGL, you also need to periodically collect the OpenCL
 
 Putting more than one GPU zone macro in a single scope features the same issue as with the \texttt{ZoneScoped} macros, described in section~\ref{multizone} (but this time the variable name is \texttt{\_\_\_tracy\_gpu\_zone}).
 
-To solve this problem, in case of OpenGL use the \texttt{TracyGpuNamedZone} macro in place of \texttt{TracyGpuZone} (or the color variant). The same applies to Vulkan and Direct3D 12 -- replace \texttt{TracyVkZone} with \texttt{TracyVkNamedZone} and \texttt{TracyD3D12Zone} with \texttt{TracyD3D12NamedZone}.
+To solve this problem, in case of OpenGL use the \texttt{TracyGpuNamedZone} macro in place of \texttt{TracyGpuZone} (or the color variant). The same applies to Vulkan and Direct3D 11/12 -- replace \texttt{TracyVkZone} with \texttt{TracyVkNamedZone} and \texttt{TracyD3D11Zone}/\texttt{TracyD3D12Zone} with \texttt{TracyD3D11NamedZone}/\texttt{TracyD3D12NamedZone}.
 
 Remember that you need to provide your own name for the created stack variable as the first parameter to the macros.
 
 \subsubsection{Transient GPU zones}
 
-Transient zones (see section~\ref{transientzones} for details) are available in OpenGL, Vulkan, and Direct3D 12 macros.
+Transient zones (see section~\ref{transientzones} for details) are available in OpenGL, Vulkan, and Direct3D 11/12 macros.
 
 \subsection{Collecting call stacks}
 \label{collectingcallstacks}
@@ -2300,7 +2311,7 @@ When a zone is displayed in the find zone window (section~\ref{findzone}), the c
 
 Moving the \faMousePointer{} mouse cursor over the frames displayed on the graph will display tooltip with information about frame number, frame time, frame image (if available, see chapter~\ref{frameimages}), etc. Such tooltips are common for many UI elements in the profiler and won't be mentioned later in the manual.
 
-The timeline view may be focused on the frames, by clicking or dragging the \LMB{}~left mouse button on the graph. The graph may be scrolled left and right by dragging the \RMB{}~right mouse button over the graph. The view may be zoomed in and out by using the \Scroll{}~mouse scroll. If the view is zoomed out, so that multiple frames are merged into one column, the highest frame time will be used to represent the given column.
+The timeline view may be focused on the frames, by clicking or dragging the \LMB{}~left mouse button on the graph. The graph may be scrolled left and right by dragging the \RMB{}~right mouse button over the graph. The view may be zoomed in and out by using the \Scroll{}~mouse wheel. If the view is zoomed out, so that multiple frames are merged into one column, the highest frame time will be used to represent the given column.
 
 Clicking the \LMB{}~left mouse button on the graph while the \keys{\ctrl}~key is pressed will open the frame image playback window (section~\ref{playback}) and set the playback to the selected frame. See section~\ref{frameimages} for more information about frame images.
 
@@ -2593,7 +2604,7 @@ Hovering the \faMousePointer{} mouse pointer over the timeline view will display
 
 The timeline view may be scrolled both vertically and horizontally by dragging the \RMB{} right mouse button. Note that only the zones, locks and plots scroll vertically, while the time scale and frame sets always stay on the top.
 
-You can zoom in and out the timeline view by using the \Scroll{} mouse scroll. You can select a range to which you want to zoom-in by dragging the \MMB{} middle mouse button. Dragging the \MMB{} middle mouse button while the \keys{\ctrl} key is pressed will zoom-out.
+You can zoom in and out the timeline view by using the \Scroll{}~mouse wheel. Pressing the \keys{\ctrl} key will make zooming more precise, while pressing the \keys{\shift} key will make it faster. You can select a range to which you want to zoom-in by dragging the \MMB{} middle mouse button. Dragging the \MMB{} middle mouse button while the \keys{\ctrl} key is pressed will zoom-out.
 
 \subsection{Time ranges}
 \label{timeranges}
@@ -2723,7 +2734,7 @@ Data displayed in this mode is in essence very similar to the instrumentation on
 
 First and foremost, the presented information is constructed from a number of call stack samples, which represent real addresses in the application's binary code, mapped to the line numbers in the source files. This reverse mapping may not be always possible, or may be erroneous. Furthermore, due to the nature of the sampling process, it is impossible to obtain exact time measurement. Instead, time values are guesstimated by multiplying number of sample counts by mean time between two distinct samples.
 
-The \emph{Name} column contains name of the function in which the sampling was done. If the \emph{\faSitemap{}~Inlines} option is enabled, functions which were inlined will be preceded with a '\faCaretRight{}' symbol and additionally display their parent function name in parenthesis. Otherwise, only non-inlined functions are listed, with count of inlined functions in parenthesis. Any entry containing inlined function may be expanded to display the corresponding functions list (some functions may be hidden if the \emph{\faPuzzlePiece{}~Show all} option is disabled, due to lack of sampling data). Clicking on a function name will open the call stack sample parents window (see chapter~\ref{sampleparents}). Note that if inclusive times are displayed, listed functions will be partially or completely coming from mid-stack frames, which will prevent, or limit the capability to display parent call stacks.
+The \emph{Name} column contains name of the function in which the sampling was done. If the \emph{\faSitemap{}~Inlines} option is enabled, functions which were inlined will be preceded with a '\faCaretRight{}' symbol and additionally display their parent function name in parenthesis. Otherwise, only non-inlined functions are listed, with count of inlined functions in parenthesis. Any entry containing inlined function may be expanded to display the corresponding functions list (some functions may be hidden if the \emph{\faPuzzlePiece{}~Show all} option is disabled, due to lack of sampling data). Clicking on a function name will open the sample entry call stacks window (see chapter~\ref{sampleparents}). Note that if inclusive times are displayed, listed functions will be partially or completely coming from mid-stack frames, which will prevent, or limit the capability to display parent call stacks.
 
 The \emph{Location} column displays the corresponding source file name and line number. Depending on the \emph{Location} option selection it can either show function entry address, or the instruction at which the sampling was performed. The \emph{Entry} mode points at the beginning of a non-inlined function, or at the place where inlined function was inserted in its parent function. The \emph{Sample} mode is not useful for non-inlined functions, as it points to one randomly selected sampling point out of many that were captured. However, in case of inlined functions, this random sampling point is within the inlined function body. Using these options in tandem enable you to look at both the inlined function code and the place where it was inserted. If the \emph{Smart} location is selected, profiler will display entry point position for non-inlined functions and sample location for inlined functions. Selecting the \emph{\faAt{}~Address} option will instead print the symbol address.
 
@@ -3089,7 +3100,7 @@ Stack frame location may be displayed in the following number of ways, depending
 
 In some cases it may be not possible to properly decode stack frame address. Such frames will be presented with a dimmed '\texttt{[ntdll.dll]}' name of the image containing the frame address, or simply '\texttt{[unknown]}' if even this information cannot be retrieved. Additionally, '\texttt{[kernel]}' is used to indicate unknown stack frames within the operating system internal routines.
 
-If the displayed call stack is a sampled call stack (chapter~\ref{sampling}), an additional button will be available, \emph{\faDoorOpen{}~Global entry statistics}. Clicking it will open the call stack sample parents window (chapter~\ref{sampleparents}) for the current call stack.
+If the displayed call stack is a sampled call stack (chapter~\ref{sampling}), an additional button will be available, \emph{\faDoorOpen{}~Global entry statistics}. Clicking it will open the sample entry call stacks window (chapter~\ref{sampleparents}) for the current call stack.
 
 Clicking on the \emph{\faClipboard{}~Copy to clipboard} button will copy call stack to the clipboard.
 
@@ -3121,10 +3132,10 @@ At the first glance it may look like \texttt{unique\_ptr::reset} was the \emph{c
 
 Moreover, the linker may determine in some rare cases that any two functions in your program are identical\footnote{For example if all they do is zero-initialize a region of memory. As some constructors would do.}. As a result, only one copy of the binary code will be provided in the executable for both functions to share. While this optimization produces more compact programs, it also means that there's no way to distinguish the two functions apart in the resulting machine code. In effect, some call stacks may look nonsensical until you perform a small investigation.
 
-\subsection{Call stack sample parents window}
+\subsection{Sample entry call stacks window}
 \label{sampleparents}
 
-This window displays statistical information about the selected symbol. All sampled call stacks (chapter~\ref{sampling}) leading to the symbol are counted and displayed in descending order. You can select the displayed call stack using the \emph{parent call stack} controls, which also display time spent in the chosen call stack. Alternatively, sample counts may be shown by disabling the \emph{\faStopwatch{}~Show time} option, which is described in more detail in chapter~\ref{statisticssampling}.
+This window displays statistical information about the selected symbol. All sampled call stacks (chapter~\ref{sampling}) leading to the symbol are counted and displayed in descending order. You can select the displayed call stack using the \emph{entry call stack} controls, which also display time spent in the chosen call stack. Alternatively, sample counts may be shown by disabling the \emph{\faStopwatch{}~Show time} option, which is described in more detail in chapter~\ref{statisticssampling}.
 
 The layout of frame list and the \emph{\faAt{}~Frame location} option selection is similar to the call stack window, described in chapter~\ref{callstackwindow}.
 
@@ -3244,9 +3255,11 @@ An assembly instruction may be associated with only a single source line, but a 
 
 If automated call stack sampling (see chapter~\ref{sampling}) was performed, additional profiling information will be available. The first column of source and assembly views will contain percentage counts of collected instruction pointer samples for each displayed line, both in numerical and graphical bar form. This information can be used to determine which line of the function takes the most time. The displayed percentage values are heat map color coded, with the lowest values mapped to dark red, and the highest values mapped to bright yellow. The color code will appear next to the percentage value, and on the scroll bar, so that 'hot' places in code can be identified at a glance.
 
+By default samples are displayed only from within the selected symbol, in isolation. In some cases you may however want to include samples from functions that were called. To do so, enable the \emph{\faSignOut*{}~Child calls} option, which may also be temporarily toggled by pressing the \keys{Z} key. Make sure to familiarize yourself with section~\ref{readingcallstacks} to be able to properly read the results.
+
 Instruction timings can be viewed as a group. To begin constructing such group, click the \LMB{}~left mouse button on the percentage value. Additional instructions can be added using the \keys{\ctrl}~key, while holding the \keys{\shift}~key will allow selection of a range. To cancel the selection, click the \RMB{}~right mouse button on a percentage value. Group statistics can be seen at the bottom of the pane.
 
-Clicking the \MMB{}~middle mouse button on the percentage value of an assembly instruction will display call stack parents of the selected sample (see chapter~\ref{sampleparents}). This functionality is only available for instructions that have collected sampling data, and only in the assembly view, as the source code may be inlined multiple times, which would result in ambiguous location data.
+Clicking the \MMB{}~middle mouse button on the percentage value of an assembly instruction will display entry call stacks of the selected sample (see chapter~\ref{sampleparents}). This functionality is only available for instructions that have collected sampling data, and only in the assembly view, as the source code may be inlined multiple times, which would result in ambiguous location data. Note that number of entry call stacks is displayed in a tooltip, for a quick reference.
 
 Sample data source is controlled by the \emph{\faSitemap{}~Function} control, in the window header. If this option should be disabled, sample data will represent the whole symbol. If it is enabled, then the sample data will only include the selected function. The currently selected function can be changed by opening the drop-down box, which includes time statistics. The time percentage values of each contributing function are calculated relative to total number of samples collected within the symbol.
 

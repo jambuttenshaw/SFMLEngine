@@ -131,7 +131,7 @@ public:
 			// add a tilemap
 
 			AddComponent(m_Ground, Tilemap{ TilePalette::LoadFromFile("assets/palettes/terrainPalette.json"), "assets/tilemaps/menu/layer0.json" });
-			AddComponent(m_Ground, TilemapRenderer{ Material::Create("LitTilemap"), -1 });
+			AddComponent(m_Ground, TilemapRenderer{ Material::Create("Lit"), -1 });
 		}
 
 

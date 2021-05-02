@@ -234,7 +234,7 @@ static int64_t SetupHwTimer()
     CpuId( regs, 0x80000007 );
     if( !( regs[3] & ( 1 << 8 ) ) )
     {
-        const char* noCheck = getenv( "TRACY_NO_INVARIANT_CHECK" );
+        const char* noCheck = GetEnvVar( "TRACY_NO_INVARIANT_CHECK" );
         if( !noCheck || noCheck[0] != '1' )
         {
 #if defined _WIN32 || defined __CYGWIN__
@@ -272,7 +272,7 @@ static const char* GetProcessName()
     if( buf ) processName = buf;
 #  endif
 #elif defined _GNU_SOURCE || defined __CYGWIN__
-    processName = program_invocation_short_name;
+    if( program_invocation_short_name ) processName = program_invocation_short_name;
 #elif defined __APPLE__ || defined BSD
     auto buf = getprogname();
     if( buf ) processName = buf;
@@ -569,16 +569,20 @@ static uint64_t GetPid()
 #endif
 }
 
-static void AckServerQuery()
+void Profiler::AckServerQuery()
 {
-    TracyLfqPrepare( QueueType::AckServerQueryNoop );
-    TracyLfqCommit;
+    QueueItem item;
+    MemWrite( &item.hdr.type, QueueType::AckServerQueryNoop );
+    NeedDataSize( QueueDataSize[(int)QueueType::AckServerQueryNoop] );
+    AppendDataUnsafe( &item, QueueDataSize[(int)QueueType::AckServerQueryNoop] );
 }
 
-static void AckSourceCodeNotAvailable()
+void Profiler::AckSourceCodeNotAvailable()
 {
-    TracyLfqPrepare( QueueType::AckSourceCodeNotAvailable );
-    TracyLfqCommit;
+    QueueItem item;
+    MemWrite( &item.hdr.type, QueueType::AckSourceCodeNotAvailable );
+    NeedDataSize( QueueDataSize[(int)QueueType::AckSourceCodeNotAvailable] );
+    AppendDataUnsafe( &item, QueueDataSize[(int)QueueType::AckSourceCodeNotAvailable] );
 }
 
 static BroadcastMessage& GetBroadcastMessage( const char* procname, size_t pnsz, int& len, int port )
@@ -746,6 +750,10 @@ static void CrashHandler( int signal, siginfo_t* info, void* /*ucontext*/ )
     bool expected = false;
     if( !s_alreadyCrashed.compare_exchange_strong( expected, true ) ) ThreadFreezer( signal );
 
+    struct sigaction act = {};
+    act.sa_handler = SIG_DFL;
+    sigaction( SIGABRT, &act, nullptr );
+
     auto msgPtr = s_crashText;
     switch( signal )
     {
@@ -872,6 +880,9 @@ static void CrashHandler( int signal, siginfo_t* info, void* /*ucontext*/ )
             break;
         }
         break;
+    case SIGABRT:
+        strcpy( msgPtr, "Abort signal from abort().\n" );
+        break;
     default:
         abort();
     }
@@ -929,7 +940,9 @@ enum { QueuePrealloc = 256 * 1024 };
 
 static Profiler* s_instance = nullptr;
 static Thread* s_thread;
+#ifndef TRACY_NO_FRAME_IMAGE
 static Thread* s_compressThread;
+#endif
 
 #ifdef TRACY_HAS_SYSTEM_TRACING
 static Thread* s_sysTraceThread = nullptr;
@@ -956,13 +969,11 @@ TRACY_API void InitRPMallocThread();
 void InitRPMallocThread()
 {
     RPMallocInit rpinit;
-    rpmalloc_thread_initialize();
 }
 
 struct ProfilerData
 {
     int64_t initTime = SetupHwTimer();
-    RPMallocInit rpmalloc_init;
     moodycamel::ConcurrentQueue<QueueItem> queue;
     Profiler profiler;
     std::atomic<uint32_t> lockCounter { 0 };
@@ -992,7 +1003,9 @@ struct ProfilerThreadData
 ProfilerData* s_profilerData = nullptr;
 TRACY_API void StartupProfiler()
 {
-    s_profilerData = new ProfilerData;
+    RPMallocInit init;
+    s_profilerData = (ProfilerData*)tracy_malloc( sizeof( ProfilerData ) );
+    new (s_profilerData) ProfilerData();
     s_profilerData->profiler.SpawnWorkerThreads();
 }
 static ProfilerData& GetProfilerData()
@@ -1002,7 +1015,8 @@ static ProfilerData& GetProfilerData()
 }
 TRACY_API void ShutdownProfiler()
 {
-    delete s_profilerData;
+    s_profilerData->~ProfilerData();
+    tracy_free( s_profilerData );
     s_profilerData = nullptr;
     rpmalloc_finalize();
 }
@@ -1020,7 +1034,8 @@ static ProfilerData& GetProfilerData()
         ptr = profilerData.load( std::memory_order_acquire );
         if( !ptr )
         {
-            ptr = (ProfilerData*)malloc( sizeof( ProfilerData ) );
+            RPMallocInit init;
+            ptr = (ProfilerData*)tracy_malloc( sizeof( ProfilerData ) );
             new (ptr) ProfilerData();
             profilerData.store( ptr, std::memory_order_release );
         }
@@ -1030,11 +1045,61 @@ static ProfilerData& GetProfilerData()
 }
 #  endif
 
+// GCC prior to 8.4 had a bug with function-inline thread_local variables. Versions of glibc beginning with
+// 2.18 may attempt to work around this issue, which manifests as a crash while running static destructors
+// if this function is compiled into a shared object. Unfortunately, centos7 ships with glibc 2.17. If running
+// on old GCC, use the old-fashioned way as a workaround
+// See: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=85400
+#if defined(__GNUC__) && ((__GNUC__ < 8) || ((__GNUC__ == 8) && (__GNUC_MINOR__ < 4)))
+struct ProfilerThreadDataKey
+{
+public:
+    ProfilerThreadDataKey()
+    {
+        int val = pthread_key_create(&m_key, sDestructor);
+        static_cast<void>(val); // unused
+        assert(val == 0);
+    }
+    ~ProfilerThreadDataKey()
+    {
+        int val = pthread_key_delete(m_key);
+        static_cast<void>(val); // unused
+        assert(val == 0);
+    }
+    ProfilerThreadData& get()
+    {
+        void* p = pthread_getspecific(m_key);
+        if (!p)
+        {
+            RPMallocInit init;
+            p = (ProfilerThreadData*)tracy_malloc( sizeof( ProfilerThreadData ) );
+            new (p) ProfilerThreadData(GetProfilerData());
+            pthread_setspecific(m_key, p);
+        }
+        return *static_cast<ProfilerThreadData*>(p);
+    }
+private:
+    pthread_key_t m_key;
+
+    static void sDestructor(void* p)
+    {
+        ((ProfilerThreadData*)p)->~ProfilerThreadData();
+        tracy_free(p);
+    }
+};
+
+static ProfilerThreadData& GetProfilerThreadData()
+{
+    static ProfilerThreadDataKey key;
+    return key.get();
+}
+#else
 static ProfilerThreadData& GetProfilerThreadData()
 {
     thread_local ProfilerThreadData data( GetProfilerData() );
     return data;
 }
+#endif
 
 TRACY_API moodycamel::ConcurrentQueue<QueueItem>::ExplicitProducer* GetToken() { return GetProfilerThreadData().token.ptr; }
 TRACY_API Profiler& GetProfiler() { return GetProfilerData().profiler; }
@@ -1140,8 +1205,10 @@ Profiler::Profiler()
     , m_lz4Buf( (char*)tracy_malloc( LZ4Size + sizeof( lz4sz_t ) ) )
     , m_serialQueue( 1024*1024 )
     , m_serialDequeue( 1024*1024 )
+#ifndef TRACY_NO_FRAME_IMAGE
     , m_fiQueue( 16 )
     , m_fiDequeue( 16 )
+#endif
     , m_frameCount( 0 )
     , m_isConnected( false )
 #ifdef TRACY_ON_DEMAND
@@ -1168,14 +1235,14 @@ Profiler::Profiler()
     ReportTopology();
 
 #ifndef TRACY_NO_EXIT
-    const char* noExitEnv = getenv( "TRACY_NO_EXIT" );
+    const char* noExitEnv = GetEnvVar( "TRACY_NO_EXIT" );
     if( noExitEnv && noExitEnv[0] == '1' )
     {
         m_noExit = true;
     }
 #endif
 
-    const char* userPort = getenv( "TRACY_PORT" );
+    const char* userPort = GetEnvVar( "TRACY_PORT" );
     if( userPort )
     {
         m_userPort = atoi( userPort );
@@ -1191,8 +1258,10 @@ void Profiler::SpawnWorkerThreads()
     s_thread = (Thread*)tracy_malloc( sizeof( Thread ) );
     new(s_thread) Thread( LaunchWorker, this );
 
+#ifndef TRACY_NO_FRAME_IMAGE
     s_compressThread = (Thread*)tracy_malloc( sizeof( Thread ) );
     new(s_compressThread) Thread( LaunchCompressWorker, this );
+#endif
 
 #ifdef TRACY_HAS_SYSTEM_TRACING
     if( SysTraceStart( m_samplingPeriod ) )
@@ -1221,6 +1290,7 @@ void Profiler::SpawnWorkerThreads()
     sigaction( SIGSEGV, &crashHandler, nullptr );
     sigaction( SIGPIPE, &crashHandler, nullptr );
     sigaction( SIGBUS, &crashHandler, nullptr );
+    sigaction( SIGABRT, &crashHandler, nullptr );
 #endif
 
 #ifdef TRACY_HAS_CALLSTACK
@@ -1243,8 +1313,11 @@ Profiler::~Profiler()
     }
 #endif
 
+#ifndef TRACY_NO_FRAME_IMAGE
     s_compressThread->~Thread();
     tracy_free( s_compressThread );
+#endif
+
     s_thread->~Thread();
     tracy_free( s_thread );
 
@@ -1563,6 +1636,11 @@ void Profiler::Worker()
                 size = MemRead<uint16_t>( &item.lockNameFat.size );
                 SendSingleString( (const char*)ptr, size );
                 break;
+            case QueueType::GpuContextName:
+                ptr = MemRead<uint64_t>( &item.gpuContextNameFat.ptr );
+                size = MemRead<uint16_t>( &item.gpuContextNameFat.size );
+                SendSingleString( (const char*)ptr, size );
+                break;
             default:
                 break;
             }
@@ -1739,6 +1817,7 @@ void Profiler::Worker()
     }
 }
 
+#ifndef TRACY_NO_FRAME_IMAGE
 void Profiler::CompressWorker()
 {
     ThreadExitHandler threadExitHandler;
@@ -1805,6 +1884,7 @@ void Profiler::CompressWorker()
         }
     }
 }
+#endif
 
 static void FreeAssociatedMemory( const QueueItem& item )
 {
@@ -2074,15 +2154,13 @@ Profiler::DequeueStatus Profiler::Dequeue( moodycamel::ConsumerToken& token )
                         break;
                     }
                     case QueueType::GpuContextName:
-                    {
                         ptr = MemRead<uint64_t>( &item->gpuContextNameFat.ptr );
-                        uint16_t size = MemRead<uint16_t>( &item->gpuContextNameFat.size );
+                        size = MemRead<uint16_t>( &item->gpuContextNameFat.size );
                         SendSingleString( (const char*)ptr, size );
 #ifndef TRACY_ON_DEMAND
                         tracy_free( (void*)ptr );
 #endif
                         break;
-                    }
                     case QueueType::PlotData:
                     {
                         int64_t t = MemRead<int64_t>( &item->plotData.time );
@@ -3234,7 +3312,7 @@ void Profiler::HandleSourceCodeQuery()
             auto ptr = (char*)tracy_malloc( st.st_size );
             auto rd = fread( ptr, 1, st.st_size, f );
             fclose( f );
-            if( rd == st.st_size )
+            if( rd == (size_t)st.st_size )
             {
                 SendLongString( (uint64_t)ptr, ptr, rd, QueueType::SourceCode );
             }

@@ -172,7 +172,9 @@ public:
 private:
     struct SourceLocationZones
     {
-        Vector<ZoneThreadData> zones;
+        struct ZtdSort { bool operator()( const ZoneThreadData& lhs, const ZoneThreadData& rhs ) { return lhs.Zone()->Start() < rhs.Zone()->Start(); } };
+
+        SortedVector<ZoneThreadData, ZtdSort> zones;
         int64_t min = std::numeric_limits<int64_t>::max();
         int64_t max = std::numeric_limits<int64_t>::min();
         int64_t total = 0;
@@ -233,7 +235,7 @@ private:
 
     struct DataBlock
     {
-        std::shared_mutex lock;
+        std::mutex lock;
         StringDiscovery<FrameData*> frames;
         FrameData* framesBase;
         Vector<GpuCtxData*> gpuData;
@@ -292,6 +294,7 @@ private:
         unordered_flat_map<uint64_t, unordered_flat_map<CallstackFrameId, uint32_t, CallstackFrameIdHash, CallstackFrameIdCompare>> instructionPointersMap;
         unordered_flat_map<uint64_t, Vector<SampleDataRange>> symbolSamples;
         unordered_flat_map<CallstackFrameId, Vector<SampleDataRange>, CallstackFrameIdHash, CallstackFrameIdCompare> pendingSymbolSamples;
+        unordered_flat_map<uint64_t, Vector<Int48>> childSamples;
         bool newFramesWereReceived = false;
         bool callstackSamplesReady = false;
         bool ghostZonesReady = false;
@@ -387,6 +390,7 @@ public:
         ZoneColor,
         ZoneName,
         MemFree,
+        MemAllocTwice,
         FrameEnd,
         FrameImageIndex,
         FrameImageTwice,
@@ -413,7 +417,7 @@ public:
     uint32_t GetCpuId() const { return m_data.cpuId; }
     const char* GetCpuManufacturer() const { return m_data.cpuManufacturer; }
 
-    std::shared_mutex& GetDataLock() { return m_data.lock; }
+    std::mutex& GetDataLock() { return m_data.lock; }
     size_t GetFrameCount( const FrameData& fd ) const { return fd.frames.size(); }
     size_t GetFullFrameCount( const FrameData& fd ) const;
     int64_t GetLastTime() const { return m_data.lastTime; }
@@ -441,6 +445,10 @@ public:
     uint64_t GetGhostZonesCount() const { return m_data.ghostCnt; }
     uint32_t GetFrameImageCount() const { return (uint32_t)m_data.frameImage.size(); }
     uint64_t GetStringsCount() const { return m_data.strings.size() + m_data.stringData.size(); }
+#ifndef TRACY_NO_STATISTICS
+    uint64_t GetChildSamplesCountSyms() const { return m_data.childSamples.size(); }
+    uint64_t GetChildSamplesCountFull() const;
+#endif
     uint64_t GetFrameOffset() const { return m_data.frameOffset; }
     const FrameData* GetFramesBase() const { return m_data.framesBase; }
     const Vector<FrameData*>& GetFrames() const { return m_data.frames.Data(); }
@@ -494,6 +502,7 @@ public:
     const VarArray<CallstackFrameId>& GetParentCallstack( uint32_t idx ) const { return *m_data.parentCallstackPayload[idx]; }
     const CallstackFrameData* GetParentCallstackFrame( const CallstackFrameId& ptr ) const;
     const Vector<SampleDataRange>* GetSamplesForSymbol( uint64_t symAddr ) const;
+    const Vector<Int48>* GetChildSamples( uint64_t addr ) const;
 #endif
 
     const CrashEvent& GetCrashEvent() const { return m_data.crashEvent; }
@@ -566,6 +575,7 @@ public:
     bool IsBackgroundDone() const { return m_backgroundDone.load( std::memory_order_relaxed ); }
     void Shutdown() { m_shutdown.store( true, std::memory_order_relaxed ); }
     void Disconnect();
+    bool WasDisconnectIssued() const { return m_disconnect; }
 
     void Write( FileWrite& f );
     int GetTraceVersion() const { return m_traceVersion; }
@@ -589,6 +599,8 @@ public:
     const CpuThreadTopology* GetThreadTopology( uint32_t cpuThread ) const;
 
     std::pair<uint64_t, uint64_t> GetTextureCompressionBytes() const { return std::make_pair( m_texcomp.GetInputBytesCount(), m_texcomp.GetOutputBytesCount() ); }
+
+    void DoPostponedWork();
 
 private:
     void Network();
@@ -684,6 +696,7 @@ private:
     void ZoneColorFailure( uint64_t thread );
     void ZoneNameFailure( uint64_t thread );
     void MemFreeFailure( uint64_t thread );
+    void MemAllocTwiceFailure( uint64_t thread );
     void FrameEndFailure();
     void FrameImageIndexFailure();
     void FrameImageTwiceFailure();
@@ -763,7 +776,6 @@ private:
     void HandlePlotName( uint64_t name, const char* str, size_t sz );
     void HandleFrameName( uint64_t name, const char* str, size_t sz );
 
-    void HandlePostponedPlots();
     void HandlePostponedSamples();
     void HandlePostponedGhostZones();
 
