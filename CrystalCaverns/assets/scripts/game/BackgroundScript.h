@@ -73,12 +73,12 @@ public:
 			AddComponent(newBackground2, t);
 
 			AddComponent(newBackground1, SpriteRenderer{
-				background1,
+				background2,
 				Material::Create("Lit"),
 				-1,
 				 backgroundNormals });
 			AddComponent(newBackground2, SpriteRenderer{
-				background2,
+				background1,
 				Material::Create("Lit"),
 				-2,
 				 backgroundNormals });

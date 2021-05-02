@@ -23,11 +23,11 @@ public:
 	{
 		SetClearColor(sf::Color::Black);
 		SetVSync(true);
-
+		
 		// set up the data that should exist between scenes
 		DataStore::CreatePersistentData("loadedLevel1", false);
 		DataStore::CreatePersistentData("playerData", PlayerData{ });
-
+		
 
 		LevelFactory::Init();
 
