@@ -1,3 +1,5 @@
+#version 120
+
 uniform sampler2D texture;
 
 uniform sampler2D u_NormalMap;
@@ -82,7 +84,7 @@ void main()
 	float rot = abs(u_Rotation);
 	normal = vec3(normal.x * cos(u_Rotation) - normal.y * sin(u_Rotation), normal.x * sin(u_Rotation) + normal.y * cos(u_Rotation), normal.z);
 	
-	int flip = sign(u_Rotation);
+	float flip = sign(u_Rotation);
 	normal.x *= flip;
 
 	// the accumulative affect of each light on this pixel

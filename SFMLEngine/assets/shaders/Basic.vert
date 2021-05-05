@@ -1,4 +1,4 @@
-uniform float u_DepthValue;
+#version 120
 
 void main()
 {

@@ -1,11 +1,11 @@
-uniform float u_DepthValue;
+#version 120
 
 varying vec3 v_FragPos;
 
 void main()
 {
 	// pass on the world pos of the fragment
-	v_FragPos = gl_Vertex;
+	v_FragPos = gl_Vertex.xyz;
 
 	// get the screen pos of the vertex
 	gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;
