@@ -1,7 +1,7 @@
 #pragma once
 
 #include <SFMLEngine.h>
-#include "Button.h"
+#include "scripts/Button.h"
 
 using namespace SFMLEngine;
 

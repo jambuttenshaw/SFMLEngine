@@ -1,7 +1,7 @@
 #include "PlayButton.h"
 
-#include "../../src/MainScene.h"
-#include "../../src/levels/Tutorial.h"
+#include "MainScene.h"
+#include "levels/Tutorial.h"
 
 
 void PlayButton::Start()

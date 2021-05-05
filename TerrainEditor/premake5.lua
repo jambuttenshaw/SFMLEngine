@@ -12,7 +12,8 @@ project "TerrainEditor"
 	includedirs
 	{
 		"%{wks.location}/SFMLEngine/src",
-		"assets/scripts",
+		"%{wks.location}/TerrainEditor/src",
+		"%{wks.location}/TerrainEditor/src/scripts",
 		"%{IncludeDir.SFML}",
 		"%{IncludeDir.spdlog}",
 		"%{IncludeDir.glew}",

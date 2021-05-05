@@ -1,7 +1,7 @@
 #include "PauseMenuButton.h"
 
 #include "game/PauseScript.h"
-#include "../../src/MainMenu.h"
+#include "MainMenu.h"
 
 
 

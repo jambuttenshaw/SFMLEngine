@@ -1,7 +1,7 @@
 #pragma once
 
 #include <SFMLEngine.h>
-#include "game/WolfController.h"
+#include "scripts/game/WolfController.h"
 
 using namespace SFMLEngine;
 

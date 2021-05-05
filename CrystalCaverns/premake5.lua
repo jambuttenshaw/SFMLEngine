@@ -6,15 +6,14 @@ project "CrystalCaverns"
 	files
 	{
 		"src/**.h",
-		"src/**.cpp",
-		"assets/scripts/**.h",
-		"assets/scripts/**.cpp"
+		"src/**.cpp"
 	}
 
 	includedirs
 	{
 		"%{wks.location}/SFMLEngine/src",
-		"assets/scripts",
+		"%{wks.location}/CrystalCaverns/src",
+		"%{wks.location}/CrystalCaverns/src/scripts",
 		"%{IncludeDir.SFML}",
 		"%{IncludeDir.spdlog}",
 		"%{IncludeDir.glew}",

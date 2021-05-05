@@ -1,6 +1,6 @@
 #include "PauseScript.h"
 
-#include "../../src/PauseMenu.h"
+#include "PauseMenu.h"
 #include "pauseMenu/ClosePauseMenu.h"
 
 bool PauseScript::s_IsPaused = false;

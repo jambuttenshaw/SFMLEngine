@@ -8,3 +8,4 @@ profiler-traces/
 **.vcxproj.user
 **.lnk
 !vendor/premake/bin
+!SFMLEngine/vendor/SFML/bin
