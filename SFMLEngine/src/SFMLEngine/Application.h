@@ -143,7 +143,7 @@ namespace SFMLEngine {
 			for (Scene* scene : m_CurrentScenes)
 			{
 				// clear out all of the existing entities
-				scene->Destroy();
+				scene->DestroyThisScene();
 				delete scene;
 			}
 			m_CurrentScenes.clear();

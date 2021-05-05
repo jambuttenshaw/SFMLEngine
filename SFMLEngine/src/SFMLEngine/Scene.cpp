@@ -29,7 +29,7 @@ namespace SFMLEngine {
 		m_IdentitySystem = identitySystem;
 	}
 
-	void Scene::Destroy()
+	void Scene::DestroyThisScene()
 	{
 		// iterate backwards through the entity registry
 		for (auto& entity : *m_EntityRegistry)
@@ -39,7 +39,7 @@ namespace SFMLEngine {
 		m_EntityRegistry->clear();
 	}
 
-	void Scene::DestroyAllPending()
+	void Scene::DestroyAllPendingEntities()
 	{
 		for (auto const& entity : m_EntitiesToDestroy)
 		{

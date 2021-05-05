@@ -350,7 +350,7 @@ namespace SFMLEngine
             // destroy entities that were queued to be deleted last frame
             for (Scene* scene : m_CurrentScenes)
             {
-                scene->DestroyAllPending();
+                scene->DestroyAllPendingEntities();
             }
 
 
@@ -367,7 +367,7 @@ namespace SFMLEngine
                         if (m_CurrentScenes[index] == scene)
                         {
                             // delete the scene and remove it from the vector
-                            scene->Destroy();
+                            scene->DestroyThisScene();
                             delete scene;
                             m_CurrentScenes.erase(m_CurrentScenes.begin() + index);
                         }
@@ -671,7 +671,7 @@ namespace SFMLEngine
         // delete the currently open scene
         for (Scene* scene : m_CurrentScenes)
         {
-            scene->Destroy();
+            scene->DestroyThisScene();
             delete scene;
         }
         m_CurrentScenes.clear();

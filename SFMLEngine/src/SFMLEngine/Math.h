@@ -8,16 +8,17 @@
 
 namespace std
 {
-	// allows Vector2f's to be used as keys in std::unordered_map's
-	template<> struct hash<sf::Vector2i>
+	// allows sf::Vector2's to be used as keys in std::unordered_map's
+	template<typename T> struct hash<sf::Vector2<T>>
 	{
-		std::size_t operator()(const sf::Vector2i& vec) const noexcept
+		std::size_t operator()(const sf::Vector2<T>& vec) const noexcept
 		{
 			// hash a vector2 to produce a scalar value
 			// the idea is that every unique vector should produce a unique corresponding scalar
 			// thus why prime numbers are used in the calculation
-			// 4327 is the maximum number of hashes that can be produced
-			return ((static_cast<size_t>(vec.x) * 73856093) ^ (static_cast<size_t>(vec.y) * 19349663)) % 4327;
+
+			// casts the vectors components to 64-bit unsigned type
+			return (static_cast<size_t>(vec.x) * 73856093) ^ (static_cast<size_t>(vec.y) * 19349663);
 		}
 	};
 }
