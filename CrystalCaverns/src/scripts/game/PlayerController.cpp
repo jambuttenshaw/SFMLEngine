@@ -355,7 +355,7 @@ void PlayerController::OnTriggerStay(const Collision& collision)
 		// it just needs to be "close enough" to count as landing on the platform
 
 		// we also only want to do it when the player is moving down
-		if (collision.GlobalBounds.top + 0.75f * collision.GlobalBounds.height < collision.OtherGlobalBounds.top && m_Rigidbody->GetVelocity().y > 0)
+		if (collision.GlobalBounds.top + (0.5f * collision.GlobalBounds.height) < collision.OtherGlobalBounds.top && m_Rigidbody->GetVelocity().y > 0)
 		{
 			if (m_CanLandOnPlatform)
 			{
