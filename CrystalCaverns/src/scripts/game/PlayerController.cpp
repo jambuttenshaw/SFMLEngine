@@ -11,6 +11,8 @@ void PlayerController::Start()
 	m_Collider = &GetComponent<BoxCollider>();
 
 	m_StatsController = &GetNativeScript<PlayerStatsController>();
+
+	m_Light = &GetComponent<Transform>(GetEntitiesWithTag("PlayerLight")[0]);
 	m_LightAnimator = &GetNativeScript<PlayerLightAnimator>();
 
 	m_CameraController = &GetNativeScript<CameraController>(GetEntitiesWithTag("MainCamera")[0]);
@@ -428,6 +430,7 @@ void PlayerController::StartCrawl()
 	// the players hitbox needs readjusted
 	m_Collider->Reset(m_CrawlingHitbox);
 	m_Transform->Translate({ -16.0f, 32.0f });
+	m_Light->SetPosition({ 32.0f, 16.0f });
 
 	// make sure we can actually fit in the space
 	if (Physics::BoxCast(m_Collider->GetGlobalBounds(), m_GroundLayerMask).first)
@@ -452,6 +455,7 @@ void PlayerController::EndCrawl()
 {
 	m_Collider->Reset(m_StandingHitbox);
 	m_Transform->Translate({ 16, -32 });
+	m_Light->SetPosition({ 16.0f, 32.0f });
 	
 	// make sure we can actually fit in the space
 	if (Physics::BoxCast(m_Collider->GetGlobalBounds(), m_GroundLayerMask).first)

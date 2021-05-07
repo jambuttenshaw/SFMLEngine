@@ -28,7 +28,7 @@ public:
 			else
 			{
 				float fac = (m_ShakeTimer / m_ShakeMagnitudeNormalizationFactor);
-				m_ShakeMovement = m_ShakeMagnitude * fac * fac * Math::RandomUnitVector();
+				m_ShakeMovement = m_GlobalShakeMagnitudeMultiplier * m_ShakeMagnitude * fac * fac * fac * Math::RandomUnitVector();
 			}
 		}
 
@@ -56,7 +56,7 @@ public:
 	void ShakeCamera(float duration, float magnitude)
 	{
 		m_Shaking = true;
-		m_ShakeTimer = duration;
+		m_ShakeTimer = duration * m_GlobalShakeDurationMultiplier;
 		m_ShakeMagnitudeNormalizationFactor = duration;
 		m_ShakeMagnitude = magnitude;
 	}
@@ -81,4 +81,9 @@ private:
 	sf::Vector2f m_ShakeMovement;
 	float m_ShakeMagnitude = 5.0f;
 	float m_ShakeMagnitudeNormalizationFactor = 1.0f;
+
+
+
+	const float m_GlobalShakeMagnitudeMultiplier = 1.0f;
+	const float m_GlobalShakeDurationMultiplier = 1.3f;
 };

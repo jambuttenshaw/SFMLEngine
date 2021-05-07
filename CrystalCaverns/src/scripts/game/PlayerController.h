@@ -71,6 +71,8 @@ private:
 
 	PlayerStatsController* m_StatsController = nullptr;
 	CameraController* m_CameraController = nullptr;
+
+	Transform* m_Light = nullptr;
 	PlayerLightAnimator* m_LightAnimator = nullptr;
 
 	Layer m_GroundLayerMask;
