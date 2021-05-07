@@ -495,6 +495,7 @@ void PlayerController::Hurt(bool toTheRight)
 		m_Rigidbody->SetVelocity({ 0, 0 });
 
 		m_CameraController->ShakeCamera(0.7f, 7.5f);
+		m_CameraController->ZoomCamera(1.0f, 0.3f);
 
 
 		m_State = PlayerState::Dead;

@@ -46,6 +46,24 @@ public:
 		}
 
 		m_Transform->SetPosition(m_FollowPos + m_ShakeMovement);
+
+
+		// zooming of the camera
+		if (m_Zooming)
+		{
+			m_ZoomTimer -= ts;
+			if (m_ZoomTimer <= 0)
+			{
+				m_Zooming = false;
+			}
+			else
+			{
+				// zoom timer goes from total zoom time to 0
+				// that is why the inputs to lerp are swapped
+				// (lerping from target to initial instead of the usual intial to target)
+				m_Camera->SetZoom(Math::Lerp(m_ZoomTarget, m_InitialZoom, m_ZoomTimer / m_TotalZoomTime));
+			}
+		}
 	}
 
 	void ImmediateReset() { m_FollowPos = m_PlayerTransform->GetPosition(); }
@@ -59,6 +77,22 @@ public:
 		m_ShakeTimer = duration * m_GlobalShakeDurationMultiplier;
 		m_ShakeMagnitudeNormalizationFactor = duration;
 		m_ShakeMagnitude = magnitude;
+	}
+
+	void ZoomCamera(float duration, float zoomLevel)
+	{
+		m_Zooming = true;
+		m_ZoomTimer = duration;
+		m_TotalZoomTime = duration;
+
+		m_ZoomTarget = zoomLevel;
+		m_InitialZoom = m_Camera->GetZoom();
+	}
+
+	void ResetZoom(float value)
+	{
+		m_Camera->SetZoom(value);
+		m_InitialZoom = value;
 	}
 
 
@@ -82,6 +116,12 @@ private:
 	float m_ShakeMagnitude = 5.0f;
 	float m_ShakeMagnitudeNormalizationFactor = 1.0f;
 
+
+	bool m_Zooming = false;
+	float m_ZoomTimer = 0.0f;
+	float m_TotalZoomTime = 0.0f;
+	float m_ZoomTarget = 0.0f;
+	float m_InitialZoom = 0.0f;
 
 
 	const float m_GlobalShakeMagnitudeMultiplier = 1.0f;
