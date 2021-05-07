@@ -688,12 +688,24 @@ namespace SFMLEngine
         Material::DestroyAllCached();
         Texture::DestroyAllCached();
 
+        // delete the icon image if one was assigned
+        if (m_IconImage != NULL_RESOURCE_ID)
+            ResourceManager::DeleteResource<sf::Image>(m_IconImage);
+
+
         FontLibrary::Shutdown();
         ShaderLibrary::Shutdown();
 
         ResourceManager::Shutdown();
 
         Math::Shutdown();
+    }
+
+    void Application::SetWindowIcon(const std::string& iconPath)
+    {
+        m_IconImage = ResourceManager::LoadFromFile<sf::Image>(iconPath);
+        sf::Image* image = ResourceManager::GetResourceHandle<sf::Image>(m_IconImage);
+        m_Window->setIcon(image->getSize().x, image->getSize().y, image->getPixelsPtr());
     }
 
 

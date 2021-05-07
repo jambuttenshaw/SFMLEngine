@@ -27,6 +27,9 @@ public:
 		SetClearColor(sf::Color::Black);
 		// use vsync to limit the framerate
 		SetVSync(true);
+
+		// set the window icon
+		SetWindowIcon("assets/textures/icon.png");
 		
 		// set up the data that should exist between scenes
 		// this allocates a bool and an instance of player data

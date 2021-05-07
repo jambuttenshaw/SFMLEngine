@@ -62,7 +62,7 @@ namespace SFMLEngine {
 
 		void Shutdown();
 
-		
+		void SetWindowIcon(const std::string& iconPath);
 		sf::RenderWindow* GetWindowHandle() { return m_Window; }
 
 
@@ -176,6 +176,8 @@ namespace SFMLEngine {
 		float m_TimeScale = 1.0f;
 
 		sf::Color m_ClearColor{ sf::Color::Black };
+
+		ResourceID m_IconImage = NULL_RESOURCE_ID;
 
 		// ECS
 		Coordinator* m_Coordinator;
