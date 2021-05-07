@@ -24,6 +24,7 @@ void LevelManager::Start()
 	m_FaderScript->SetFadeSpeed(1.0f);
 
 	m_LoadedLevel1 = DataStore::RetrieveData<bool>("loadedLevel1");
+	m_EnteredTrigger = false;
 }
 
 void LevelManager::Update(float ts)
@@ -55,11 +56,6 @@ void LevelManager::Update(float ts)
 	else if (m_FadingOut)
 	{
 		m_FadingOut = !m_FaderScript->FadeComplete();
-
-		if (!m_FadingOut)
-		{
-			m_FadingOut = false;
-		}
 	}
 }
 
@@ -74,17 +70,23 @@ void LevelManager::OnTriggerEnter(const Collision& collision)
 {
 	if (GetEntityTag(collision.Other) == "LevelEnd")
 	{
-		if (*m_LoadedLevel1)
+		if (!m_EnteredTrigger)
 		{
-			m_FadingIn = true;
-			m_Action = Action::ToWinScreen;
-			m_FaderScript->SetFadeState(Fader::State::FadeIn);
-		}
-		else
-		{
-			m_FadingIn = true;
-			m_Action = Action::LoadLevel1;
-			m_FaderScript->SetFadeState(Fader::State::FadeIn);
+			m_EnteredTrigger = true;
+
+
+			if (*m_LoadedLevel1)
+			{
+				m_FadingIn = true;
+				m_Action = Action::ToWinScreen;
+				m_FaderScript->SetFadeState(Fader::State::FadeIn);
+			}
+			else
+			{
+				m_FadingIn = true;
+				m_Action = Action::LoadLevel1;
+				m_FaderScript->SetFadeState(Fader::State::FadeIn);
+			}
 		}
 	}
 }
@@ -110,6 +112,8 @@ void LevelManager::LoadLevel()
 	m_CameraController->ImmediateReset();
 
 	*m_LoadedLevel1 = true;
+	m_EnteredTrigger = false;
+
 }
 
 void LevelManager::LoadDeathScreen()

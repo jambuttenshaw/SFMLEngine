@@ -40,6 +40,7 @@ private:
 
 	Action m_Action = Action::None;
 
+	bool m_EnteredTrigger = false;
 	bool* m_LoadedLevel1 = nullptr;
 
 	bool m_FadingIn = false;

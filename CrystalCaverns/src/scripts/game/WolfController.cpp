@@ -1,5 +1,7 @@
 #include "WolfController.h"
 
+#include "PauseScript.h"
+
 
 void WolfController::Start()
 {
@@ -60,6 +62,9 @@ void WolfController::Start()
 
 void WolfController::Update(float ts)
 {
+	// dont update the wolf when the game is paused
+	if (PauseScript::IsGamePaused()) return;
+
 	float dist = Math::SquareMagnitude(m_PlayerController->GetCentre() - m_Transform->GetPosition() - sf::Vector2f{ 32, 16 });
 
 
