@@ -6,10 +6,15 @@
 using namespace SFMLEngine;
 
 
+class CrystalCollector;
+
+
 class PlayerStatsController : public ScriptableEntity
 {
 public:
 	void Start() override;
+
+	void OnTriggerEnter(const Collision& collision) override;
 
 	void Damage();
 	bool IsDead() const { return m_Health == 0; }
@@ -23,6 +28,8 @@ public:
 private:
 	int m_MaxHealth = 0;
 	int m_Health = m_MaxHealth;
+
+	CrystalCollector* m_CrystalCollector = nullptr;
 
 
 	std::vector<Animator*> m_HeartAnimators;

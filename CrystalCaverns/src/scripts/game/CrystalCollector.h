@@ -39,6 +39,8 @@ public:
 	void OnTriggerEnter(const Collision& collision) override;
 	void OnTriggerExit(const std::pair<Entity, ColliderID>& other) override;
 
+	void ScorePoints(int points);
+
 	void UpdateText();
 
 	void SetScoreText(Entity scoreText);

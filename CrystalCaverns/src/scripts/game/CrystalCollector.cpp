@@ -40,6 +40,17 @@ void CrystalCollector::FindCrystalMap()
 
 void CrystalCollector::Update(float ts)
 {
+	if (Input::IsMouseButtonPressed(sf::Mouse::Left))
+	{
+		sf::Vector2f pos{ Input::GetMouseWorldPos() };
+		LOG_TRACE("{0}  {1}", pos.x, pos.y);
+	}
+	else if (Input::IsMouseButtonPressed(sf::Mouse::Right))
+	{
+		sf::Vector2f pos{ m_CrystalMap->TileToWorldCoordinates(m_CrystalMap->WorldToTileCoordinates(Input::GetMouseWorldPos())) };
+		LOG_TRACE("{0}  {1}", pos.x, pos.y);
+	}
+
 	if (Input::IsKeyPressed(sf::Keyboard::Space))
 	{
 		if (m_CollidingCrystals.size() > 0)
@@ -83,7 +94,7 @@ void CrystalCollector::Update(float ts)
 			{
 				// this crystal has been broken and we can now take the points for it
 				m_CrystalMap->RemoveTile(currentCrystal);
-				m_CrystalScore += crystal.Data->Value;
+				ScorePoints(crystal.Data->Value);
 				m_MiningProgress.erase(currentCrystal);
 
 				m_CameraController->ShakeCamera(0.25f, 5.0f);
@@ -156,6 +167,11 @@ void CrystalCollector::OnTriggerExit(const std::pair<Entity, ColliderID>& other)
 			m_CrystalColliders.erase(other.second);
 		}
 	}
+}
+
+void CrystalCollector::ScorePoints(int points)
+{
+	m_CrystalScore += points;
 }
 
 

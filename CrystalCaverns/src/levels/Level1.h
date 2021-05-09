@@ -6,6 +6,8 @@
 #include "../entities/Wolf.h"
 #include "game/WolfController.h"
 
+#include "../entities/HealthPickup.h"
+
 #include "LevelFactory.h"
 
 
@@ -27,6 +29,18 @@ public:
 
 		LevelFactory::CreateTutorialText(this, 11, { 50, -100 });
 
+
+		// HEALTH PICKUPS
+		std::vector<sf::Vector2f> healthPickupPositions{
+			{ - 704,  608 },
+			{     0,  768 },
+			{  1120,  992 },
+			{  2272,  896 },
+			{ -1504, 1088 }
+		};
+
+		for (auto& pos : healthPickupPositions)
+			HealthPickup::Create(this, pos);
 
 
 		// WOLVES

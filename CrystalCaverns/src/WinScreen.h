@@ -5,7 +5,7 @@
 #include "menu/GoToMouse.h"
 #include "deathScreen/DeathScreenButtons.h"
 
-
+#include "Constants.h"
 #include "PlayerData.h"
 
 
@@ -118,7 +118,7 @@ public:
 		// as we cannot place data onto an entity since the entity would be destroyed between scene unloading and reloading
 		PlayerData* data = DataStore::RetrieveData<PlayerData>("playerData");
 		// they get a score bonus for every half-heart they retained
-		int healthBonus = 25 * data->Health;
+		int healthBonus = HEART_BONUS_POINTS * data->Health;
 		// the depth they travelled into the cave becomes a score mulitplier to their crystal score
 		int depthBonus = static_cast<int>(data->Score * (1 + data->DepthPercent));
 		int totalScore = data->Score + healthBonus + depthBonus;

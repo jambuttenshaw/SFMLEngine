@@ -1,16 +1,40 @@
 #include "PlayerStatsController.h"
 #include "LevelManager.h"
 
-
+#include "CrystalCollector.h"
+#include "HealthPickupController.h"
+#include "Constants.h"
 
 void PlayerStatsController::Start()
 {
 	m_Health = m_MaxHealth;
 
+	m_CrystalCollector = &GetNativeScript<CrystalCollector>();
+
 	AudioSystem::LoadSound("hurt", "assets/audio/hurt.ogg", 50);
 	AudioSystem::SetRelativeToListener("hurt", true);
 	AudioSystem::LoadSound("die", "assets/audio/die.ogg", 50);
 	AudioSystem::SetRelativeToListener("die", true);
+}
+
+void PlayerStatsController::OnTriggerEnter(const Collision& collision)
+{
+	if (GetEntityTag(collision.Other) == "HealthPickup")
+	{
+		// collided with a health pickup
+		auto& controller = GetNativeScript<HealthPickupController>(collision.Other);
+		controller.CollectHeart();
+
+		if (m_Health < m_MaxHealth)
+		{
+			m_Health++;
+			UpdateHearts();
+		}
+		else
+		{
+			m_CrystalCollector->ScorePoints(HEART_BONUS_POINTS);
+		}
+	}
 }
 
 
