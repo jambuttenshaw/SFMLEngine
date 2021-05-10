@@ -63,6 +63,11 @@ public:
 		m_Fading = true;
 		AudioSystem::SetPosition("HealthPickup", m_Transform->GetPosition() + sf::Vector2f{ 16, 16 });
 		AudioSystem::PlaySound("HealthPickup", true);
+
+
+		// remove the collider so that the player doesn't interact with the heart after it has been collected
+		RemoveComponent<BoxCollider>();
+		RemoveComponent<ColliderInfo>();
 	}
 
 

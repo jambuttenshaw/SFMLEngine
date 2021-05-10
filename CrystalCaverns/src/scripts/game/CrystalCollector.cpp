@@ -40,17 +40,6 @@ void CrystalCollector::FindCrystalMap()
 
 void CrystalCollector::Update(float ts)
 {
-	if (Input::IsMouseButtonPressed(sf::Mouse::Left))
-	{
-		sf::Vector2f pos{ Input::GetMouseWorldPos() };
-		LOG_TRACE("{0}  {1}", pos.x, pos.y);
-	}
-	else if (Input::IsMouseButtonPressed(sf::Mouse::Right))
-	{
-		sf::Vector2f pos{ m_CrystalMap->TileToWorldCoordinates(m_CrystalMap->WorldToTileCoordinates(Input::GetMouseWorldPos())) };
-		LOG_TRACE("{0}  {1}", pos.x, pos.y);
-	}
-
 	if (Input::IsKeyPressed(sf::Keyboard::Space))
 	{
 		if (m_CollidingCrystals.size() > 0)
