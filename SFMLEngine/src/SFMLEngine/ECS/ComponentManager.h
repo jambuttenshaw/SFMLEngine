@@ -9,6 +9,7 @@
 
 namespace SFMLEngine {
 
+
 	class ComponentManager
 	{
 	public:
