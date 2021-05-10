@@ -8,7 +8,8 @@
 #include "MainScene.h"
 
 #include "levels/LevelFactory.h"
-#include "levels/AllLevels.h"
+#include "levels/Tutorial.h"
+#include "levels/Level1.h"
 
 #include "DeathScreen.h"
 
