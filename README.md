@@ -197,20 +197,12 @@ The audio system has a 'Listener', which defines where all sounds are percieved 
 
 
 ### GUI System
+HUD and GUI elements are crucial to any game. As such, SFMLEngine implements a useful GUI system to position and render different GUI elements.
 
+SFMLEngine's GUI position system allows the position of GUI elements to be specified in the range \[0,1\], and then this coordinate is converted into screen coordinates relative to the window's dimensions and an 'anchor' property. The anchor changes which part of the GUI elements' bounding box is positioned at its coordinate; for example, top-left, bottom-right, middle-right, or completely centred. Using the system, resizing the screen preserves the GUI elements relative positions.
 
 
 ### Font Library 
+SFMLEngine implements a simple font library, build on top of the resource manager. This allows fonts to be easily shared across any component in a game that may require text to be rendered on the fly, either on the GUI or as an in-game sprite.
 
-
-
-### Tilemaps
-
-
-
-### Tile Palettes
-
-
-
-### Tilemap Colliders
-
+To allow text to be rendered with a sprite renderer component, SFMLEngine's `Texture` class offers a constructor that takes a font, a string, a color, and a font size to render the given string with the given parameters onto a texture, which in turn can be displayed in-game as a sprite.
