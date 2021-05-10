@@ -19,6 +19,14 @@ public:
 		if (!m_Active) return;
 
 
+		if (Input::IsKeyPressed(sf::Keyboard::E))
+		{
+			sf::Vector2f worldPos{ Input::GetMouseWorldPos() };
+			sf::Vector2f tilePos{ m_Tilemap->TileToWorldCoordinates(m_Tilemap->WorldToTileCoordinates(worldPos)) };
+			LOG_TRACE("World Pos:  X: {0}  Y: {1}   Tile Pos:  X: {2}  Y: {3}", worldPos.x, worldPos.y, tilePos.x, tilePos.y);
+		}
+
+
 		if (Input::IsMouseButtonDown(sf::Mouse::Left))
 		{
 			m_Tilemap->PlaceTile(m_Tilemap->WorldToTileCoordinates(Input::GetMouseWorldPos()), m_Palette->GetAllTiles()[m_CurrentTile], true);
