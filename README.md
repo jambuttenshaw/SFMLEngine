@@ -8,8 +8,10 @@ The following instructions are how to build SFMLEngine and Crystal Caverns for W
 
 1. Clone this repo.
 2. Run `Win-GenProjects.bat`. This will generate a `.sln` file to be opened with Visual Studio 2019. This sets up all of the dependencies, include paths, etc.
-3. Make sure the start-up project is set to Crystal Caverns.
-4. Build the Crystal Caverns project (SFMLEngine will be built first automatically as it is a dependency).
+3. Open `SFMLEngine.sln` in Visual Studio 2019.
+4. Make sure the start-up project is set to Crystal Caverns.
+5. Build the Crystal Caverns project (SFMLEngine will be built first automatically as it is a dependency).
+6. Before running the executable, copy `openal32.dll` from `SFMLEngine/vendor/SFML/bin` into the output directory.
 
 
 ## Features
