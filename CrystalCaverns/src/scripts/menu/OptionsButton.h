@@ -23,6 +23,6 @@ public:
 	}
 
 private:
-	MenuCameraController* m_CameraController;
+	MenuCameraController* m_CameraController = nullptr;
 
 };

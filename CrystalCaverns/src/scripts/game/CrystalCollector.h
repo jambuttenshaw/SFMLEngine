@@ -21,8 +21,8 @@ struct CrystalData
 };
 struct MiningProgress
 {
-	int Progress;
-	CrystalData* Data;
+	int Progress = 0;
+	CrystalData* Data = nullptr;
 	bool Broken = false;
 };
 

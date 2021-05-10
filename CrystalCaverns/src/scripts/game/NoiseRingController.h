@@ -46,8 +46,8 @@ public:
 	}
 
 private:
-	Transform* m_Transform;
-	SpriteRenderer* m_Sprite;
+	Transform* m_Transform = nullptr;
+	SpriteRenderer* m_Sprite = nullptr;
 
 	sf::Vector2f m_CentrePos;
 	const sf::Vector2f m_TextureSize{ 64, 64 };

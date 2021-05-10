@@ -20,9 +20,9 @@ public:
 	void OnClick() override;
 
 private:
-	PointLight* m_SceneLight;
-	PointLight* m_TitleLight;
-	DirectionalLight* m_DirLight;
+	PointLight* m_SceneLight = nullptr;
+	PointLight* m_TitleLight = nullptr;
+	DirectionalLight* m_DirLight = nullptr;
 
 	float m_InitialRange = 0.0f;
 	float m_InitialIntensity1 = 0.0f;

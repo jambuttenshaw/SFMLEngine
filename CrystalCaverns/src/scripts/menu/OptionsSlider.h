@@ -48,8 +48,8 @@ public:
 
 
 private:
-	Entity m_Knob;
-	KnobController* m_KnobController;
+	Entity m_Knob = INVALID_ENTITY_ID;
+	KnobController* m_KnobController = nullptr;
 
 	float m_Value = 0;
 	std::function<void(float)> m_OnSliderChange;
