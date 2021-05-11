@@ -22,9 +22,20 @@ public:
 
 	void Create() override
 	{
+		/*
+		The main menu contains a play button,
+		options button,
+		and quit button
+
+
+		and it also contains the options menu
+		the two sliders for sound volume and music volume
+		*/
 		{
+			// create the play button
 			m_PlayButton = CreateEntity();
 
+			// place it in the scene and give it its texture
 			AddComponent(m_PlayButton, Transform{ { 0, -64 } });
 			AddComponent(m_PlayButton, SpriteRenderer{
 					Texture::Create("assets/textures/playButton.png"),
@@ -33,15 +44,17 @@ public:
 					Texture::Create("assets/textures/playButton_n.png")
 				});
 			
+			// add a collider so we can use the physics system for determing when its clicked
 			AddComponent(m_PlayButton, BoxCollider{ {128, 64}, {0, 0} });
 			AddComponent(m_PlayButton, ColliderInfo{ ColliderType::Box });
 
+			// add the script that defines what the button does when clicked
 			AddNativeScript<PlayButton>(m_PlayButton);
 		}
 
 		
 		
-		
+		// exact same process as above, except add an options button script instead
 		{
 			m_OptionsButton = CreateEntity();
 
@@ -59,6 +72,9 @@ public:
 			AddNativeScript<OptionsButton>(m_OptionsButton);
 		}
 
+		// the options menu needs a back button to return to the main menu
+		// this is constructed exactly the same as the other buttons
+		// just add the back button script instead
 		{
 			m_OptionsBackButton = CreateEntity();
 
@@ -76,7 +92,8 @@ public:
 			auto& script = AddNativeScript<BackButton>(m_OptionsBackButton);
 		}
 		
-		
+		// the quit button is constructed in the same way again
+		// just add the quit button script
 		{
 			m_QuitButton = CreateEntity();
 
@@ -94,7 +111,9 @@ public:
 			AddNativeScript<QuitButton>(m_QuitButton);
 		}
 
-
+		// two volume sliders are created
+		// one for sounds and one for music
+		// these work almost the same as buttons, they just have an options slider script instead
 		{
 			m_SoundsVolumeSlider = CreateEntity();
 
@@ -106,6 +125,7 @@ public:
 					Texture::Create("assets/textures/buttons/soundsOptionsSlider_n.png")
 				});
 			auto& script = AddNativeScript<OptionsSlider>(m_SoundsVolumeSlider);
+			// specify that moving the slider controls the listener volume, and the range of values is between 0 and 100
 			script.SetSliderFunction([](float val) { AudioSystem::SetListenerVolume(val); }, 0, 100);
 		}
 		{
@@ -119,11 +139,14 @@ public:
 					Texture::Create("assets/textures/buttons/musicOptionsSlider_n.png")
 				});
 			auto& script = AddNativeScript<OptionsSlider>(m_MusicVolumeSlider);
+			// specify that moving the slider controls the music volume, and the range of values is between 0 and 100
 			script.SetSliderFunction([](float val) { AudioSystem::SetMusicVolume(val); }, 0, 100);
 		}
 		
 
 		{
+			// the ground is for visual purposes only
+			// nothing interacts with the ground so we add no scripts to it
 			m_Ground = CreateEntity();
 
 			AddComponent(m_Ground, Transform{ });
@@ -134,7 +157,7 @@ public:
 			AddComponent(m_Ground, TilemapRenderer{ Material::Create("Lit"), -1 });
 		}
 
-
+		// create the big text that displays the name of the game
 		m_TitleText = CreateEntity();
 		AddComponent(m_TitleText, Transform{ { -239.0f, -293.5f } });
 		AddComponent(m_TitleText, SpriteRenderer{
@@ -143,32 +166,40 @@ public:
 			0,
 			Texture::Create("assets/textures/titleText_n.png") });
 
-
+		// to make it look cooler, place a blue light near the title
+		// give it a tag so it can be identified when all the lights need to be faded out
 		m_TitleTextLight = CreateEntity();
 		SetEntityTag(m_TitleTextLight, "TitleLight");
 		AddComponent(m_TitleTextLight, Transform{ { 240, 86 }, &GetComponent<Transform>(m_TitleText) });
 		AddComponent(m_TitleTextLight, PointLight{ 1.5f, 150.0f, sf::Color(17, 32, 255, 255) });
 
 
-
+		// create another light entity
+		// give it a tag so scripts can find it
 		m_Light = CreateEntity();
 		SetEntityTag(m_Light, "SceneLight");
 		AddComponent(m_Light, Transform{ });
+		// add a red-ish point light
 		AddComponent(m_Light, PointLight{ 3.0f, 400.0f, sf::Color(219, 113, 114, 255) });
+		// this light should follow the mouse
 		AddNativeScript<GoToMouse>(m_Light);
+		// give it a directional light too for some ambient lighting
 		// place both lights onto the same entity
 		AddComponent(m_Light, DirectionalLight{ -1.5f, 0.7f, 0.5f, sf::Color(240, 61, 19, 255) });
 
 
-
+		// all scenes must have a camera
+		// so create a camera
+		// give it a tag so scripts can access it
 		m_Camera = CreateEntity();
 		SetEntityTag(m_Camera, "Camera");
 
 		AddComponent(m_Camera, Transform{ });
 		AddComponent(m_Camera, Camera{ });
+		// the camera controller controls the position of the camera
 		AddNativeScript<MenuCameraController>(m_Camera);
 
-
+		// and a fade in controller for a quick fade into the menu
 		m_FadeInController = CreateEntity();
 		AddNativeScript<FadeInController>(m_FadeInController);
 	}

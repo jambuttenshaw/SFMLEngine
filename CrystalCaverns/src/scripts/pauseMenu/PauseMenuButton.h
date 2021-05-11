@@ -16,17 +16,25 @@ class PauseMenuButton : public ScriptableEntity
 
 	void Update(float ts) override
 	{
+		// since the pause menu exists in screen space rather than world space we cannot use the collision system to detect collisions
+		// we can just use the transform of this button to find out the rectangle of the image in screen space
+		// and see if the mouse pointer lies within that rectangle
 		sf::Vector2f mousePos{ Input::GetMouseScreenPos() };
 		m_CollidingWithMouse = m_Transform->GetTransformMatrix().transformRect(m_Image->GetSpriteObject().getGlobalBounds()).contains(mousePos);
 
+		// we want to trigger the event after the mouse is released
 		if (Input::IsMouseButtonDown(sf::Mouse::Left))
 		{
+			// signify that we are waiting for the mouse to be released
 			if (!m_Holding) m_Holding = true;
 		}
 		else if (m_Holding)
 		{
+			// the mouse has been released
+			// check if we are colliding with the mouse
 			if (m_CollidingWithMouse)
 			{
+				// play the click sound and trigger the click event
 				AudioSystem::PlaySound("buttonClick");
 				OnClick();
 			}
@@ -35,6 +43,7 @@ class PauseMenuButton : public ScriptableEntity
 		}
 	}
 
+	// to be implemented by individual buttons
 	virtual void OnClick() = 0;
 
 
@@ -48,7 +57,7 @@ private:
 };
 
 
-
+// the 3 buttons that the pause menu contains
 class PResumeButton : public PauseMenuButton
 {
 	void OnClick() override;

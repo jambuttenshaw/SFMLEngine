@@ -36,42 +36,42 @@ public:
 		*/
 
 		{
-			m_ReplayButton = CreateEntity();
+			Entity replayButton = CreateEntity();
 
-			AddComponent(m_ReplayButton, Transform{ { -180, 113 } });
-			AddComponent(m_ReplayButton, SpriteRenderer{
+			AddComponent(replayButton, Transform{ { -180, 113 } });
+			AddComponent(replayButton, SpriteRenderer{
 					Texture::Create("assets/textures/buttons/replayButton.png"),
 					Material::Create("Lit"),
 					0,
 					Texture::Create("assets/textures/buttons/replayButton_n.png"),
 				});
 
-			AddComponent(m_ReplayButton, BoxCollider{ {160, 64}, {0, 0} });
-			AddComponent(m_ReplayButton, ColliderInfo{ ColliderType::Box });
+			AddComponent(replayButton, BoxCollider{ {160, 64}, {0, 0} });
+			AddComponent(replayButton, ColliderInfo{ ColliderType::Box });
 
-			AddNativeScript<ReplayButton>(m_ReplayButton);
+			AddNativeScript<ReplayButton>(replayButton);
 		}
 		{
-			m_MenuButton = CreateEntity();
+			Entity menuButton = CreateEntity();
 
-			AddComponent(m_MenuButton, Transform{ { 20, 113 } });
-			AddComponent(m_MenuButton, SpriteRenderer{
+			AddComponent(menuButton, Transform{ { 20, 113 } });
+			AddComponent(menuButton, SpriteRenderer{
 					Texture::Create("assets/textures/buttons/menuButton.png"),
 					Material::Create("Lit"),
 					0,
 					Texture::Create("assets/textures/buttons/menuButton_n.png"),
 				});
 
-			AddComponent(m_MenuButton, BoxCollider{ {128, 64}, {0, 0} });
-			AddComponent(m_MenuButton, ColliderInfo{ ColliderType::Box });
+			AddComponent(menuButton, BoxCollider{ {128, 64}, {0, 0} });
+			AddComponent(menuButton, ColliderInfo{ ColliderType::Box });
 
-			AddNativeScript<ExitToMenuButton>(m_MenuButton);
+			AddNativeScript<ExitToMenuButton>(menuButton);
 		}
 
 		// create big text telling the player they made it out of the cave
-		m_MainText = CreateEntity();
-		AddComponent(m_MainText, Transform{ { -189, -200 } });
-		AddComponent(m_MainText, SpriteRenderer{
+		Entity mainText = CreateEntity();
+		AddComponent(mainText, Transform{ { -189, -200 } });
+		AddComponent(mainText, SpriteRenderer{
 			Texture::Create("assets/textures/winText.png"),
 			Material::Create("Lit"),
 			0,
@@ -80,36 +80,36 @@ public:
 
 
 		// text to tell them what their scores are
-		m_ScoreText = CreateEntity();
-		AddComponent(m_ScoreText, Transform{ { -189.0f, -36.5f } });
-		AddComponent(m_ScoreText, SpriteRenderer{
+		Entity scoreText = CreateEntity();
+		AddComponent(scoreText, Transform{ { -189.0f, -36.5f } });
+		AddComponent(scoreText, SpriteRenderer{
 			Texture::Create("assets/textures/scoreText.png"), Material::Create("Basic"), 0 });
 
 
 		// every scene needs a camera
 		// in this scene the player does not manipulate the camera
-		m_Camera = CreateEntity();
-		SetEntityTag(m_Camera, "Camera");
-		AddComponent(m_Camera, Transform{ });
-		AddComponent(m_Camera, Camera{ });
+		Entity camera = CreateEntity();
+		SetEntityTag(camera, "Camera");
+		AddComponent(camera, Transform{ });
+		AddComponent(camera, Camera{ });
 
 
 		// this scene should fade in from the main game scene
 		// to make the transition look smooth
-		m_FadeInController = CreateEntity();
-		AddNativeScript<FadeInController>(m_FadeInController);
+		Entity fadeInController = CreateEntity();
+		AddNativeScript<FadeInController>(fadeInController);
 
 
 		// create some neat lighting to make the scene look cool
 		// add a point light that follows the mouse (via a script)
 		// and a directional lighting to make it not completely black when the user hovers their mouse elsewhere
-		m_Light = CreateEntity();
-		SetEntityTag(m_Light, "SceneLight");
-		AddComponent(m_Light, Transform{ });
-		AddComponent(m_Light, PointLight{ 3.0f, 400.0f, sf::Color(219, 113, 114, 255) });
-		AddNativeScript<GoToMouse>(m_Light);
+		Entity light = CreateEntity();
+		SetEntityTag(light, "SceneLight");
+		AddComponent(light, Transform{ });
+		AddComponent(light, PointLight{ 3.0f, 400.0f, sf::Color(219, 113, 114, 255) });
+		AddNativeScript<GoToMouse>(light);
 		// place both lights onto the same entity
-		AddComponent(m_Light, DirectionalLight{ 0.0f, -1.7f, 0.3f, sf::Color(200, 61, 19, 255) });
+		AddComponent(light, DirectionalLight{ 0.0f, -1.7f, 0.3f, sf::Color(200, 61, 19, 255) });
 
 
 
@@ -142,15 +142,4 @@ public:
 
 		return newScoreText;
 	}
-
-private:
-	Entity m_MainText = INVALID_ENTITY_ID;
-	Entity m_ScoreText = INVALID_ENTITY_ID;
-	Entity m_Camera = INVALID_ENTITY_ID;
-	Entity m_FadeInController = INVALID_ENTITY_ID;
-
-	Entity m_ReplayButton = INVALID_ENTITY_ID;
-	Entity m_MenuButton = INVALID_ENTITY_ID;
-
-	Entity m_Light = INVALID_ENTITY_ID;
 };

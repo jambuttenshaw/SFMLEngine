@@ -14,6 +14,7 @@ public:
 
 	void Create() override
 	{
+		// the replay button and menu button are implemented identically to WinScreen.h
 		{
 			m_ReplayButton = CreateEntity();
 
@@ -47,7 +48,7 @@ public:
 			AddNativeScript<ExitToMenuButton>(m_MenuButton);
 		}
 
-
+		// create text saying the players died
 		m_MainText = CreateEntity();
 		AddComponent(m_MainText, Transform{ { -140, -52 } });
 		AddComponent(m_MainText, SpriteRenderer{
@@ -57,17 +58,21 @@ public:
 			Texture::Create("assets/textures/deathScreen_n.png"),
 			});
 
-
+		// add the scene camera
+		// nothing fancy this time
 		m_Camera = CreateEntity();
 		SetEntityTag(m_Camera, "Camera");
 		AddComponent(m_Camera, Transform{ });
 		AddComponent(m_Camera, Camera{ });
 
 
+		// we should fade into the death screen so create a fade in controller entity (same as the menu)
 		m_FadeInController = CreateEntity();
 		AddNativeScript<FadeInController>(m_FadeInController);
 
-
+		// and add a scene light
+		// this is also the same as the main menu
+		// make it follow the mouse for cool effect
 		m_Light = CreateEntity();
 		SetEntityTag(m_Light, "SceneLight");
 		AddComponent(m_Light, Transform{ });

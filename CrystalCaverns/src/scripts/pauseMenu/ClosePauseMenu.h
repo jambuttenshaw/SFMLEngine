@@ -15,6 +15,8 @@ public:
 
 	void Close()
 	{
+		// deletes the scene that contains this entity
+		// used for deleting the pause menu once the game is resumed
 		if (m_Scene)
 			Application::GetApplicationHandle()->DeleteScene(m_Scene);
 	}
