@@ -5,6 +5,7 @@
 
 void PlayerController::Start()
 {
+	// get the components on the player that we need to manipulate
 	m_Transform = &GetComponent<Transform>();
 	m_Rigidbody = &GetComponent<Rigidbody>();
 	m_Animator = &GetComponent<Animator>();
@@ -17,8 +18,12 @@ void PlayerController::Start()
 
 	m_CameraController = &GetNativeScript<CameraController>(GetEntitiesWithTag("MainCamera")[0]);
 
+	// the ground layer mask is things that the player can collide with
 	m_GroundLayerMask = LayerManager::GetLayer("Ground") | LayerManager::GetLayer("JumpThrough");
 
+	// the cast points depend on whether the player is crouching or standing
+	// and define where the player looks to see if there is any level geometry
+	// so it knows how it can move
 	m_LeftCastPoint = { 7, 16 };
 	m_RightCastPoint = { 25, 16 };
 	m_BottomCastPoint = { 8, 64 };
@@ -29,6 +34,7 @@ void PlayerController::Start()
 
 
 	// load in the players sounds
+	// these are all relative to listener, as the player is the listener
 	AudioSystem::LoadSound("ladderCreak", "assets/audio/ladderCreak.ogg", 30);
 	AudioSystem::SetLooping("ladderCreak", true);
 	AudioSystem::SetRelativeToListener("ladderCreak", true);
@@ -66,26 +72,30 @@ void PlayerController::Update(float ts)
 	// all user input response needs to be below this
 	if (m_State == PlayerState::Dead) return;
 
-
+	// only check for ground if were not on a jump through platform
 	if (!(m_OnJumpThrough && m_CanLandOnPlatform))
 		m_OnGround = Physics::BoxCast({ m_Transform->GetPosition() + m_BottomCastPoint, m_HorizontalCastSize }, m_GroundLayerMask).first;
 
+	// perform a box cast to check if the players against the wall
 	if (m_FacingRight)
 		m_AgainstWall = Physics::BoxCast({ m_Transform->GetPosition() + m_RightCastPoint, m_VerticalCastSize }, m_GroundLayerMask).first;
 	else
 		m_AgainstWall = Physics::BoxCast({ m_Transform->GetPosition() + m_LeftCastPoint, m_VerticalCastSize }, m_GroundLayerMask).first;
 
 
-
+	// if we can land on a jump through platform
 	if (m_CanLandOnPlatform)
 	{
+		// if we are pressing S then we should drop through them
 		if (Input::IsKeyDown(sf::Keyboard::S))
 		{
 			m_CanLandOnPlatform = false;
 
+			// if the player is climbing a ladder, then different behaviour is produced when pressing S
 			if (m_State != PlayerState::Climb)
 			{// the player should move to jump state after falling down through a platform
 				if (m_State == PlayerState::Crawl)
+					// if the player is crawling they need to stop before dropping down
 					EndCrawl();
 
 				m_Animator->SetCurrentAnimation("jump");
@@ -110,15 +120,19 @@ void PlayerController::Update(float ts)
 		// check if the player has left the ground
 		if (!(m_OnGround || m_OnJumpThrough))
 		{
+			// stop the footsteps
 			AudioSystem::StopSound("footsteps");
 			if (m_LadderContacts)
 			{
+				// the player has left the ground but is now on a ladder
+				// so they should begin climbing the ladder
 				m_Animator->SetCurrentAnimation("climb");
 				m_State = PlayerState::Climb;
 				AudioSystem::PlaySound("ladderCreak");
 			}
 			else
 			{
+				// if theyre not on the ground and not on a ladder they must be jumping
 				m_Animator->SetCurrentAnimation("jump");
 				m_State = PlayerState::Jump;
 			}
@@ -132,9 +146,12 @@ void PlayerController::Update(float ts)
 		if (Input::IsKeyDown(sf::Keyboard::LControl))
 		{
 			StartCrawl();
-			// dont do any other grounded activities if were now crawling
+			// check if the player actually began crawling
+			// it may not have actually started crawling if there was not space
+			// to crawl in
 			if (m_State == PlayerState::Crawl)
 			{
+				// dont do any other grounded activities if were now crawling
 				AudioSystem::StopSound("footsteps");
 				m_Animator->SetCurrentAnimation("idleCrawl");
 				break;
@@ -145,13 +162,16 @@ void PlayerController::Update(float ts)
 		// the player can move while on the ground
 		Move(ts);
 
+		// set the run animation when the player is moving fast enough
 		if (fabsf(m_Rigidbody->GetVelocity().x) > 100.0f)
 		{
+			// play the footsteps sound
 			m_Animator->SetCurrentAnimation("run");
 			AudioSystem::PlaySound("footsteps", false);
 		}
 		else
 		{
+			// set the idle animation and stop the footsteps sound
 			m_Animator->SetCurrentAnimation("idle");
 			AudioSystem::StopSound("footsteps");
 		}
@@ -161,8 +181,12 @@ void PlayerController::Update(float ts)
 		// the player can jump while on the ground
 		if (Input::IsKeyDown(sf::Keyboard::W))
 		{
+			// the player is attempting to jump
+
+			// check if theyre in contact with a ladder first
 			if (m_LadderContacts)
 			{
+				// transition to climbing state
 				AudioSystem::StopSound("footsteps");
 
 				m_State = PlayerState::Climb;
@@ -171,6 +195,7 @@ void PlayerController::Update(float ts)
 			}
 			else 
 			{
+				// theyre not touching a ladder they should just jump
 				Jump(ts);
 				AudioSystem::StopSound("footsteps");
 			}
@@ -184,6 +209,7 @@ void PlayerController::Update(float ts)
 		Move(ts);
 
 		// add in the fall multiplier to make the player fall down faster than it went up
+		// makes jumping more satisfying
 		if (m_Rigidbody->GetVelocity().y > 0)
 			m_Rigidbody->ChangeVelocity(Physics::Gravity * m_FallMultiplier * (float)ts);
 
@@ -191,6 +217,7 @@ void PlayerController::Update(float ts)
 		// check if weve landed on the ground
 		if (m_OnGround)
 		{
+			// return to the grounded state
 			if (!(m_OnJumpThrough && !m_CanLandOnPlatform))
 			{
 				m_State = PlayerState::Grounded;
@@ -205,13 +232,16 @@ void PlayerController::Update(float ts)
 		// the player can move while crawling
 		Move(ts);
 		
-
+		// check the player is attempting to stop crawling
 		if (!Input::IsKeyDown(sf::Keyboard::LControl))
 		{
 			EndCrawl();
-			// dont do any other crawling activities if were not crawling anymore
+			// end crawl may not actually make the player stop crawling
+			// depending on the space around the player
+			// so we need to check if it worked or not
 			if (m_State != PlayerState::Crawl)
 			{
+				// dont do any other crawling activities if were not crawling anymore
 				m_Animator->SetCurrentAnimation("idle");
 				AudioSystem::StopSound("crawlingFootsteps");
 				break;
@@ -221,6 +251,7 @@ void PlayerController::Update(float ts)
 
 		// the player moves slower while crawling
 		m_Rigidbody->SetVelocity({ m_Rigidbody->GetVelocity().x * m_ClimbHorizontalFactor, m_Rigidbody->GetVelocity().y });
+		// set the animation depending on the velocity
 		if (fabsf(m_Rigidbody->GetVelocity().x) > 50.0f)
 		{
 			m_Animator->SetCurrentAnimation("crawl");
@@ -236,7 +267,9 @@ void PlayerController::Update(float ts)
 		// the player can jump from crawing position
 		if (Input::IsKeyDown(sf::Keyboard::W))
 		{
+			// but they most stop crawling first
 			EndCrawl();
+			// and they can only jump if they have space to stand up
 			if (m_State != PlayerState::Crawl)
 			{
 				// if standing up was succesful
@@ -293,7 +326,8 @@ void PlayerController::Update(float ts)
 		if (!m_Animator->GetCurrentAnimation().IsPlaying())
 		{
 			// the attack animation has finished playing
-			// move back to idle state
+			// move back to the crawling state if the player was hurt while crawling
+			// otherwise move back to grounded state
 			if (m_Crawling)
 			{
 				m_State = PlayerState::Crawl;
@@ -315,10 +349,11 @@ void PlayerController::Update(float ts)
 	default: break;
 	}
 
-
+	// for debug purposes display the state of the player
 	DEBUG_DISPLAY("Player state: " + GetStringFromCurrentState());
 
 
+	// the animator should flip all animations when the player is facing left
 	m_Animator->SetFlipped(!m_FacingRight);
 
 }
@@ -327,15 +362,19 @@ void PlayerController::Update(float ts)
 
 void PlayerController::OnTriggerEnter(const Collision& collision)
 {					
+	// if the player collided with a ladder
 	if (GetEntityTag(collision.Other) == "Ladder")
 	{
 		// hit ladder
+		// register another ladder contact
 		m_LadderContacts += 1;
+		// if the player is in the air, it should start climbing the ladder
 		if (!(m_OnGround || m_OnJumpThrough))
 		{
 			m_State = PlayerState::Climb;
 			m_Animator->SetCurrentAnimation("climb");
 
+			// only begin playing the ladder sound if this is the first ladder the player has come into contact with
 			if (m_LadderContacts == 1)
 				AudioSystem::PlaySound("ladderCreak");
 		}
@@ -343,6 +382,7 @@ void PlayerController::OnTriggerEnter(const Collision& collision)
 	}
 	else if (GetEntityLayer(collision.Other) == "JumpThrough")
 	{
+		// if we have collided with a jump through platform then register that collision
 		m_JumpThroughContactCount++;
 	}
 
@@ -361,9 +401,13 @@ void PlayerController::OnTriggerStay(const Collision& collision)
 		{
 			if (m_CanLandOnPlatform)
 			{
+				// standard collision resolution
+				// set the bottom of the collider to the top of the platform
+				// but a bunch of offsets and stuff need to be taken into account
 				m_Transform->SetPosition({ m_Transform->GetPosition().x,
 					collision.OtherGlobalBounds.top - collision.GlobalBounds.height + m_Transform->GetPosition().y - collision.GlobalBounds.top });
 				m_Rigidbody->SetVelocity({ m_Rigidbody->GetVelocity().x, 0.0f });
+				// register the player is standing on the ground, and on a jump through platform (so we know we can drop through the ground)
 				m_OnGround = true;
 				m_OnJumpThrough = true;
 			}
@@ -373,6 +417,7 @@ void PlayerController::OnTriggerStay(const Collision& collision)
 
 void PlayerController::OnTriggerExit(const std::pair<Entity, ColliderID>& other)
 {
+	// the player has left a ladder
 	if (GetEntityTag(other.first) == "Ladder")
 	{
 		// left ladder
@@ -380,6 +425,7 @@ void PlayerController::OnTriggerExit(const std::pair<Entity, ColliderID>& other)
 		// check if we have left all ladders
 		if (m_LadderContacts == 0 && m_State == PlayerState::Climb)
 		{
+			// go back to grounded state
 			m_State = PlayerState::Grounded;
 			AudioSystem::StopSound("ladderCreak");
 		}
@@ -387,6 +433,7 @@ void PlayerController::OnTriggerExit(const std::pair<Entity, ColliderID>& other)
 	}
 	else if (GetEntityLayer(other.first) == "JumpThrough")
 	{
+		// detect if we are no longer in contact with any jump through platforms
 		m_JumpThroughContactCount--;
 		if (!m_JumpThroughContactCount)
 			m_OnJumpThrough = false;
@@ -413,12 +460,16 @@ void PlayerController::Move(float ts)
 
 void PlayerController::Jump(float ts)
 {
+	// give the player a big velocity boost upwards
 	m_Rigidbody->ChangeVelocity({ 0.0f, -m_JumpPower });
+	// the player is no loinger on the ground
 	m_OnGround = false;
 
+	// change the state and the animation
 	m_State = PlayerState::Jump;
 	m_Animator->SetCurrentAnimation("jump");
 
+	// play the jump sound
 	AudioSystem::PlaySound("jump");
 }
 
@@ -435,10 +486,13 @@ void PlayerController::StartCrawl()
 	// make sure we can actually fit in the space
 	if (Physics::BoxCast(m_Collider->GetGlobalBounds(), m_GroundLayerMask).first)
 	{
+		// we cannot fit in the gap
+		// go back to standing up
 		EndCrawl();
 	}
 	else
 	{
+		// change all of the physics cast points to their crawling varieties
 		m_LeftCastPoint = { 5, 10 };
 		m_RightCastPoint = { 59, 10 };
 		m_BottomCastPoint = { 5, 32 };
@@ -446,6 +500,7 @@ void PlayerController::StartCrawl()
 		m_HorizontalCastSize = { 54, 0.5f };
 		m_VerticalCastSize = { 0.5f, 22 };
 
+		// set the state to crawling
 		m_State = PlayerState::Crawl;
 		m_Crawling = true;
 	}
@@ -453,6 +508,7 @@ void PlayerController::StartCrawl()
 
 void PlayerController::EndCrawl()
 {
+	// change the hitbox size and reposition the player
 	m_Collider->Reset(m_StandingHitbox);
 	m_Transform->Translate({ 16, -32 });
 	m_Light->SetPosition({ 16.0f, 32.0f });
@@ -460,10 +516,13 @@ void PlayerController::EndCrawl()
 	// make sure we can actually fit in the space
 	if (Physics::BoxCast(m_Collider->GetGlobalBounds(), m_GroundLayerMask).first)
 	{
+		// we cannot fit in the gap
+		// go back to crawling
 		StartCrawl();
 	}
 	else
 	{
+		// change all of the physics cast points back to the standing varieties
 		m_LeftCastPoint = { 7, 16 };
 		m_RightCastPoint = { 25, 16 };
 		m_BottomCastPoint = { 8, 64 };
@@ -484,7 +543,9 @@ void PlayerController::Hurt(bool toTheRight)
 	// face towards the threat
 	m_FacingRight = !toTheRight;
 
+	// apply damage to the player (which in turn updates the GUI)
 	m_StatsController->Damage();
+	// make the scene light flash red
 	m_LightAnimator->BeginAnimate(sf::Color::Red, 0.8f);
 
 	// check if the player has now passed
@@ -492,30 +553,38 @@ void PlayerController::Hurt(bool toTheRight)
 	{
 		// the player has died :(
 		m_Animator->SetCurrentAnimation("die");
+		// stop them from moving
 		m_Rigidbody->SetVelocity({ 0, 0 });
 
+		// camera effects!
+		// give it a good shake
+		// and zoom it in on the players body
 		m_CameraController->ShakeCamera(0.7f, 7.5f);
 		m_CameraController->ZoomCamera(1.0f, 0.3f);
 
-
+		// the player is dead
 		m_State = PlayerState::Dead;
 	}
 	else
 	{
 		// if were crawling then just make the player not move
+		// playing the hurt animation will look werid
 		if (m_State == PlayerState::Crawl)
 		{
+			// apply the knockback velocity
 			m_Rigidbody->SetVelocity({ (toTheRight ? m_HurtBounceVelocity : -m_HurtBounceVelocity) / m_ClimbHorizontalFactor, 0 });
 			m_Animator->SetCurrentAnimation("idleCrawl");
 		}
 		else
 		{
+			// apply the knockback velocity and play the hurt animation
 			m_Rigidbody->SetVelocity({ toTheRight ? m_HurtBounceVelocity : -m_HurtBounceVelocity, 0 });
 			m_Animator->SetCurrentAnimation("hurt");
 		}
+		// shake the camera for neat effect
 		m_CameraController->ShakeCamera(0.3f, 4.5f);
 
-
+		// switch to hurting state
 		m_State = PlayerState::Hurting;
 	}
 	
@@ -525,6 +594,7 @@ void PlayerController::Hurt(bool toTheRight)
 
 void PlayerController::Reset()
 {
+	// reset all of the players state variables back to their initial variables
 	bool m_OnGround = false;
 	bool m_OnJumpThrough = false;
 	int m_JumpThroughContactCount = 0;
@@ -533,11 +603,13 @@ void PlayerController::Reset()
 	bool m_CanLandOnPlatform = true;
 	bool m_Crawling = false;
 
+	// move the player back to its starting position
 	m_Transform->SetPosition({ 0, -200 });
 }
 
 std::string PlayerController::GetStringFromCurrentState()
 {
+	// debug function that converts the players state into a human readable string
 	switch (m_State)
 	{
 	case PlayerState::Grounded:		return "Grounded";	break;

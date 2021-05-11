@@ -10,26 +10,30 @@ using namespace SFMLEngine;
 class WolfManager : public ScriptableEntity
 {
 public:
-	// void Start() override;
 	void OnSceneLoaded() override
 	{
 		// get fresh wolf data every time a new scene is loaded
+		// as the wolves in existence will have changed
 		m_WolfControllers.clear();
 
+		// get all of the wolves
 		std::vector<Entity> wolves = GetEntitiesWithTag("Wolf");
 		for (auto const& wolf : wolves)
 		{
+			// and get a pointer to their wolf controller
 			m_WolfControllers.push_back(&GetNativeScript<WolfController>(wolf));
 		}
 	}
 
 	void AwakenWolves(const sf::Vector2f& pos)
 	{
-		for (size_t i = 0; i < m_WolfControllers.size(); i++)
+		// iterate through all of the wolves
+		for (auto& wolfController : m_WolfControllers)
 		{
-			if (Math::SquareMagnitude(m_WolfControllers[i]->GetCentre() - pos) < WOLF_WAKE_DISTANCE * WOLF_WAKE_DISTANCE)
+			// if they are close enough to the position the wake event occurred, then wake them up
+			if (Math::SquareMagnitude(wolfController->GetCentre() - pos) < WOLF_WAKE_DISTANCE * WOLF_WAKE_DISTANCE)
 			{
-				m_WolfControllers[i]->Wake();
+				wolfController->Wake();
 			}
 		}
 	}
@@ -37,6 +41,7 @@ public:
 
 	void Update(float ts) override
 	{
+		// reset them to not stalling initially
 		for (auto& wolf : m_WolfControllers)
 		{
 			wolf->SetStalling(false);
@@ -55,10 +60,12 @@ public:
 
 			for (auto& other : m_WolfControllers)
 			{
+				// make sure it isnt the same wolf, and that it is in the correct state
 				if (other == wolf || other->GetState() != WolfController::WolfState::Follow) continue;
 
 				if (Math::SquareMagnitude(other->GetCentre() - wolf->GetCentre()) < m_WolfSeperationRadius * m_WolfSeperationRadius)
 				{
+					// wolves with a higher entity handle are allowed to keep on moving and the other ones are made to wait
 					bool wolf1Stall = wolf->GetEntityHandle() < other->GetEntityHandle();
 					wolf->SetStalling(wolf1Stall);
 					other->SetStalling(!wolf1Stall);
@@ -68,6 +75,7 @@ public:
 	}
 
 private:
+	// wolves chasing the player should be at least 1 tile apart at all times
 	float m_WolfSeperationRadius = 32;
 
 	std::vector<WolfController*> m_WolfControllers;

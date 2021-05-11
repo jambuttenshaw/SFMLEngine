@@ -16,17 +16,23 @@ void WolfController::Start()
 
 	m_Collider = &GetComponent<BoxCollider>();
 
+	// sleeping by default
 	m_Animator = &GetComponent<Animator>();
 	m_Animator->SetCurrentAnimation("sleep");
 
 	Entity player = GetEntitiesWithTag("Player")[0];
 	m_PlayerController = &GetNativeScript<PlayerController>(player);
 
+	// everything the wolf can collide with
 	m_GroundLayerMask = LayerManager::GetLayer("Ground");
 
 
 
 	// set up the wolf's audio
+	// each wolf needs its own sound as they all have different positions
+	// and many wolves may by playing the same audio clip at the same time
+	// but the audio system handles the sharing of the sound buffer so only
+	// 1 sound buffer per unique asset will be loaded
 
 	m_GrowlSound = "Growl" + std::to_string(GetEntityHandle());
 	AudioSystem::LoadSound(m_GrowlSound, "assets/audio/growl.ogg");
@@ -65,7 +71,9 @@ void WolfController::Update(float ts)
 	// dont update the wolf when the game is paused
 	if (PauseScript::IsGamePaused()) return;
 
-	float dist = Math::SquareMagnitude(m_PlayerController->GetCentre() - m_Transform->GetPosition() - sf::Vector2f{ 32, 16 });
+	// the distance to the player is used a lot
+	// just calculate that at the start
+	float dist = Math::SquareMagnitude(m_PlayerController->GetCentre() - GetCentre());
 
 
 	switch (m_State)
@@ -151,6 +159,7 @@ void WolfController::Update(float ts)
 				else
 				{
 					// check first of all if we can actually move in the direction we want
+					// sometimes wolves are blocked so they dont fall off critical edges they could not return back up to
 					if ((m_DirectionBlock == 1 && m_FacingRight) || (m_DirectionBlock == -1 && !m_FacingRight))
 					{
 						m_Rigidbody->SetVelocity({ 0, m_Rigidbody->GetVelocity().y });
@@ -202,12 +211,10 @@ void WolfController::Update(float ts)
 			if (fabsf(diff.y) < m_VerticalThresholdForDirectionChange)
 				m_FacingRight = diff.x > 0;
 
+			// check if the wolf is against the wall
 			m_AgainstWall = Physics::BoxCast({ m_Transform->GetPosition() + (m_FacingRight ? m_RightCastPoint : m_LeftCastPoint), m_CastSize }, m_GroundLayerMask).first;
 
-			// sf::Vector2f oldVel{ m_Rigidbody->GetVelocity() };
-			// m_Rigidbody->SetVelocity({ Math::Lerp(oldVel.x, 0.0f, m_Friction * ts), oldVel.y });
-
-
+			// check if the player is far enough away to follow
 			if (fabsf(diff.x) > m_MinPlayerFollowDistance)
 			{
 				if (m_AgainstWall)
@@ -227,8 +234,10 @@ void WolfController::Update(float ts)
 						// make sure we dont start climbing a 2-block high wall with a roof above it, cause this will look glitchy
 						bool tooShortToClimb = Physics::BoxCast({ m_Transform->GetPosition() + (m_FacingRight ? m_RightCanClimbCastPoint : m_LeftCanClimbCastPoint), m_ClimbRoofCastSize }, m_GroundLayerMask).first;
 						
+						// is the wall too high?
 						if (tooTallToJump)
 						{
+							// a 2-block high wall with a roof above it is too short to climb
 							if (!tooShortToClimb)
 							{
 								// the wall is too high for the wolf to jump over
@@ -249,8 +258,10 @@ void WolfController::Update(float ts)
 				}
 				else
 				{
+					// we are waiting for other wolves to pass so that they dont all bunch together
 					if (m_Stalling)
 					{
+						// just be idle for a bit
 						m_Rigidbody->SetVelocity({ 0, m_Rigidbody->GetVelocity().y });
 						m_Animator->SetCurrentAnimation("idle");
 						AudioSystem::StopSound(m_FootstepsSound);
@@ -262,6 +273,7 @@ void WolfController::Update(float ts)
 						// then the delta time will be taken into account when the velocity is applied to the position in the physics system
 
 						// check first of all if we can actually move in the direction we want
+						// sometimes wolves are blocked so they dont fall off critical edges they could not return back up to
 						if ((m_DirectionBlock == 1 && m_FacingRight) || (m_DirectionBlock == -1 && !m_FacingRight))
 						{
 							m_Rigidbody->SetVelocity({ 0, m_Rigidbody->GetVelocity().y });
@@ -270,6 +282,7 @@ void WolfController::Update(float ts)
 						}
 						else
 						{
+							// move in the direction its facing
 							m_Rigidbody->SetVelocity({ m_MoveSpeed * (m_FacingRight ? 1 : -1), m_Rigidbody->GetVelocity().y });
 						}
 
@@ -297,33 +310,42 @@ void WolfController::Update(float ts)
 				// make sure we havent JUST attacked the player
 					if (m_AttackCooldown <= 0)
 					{
+						// attack time
 						m_State = WolfState::Attack;
+						// play the attack animation
 						m_Animator->SetCurrentAnimation("bite");
 						m_Animator->Reset();
 
+						// play the bite sound
 						AudioSystem::StopSound(m_FootstepsSound);
 						AudioSystem::PlaySound(m_BiteSound);
 
 
+						// apply the attack cooldown
 						m_AttackCooldown = m_InitialAttackCooldown;
 
+						// hurt the player to register the bite
 						m_PlayerController->Hurt(diff.x > 0);
 					}
 					else
 					{
+						// idle until something changes
 						m_Animator->SetCurrentAnimation("idle");
 						AudioSystem::StopSound(m_FootstepsSound);
 					}
 				}
 				else
 				{
+					// idle until something changes
 					m_Animator->SetCurrentAnimation("idle");
 					AudioSystem::StopSound(m_FootstepsSound);
 				}
+				// stop moving for now
 				m_Rigidbody->SetVelocity({ 0, m_Rigidbody->GetVelocity().y });
 			}
 			else
 			{
+				// idle until something changes
 				m_Animator->SetCurrentAnimation("idle");
 				AudioSystem::StopSound(m_FootstepsSound);
 			}
@@ -385,13 +407,17 @@ void WolfController::Update(float ts)
 	AudioSystem::SetPosition(m_FootstepsSound, GetCentre());
 	AudioSystem::SetPosition(m_AngrySound, GetCentre());
 
+	// if the wolf is facing left all of its animations must be flipped
 	m_Animator->SetFlipped(!m_FacingRight);
 }
 
 void WolfController::OnTriggerEnter(const Collision& collision)
 {
+	// check if the wolf collided with a blocker
 	if (GetEntityTag(collision.Other) == "WolfBlocker")
 	{
+		// we only want to compare horizontal diffs, which is why we dont use collision.CollisionDirection
+		// as if it is Up or Down then that would be problematic
 		if (Math::Centroid(collision.OtherGlobalBounds).x > GetCentre().x)
 		{
 			// we cannot move to the right at the moment
@@ -407,6 +433,7 @@ void WolfController::OnTriggerEnter(const Collision& collision)
 
 void WolfController::OnTriggerExit(const std::pair<Entity, ColliderID>& other)
 {
+	// the wolf is no longer being blocked
 	if (GetEntityTag(other.first) == "WolfBlocker")
 	{
 		m_DirectionBlock = 0;
@@ -416,10 +443,13 @@ void WolfController::OnTriggerExit(const std::pair<Entity, ColliderID>& other)
 
 void WolfController::Wake()
 {
+	// wake up the wolf
 	if (m_State == WolfState::Sleep)
 	{
+		// change its state to wake
 		m_State = WolfState::Wake;
 		m_Animator->SetCurrentAnimation("wake");
+		// the wolf does not growl when woken
 		AudioSystem::StopSound(m_GrowlSound);
 	}
 }
@@ -427,6 +457,7 @@ void WolfController::Wake()
 
 void WolfController::StartClimb()
 {
+	// change the wolfs hitbox
 	m_Collider->Reset(m_ClimbHitbox);
 
 	// position the wolf against the wall
@@ -444,6 +475,7 @@ void WolfController::StartClimb()
 
 void WolfController::EndClimb()
 {
+	// change the wolfs hitbox
 	m_Collider->Reset(m_StandHitbox);
 
 	// position the wolf on top of the wall
@@ -478,6 +510,7 @@ void WolfController::EndClimbFromRoof()
 
 sf::Vector2f WolfController::GetCentre()
 {
+	// find out the centre position of the wolf
 	if (m_State == WolfState::Climb)
 		return m_Transform->GetPosition() + sf::Vector2f{ 16, 32 };
 	else

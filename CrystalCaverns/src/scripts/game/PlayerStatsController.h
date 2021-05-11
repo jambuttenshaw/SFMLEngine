@@ -8,7 +8,10 @@ using namespace SFMLEngine;
 
 class CrystalCollector;
 
-
+/*
+PlayerStatsController is in charge of managing the players health points
+and the hearts GUI to display how much health it has
+*/
 class PlayerStatsController : public ScriptableEntity
 {
 public:

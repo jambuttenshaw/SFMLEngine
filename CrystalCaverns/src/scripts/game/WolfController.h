@@ -10,6 +10,7 @@ class WolfController: public ScriptableEntity
 {
 public:
 
+	// all of the states that the wolf can be in
 	enum class WolfState
 	{
 		Sleep,
@@ -61,6 +62,9 @@ private:
 	float m_InitialInterest = 15.0f;
 	float m_Interest = m_InitialInterest;
 
+	// physics casting location information
+	// we need to know where to check for obstacles relative to the position of the sprite
+
 	sf::FloatRect m_StandHitbox{0, 3, 64, 29};
 	sf::FloatRect m_ClimbHitbox{3, 0, 29, 64};
 
@@ -79,7 +83,7 @@ private:
 	sf::Vector2f m_ClimbRoofCastSize{ 16, 5.0f };
 
 
-
+	// variables that affect the movement and behaviour of the wolf
 	float m_MoveSpeed = 240.0f;
 	float m_PaceSpeed = 80.0f;
 	float m_ClimbSpeed = 100.0f;
@@ -94,6 +98,7 @@ private:
 	float m_AttackCooldown = 0.0f;
 
 
+	// handles to the wolfs sounds
 	std::string m_GrowlSound;
 	std::string m_AngrySound;
 	std::string m_FootstepsSound;

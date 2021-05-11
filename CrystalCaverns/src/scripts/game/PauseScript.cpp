@@ -8,14 +8,15 @@ bool PauseScript::s_IsPaused = false;
 
 void PauseScript::Pause()
 {
+	// pause the  game
+
+	// mark the game as paused
 	s_IsPaused = true;
+	// stop time so no physics or animations progress
 	Application::GetApplicationHandle()->SetTimeScale(0);
 
 	// pause all currently playing sounds
 	AudioSystem::PauseAllSounds();
-	// because pausing all the sounds will stop the click being heard,
-	// we make it click again
-	AudioSystem::PlaySound("buttonClick");
 
 	// open the pause menu
 	Application::GetApplicationHandle()->LoadScene<PauseMenu>(LoadSceneMode::Additive);
@@ -23,7 +24,7 @@ void PauseScript::Pause()
 
 void PauseScript::Resume()
 {
-	s_IsPaused = false;
+	// start time again
 	Application::GetApplicationHandle()->SetTimeScale(1);
 
 	// resume all sounds that were paused
@@ -31,4 +32,7 @@ void PauseScript::Resume()
 
 	// close the pause menu
 	GetNativeScript<ClosePauseMenu>(GetEntitiesWithTag("ClosePauseMenu")[0]).Close();
+
+	// mark as no longer paused
+	s_IsPaused = false;
 }

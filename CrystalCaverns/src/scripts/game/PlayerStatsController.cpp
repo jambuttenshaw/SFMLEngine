@@ -11,6 +11,8 @@ void PlayerStatsController::Start()
 
 	m_CrystalCollector = &GetNativeScript<CrystalCollector>();
 
+	// load sounds that are played when the player hurts/dies
+	// they are relative to the listener as they always come from the player
 	AudioSystem::LoadSound("hurt", "assets/audio/hurt.ogg", 50);
 	AudioSystem::SetRelativeToListener("hurt", true);
 	AudioSystem::LoadSound("die", "assets/audio/die.ogg", 50);
@@ -19,19 +21,25 @@ void PlayerStatsController::Start()
 
 void PlayerStatsController::OnTriggerEnter(const Collision& collision)
 {
+	// check if weve collided with a health pickup
 	if (GetEntityTag(collision.Other) == "HealthPickup")
 	{
 		// collided with a health pickup
+
+		// notify the script the heart has been collected and should be removed from the scene
 		auto& controller = GetNativeScript<HealthPickupController>(collision.Other);
 		controller.CollectHeart();
 
+		// if we are missing hearts
 		if (m_Health < m_MaxHealth)
 		{
+			// increase health and update the gui
 			m_Health++;
 			UpdateHearts();
 		}
 		else
 		{
+			// our hearts are full: the health pickup contributes to score instead
 			m_CrystalCollector->ScorePoints(HEART_BONUS_POINTS);
 		}
 	}
@@ -40,10 +48,13 @@ void PlayerStatsController::OnTriggerEnter(const Collision& collision)
 
 void PlayerStatsController::Damage()
 {
-	m_Health -= 1;
+	// decrement health
+	m_Health--;
 
+	// check if the player has passed
 	if (m_Health <= 0)
 	{
+		// clamp health at 0
 		m_Health = 0;
 
 		// player has died!
@@ -55,15 +66,19 @@ void PlayerStatsController::Damage()
 	}
 	else
 	{
+		// play ouch sound
 		AudioSystem::PlaySound("hurt");
 	}
 
+	// and update the gui
 	UpdateHearts();
 }
 
 
 void PlayerStatsController::SetupHearts(const std::vector<Entity>* const heartEntities)
 {
+	// we need to have a way to access the animators of all the hearts on the gui
+	// we store them in a vector
 	for (auto const& heart : *heartEntities)
 	{
 		m_HeartAnimators.push_back(&GetComponent<Animator>(heart));
@@ -76,6 +91,7 @@ void PlayerStatsController::SetupHearts(const std::vector<Entity>* const heartEn
 
 void PlayerStatsController::UpdateHearts()
 {
+	// fullValue is the amount of health that is required for this heart to be displayed as full
 	int fullValue = 2;
 	for (auto& animator : m_HeartAnimators)
 	{
@@ -100,6 +116,8 @@ void PlayerStatsController::UpdateHearts()
 
 void PlayerStatsController::AssignPlayerData()
 {
+	// the health of the player is used in the win screen
+	// so it is saved in the data store for access across scenes
 	int* health = &DataStore::RetrieveData<PlayerData>("playerData")->Health;
 	*health = m_Health;
 }

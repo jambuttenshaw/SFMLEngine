@@ -13,6 +13,7 @@ class PlayerController : public ScriptableEntity
 {
 private:
 
+	// all of the unqiue states the player can be in
 	enum class PlayerState
 	{
 		Grounded,
@@ -42,6 +43,7 @@ public:
 
 	void Reset();
 
+	// the centre of the player depends on whether it is crawling or standing
 	sf::Vector2f GetCentre()
 	{
 		if (m_State == PlayerState::Crawl)

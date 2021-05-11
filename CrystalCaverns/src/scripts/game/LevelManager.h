@@ -11,6 +11,7 @@ using namespace SFMLEngine;
 
 class LevelManager : public ScriptableEntity
 {
+	// the actions that the level manager can perform after fading out of a level
 	enum class Action
 	{
 		None,

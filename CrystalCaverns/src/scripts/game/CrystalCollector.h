@@ -12,18 +12,19 @@ using namespace SFMLEngine;
 
 class MiningNoiseRing;
 
-
+// data pertaining to a certain type of crystal
 struct CrystalData
 {
-	int Value;
-	int Durability;
-	TileID BrokenTile;
+	int Value; // how many points are gained from mining the crystal
+	int Durability; // how many hits it takes to mine a crystal
+	TileID BrokenTile; // the tile ID of this crystals respective broken texture
 };
+// information on crystals that are currently being mined
 struct MiningProgress
 {
-	int Progress = 0;
-	CrystalData* Data = nullptr;
-	bool Broken = false;
+	int Progress = 0; // how much mining has been done on it
+	CrystalData* Data = nullptr; // the data about the type of crystal that is being mined
+	bool Broken = false; // if it has been cracked or not yet
 };
 
 
@@ -70,12 +71,18 @@ private:
 	CameraController* m_CameraController = nullptr;
 	PlayerLightAnimator* m_LightAnimator = nullptr;
 
+	// all of the crystals that we are currently in contact with
 	std::vector<sf::Vector2i> m_CollidingCrystals;
 	bool m_BrokenCrystal = false;
 
+	// information about each type of crystal in the world
 	std::unordered_map<TileID, CrystalData> m_CrystalData;
+	
+	// data about crystals that we are currently mining
 	std::unordered_map<sf::Vector2i, MiningProgress> m_MiningProgress;
-
+	// information about where each collider is located
+	// so when the crystal cracks, and its collider is swapped out,
+	// we can maintain our knowledge of what crystal is where by updating the collider ID
 	std::unordered_map<ColliderID, sf::Vector2i> m_CrystalColliders;
 
 	int m_CrystalScore = 0;
