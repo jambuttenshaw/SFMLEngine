@@ -12,6 +12,7 @@ public:
 
 	virtual void OnClick() override
 	{
+		// close the application when the quit button is pressed
 		Application::GetApplicationHandle()->Close();
 	}
 

@@ -15,6 +15,7 @@ public:
 
 	void Update(float ts) override
 	{
+		// simply set the position of this sprite to the world position of the mouse
 		m_Transform->SetPosition(Input::GetMouseWorldPos());
 	}
 

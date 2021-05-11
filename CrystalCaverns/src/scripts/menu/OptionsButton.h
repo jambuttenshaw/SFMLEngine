@@ -19,6 +19,7 @@ public:
 
 	virtual void OnClick() override
 	{
+		// we want to move the camera down to the options menu when clicked
 		m_CameraController->SetTarget({ 0, 896 });
 	}
 

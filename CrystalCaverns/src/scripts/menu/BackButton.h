@@ -19,6 +19,7 @@ public:
 
 	virtual void OnClick() override
 	{
+		// when the back button is clicked the camera retargets onto the main menu
 		m_CameraController->SetTarget({ 0, 0 });
 	}
 

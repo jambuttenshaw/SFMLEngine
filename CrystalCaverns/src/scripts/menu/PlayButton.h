@@ -24,11 +24,13 @@ private:
 	PointLight* m_TitleLight = nullptr;
 	DirectionalLight* m_DirLight = nullptr;
 
+	// used for interpolating the properties of the scene lights when the play button is clicked
 	float m_InitialRange = 0.0f;
 	float m_InitialIntensity1 = 0.0f;
 	float m_InitialIntensity2 = 0.0f;
 
 	bool m_Fading = false;
+	// how long will the menu take to fade out
 	float m_FadeTime = 0.5f;
 	float m_FadeTimer = 0.0f;
 
