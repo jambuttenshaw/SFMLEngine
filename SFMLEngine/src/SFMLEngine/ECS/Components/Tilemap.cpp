@@ -200,6 +200,19 @@ namespace SFMLEngine {
 		return tiletype;
 	}
 
+	TileID Tilemap::GetTileAtLocation(const sf::Vector2i& location)
+	{
+		size_t index = GetTileIndex(location);
+		if (index == static_cast<size_t>(-1))
+		{
+			return NULL_TILE_ID;
+		}
+		else
+		{
+			return m_Tiles[index].TileType;
+		}
+	}
+
 
 	sf::Vector2i Tilemap::WorldToTileCoordinates(const sf::Vector2f& worldCoords)
 	{

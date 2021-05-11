@@ -172,7 +172,7 @@ namespace SFMLEngine {
 		// VSync enabled by default
 		bool m_VSync = true;
 		unsigned int m_FPSLimit = 0;
-		const float m_DeltaTimeLimit = 1.0f / 20.0f;
+		const float m_DeltaTimeLimit = 1.0f / 30.0f;
 		float m_TimeScale = 1.0f;
 
 		sf::Color m_ClearColor{ sf::Color::Black };

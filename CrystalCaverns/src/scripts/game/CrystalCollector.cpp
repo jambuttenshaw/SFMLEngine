@@ -64,6 +64,8 @@ void CrystalCollector::Update(float ts)
 			{
 				// this crystal hasn't been touched before, so register as it being mined
 				TileID type = m_CrystalMap->GetTileAtLocation(currentCrystal);
+				if (type == NULL_TILE_ID) // something went really wrong, abort mission
+					return;
 				// subtract one because this counts as one hit
 				m_MiningProgress.insert({ currentCrystal, { m_CrystalData[type].Durability - 1, &m_CrystalData[type] } });
 			}

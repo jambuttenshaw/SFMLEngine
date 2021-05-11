@@ -11,12 +11,16 @@ they should only be defining their application; not how it should be run.
 
 int main()
 {
+#ifdef SFMLENGINE_DEBUG
 	SFMLEngine::Log::Init();
+#endif
 	SFMLEngine::Application* app = SFMLEngine::CreateApplication();
 
 	app->Run();
 
 	delete app;
 
+#ifdef SFMLENGINE_DEBUG
 	_CrtDumpMemoryLeaks();
+#endif
 }
